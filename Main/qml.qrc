@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>BasicComponents/Button.qml</file>
+        <file>BasicComponents/GradientBorder.qml</file>
     </qresource>
 </RCC>
