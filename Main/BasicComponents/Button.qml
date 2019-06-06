@@ -11,15 +11,16 @@ Item {
     Rectangle {
         id: border
 
-
         visible: showBorder
 
         anchors.fill: parent
 
         color: "transparent"
 
+        radius: 2
+
         border.width: 1
-        border.color: "gold"
+        border.color: Qt.rgba(0, 0, 0, 0.4)
     }
 
     GradientBorder {
@@ -39,5 +40,9 @@ Item {
         anchors.margins: showBorder ? 2 : 1
 
         color: Qt.rgba(1, 1, 1, 0.12)
+    }
+
+    MouseArea {
+        anchors.fill: parent
     }
 }

@@ -20,7 +20,7 @@ Window {
     Rectangle {
         id: header
         width: parent.width
-        height: 40
+        height: 30
         color: "transparent"
 
         anchors.top: parent.top
@@ -47,7 +47,7 @@ Window {
 
                 color: "transparent"
                 border.color: Qt.rgba(0, 0, 0, 0.4)
-                radius: 1
+                radius: 2
                 antialiasing: true
 
 
@@ -168,6 +168,12 @@ Window {
 
         MouseArea {
             anchors.fill: parent
+            anchors.rightMargin: 28 + 26 + 28 + margin // close buttons width + margin
+
+            Rectangle {
+                anchors.fill: parent
+                color: "red"
+            }
 
             onPressed: {
                 previousX = mouseX
@@ -200,9 +206,7 @@ Window {
                 var dy = mouseY - previousY
                 mainWindow.setY(mainWindow.y + dy)
             }
-
         }
-
     }
 
     // Resize right
