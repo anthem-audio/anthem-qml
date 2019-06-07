@@ -1,12 +1,17 @@
-import QtQuick 2.0
+import QtQuick 2.12
 
 Item {
-    property bool isTopLeftRounded: true
-    property bool isTopRightRounded: true
-    property bool isBottomLeftRounded: true
-    property bool isBottomRightRounded: true
+    id: button
 
     property bool showBorder: true
+
+    QtObject {
+        id: buttonProps
+        property bool isHoverActive: false
+        property bool isClickActive: false
+    }
+
+    signal press()
 
     Rectangle {
         id: border
@@ -39,10 +44,30 @@ Item {
         anchors.fill: parent
         anchors.margins: showBorder ? 2 : 1
 
-        color: Qt.rgba(1, 1, 1, 0.12)
+        QtObject {
+            id: insideProps
+            property real opacity: buttonProps.isClickActive ? 0.09 :
+                (buttonProps.isHoverActive ? 0.17 : 0.12)
+//            property real colorVal: buttonProps.isClickActive ? 0 : 1
+            property real colorVal: 1
+        }
+
+        color: Qt.rgba(insideProps.colorVal, insideProps.colorVal, insideProps.colorVal, insideProps.opacity)
     }
 
     MouseArea {
         anchors.fill: parent
+        onClicked: parent.press()
+
+        property alias clickActive: buttonProps.isClickActive
+
+        onPressed: clickActive = true
+        onReleased: clickActive = false
+
+        property alias hoverActive: buttonProps.isHoverActive
+
+        hoverEnabled: true
+        onEntered: hoverActive = true
+        onExited: hoverActive = false
     }
 }

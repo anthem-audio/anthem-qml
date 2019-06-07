@@ -64,6 +64,10 @@ Window {
 
                     showBorder: false
 
+                    onPress: {
+                        mainWindow.showMinimized()
+                    }
+
                     Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.horizontalCenter: parent.horizontalCenter
@@ -97,6 +101,15 @@ Window {
                     anchors.bottomMargin: 1
 
                     showBorder: false
+
+                    onPress: {
+                        if (mainWindow.isMaximized)
+                            mainWindow.showNormal();
+                        else
+                            mainWindow.showMaximized();
+
+                        mainWindow.isMaximized = !mainWindow.isMaximized;
+                    }
 
                     Rectangle {
                         anchors.bottom: parent.bottom
@@ -137,6 +150,10 @@ Window {
 
                     showBorder: false
 
+                    onPress: {
+                        mainWindow.close()
+                    }
+
                     Shape {
                         anchors.bottom: parent.bottom
                         anchors.top: parent.top
@@ -169,11 +186,6 @@ Window {
         MouseArea {
             anchors.fill: parent
             anchors.rightMargin: 28 + 26 + 28 + margin // close buttons width + margin
-
-            Rectangle {
-                anchors.fill: parent
-                color: "red"
-            }
 
             onPressed: {
                 previousX = mouseX
