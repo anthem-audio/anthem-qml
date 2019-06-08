@@ -7,7 +7,7 @@ Window {
     id: mainWindow
     flags: Qt.Window | Qt.FramelessWindowHint
     visible: true
-    width: 1024
+    width: 1300
     height: 768
 //    title: qsTr("Hello World")
     property int previousX
@@ -219,6 +219,44 @@ Window {
                 mainWindow.setY(mainWindow.y + dy)
             }
         }
+    }
+
+    Item {
+        id: mainContentContainer
+
+        anchors.top: header.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: footerContainer.top
+
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
+        anchors.topMargin: 5
+        anchors.bottomMargin: 5
+
+        ControlsPanel {
+            id: controlsPanel
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.right: parent.right
+        }
+
+        MainStack {
+            anchors.top: controlsPanel.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            anchors.topMargin: 4
+        }
+    }
+
+    Item {
+        id: footerContainer
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 30
     }
 
     // Resize right
