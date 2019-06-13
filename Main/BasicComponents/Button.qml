@@ -3,9 +3,24 @@ import QtQuick 2.12
 Item {
     id: button
 
-    property bool showBorder: true
-    property bool isPressed: false
-    property bool isToggleButton: false
+    property bool   showBorder: true
+    property bool   isPressed: false
+    property bool   isToggleButton: false
+    property string imageSource: ""
+    property real   imageWidth: 1
+    property real   imageHeight: 1
+
+    Image {
+        id: icon
+        // If the source is defined, use it. Otherwise, use a transparent 1-pixel PNG.
+        source: imageSource != "" ? "../" + imageSource : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+        width: imageWidth
+        height: imageHeight
+        anchors.centerIn: parent
+        sourceSize.width: imageWidth
+        sourceSize.height: imageHeight
+        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
+    }
 
     QtObject {
         id: buttonProps

@@ -16,6 +16,10 @@ Panel {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             width: parent.height // makes it square :)
+
+            imageSource: "Images/Logo.svg"
+            imageWidth: 14
+            imageHeight: 12
         }
 
         Button {
