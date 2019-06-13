@@ -1,6 +1,7 @@
 import QtQuick 2.13
 import QtQuick.Window 2.13
 import QtQuick.Shapes 1.13
+import QtGraphicalEffects 1.0
 import "BasicComponents"
 
 Window {
@@ -16,6 +17,19 @@ Window {
     readonly property int margin: 5
 
     color: "#454545"
+
+    Image {
+        id: asdf
+        source: "Images/pretty.jpg"
+        anchors.fill: parent
+    }
+    FastBlur {
+        id: blurredbg
+        visible: true
+        anchors.fill: asdf
+        source: asdf
+        radius: 128
+    }
 
     Rectangle {
         id: header
