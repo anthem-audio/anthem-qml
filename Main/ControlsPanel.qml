@@ -29,6 +29,8 @@ Panel {
             anchors.left: btnLogo.right
             anchors.leftMargin: 2
             width: parent.height
+
+            textContent: "File"
         }
 
 

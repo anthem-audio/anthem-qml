@@ -6,9 +6,20 @@ Item {
     property bool   showBorder: true
     property bool   isPressed: false
     property bool   isToggleButton: false
+
     property string imageSource: ""
     property real   imageWidth: 1
     property real   imageHeight: 1
+
+    property string textContent: ""
+
+    Text {
+        id: text
+        text: qsTr(textContent)
+        anchors.centerIn: parent
+        color: "white"
+        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
+    }
 
     Image {
         id: icon
