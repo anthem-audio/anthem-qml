@@ -16,26 +16,6 @@ Item {
 
     property string textContent: ""
 
-    Text {
-        id: text
-        text: qsTr(textContent)
-        anchors.centerIn: parent
-        color: "white"
-        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
-    }
-
-    Image {
-        id: icon
-        // If the source is defined, use it. Otherwise, use a transparent 1-pixel PNG.
-        source: imageSource != "" ? "../" + imageSource : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
-        width: imageWidth
-        height: imageHeight
-        anchors.centerIn: parent
-        sourceSize.width: imageWidth
-        sourceSize.height: imageHeight
-        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
-    }
-
     QtObject {
         id: buttonProps
         property bool isHoverActive: false
@@ -113,6 +93,26 @@ Item {
         anchors.margins: 1
         radius: 1
         visible: false
+    }
+
+    Text {
+        id: text
+        text: qsTr(textContent)
+        anchors.centerIn: parent
+        color: "white"
+        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
+    }
+
+    Image {
+        id: icon
+        // If the source is defined, use it. Otherwise, use a transparent 1-pixel PNG.
+        source: imageSource != "" ? "../" + imageSource : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+        width: imageWidth
+        height: imageHeight
+        anchors.centerIn: parent
+        sourceSize.width: imageWidth
+        sourceSize.height: imageHeight
+        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
     }
 
     Rectangle {
