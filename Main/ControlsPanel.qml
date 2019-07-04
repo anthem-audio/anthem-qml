@@ -42,6 +42,10 @@ Panel {
             anchors.left: btnFile.right
             anchors.leftMargin: 20
             width: parent.height
+
+            imageSource: "Images/Save.svg"
+            imageWidth: 16
+            imageHeight: 16
         }
 
         Button {
@@ -51,6 +55,10 @@ Panel {
             anchors.left: btnSave.right
             anchors.leftMargin: 2
             width: parent.height
+
+            imageSource: "Images/Undo.svg"
+            imageWidth: 15
+            imageHeight: 15
         }
 
         Button {
@@ -60,6 +68,10 @@ Panel {
             anchors.left: btnUndo.right
             anchors.leftMargin: 2
             width: parent.height
+
+            imageSource: "Images/Redo.svg"
+            imageWidth: 15
+            imageHeight: 15
         }
 
 
