@@ -1,4 +1,5 @@
 import QtQuick 2.12
+import QtGraphicalEffects 1.13
 
 Item {
     id: button
@@ -6,6 +7,8 @@ Item {
     property bool   showBorder: true
     property bool   isPressed: false
     property bool   isToggleButton: false
+
+    property bool   hasMenuIndicator: false
 
     property string imageSource: ""
     property real   imageWidth: 1
@@ -100,6 +103,41 @@ Item {
         anchors.margins: showBorder ? 1 : 0
 
         borderWidth: 1
+    }
+
+    Rectangle {
+        id: btnCorner
+        color: 'transparent'
+        anchors.fill: parent
+        border.color: Qt.rgba(1, 1, 1, buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7)
+        anchors.margins: 1
+        radius: 1
+        visible: false
+    }
+
+    Rectangle {
+        id: btnCornerMask
+
+        anchors.fill: parent
+        anchors.margins: 1
+        color: 'transparent'
+
+        Rectangle {
+            color: 'white'
+            width: 5
+            height: 5
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+        }
+
+        visible: false
+    }
+
+    OpacityMask {
+        anchors.fill: btnCorner
+        source: btnCorner
+        maskSource: btnCornerMask
+        visible: hasMenuIndicator
     }
 
     MouseArea {

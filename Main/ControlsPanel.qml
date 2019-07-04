@@ -31,6 +31,8 @@ Panel {
             width: parent.height
 
             textContent: "File"
+
+            hasMenuIndicator: true
         }
 
 
