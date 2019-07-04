@@ -14,5 +14,6 @@
         <file>Images/Redo.svg</file>
         <file>Images/Save.svg</file>
         <file>Images/Undo.svg</file>
+        <file>Images/Metronome.svg</file>
     </qresource>
 </RCC>

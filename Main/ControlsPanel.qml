@@ -104,6 +104,10 @@ Panel {
                 width: parent.height
 
                 isToggleButton: true
+
+                imageSource: "Images/Metronome.svg"
+                imageWidth: 13
+                imageHeight: 16
             }
         }
 
