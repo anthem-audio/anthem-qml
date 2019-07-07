@@ -99,8 +99,9 @@ Item {
         id: text
         text: qsTr(textContent)
         anchors.centerIn: parent
-        color: "white"
-        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
+        property int colorVal: isToggleButton && isPressed ? 0 : 1
+        color: Qt.rgba(colorVal, colorVal, colorVal, 1)
+        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
     }
 
     Image {
@@ -112,7 +113,14 @@ Item {
         anchors.centerIn: parent
         sourceSize.width: imageWidth
         sourceSize.height: imageHeight
-        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7
+        visible: false
+    }
+    ColorOverlay {
+        anchors.fill: icon
+        source: icon
+        property int colorVal: isToggleButton && isPressed ? 0 : 1
+        color: Qt.rgba(colorVal, colorVal, colorVal, 1)
+        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
     }
 
     Rectangle {
