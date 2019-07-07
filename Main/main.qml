@@ -1,7 +1,7 @@
 import QtQuick 2.13
 import QtQuick.Window 2.13
 import QtQuick.Shapes 1.13
-import QtGraphicalEffects 1.0
+import QtGraphicalEffects 1.13
 import "BasicComponents"
 
 Window {

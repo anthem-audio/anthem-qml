@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.13
 
 Rectangle {
     color: Qt.rgba(0, 0, 0, 0.2)
