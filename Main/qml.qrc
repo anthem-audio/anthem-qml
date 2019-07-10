@@ -19,5 +19,6 @@
         <file>Images/Record.svg</file>
         <file>Images/Play and Record.svg</file>
         <file>Images/Stop.svg</file>
+        <file>Images/Loop.svg</file>
     </qresource>
 </RCC>

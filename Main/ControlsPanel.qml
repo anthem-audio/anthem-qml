@@ -230,6 +230,21 @@ Panel {
                     width: 1
                 }
             }
+
+            Button {
+                id: btnLoop
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: playbackControlsGroup.right
+                anchors.leftMargin: 3
+                width: parent.height
+
+                isToggleButton: true
+
+                imageSource: "Images/Loop.svg"
+                imageWidth: 16
+                imageHeight: 14
+            }
         }
 
         // Float right
