@@ -15,5 +15,9 @@
         <file>Images/Save.svg</file>
         <file>Images/Undo.svg</file>
         <file>Images/Metronome.svg</file>
+        <file>Images/Play.svg</file>
+        <file>Images/Record.svg</file>
+        <file>Images/Play and Record.svg</file>
+        <file>Images/Stop.svg</file>
     </qresource>
 </RCC>

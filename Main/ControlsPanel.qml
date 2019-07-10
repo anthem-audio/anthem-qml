@@ -109,6 +109,127 @@ Panel {
                 imageWidth: 13
                 imageHeight: 16
             }
+
+            Button {
+                id: idk
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: btnMetronomeToggle.right
+                anchors.leftMargin: 3
+                width: 21
+            }
+
+            // Still don't have a button group. Not sure how I'd make one.
+            Rectangle {
+                id: playbackControlsGroup
+                width: 125
+                anchors.top: parent.top
+                anchors.left: idk.right
+                anchors.bottom: parent.bottom
+                anchors.leftMargin: 3
+                radius: 2
+                color: "transparent"
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Button {
+                    id: btnPlay
+                    showBorder: false
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.bottom: parent.bottom
+                    width: parent.height - 2
+
+                    anchors.topMargin: 1
+                    anchors.leftMargin: 1
+                    anchors.bottomMargin: 1
+
+                    imageSource: "Images/Play.svg"
+                    imageWidth: 12
+                    imageHeight: 12
+                }
+
+                Button {
+                    id: btnRecord
+                    showBorder: false
+                    anchors.top: parent.top
+                    anchors.left: btnPlay.right
+                    anchors.bottom: parent.bottom
+                    width: parent.height - 2
+
+                    anchors.topMargin: 1
+                    anchors.leftMargin: 1
+                    anchors.bottomMargin: 1
+
+                    imageSource: "Images/Record.svg"
+                    imageWidth: 12
+                    imageHeight: 12
+                }
+
+                Button {
+                    id: btnPlayRecord
+                    showBorder: false
+                    anchors.top: parent.top
+                    anchors.left: btnRecord.right
+                    anchors.bottom: parent.bottom
+                    width: parent.height - 2
+
+                    anchors.topMargin: 1
+                    anchors.leftMargin: 1
+                    anchors.bottomMargin: 1
+
+                    imageSource: "Images/Play and Record.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    id: btnStop
+                    showBorder: false
+                    anchors.top: parent.top
+                    anchors.left: btnPlayRecord.right
+                    anchors.bottom: parent.bottom
+                    width: parent.height - 2
+
+                    anchors.topMargin: 1
+                    anchors.leftMargin: 1
+                    anchors.bottomMargin: 1
+
+                    imageSource: "Images/Stop.svg"
+                    imageWidth: 12
+                    imageHeight: 12
+                }
+
+                Rectangle {
+                    anchors.left: btnPlay.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 1
+                    color: Qt.rgba(0, 0, 0, 0.4)
+                    width: 1
+                }
+
+                Rectangle {
+                    anchors.left: btnRecord.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 1
+                    color: Qt.rgba(0, 0, 0, 0.4)
+                    width: 1
+                }
+
+                Rectangle {
+                    anchors.left: btnPlayRecord.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 1
+                    color: Qt.rgba(0, 0, 0, 0.4)
+                    width: 1
+                }
+            }
         }
 
         // Float right
