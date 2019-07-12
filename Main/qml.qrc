@@ -21,5 +21,6 @@
         <file>Images/Stop.svg</file>
         <file>Images/Loop.svg</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
+        <file>Images/Knob.svg</file>
     </qresource>
 </RCC>

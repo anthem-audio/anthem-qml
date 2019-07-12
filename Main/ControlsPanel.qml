@@ -311,6 +311,10 @@ Panel {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             width: parent.height
+
+            imageSource: "Images/Knob.svg"
+            imageWidth: 16
+            imageHeight: 16
         }
     }
 }
