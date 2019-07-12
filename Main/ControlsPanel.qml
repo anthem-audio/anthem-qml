@@ -245,6 +245,62 @@ Panel {
                 imageWidth: 16
                 imageHeight: 14
             }
+
+            Rectangle {
+                id: tempoAndTimeSignatureBlock
+                anchors.left: btnLoop.right
+                anchors.leftMargin: 20
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 61
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+            }
+
+            Rectangle {
+                id: playheadInfoBlock
+                anchors.left: tempoAndTimeSignatureBlock.right
+                anchors.leftMargin: 2
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 95
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+            }
+
+            Rectangle {
+                id: pitchBlock
+                anchors.left: playheadInfoBlock.right
+                anchors.leftMargin: 2
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 39
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+            }
+
+            Rectangle {
+                id: cpuAndOutputBlock
+                anchors.left: pitchBlock.right
+                anchors.leftMargin: 2
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 58
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+            }
         }
 
         // Float right
