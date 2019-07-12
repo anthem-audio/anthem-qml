@@ -12,6 +12,8 @@ public:
 
     Q_INVOKABLE void setCursorPosition(int x, int y);
     Q_INVOKABLE QPoint getCursorPosition();
+    Q_INVOKABLE void setCursorToBlank();
+    Q_INVOKABLE void setCursorToArrow();
 
 signals:
 
