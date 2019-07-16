@@ -1,5 +1,6 @@
 import QtQuick 2.13
 import "BasicComponents"
+import "Global"
 
 Panel {
     height: 44
@@ -258,6 +259,48 @@ Panel {
                 color: Qt.rgba(0, 0, 0, 0.15)
                 border.width: 1
                 border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    id: spacer1
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.height * 0.5;
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("128.00")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.topMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+
+                Item {
+                    id: spacer2
+                    anchors.top: spacer1.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("4/4")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.bottomMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
             }
 
             Rectangle {
@@ -272,6 +315,48 @@ Panel {
                 color: Qt.rgba(0, 0, 0, 0.15)
                 border.width: 1
                 border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    id: spacer3
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.height * 0.5;
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("1.1.1.00")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.topMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+
+                Item {
+                    id: spacer4
+                    anchors.top: spacer3.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("0:00.00")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.bottomMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
             }
 
             Rectangle {

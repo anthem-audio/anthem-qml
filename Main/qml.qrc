@@ -22,5 +22,9 @@
         <file>Images/Loop.svg</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
         <file>Images/Knob.svg</file>
+        <file>Fonts/NotoSans-Regular.ttf</file>
+        <file>Global/Fonts.qml</file>
+        <file>Global/qmldir</file>
+        <file>Fonts/SourceCodePro-SemiBold.ttf</file>
     </qresource>
 </RCC>

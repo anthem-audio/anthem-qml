@@ -1,5 +1,6 @@
 import QtQuick 2.13
 import QtGraphicalEffects 1.13
+import "../Global"
 
 Item {
     id: button
@@ -98,6 +99,7 @@ Item {
     Text {
         id: text
         text: qsTr(textContent)
+        font: Fonts.notoSansRegular.name
         anchors.centerIn: parent
         property int colorVal: isToggleButton && isPressed ? 0 : 1
         color: Qt.rgba(colorVal, colorVal, colorVal, 1)
