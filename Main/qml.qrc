@@ -26,5 +26,6 @@
         <file>Global/Fonts.qml</file>
         <file>Global/qmldir</file>
         <file>Fonts/SourceCodePro-SemiBold.ttf</file>
+        <file>BasicComponents/DigitControl.qml</file>
     </qresource>
 </RCC>

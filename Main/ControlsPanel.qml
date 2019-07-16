@@ -371,6 +371,38 @@ Panel {
                 color: Qt.rgba(0, 0, 0, 0.15)
                 border.width: 1
                 border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 1
+
+                    Text {
+                        id: pitchLabel
+                        text: qsTr("PITCH")
+                        font.family: Fonts.notoSansRegular.name
+                        font.pointSize: 8
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: parent.height * 0.5
+                        color: "#a6a6a6"
+                    }
+
+                    DigitControl {
+                        anchors.top: pitchLabel.bottom
+                        anchors.left: parent.left
+                        anchors.leftMargin: 4
+                        anchors.right: parent.right
+                        anchors.rightMargin: 4
+                        anchors.bottom: parent.bottom
+
+                        highBound: 48
+                        lowBound: -48
+                    }
+                }
             }
 
             Rectangle {
