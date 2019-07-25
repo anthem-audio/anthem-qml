@@ -1,4 +1,6 @@
 import QtQuick 2.13
+import QtGraphicalEffects 1.13
+
 import "BasicComponents"
 import "Global"
 
@@ -388,7 +390,7 @@ Panel {
                         anchors.left: parent.left
                         anchors.right: parent.right
                         height: parent.height * 0.5
-                        color: "#a6a6a6"
+                        color: Qt.rgba(1, 1, 1, 0.65)
                     }
 
                     DigitControl {
@@ -417,6 +419,94 @@ Panel {
                 color: Qt.rgba(0, 0, 0, 0.15)
                 border.width: 1
                 border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    anchors.fill: parent
+                    anchors.margins: 5
+
+                    Item {
+                        id: icons
+                        width: 9
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+
+                        Image {
+                            id: cpuIcon
+                            source: 'Images/CPU.svg'
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            height: parent.width
+                            visible: false
+                        }
+
+                        ColorOverlay {
+                            anchors.fill: cpuIcon
+                            source: cpuIcon
+                            color: Qt.rgba(1, 1, 1, 1)
+                            opacity: 0.65
+                        }
+
+                        Image {
+                            id: outputIcon
+                            source: 'Images/Output Level.svg'
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: parent.width
+                            visible: false
+                        }
+
+                        ColorOverlay {
+                            anchors.fill: outputIcon
+                            source: outputIcon
+                            color: Qt.rgba(1, 1, 1, 1)
+                            opacity: 0.65
+                        }
+                    }
+
+                    Item {
+                        anchors.left: icons.right
+                        anchors.leftMargin: 3
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
+
+                        SimpleMeter {
+                            anchors.right: parent.right
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            height: 9
+
+                            value: 0.45
+                        }
+
+                        Item {
+                            anchors.right: parent.right
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            height: 9
+
+                            SimpleMeter {
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 4
+
+                                value: 0.7
+                            }
+
+                            SimpleMeter {
+                                anchors.bottom: parent.bottom
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 4
+                                value: 0.8
+                            }
+                        }
+                    }
+                }
             }
         }
 
