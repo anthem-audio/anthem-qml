@@ -1,5 +1,8 @@
 import QtQuick 2.13
+import QtGraphicalEffects 1.13
+
 import "BasicComponents"
+import "Global"
 
 Panel {
     height: 44
@@ -245,6 +248,266 @@ Panel {
                 imageWidth: 16
                 imageHeight: 14
             }
+
+            Rectangle {
+                id: tempoAndTimeSignatureBlock
+                anchors.left: btnLoop.right
+                anchors.leftMargin: 20
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 61
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    id: spacer1
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.height * 0.5;
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("128.00")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.topMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+
+                Item {
+                    id: spacer2
+                    anchors.top: spacer1.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("4/4")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.bottomMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
+
+            Rectangle {
+                id: playheadInfoBlock
+                anchors.left: tempoAndTimeSignatureBlock.right
+                anchors.leftMargin: 2
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 95
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    id: spacer3
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: parent.height * 0.5;
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("1.1.1.00")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.topMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+
+                Item {
+                    id: spacer4
+                    anchors.top: spacer3.bottom
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.rightMargin: 7
+
+                    Text {
+                        text: qsTr("0:00.00")
+                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.weight: Font.Bold
+                        font.pointSize: 10
+                        anchors.fill: parent
+                        anchors.bottomMargin: 2
+                        color: "#1ac18f"
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
+            }
+
+            Rectangle {
+                id: pitchBlock
+                anchors.left: playheadInfoBlock.right
+                anchors.leftMargin: 2
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 39
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    anchors.fill: parent
+                    anchors.topMargin: 1
+                    anchors.bottomMargin: 1
+
+                    Text {
+                        id: pitchLabel
+                        text: qsTr("PITCH")
+                        font.family: Fonts.notoSansRegular.name
+                        font.pointSize: 8
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        height: parent.height * 0.5
+                        color: Qt.rgba(1, 1, 1, 0.65)
+                    }
+
+                    DigitControl {
+                        anchors.top: pitchLabel.bottom
+                        anchors.left: parent.left
+                        anchors.leftMargin: 4
+                        anchors.right: parent.right
+                        anchors.rightMargin: 4
+                        anchors.bottom: parent.bottom
+
+                        highBound: 48
+                        lowBound: -48
+                    }
+                }
+            }
+
+            Rectangle {
+                id: cpuAndOutputBlock
+                anchors.left: pitchBlock.right
+                anchors.leftMargin: 2
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: 58
+                radius: 2
+
+                color: Qt.rgba(0, 0, 0, 0.15)
+                border.width: 1
+                border.color: Qt.rgba(0, 0, 0, 0.4)
+
+                Item {
+                    anchors.fill: parent
+                    anchors.margins: 5
+
+                    Item {
+                        id: icons
+                        width: 9
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.left: parent.left
+
+                        Image {
+                            id: cpuIcon
+                            source: 'Images/CPU.svg'
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            height: parent.width
+                            visible: false
+                        }
+
+                        ColorOverlay {
+                            anchors.fill: cpuIcon
+                            source: cpuIcon
+                            color: Qt.rgba(1, 1, 1, 1)
+                            opacity: 0.65
+                        }
+
+                        Image {
+                            id: outputIcon
+                            source: 'Images/Output Level.svg'
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: parent.width
+                            visible: false
+                        }
+
+                        ColorOverlay {
+                            anchors.fill: outputIcon
+                            source: outputIcon
+                            color: Qt.rgba(1, 1, 1, 1)
+                            opacity: 0.65
+                        }
+                    }
+
+                    Item {
+                        anchors.left: icons.right
+                        anchors.leftMargin: 3
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: parent.right
+
+                        SimpleMeter {
+                            anchors.right: parent.right
+                            anchors.left: parent.left
+                            anchors.top: parent.top
+                            height: 9
+
+                            value: 0.45
+                        }
+
+                        Item {
+                            anchors.right: parent.right
+                            anchors.left: parent.left
+                            anchors.bottom: parent.bottom
+                            height: 9
+
+                            SimpleMeter {
+                                anchors.top: parent.top
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 4
+
+                                value: 0.7
+                            }
+
+                            SimpleMeter {
+                                anchors.bottom: parent.bottom
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                height: 4
+                                value: 0.8
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         // Float right
@@ -255,6 +518,10 @@ Panel {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             width: parent.height
+
+            imageSource: "Images/Knob.svg"
+            imageWidth: 16
+            imageHeight: 16
         }
     }
 }

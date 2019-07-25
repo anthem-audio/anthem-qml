@@ -21,5 +21,14 @@
         <file>Images/Stop.svg</file>
         <file>Images/Loop.svg</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
+        <file>Images/Knob.svg</file>
+        <file>Fonts/NotoSans-Regular.ttf</file>
+        <file>Global/Fonts.qml</file>
+        <file>Global/qmldir</file>
+        <file>Fonts/SourceCodePro-SemiBold.ttf</file>
+        <file>BasicComponents/DigitControl.qml</file>
+        <file>BasicComponents/SimpleMeter.qml</file>
+        <file>Images/CPU.svg</file>
+        <file>Images/Output Level.svg</file>
     </qresource>
 </RCC>
