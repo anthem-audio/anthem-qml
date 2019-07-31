@@ -13,6 +13,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        Core/modelitem.cpp \
         Utilities/mousehelper.cpp \
         main.cpp
 
@@ -30,4 +31,41 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    Core/modelitem.h \
+    Include/rapidjson/include/rapidjson/allocators.h \
+    Include/rapidjson/include/rapidjson/cursorstreamwrapper.h \
+    Include/rapidjson/include/rapidjson/document.h \
+    Include/rapidjson/include/rapidjson/encodedstream.h \
+    Include/rapidjson/include/rapidjson/encodings.h \
+    Include/rapidjson/include/rapidjson/error/en.h \
+    Include/rapidjson/include/rapidjson/error/error.h \
+    Include/rapidjson/include/rapidjson/filereadstream.h \
+    Include/rapidjson/include/rapidjson/filewritestream.h \
+    Include/rapidjson/include/rapidjson/fwd.h \
+    Include/rapidjson/include/rapidjson/internal/biginteger.h \
+    Include/rapidjson/include/rapidjson/internal/diyfp.h \
+    Include/rapidjson/include/rapidjson/internal/dtoa.h \
+    Include/rapidjson/include/rapidjson/internal/ieee754.h \
+    Include/rapidjson/include/rapidjson/internal/itoa.h \
+    Include/rapidjson/include/rapidjson/internal/meta.h \
+    Include/rapidjson/include/rapidjson/internal/pow10.h \
+    Include/rapidjson/include/rapidjson/internal/regex.h \
+    Include/rapidjson/include/rapidjson/internal/stack.h \
+    Include/rapidjson/include/rapidjson/internal/strfunc.h \
+    Include/rapidjson/include/rapidjson/internal/strtod.h \
+    Include/rapidjson/include/rapidjson/internal/swap.h \
+    Include/rapidjson/include/rapidjson/istreamwrapper.h \
+    Include/rapidjson/include/rapidjson/memorybuffer.h \
+    Include/rapidjson/include/rapidjson/memorystream.h \
+    Include/rapidjson/include/rapidjson/msinttypes/inttypes.h \
+    Include/rapidjson/include/rapidjson/msinttypes/stdint.h \
+    Include/rapidjson/include/rapidjson/ostreamwrapper.h \
+    Include/rapidjson/include/rapidjson/pointer.h \
+    Include/rapidjson/include/rapidjson/prettywriter.h \
+    Include/rapidjson/include/rapidjson/rapidjson.h \
+    Include/rapidjson/include/rapidjson/reader.h \
+    Include/rapidjson/include/rapidjson/schema.h \
+    Include/rapidjson/include/rapidjson/stream.h \
+    Include/rapidjson/include/rapidjson/stringbuffer.h \
+    Include/rapidjson/include/rapidjson/writer.h \
     Utilities/mousehelper.h
