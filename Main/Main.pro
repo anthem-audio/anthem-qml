@@ -14,6 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Core/modelitem.cpp \
+        Model/project.cpp \
         Utilities/mousehelper.cpp \
         main.cpp
 
@@ -68,4 +69,5 @@ HEADERS += \
     Include/rapidjson/include/rapidjson/stream.h \
     Include/rapidjson/include/rapidjson/stringbuffer.h \
     Include/rapidjson/include/rapidjson/writer.h \
+    Model/project.h \
     Utilities/mousehelper.h
