@@ -1,7 +1,7 @@
 #ifndef MODELITEM_H
 #define MODELITEM_H
 
-#include "rapidjson/include/rapidjson/document.h"
+#include "../Include/rapidjson/include/rapidjson/document.h"
 
 class ModelItem
 {

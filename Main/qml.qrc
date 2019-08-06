@@ -30,5 +30,8 @@
         <file>BasicComponents/SimpleMeter.qml</file>
         <file>Images/CPU.svg</file>
         <file>Images/Output Level.svg</file>
+        <file>BasicComponents/Menu.qml</file>
+        <file>BasicComponents/MenuItem.qml</file>
+        <file>BasicComponents/MenuSeparator.qml</file>
     </qresource>
 </RCC>

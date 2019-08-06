@@ -36,6 +36,31 @@ Panel {
             textContent: "File"
 
             hasMenuIndicator: true
+
+            onPress: fileMenu.open()
+
+            Menu {
+                id: fileMenu
+                y: parent.height
+
+                MenuItem {
+                    text: 'New project'
+                }
+                MenuItem {
+                    text: 'Open...'
+                }
+                MenuSeparator {}
+                MenuItem {
+                    text: 'Save'
+                }
+                MenuItem {
+                    text: 'Save as...'
+                }
+                MenuSeparator {}
+                MenuItem {
+                    text: 'Exit'
+                }
+            }
         }
 
 
