@@ -1,7 +1,9 @@
 #include <QGuiApplication>
+#include <QQmlContext>
 #include <QQmlApplicationEngine>
 
 #include "Utilities/mousehelper.h"
+#include "Presenter/mainpresenter.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +21,9 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+    MainPresenter mainPresenter(nullptr);
+    engine.rootContext()->setContextProperty("Anthem", &mainPresenter);
 
     return app.exec();
 }

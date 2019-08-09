@@ -1,5 +1,6 @@
 import QtQuick 2.13
 import QtGraphicalEffects 1.13
+import QtQuick.Dialogs 1.2
 
 import "BasicComponents"
 import "Global"
@@ -47,7 +48,20 @@ Panel {
                     text: 'New project'
                 }
                 MenuItem {
+                    FileDialog {
+                        id: loadFileDialog
+                        title: "Select a project"
+                        folder: shortcuts.home
+                        nameFilters: ["Anthem project files (*.anthem)"]
+                        onAccepted: {
+                            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
+                        }
+                    }
+
                     text: 'Open...'
+                    onTriggered: {
+                        loadFileDialog.open();
+                    }
                 }
                 MenuSeparator {}
                 MenuItem {

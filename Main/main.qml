@@ -10,7 +10,6 @@ Window {
     visible: true
     width: 1300
     height: 768
-//    title: qsTr("Hello World")
     property int previousX
     property int previousY
     property bool isMaximized: false
