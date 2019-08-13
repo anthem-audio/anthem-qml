@@ -72,4 +72,6 @@ HEADERS += \
     Include/rapidjson/include/rapidjson/writer.h \
     Model/project.h \
     Presenter/mainpresenter.h \
+    Utilities/documentwrapper.h \
+    Utilities/exceptions.h \
     Utilities/mousehelper.h

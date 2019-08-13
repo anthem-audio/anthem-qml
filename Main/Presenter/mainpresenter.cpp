@@ -1,3 +1,5 @@
+#include "mainpresenter.h"
+
 #include <QFileInfo>
 #include <QDir>
 #include <QStringList>
@@ -6,10 +8,7 @@
 
 #include <cstdio>
 
-#include "../Include/rapidjson/include/rapidjson/document.h"
 #include "../Include/rapidjson/include/rapidjson/filereadstream.h"
-
-#include "mainpresenter.h"
 
 MainPresenter::MainPresenter(QObject *parent) : QObject(parent)
 {
@@ -39,14 +38,34 @@ void MainPresenter::loadProject(QString path) {
     char readBuffer[65536];
     rapidjson::FileReadStream stream(fp, readBuffer, sizeof(readBuffer));
 
-    rapidjson::Document json;
-    json.ParseStream(stream);
+    auto i = projectFiles.length();
+
+    projectFiles.append(QSharedPointer<DocumentWrapper>(new DocumentWrapper()));
+
+    projectFiles[i]->document.ParseStream(stream);
 
     fclose(fp);
 
-    if (json.IsNull()) {
+    if (projectFiles[i]->document.IsNull()) {
         return;
     }
 
     // Initialize model with JSON
+    QSharedPointer<Project> project = QSharedPointer<Project>(new Project(this, projectFiles[i]));
+    projects.append(project);
+    activeProject = project;
+
+    updateAll();
+}
+
+void MainPresenter::updateAll() {
+    emit masterPitchChanged(getMasterPitch());
+}
+
+int MainPresenter::getMasterPitch() {
+    return activeProject->masterPitch;
+}
+
+void MainPresenter::setMasterPitch(int pitch) {
+
 }

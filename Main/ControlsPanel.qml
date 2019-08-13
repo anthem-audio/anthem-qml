@@ -433,6 +433,7 @@ Panel {
                     }
 
                     DigitControl {
+                        id: masterPitchControl
                         anchors.top: pitchLabel.bottom
                         anchors.left: parent.left
                         anchors.leftMargin: 4
@@ -442,6 +443,13 @@ Panel {
 
                         highBound: 48
                         lowBound: -48
+
+                        Connections {
+                            target: Anthem
+                            onMasterPitchChanged: {
+                                masterPitchControl.value = pitch;
+                            }
+                        }
                     }
                 }
             }
