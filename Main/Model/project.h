@@ -7,13 +7,13 @@
 #include "../Include/rapidjson/include/rapidjson/document.h"
 
 #include "../Core/modelitem.h"
-#include "../Utilities/documentwrapper.h"
+#include "../Utilities/projectfile.h"
 
 class Project : public QObject, ModelItem
 {
     Q_OBJECT
 public:
-    Project(QObject *parent, QSharedPointer<DocumentWrapper> projectFile);
+    Project(QObject *parent, QSharedPointer<ProjectFile> projectFile);
 
     int masterPitch;
 

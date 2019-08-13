@@ -9,7 +9,7 @@
 #include "../Include/rapidjson/include/rapidjson/document.h"
 
 #include "../Model/project.h"
-#include "../Utilities/documentwrapper.h"
+#include "../Utilities/projectfile.h"
 
 class MainPresenter : public QObject
 {
@@ -23,7 +23,7 @@ public:
     QVector<QSharedPointer<Project>> projects;
 
     // List of project files (mirrors list of projects)
-    QVector<QSharedPointer<DocumentWrapper>> projectFiles;
+    QVector<QSharedPointer<ProjectFile>> projectFiles;
 
     // Project that is currently loaded
     QSharedPointer<Project> activeProject;

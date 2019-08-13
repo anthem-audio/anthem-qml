@@ -17,6 +17,7 @@ SOURCES += \
         Model/project.cpp \
         Presenter/mainpresenter.cpp \
         Utilities/mousehelper.cpp \
+        Utilities/projectfile.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -72,6 +73,6 @@ HEADERS += \
     Include/rapidjson/include/rapidjson/writer.h \
     Model/project.h \
     Presenter/mainpresenter.h \
-    Utilities/documentwrapper.h \
     Utilities/exceptions.h \
-    Utilities/mousehelper.h
+    Utilities/mousehelper.h \
+    Utilities/projectfile.h

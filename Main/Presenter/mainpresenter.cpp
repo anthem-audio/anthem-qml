@@ -8,8 +8,6 @@
 
 #include <cstdio>
 
-#include "../Include/rapidjson/include/rapidjson/filereadstream.h"
-
 MainPresenter::MainPresenter(QObject *parent) : QObject(parent)
 {
 
@@ -30,21 +28,9 @@ void MainPresenter::loadProject(QString path) {
         return;
     }
 
-    // Attempt to load the file as JSON
-    bool isWindows = QSysInfo::kernelType() == "winnt";
-
-    FILE* fp = std::fopen(path.toUtf8(), isWindows ? "rb" : "r");
-
-    char readBuffer[65536];
-    rapidjson::FileReadStream stream(fp, readBuffer, sizeof(readBuffer));
-
     auto i = projectFiles.length();
 
-    projectFiles.append(QSharedPointer<DocumentWrapper>(new DocumentWrapper()));
-
-    projectFiles[i]->document.ParseStream(stream);
-
-    fclose(fp);
+    projectFiles.append(QSharedPointer<ProjectFile>(new ProjectFile(path)));
 
     if (projectFiles[i]->document.IsNull()) {
         return;
