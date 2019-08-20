@@ -2,5 +2,5 @@
 
 ModelItem::ModelItem()
 {
-    this->jsonNode.SetObject();
+//    this->jsonNode->SetObject();
 }

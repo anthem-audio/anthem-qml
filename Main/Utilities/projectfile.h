@@ -12,6 +12,8 @@ public:
     ProjectFile(QString path);
     rapidjson::Document document;
     QString path;
+
+    void save();
 };
 
 #endif // DOCUMENTWRAPPER_H

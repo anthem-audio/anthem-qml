@@ -12,10 +12,13 @@
 class Project : public QObject, ModelItem
 {
     Q_OBJECT
+private:
+    int masterPitch;
 public:
     Project(QObject *parent, QSharedPointer<ProjectFile> projectFile);
 
-    int masterPitch;
+    void setMasterPitch(int pitch);
+    int getMasterPitch();
 
 signals:
 

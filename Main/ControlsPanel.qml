@@ -59,13 +59,12 @@ Panel {
                     }
 
                     text: 'Open...'
-                    onTriggered: {
-                        loadFileDialog.open();
-                    }
+                    onTriggered: loadFileDialog.open()
                 }
                 MenuSeparator {}
                 MenuItem {
                     text: 'Save'
+                    onTriggered: Anthem.saveActiveProject()
                 }
                 MenuItem {
                     text: 'Save as...'
@@ -90,6 +89,8 @@ Panel {
             imageSource: "Images/Save.svg"
             imageWidth: 16
             imageHeight: 16
+
+            onPress: Anthem.saveActiveProject()
         }
 
         Button {
@@ -443,6 +444,14 @@ Panel {
 
                         highBound: 48
                         lowBound: -48
+
+                        onValueChanged: {
+                            Anthem.setMasterPitch(value, false);
+                        }
+
+                        onValueChangeCompleted: {
+                            Anthem.setMasterPitch(value, true);
+                        }
 
                         Connections {
                             target: Anthem

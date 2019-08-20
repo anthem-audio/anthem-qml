@@ -40,6 +40,7 @@ void MainPresenter::loadProject(QString path) {
     QSharedPointer<Project> project = QSharedPointer<Project>(new Project(this, projectFiles[i]));
     projects.append(project);
     activeProject = project;
+    activeProjectIndex = i;
 
     updateAll();
 }
@@ -48,10 +49,17 @@ void MainPresenter::updateAll() {
     emit masterPitchChanged(getMasterPitch());
 }
 
-int MainPresenter::getMasterPitch() {
-    return activeProject->masterPitch;
+void MainPresenter::saveActiveProject() {
+    projectFiles[activeProjectIndex]->save();
 }
 
-void MainPresenter::setMasterPitch(int pitch) {
+int MainPresenter::getMasterPitch() {
+    return activeProject->getMasterPitch();
+}
 
+void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
+    activeProject->setMasterPitch(pitch);
+    if (isFinal) {
+        emit masterPitchChanged(pitch);
+    }
 }

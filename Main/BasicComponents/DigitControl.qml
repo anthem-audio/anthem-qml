@@ -3,11 +3,13 @@ import QtQuick 2.13
 import "../Global"
 
 Item {
-    id: parent
+    id: control
     property int value: 0
     property int highBound
     property int lowBound
-    property int alignment: Text.AlignRight;
+    property int alignment: Text.AlignRight
+
+    signal valueChangeCompleted(int value);
 
     Text {
         id: pitchLabel
@@ -46,6 +48,10 @@ Item {
                     accumulator += slownessMultiplier;
                 }
             }
+        }
+
+        onDragEnd: {
+            control.valueChangeCompleted(control.value);
         }
     }
 }

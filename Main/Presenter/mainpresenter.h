@@ -27,15 +27,17 @@ public:
 
     // Project that is currently loaded
     QSharedPointer<Project> activeProject;
+    int activeProjectIndex;
 
 signals:
     void masterPitchChanged(int pitch);
 
 public slots:
     void loadProject(QString path);
+    void saveActiveProject();
 
     int getMasterPitch();
-    void setMasterPitch(int pitch);
+    void setMasterPitch(int pitch, bool isFinal);
 };
 
 #endif // MAINPRESENTER_H

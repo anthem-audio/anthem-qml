@@ -10,7 +10,7 @@ class ModelItem
 public:
     ModelItem();
 
-    rapidjson::Value jsonNode;
+    rapidjson::Value* jsonNode;
 };
 
 #endif // MODELITEM_H
