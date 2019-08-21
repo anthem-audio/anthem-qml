@@ -9,6 +9,8 @@
 
 class ProjectFile {
 public:
+    // Empty project file
+    ProjectFile();
     ProjectFile(QString path);
     rapidjson::Document document;
     QString path;

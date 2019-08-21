@@ -3,14 +3,21 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QStringList>
-#include <QDebug>
 #include <QSysInfo>
 
 #include <cstdio>
 
 MainPresenter::MainPresenter(QObject *parent) : QObject(parent)
 {
+    isInInitialState = true;
 
+    // Initialize with blank project
+    auto projectFile = QSharedPointer<ProjectFile>(new ProjectFile());
+    auto projectModel = QSharedPointer<Project>(new Project(this, projectFile));
+    projectFiles.append(projectFile);
+    projects.append(projectModel);
+    activeProject = projectModel;
+    activeProjectIndex = 0;
 }
 
 void MainPresenter::loadProject(QString path) {
@@ -30,19 +37,33 @@ void MainPresenter::loadProject(QString path) {
 
     auto i = projectFiles.length();
 
-    projectFiles.append(QSharedPointer<ProjectFile>(new ProjectFile(path)));
+    auto projectFile = QSharedPointer<ProjectFile>(new ProjectFile(path));
 
+    if (isInInitialState)
+        projectFiles[0] = projectFile;
+    else
+        projectFiles.append(projectFile);
+
+    // TODO: If something goes wrong and this error case trips, the list
+    // of project files and project models will become desynced. This
+    // should really be solved by creating helper functions to manipulate
+    // both lists at once.
     if (projectFiles[i]->document.IsNull()) {
         return;
     }
 
     // Initialize model with JSON
-    QSharedPointer<Project> project = QSharedPointer<Project>(new Project(this, projectFiles[i]));
-    projects.append(project);
+    QSharedPointer<Project> project = QSharedPointer<Project>(new Project(this, projectFile));
+    if (isInInitialState)
+        projects[0] = project;
+    else
+        projects.append(project);
     activeProject = project;
     activeProjectIndex = i;
 
     updateAll();
+
+    isInInitialState = false;
 }
 
 void MainPresenter::updateAll() {

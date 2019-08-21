@@ -5,12 +5,12 @@
 Project::Project(QObject *parent, QSharedPointer<ProjectFile> projectFile) : QObject(parent)
 {
     this->jsonNode = &(projectFile->document["project"]);
-    this->masterPitch = this->jsonNode->operator[]("masterPitch").GetInt();
+    this->masterPitch = this->jsonNode->operator[]("transport")["masterPitch"].GetInt();
 }
 
 void Project::setMasterPitch(int pitch) {
     this->masterPitch = pitch;
-    this->jsonNode->operator[]("masterPitch") = pitch;
+    this->jsonNode->operator[]("transport")["masterPitch"] = pitch;
 }
 
 int Project::getMasterPitch() {

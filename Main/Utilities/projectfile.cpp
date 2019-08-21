@@ -4,6 +4,27 @@
 #include "../Include/rapidjson/include/rapidjson/filewritestream.h"
 #include "../Include/rapidjson/include/rapidjson/writer.h"
 
+ProjectFile::ProjectFile() {
+    // There's probably a Better Way
+    auto emptyProject =
+        "{"
+        "    \"softwareVersion\": \"0.0.1\","
+        "    \"project\": {"
+        "        \"song\": {"
+        "            \"patterns\": [],"
+        "            \"arrangements\": []"
+        "        },"
+        "        \"transport\": {"
+        "            \"masterPitch\": 0"
+        "        },"
+        "        \"mixer\": {},"
+        "        \"generators\": []"
+        "    }"
+        "}";
+
+    document.Parse(emptyProject);
+}
+
 ProjectFile::ProjectFile(QString path) {
     this->path = path;
 

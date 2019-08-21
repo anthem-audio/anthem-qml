@@ -16,6 +16,12 @@ class MainPresenter : public QObject
     Q_OBJECT
 private:
     void updateAll();
+
+    /// Used to track whether the user has 1) opened a project or
+    /// 2) modified the blank project since the software was
+    /// launched. This determines whether "File -> Open project"
+    /// should replace the current tab or use a new one.
+    bool isInInitialState;
 public:
     explicit MainPresenter(QObject *parent = nullptr);
 
