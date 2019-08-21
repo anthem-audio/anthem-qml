@@ -8,14 +8,14 @@ ProjectFile::ProjectFile() {
     // There's probably a Better Way
     auto emptyProject =
         "{"
-        "    \"softwareVersion\": \"0.0.1\","
+        "    \"software_version\": \"0.0.1\","
         "    \"project\": {"
         "        \"song\": {"
         "            \"patterns\": [],"
         "            \"arrangements\": []"
         "        },"
         "        \"transport\": {"
-        "            \"masterPitch\": 0"
+        "            \"master_pitch\": 0"
         "        },"
         "        \"mixer\": {},"
         "        \"generators\": []"
