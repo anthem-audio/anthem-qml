@@ -48,18 +48,21 @@ void MainPresenter::loadProject(QString path) {
     // of project files and project models will become desynced. This
     // should really be solved by creating helper functions to manipulate
     // both lists at once.
-    if (projectFiles[i]->document.IsNull()) {
+    if (projectFile->document.IsNull()) {
         return;
     }
 
     // Initialize model with JSON
     QSharedPointer<Project> project = QSharedPointer<Project>(new Project(this, projectFile));
-    if (isInInitialState)
+    if (isInInitialState) {
         projects[0] = project;
-    else
+        activeProjectIndex = 0;
+    }
+    else {
         projects.append(project);
+        activeProjectIndex = i;
+    }
     activeProject = project;
-    activeProjectIndex = i;
 
     updateAll();
 
@@ -75,11 +78,11 @@ void MainPresenter::saveActiveProject() {
 }
 
 int MainPresenter::getMasterPitch() {
-    return activeProject->getMasterPitch();
+    return activeProject->transport->getMasterPitch();
 }
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
-    activeProject->setMasterPitch(pitch);
+    activeProject->transport->setMasterPitch(pitch);
     if (isFinal) {
         emit masterPitchChanged(pitch);
     }

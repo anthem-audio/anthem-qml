@@ -6,6 +6,8 @@
 
 #include "../Include/rapidjson/include/rapidjson/document.h"
 
+#include "transport.h"
+
 #include "../Core/modelitem.h"
 #include "../Utilities/projectfile.h"
 
@@ -13,12 +15,9 @@ class Project : public QObject, ModelItem
 {
     Q_OBJECT
 private:
-    int masterPitch;
 public:
-    Project(QObject *parent, QSharedPointer<ProjectFile> projectFile);
-
-    void setMasterPitch(int pitch);
-    int getMasterPitch();
+    Transport* transport;
+    Project(QObject* parent, QSharedPointer<ProjectFile> projectFile);
 
 signals:
 
