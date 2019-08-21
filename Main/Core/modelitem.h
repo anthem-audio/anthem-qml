@@ -3,7 +3,7 @@
 
 #include <QSharedPointer>
 
-#include "../Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/include/rapidjson/document.h"
 
 class ModelItem
 {

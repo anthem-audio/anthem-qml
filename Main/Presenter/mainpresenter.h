@@ -6,10 +6,10 @@
 #include <QVector>
 #include <QSharedPointer>
 
-#include "../Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/include/rapidjson/document.h"
 
-#include "../Model/project.h"
-#include "../Utilities/projectfile.h"
+#include "Model/project.h"
+#include "Utilities/projectfile.h"
 
 class MainPresenter : public QObject
 {

@@ -1,6 +1,6 @@
 #include "project.h"
 
-#include "../Utilities/exceptions.h"
+#include "Utilities/exceptions.h"
 
 Project::Project(QObject *parent, QSharedPointer<ProjectFile> projectFile) : QObject(parent)
 {

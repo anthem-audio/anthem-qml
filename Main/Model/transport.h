@@ -3,9 +3,9 @@
 
 #include <QObject>
 
-#include "../Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/include/rapidjson/document.h"
 
-#include "../Core/modelitem.h"
+#include "Core/modelitem.h"
 
 class Transport : public QObject, ModelItem
 {

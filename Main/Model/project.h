@@ -4,12 +4,12 @@
 #include <QObject>
 #include <QSharedPointer>
 
-#include "../Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/include/rapidjson/document.h"
 
 #include "transport.h"
 
-#include "../Core/modelitem.h"
-#include "../Utilities/projectfile.h"
+#include "Core/modelitem.h"
+#include "Utilities/projectfile.h"
 
 class Project : public QObject, ModelItem
 {
