@@ -7,8 +7,10 @@
 
 #include <cstdio>
 
-MainPresenter::MainPresenter(QObject *parent) : QObject(parent)
+MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : QObject(parent)
 {
+    this->id = id;
+
     isInInitialState = true;
 
     // Initialize with blank project

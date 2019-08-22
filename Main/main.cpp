@@ -3,6 +3,7 @@
 #include <QQmlApplicationEngine>
 
 #include "Utilities/mousehelper.h"
+#include "Utilities/idgenerator.h"
 #include "Presenter/mainpresenter.h"
 
 int main(int argc, char *argv[])
@@ -15,7 +16,8 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
 
-    MainPresenter mainPresenter(nullptr);
+    IdGenerator idGen = IdGenerator();
+    MainPresenter mainPresenter(nullptr, &idGen);
     engine.rootContext()->setContextProperty("Anthem", &mainPresenter);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));

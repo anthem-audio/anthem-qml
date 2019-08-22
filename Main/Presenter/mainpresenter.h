@@ -10,6 +10,7 @@
 
 #include "Model/project.h"
 #include "Utilities/projectfile.h"
+#include "Utilities/idgenerator.h"
 
 class MainPresenter : public QObject
 {
@@ -22,8 +23,10 @@ private:
     /// launched. This determines whether "File -> Open project"
     /// should replace the current tab or use a new one.
     bool isInInitialState;
+
+    IdGenerator* id;
 public:
-    explicit MainPresenter(QObject *parent = nullptr);
+    explicit MainPresenter(QObject *parent, IdGenerator* id);
 
     // List of currently open projects
     QVector<QSharedPointer<Project>> projects;

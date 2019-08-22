@@ -17,6 +17,7 @@ SOURCES += \
         Model/project.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
+        Utilities/idgenerator.cpp \
         Utilities/mousehelper.cpp \
         Utilities/projectfile.cpp \
         main.cpp
@@ -72,9 +73,11 @@ HEADERS += \
     Include/rapidjson/include/rapidjson/stream.h \
     Include/rapidjson/include/rapidjson/stringbuffer.h \
     Include/rapidjson/include/rapidjson/writer.h \
+    Include/snowflake.h \
     Model/project.h \
     Model/transport.h \
     Presenter/mainpresenter.h \
     Utilities/exceptions.h \
+    Utilities/idgenerator.h \
     Utilities/mousehelper.h \
     Utilities/projectfile.h
