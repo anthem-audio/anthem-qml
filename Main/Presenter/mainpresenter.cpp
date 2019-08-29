@@ -20,6 +20,10 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : QObject(parent)
     projects.append(projectModel);
     activeProject = projectModel;
     activeProjectIndex = 0;
+
+    // Start the engine
+    engine = new Engine(this);
+    engine->start();
 }
 
 void MainPresenter::loadProject(QString path) {

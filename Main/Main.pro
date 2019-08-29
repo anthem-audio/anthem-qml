@@ -14,6 +14,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Core/modelitem.cpp \
+        Core/engine.cpp \
         Model/project.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
@@ -37,6 +38,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Core/modelitem.h \
+    Core/engine.h \
     Include/rapidjson/include/rapidjson/allocators.h \
     Include/rapidjson/include/rapidjson/cursorstreamwrapper.h \
     Include/rapidjson/include/rapidjson/document.h \

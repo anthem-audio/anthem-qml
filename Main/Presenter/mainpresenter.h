@@ -11,6 +11,7 @@
 #include "Model/project.h"
 #include "Utilities/projectfile.h"
 #include "Utilities/idgenerator.h"
+#include "Core/engine.h"
 
 class MainPresenter : public QObject
 {
@@ -25,6 +26,10 @@ private:
     bool isInInitialState;
 
     IdGenerator* id;
+
+    /// Handles engine lifecycle and communication.
+    Engine* engine;
+
 public:
     explicit MainPresenter(QObject *parent, IdGenerator* id);
 
