@@ -14,7 +14,7 @@ jobs:
     - name: Download Qt
       run: |
             curl -s -o null http://download.qt.io/official_releases/qt/5.13/5.13.0/qt-opensource-windows-x86-5.13.0.exe
-            dir
+            dir \
     - name: Install Qt       
       run: .\qt-opensource-windows-x86-5.13.0.exe --script .\daw-prototype\actions\installer-noninteractive.qs --platform minimal
     - name: Show Qt directory
