@@ -29,7 +29,7 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
 
     widget.deselectAll();
     // widget.selectComponent("qt.55.mingw73_64");
-    widget.selectComponent("qt.513.gcc_64");
+    widget.selectComponent("qt.qt5.5130.gcc_64");
     // widget.selectComponent("qt.55.qtquickcontrols");
     
     // widget.deselectComponent("qt.tools.qtcreator");
