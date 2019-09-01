@@ -24,7 +24,6 @@ jobs:
     - name: Build Anthem
       run: |
            export PATH=$PATH:/qt/5.13.0/gcc_64/bin/
-           mkdir build
-           cd build 
-           qmake ../daw-prototype/Prototyping.pro
+           cd daw-prototype/ 
+           qmake ./Prototyping.pro
            make
