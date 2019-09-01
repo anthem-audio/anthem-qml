@@ -28,7 +28,8 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
 
     widget.deselectAll();
-    widget.selectComponent("qt.55.gcc_64");
+    widget.selectComponent("qt.55.mingw73_64");
+    // widget.selectComponent("qt.55.gcc_64");
     // widget.selectComponent("qt.55.qtquickcontrols");
     
     // widget.deselectComponent("qt.tools.qtcreator");
