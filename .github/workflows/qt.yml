@@ -12,14 +12,13 @@ jobs:
     - name: Download repository
       run: git clone --single-branch --branch jake-dev https://github.com/SecondFlight/daw-prototype.git
     - name: Download Qt
-      run: |
-            curl -s -L -o qt-unified-windows-x86-online.exe https://download.qt.io/official_releases/online_installers/qt-unified-windows-x86-online.exe
-            cd \
-            dir /s *qt-unified-windows-x86-online.exe*
+      run: wget http://qt.mirror.constant.com/archive/qt/5.13/5.13.0/qt-opensource-linux-x64-5.13.0.run
+    - name: Install Dependencies
+      run: apt-get install -y libx11-xcb-dev libglu1-mesa-dev
     - name: Install Qt       
-      run: .\qt-unified-windows-x86-online.exe --script .\daw-prototype\actions\installer-noninteractive.qs --platform minimal
-    - name: Show Qt directory
-      run: dir c:/Qt
+      run: .\qt-opensource-linux-x64-5.13.0.run --script .\daw-prototype\actions\installer-noninteractive.qs --platform minimal
+    - name: Find qmake
+      run: find / -name "qmake"
     - name: Build Anthem
       run: |
            mkdir build
