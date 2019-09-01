@@ -16,7 +16,9 @@ jobs:
     - name: Install Dependencies
       run: sudo apt-get install -y libx11-xcb-dev libglu1-mesa-dev
     - name: Install Qt       
-      run: sudo ./qt-opensource-linux-x64-5.13.0.run --script ./daw-prototype/actions/installer-noninteractive.qs --platform minimal
+      run: |
+            chmod +x ./qt-opensource-linux-x64-5.13.0.run
+            ./qt-opensource-linux-x64-5.13.0.run --script ./daw-prototype/actions/installer-noninteractive.qs --platform minimal
     - name: Find qmake
       run: find / -name "qmake"
     - name: Build Anthem
