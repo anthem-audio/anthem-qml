@@ -7,7 +7,7 @@ function Controller() {
 
 Controller.prototype.WelcomePageCallback = function() {
     // click delay here because the next button is initially disabled for ~1 second
-    gui.clickButton(buttons.NextButton, 3000);
+    gui.clickButton(buttons.NextButton, 30000);
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
@@ -28,20 +28,9 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
 
     widget.deselectAll();
-    // widget.selectComponent("qt.55.mingw73_64");
     widget.selectComponent("qt.qt5.5130.gcc_64");
-    // widget.selectComponent("qt.55.qtquickcontrols");
-    
-    // widget.deselectComponent("qt.tools.qtcreator");
-    // widget.deselectComponent("qt.55.qt3d");
-    // widget.deselectComponent("qt.55.qtcanvas3d");
-    // widget.deselectComponent("qt.55.qtlocation");
-    // widget.deselectComponent("qt.55.qtquick1");
-    // widget.deselectComponent("qt.55.qtscript");
-    // widget.deselectComponent("qt.55.qtwebengine");
-    // widget.deselectComponent("qt.extras");
-    // widget.deselectComponent("qt.tools.doc");
-    // widget.deselectComponent("qt.tools.examples");
+    // widget.selectComponent("qt.qt5.5130.win64_mingw73");
+    // widget.selectComponent("qt.tools.win64_mingw730");
 
     gui.clickButton(buttons.NextButton);
 }
