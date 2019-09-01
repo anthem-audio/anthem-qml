@@ -17,3 +17,8 @@ jobs:
       run: chmod +x ./qt-opensource-linux-x64-5.13.0.run
     - name: Install Qt       
       run: ./qt-opensource-linux-x64-5.13.0.run --script ./daw-prototype/actions/installer-noninteractive.qs --platform minimal
+    - name: Build Anthem
+      run: mkdir ./build
+           cd ./build 
+           qmake ../daw-prototype/Prototyping.pro
+           make
