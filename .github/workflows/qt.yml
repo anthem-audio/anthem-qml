@@ -13,7 +13,7 @@ jobs:
       run: git clone --single-branch --branch jake-dev https://github.com/SecondFlight/daw-prototype.git
     - name: Download Qt
       run: |
-            curl -s https://download.qt.io/official_releases/online_installers/qt-unified-windows-x86-online.exe
+            curl -s -o null -L https://download.qt.io/official_releases/online_installers/qt-unified-windows-x86-online.exe
             cd \
             dir /s *qt-unified-windows-x86-online.exe*
     - name: Install Qt       
