@@ -1,4 +1,4 @@
-name: CI
+name: Linux Build
 
 on: [push]
 
@@ -28,3 +28,4 @@ jobs:
            cd build 
            qmake ../daw-prototype/Prototyping.pro
            make
+           ls
