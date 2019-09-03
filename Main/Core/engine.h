@@ -18,8 +18,8 @@ class Engine : public QObject
     Q_OBJECT
 private:
     QProcess* engine;
-    void write(Document& json);
     void addRPCHeaders(Document& json, Document::AllocatorType& allocator);
+    void write(Document& json);
 
 public:
     explicit

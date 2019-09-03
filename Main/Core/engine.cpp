@@ -45,19 +45,30 @@ void Engine::addRPCHeaders(Document &json, Document::AllocatorType& allocator) {
     Value jsonrpcVal(Type::kStringType);
     jsonrpcVal.SetString("2.0");
 
-    Value methodVal(Type::kStringType);
-    methodVal.SetString("ControlLiveUpdate");
-
     json.AddMember("jsonrpc", jsonrpcVal, allocator);
-    json.AddMember("method", methodVal, allocator);
 }
 
+/*
+ * {
+ *   "jsonrpc": "2.0",
+ *   "method": "ControlUpdate",
+ *   "params": {
+ *     "control_id": (uint64)
+ *     "value": (float)
+ *   }
+ * }
+ */
 void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
     Document json;
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
     addRPCHeaders(json, allocator);
+
+    Value methodVal(Type::kStringType);
+    methodVal.SetString("ControlUpdate");
+
+    json.AddMember("method", methodVal, allocator);
 
     Value params(Type::kObjectType);
 
@@ -75,12 +86,27 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
     write(json);
 }
 
+/*
+ * {
+ *   "jsonrpc": "2.0",
+ *   "method": "MidiNoteEvent",
+ *   "params": {
+ *     "generator_id": (uint64)
+ *     "message": [(uint8), (uint8), (uint8)]
+ *   }
+ * }
+ */
 void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2) {
     Document json;
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
     addRPCHeaders(json, allocator);
+
+    Value methodVal(Type::kStringType);
+    methodVal.SetString("MidiNoteEvent");
+
+    json.AddMember("method", methodVal, allocator);
 
     Value params(Type::kObjectType);
 
