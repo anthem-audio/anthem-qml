@@ -29,9 +29,4 @@ jobs:
            mkdir appdir
            qmake ../daw-prototype/Prototyping.pro
            make
-           make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
-           cd
-           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-           ./linuxdeployqt-continuous-x86_64.AppImage appdir/usr/share/applications/*.desktop -appimage
-           
+           ls
