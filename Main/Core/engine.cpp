@@ -32,11 +32,16 @@ void Engine::onEngineMessageChunk() {
     qDebug() << engine->readAllStandardOutput();
 }
 
-void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
-    Document json;
-    json.SetObject();
-    Document::AllocatorType& allocator = json.GetAllocator();
+void Engine::write(Document &json) {
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    json.Accept(writer);
 
+    const char* output = buffer.GetString();
+    engine->write(output);
+}
+
+void Engine::addRPCHeaders(Document &json, Document::AllocatorType& allocator) {
     Value jsonrpcVal(Type::kStringType);
     jsonrpcVal.SetString("2.0");
 
@@ -45,6 +50,14 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
 
     json.AddMember("jsonrpc", jsonrpcVal, allocator);
     json.AddMember("method", methodVal, allocator);
+}
+
+void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
+    Document json;
+    json.SetObject();
+    Document::AllocatorType& allocator = json.GetAllocator();
+
+    addRPCHeaders(json, allocator);
 
     Value params(Type::kObjectType);
 
@@ -59,12 +72,7 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
 
     json.AddMember("params", params, allocator);
 
-    StringBuffer buffer;
-    Writer<StringBuffer> writer(buffer);
-    json.Accept(writer);
-
-    const char* output = buffer.GetString();
-    engine->write(output);
+    write(json);
 }
 
 void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2) {
@@ -72,14 +80,7 @@ void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t dat
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
-    Value jsonrpcVal(Type::kStringType);
-    jsonrpcVal.SetString("2.0");
-
-    Value methodVal(Type::kStringType);
-    methodVal.SetString("MidiNoteEvent");
-
-    json.AddMember("jsonrpc", jsonrpcVal, allocator);
-    json.AddMember("method", methodVal, allocator);
+    addRPCHeaders(json, allocator);
 
     Value params(Type::kObjectType);
 
@@ -107,10 +108,5 @@ void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t dat
 
     json.AddMember("params", params, allocator);
 
-    StringBuffer buffer;
-    Writer<StringBuffer> writer(buffer);
-    json.Accept(writer);
-
-    const char* output = buffer.GetString();
-    engine->write(output);
+    write(json);
 }
