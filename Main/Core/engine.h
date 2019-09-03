@@ -20,7 +20,7 @@ public:
     void start();
     void stop();
 
-    void sendLiveUpdate(uint64_t controlId, float value);
+    void sendLiveControlUpdate(uint64_t controlId, float value);
     void sendPatch();
 
 signals:
