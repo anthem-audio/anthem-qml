@@ -1,12 +1,6 @@
 #include "engine.h"
 
-#include "Include/rapidjson/include/rapidjson/document.h"
-#include "Include/rapidjson/include/rapidjson/stringbuffer.h"
-#include "Include/rapidjson/include/rapidjson/writer.h"
-
 #include <QDebug>
-
-using namespace rapidjson;
 
 Engine::Engine(QObject* parent) : QObject(parent)
 {
@@ -30,8 +24,8 @@ void Engine::stop() {
 }
 
 void Engine::onEngineStart() {
-//    sendLiveControlUpdate(0, 0.123f);
-//    engine->write("\n");
+    sendMidiNoteEvent(0, 1, 2, 3);
+    engine->write("\n");
 }
 
 void Engine::onEngineMessageChunk() {
@@ -47,7 +41,7 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
     jsonrpcVal.SetString("2.0");
 
     Value methodVal(Type::kStringType);
-    methodVal.SetString("control_live_update");
+    methodVal.SetString("ControlLiveUpdate");
 
     json.AddMember("jsonrpc", jsonrpcVal, allocator);
     json.AddMember("method", methodVal, allocator);
@@ -62,6 +56,54 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
 
     params.AddMember("control_id", controlIdVal, allocator);
     params.AddMember("value", valueVal, allocator);
+
+    json.AddMember("params", params, allocator);
+
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    json.Accept(writer);
+
+    const char* output = buffer.GetString();
+    engine->write(output);
+}
+
+void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2) {
+    Document json;
+    json.SetObject();
+    Document::AllocatorType& allocator = json.GetAllocator();
+
+    Value jsonrpcVal(Type::kStringType);
+    jsonrpcVal.SetString("2.0");
+
+    Value methodVal(Type::kStringType);
+    methodVal.SetString("MidiNoteEvent");
+
+    json.AddMember("jsonrpc", jsonrpcVal, allocator);
+    json.AddMember("method", methodVal, allocator);
+
+    Value params(Type::kObjectType);
+
+    Value generatorIdVal(Type::kNumberType);
+    generatorIdVal.SetUint64(generatorId);
+
+    Value statusVal(Type::kNumberType);
+    statusVal.SetUint(status);
+
+    Value data1Val(Type::kNumberType);
+    data1Val.SetUint(data1);
+
+    Value data2Val(Type::kNumberType);
+    data2Val.SetUint(data2);
+
+    params.AddMember("generator", generatorIdVal, allocator);
+
+    Value message(Type::kArrayType);
+
+    message.PushBack(statusVal, allocator);
+    message.PushBack(data1Val, allocator);
+    message.PushBack(data2Val, allocator);
+
+    params.AddMember("message", message, allocator);
 
     json.AddMember("params", params, allocator);
 

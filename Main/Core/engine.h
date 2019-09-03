@@ -7,6 +7,12 @@
 #include <QObject>
 #include <QProcess>
 
+#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/include/rapidjson/stringbuffer.h"
+#include "Include/rapidjson/include/rapidjson/writer.h"
+
+using namespace rapidjson;
+
 class Engine : public QObject
 {
     Q_OBJECT
@@ -21,6 +27,9 @@ public:
     void stop();
 
     void sendLiveControlUpdate(uint64_t controlId, float value);
+    void sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2);
+    // TODO: Add play, pause, stop, seek, etc.
+
     void sendPatch();
 
 signals:
