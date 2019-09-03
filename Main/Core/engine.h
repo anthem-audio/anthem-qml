@@ -35,6 +35,7 @@ public:
     void sendPatch();
 
 signals:
+    void engineStarted();
 
 public slots:
     void onEngineStart();

@@ -24,8 +24,7 @@ void Engine::stop() {
 }
 
 void Engine::onEngineStart() {
-    sendMidiNoteEvent(0, 1, 2, 3);
-    engine->write("\n");
+    emit engineStarted();
 }
 
 void Engine::onEngineMessageChunk() {
