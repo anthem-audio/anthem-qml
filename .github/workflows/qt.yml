@@ -29,4 +29,4 @@ jobs:
            mkdir appdir
            qmake ../daw-prototype/Prototyping.pro
            make
-           ls
+           ls -la
