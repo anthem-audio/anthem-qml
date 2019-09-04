@@ -25,6 +25,11 @@ jobs:
            mkdir appdir
            qmake ../Prototyping.pro
            make
-           make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
+           make -j$(nproc) install ; find appdir/
+           echo "Current Directory"
+           ls -la
+           echo "Main Directory"
+           ls -la ./Main
+           echo "appdir directory" 
            ls -la ./appdir
 
