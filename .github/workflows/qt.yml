@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Download repository
       run: |
-           git clone --single-branch --branch jake-dev https://github.com/SecondFlight/daw-prototype.git
+           git clone https://github.com/SecondFlight/daw-prototype.git
            cd daw-prototype
            git submodule update --init --recursive
            cd ../
