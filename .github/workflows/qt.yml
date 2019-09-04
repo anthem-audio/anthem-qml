@@ -9,6 +9,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: Download submodules
+      run: git submodule update --init --recursive
     - name: Download Qt
       run: wget http://qt.mirror.constant.com/archive/qt/5.13/5.13.0/qt-opensource-linux-x64-5.13.0.run
     - name: Install Qt       
