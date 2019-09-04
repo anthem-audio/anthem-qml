@@ -26,5 +26,5 @@ jobs:
            qmake ../Prototyping.pro
            make
            make INSTALL_ROOT=appdir -j$(nproc) install ; find appdir/
-           ls -la
+           ls -la ./appdir
 
