@@ -1,6 +1,6 @@
 #include "transport.h"
 
-Transport::Transport(QObject* parent, rapidjson::Value* projectNode) : QObject(parent)
+Transport::Transport(ModelItem* parent, rapidjson::Value* projectNode) : ModelItem(parent)
 {
     this->jsonNode = &(projectNode->operator[]("transport"));
     this->masterPitch = this->jsonNode->operator[]("master_pitch").GetInt();

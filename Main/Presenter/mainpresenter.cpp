@@ -7,7 +7,7 @@
 
 #include <cstdio>
 
-MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : QObject(parent)
+MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
 {
     this->id = id;
 
@@ -22,7 +22,7 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : QObject(parent)
     activeProjectIndex = 0;
 
     // Start the engine
-    engine = new Engine(this);
+    engine = new Engine(dynamic_cast<QObject*>(this));
     engine->start();
 }
 

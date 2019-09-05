@@ -2,7 +2,7 @@
 
 #include "Utilities/exceptions.h"
 
-Project::Project(QObject *parent, QSharedPointer<ProjectFile> projectFile) : QObject(parent)
+Project::Project(Communicator* parent, QSharedPointer<ProjectFile> projectFile) : ModelItem(parent)
 {
     jsonNode = &(projectFile->document["project"]);
     transport = new Transport(this, jsonNode);

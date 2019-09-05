@@ -1,6 +1,8 @@
 #include "modelitem.h"
 
-ModelItem::ModelItem()
+ModelItem::ModelItem(Communicator* parent) : Communicator(static_cast<QObject*>(parent))
 {
-//    this->jsonNode->SetObject();
+    this->parent = parent;
 }
+
+ModelItem::~ModelItem() {}

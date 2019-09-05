@@ -11,9 +11,10 @@
 #include "Model/project.h"
 #include "Utilities/projectfile.h"
 #include "Utilities/idgenerator.h"
+#include "Core/communicator.h"
 #include "Core/engine.h"
 
-class MainPresenter : public QObject
+class MainPresenter : public Communicator
 {
     Q_OBJECT
 private:

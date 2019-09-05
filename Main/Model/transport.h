@@ -7,12 +7,13 @@
 
 #include "Core/modelitem.h"
 
-class Transport : public QObject, ModelItem
+class Transport : public ModelItem
 {
+    Q_OBJECT
 private:
     int masterPitch;
 public:
-    Transport(QObject* parent, rapidjson::Value* projectNode);
+    Transport(ModelItem* parent, rapidjson::Value* projectNode);
 
     void setMasterPitch(int pitch);
     int getMasterPitch();

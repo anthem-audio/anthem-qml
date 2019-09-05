@@ -13,8 +13,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        Core/modelitem.cpp \
+        Core/communicator.cpp \
         Core/engine.cpp \
+        Core/modelitem.cpp \
         Model/project.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
@@ -37,8 +38,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    Core/modelitem.h \
+    Core/communicator.h \
     Core/engine.h \
+    Core/modelitem.h \
     Include/rapidjson/include/rapidjson/allocators.h \
     Include/rapidjson/include/rapidjson/cursorstreamwrapper.h \
     Include/rapidjson/include/rapidjson/document.h \
