@@ -16,8 +16,8 @@ class Engine : public QObject
     Q_OBJECT
 private:
     QProcess* engine;
-    void addRPCHeaders(Document& json, Document::AllocatorType& allocator);
-    void write(Document& json);
+    void addRPCHeaders(rapidjson::Document& json, std::string headers);
+    void write(rapidjson::Document& json);
 
 public:
     explicit
@@ -30,7 +30,7 @@ public:
     void sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2);
     // TODO: Add play, pause, stop, seek, etc.
 
-    void sendPatch();
+    void sendPatch(QString operation, QString from, QString path, rapidjson::Value &value);
 
 signals:
     void engineStarted();

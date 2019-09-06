@@ -1,6 +1,8 @@
 #include "transport.h"
 
-Transport::Transport(ModelItem* parent, rapidjson::Value* projectNode) : ModelItem(parent)
+using namespace rapidjson;
+
+Transport::Transport(ModelItem* parent, Value* projectNode) : ModelItem(parent, "transport")
 {
     this->jsonNode = &(projectNode->operator[]("transport"));
     this->masterPitch = this->jsonNode->operator[]("master_pitch").GetInt();
@@ -9,6 +11,11 @@ Transport::Transport(ModelItem* parent, rapidjson::Value* projectNode) : ModelIt
 void Transport::setMasterPitch(int pitch) {
     this->masterPitch = pitch;
     this->jsonNode->operator[]("master_pitch") = pitch;
+
+    Value pitchVal(kNumberType);
+    pitchVal = pitch;
+
+    patchReplace("master_pitch", pitchVal);
 }
 
 int Transport::getMasterPitch() {

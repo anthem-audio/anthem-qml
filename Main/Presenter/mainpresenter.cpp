@@ -93,3 +93,7 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
         emit masterPitchChanged(pitch);
     }
 }
+
+void MainPresenter::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
+    engine->sendPatch(operation, from, path, value);
+}

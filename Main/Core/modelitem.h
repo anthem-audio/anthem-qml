@@ -11,8 +11,12 @@
 class ModelItem : public Communicator
 {
     Q_OBJECT
+private:
+    QString key;
 public:
-    ModelItem(Communicator* parent);
+    ModelItem(Communicator* parent, QString jsonKey);
+
+    void patch(QString operation, QString from, QString path, rapidjson::Value& value);
 
     rapidjson::Value* jsonNode;
     Communicator* parent;

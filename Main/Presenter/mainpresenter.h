@@ -34,6 +34,8 @@ private:
 public:
     explicit MainPresenter(QObject *parent, IdGenerator* id);
 
+     void patch(QString operation, QString from, QString path, rapidjson::Value& value);
+
     // List of currently open projects
     QVector<QSharedPointer<Project>> projects;
 

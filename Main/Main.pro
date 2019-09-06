@@ -16,6 +16,7 @@ SOURCES += \
         Core/communicator.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
+        Model/control.cpp \
         Model/project.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
@@ -78,6 +79,7 @@ HEADERS += \
     Include/rapidjson/stringbuffer.h \
     Include/rapidjson/writer.h \
     Include/snowflake.h \
+    Model/control.h \
     Model/project.h \
     Model/transport.h \
     Presenter/mainpresenter.h \
