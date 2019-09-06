@@ -5,7 +5,7 @@
 
 #include <QString>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/document.h"
 
 class ProjectFile {
 public:

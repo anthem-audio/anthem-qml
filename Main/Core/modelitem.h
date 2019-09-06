@@ -6,7 +6,7 @@
 
 #include "communicator.h"
 
-#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/document.h"
 
 class ModelItem : public Communicator
 {

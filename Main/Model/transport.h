@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/document.h"
 
 #include "Core/modelitem.h"
 

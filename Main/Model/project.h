@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QSharedPointer>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/document.h"
 
 #include "Core/communicator.h"
 #include "transport.h"

@@ -7,11 +7,9 @@
 #include <QObject>
 #include <QProcess>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
-#include "Include/rapidjson/include/rapidjson/stringbuffer.h"
-#include "Include/rapidjson/include/rapidjson/writer.h"
-
-using namespace rapidjson;
+#include "Include/rapidjson/document.h"
+#include "Include/rapidjson/stringbuffer.h"
+#include "Include/rapidjson/writer.h"
 
 class Engine : public QObject
 {
