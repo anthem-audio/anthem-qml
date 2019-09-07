@@ -6,6 +6,8 @@ ModelItem::ModelItem(Communicator* parent, QString jsonKey) : Communicator(stati
     this->key = jsonKey;
 }
 
+ModelItem::~ModelItem() {}
+
 void ModelItem::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
     parent->patch(
         operation,
@@ -15,4 +17,6 @@ void ModelItem::patch(QString operation, QString from, QString path, rapidjson::
     );
 }
 
-ModelItem::~ModelItem() {}
+void ModelItem::liveUpdate(uint64_t controlId, float value) {
+    parent->liveUpdate(controlId, value);
+}

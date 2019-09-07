@@ -97,3 +97,7 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
 void MainPresenter::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
     engine->sendPatch(operation, from, path, value);
 }
+
+void MainPresenter::liveUpdate(uint64_t controlId, float value) {
+    engine->sendLiveControlUpdate(controlId, value);
+}

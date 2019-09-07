@@ -17,6 +17,7 @@ public:
     ModelItem(Communicator* parent, QString jsonKey);
 
     void patch(QString operation, QString from, QString path, rapidjson::Value& value);
+    void liveUpdate(uint64_t controlId, float value);
 
     rapidjson::Value* jsonNode;
     Communicator* parent;

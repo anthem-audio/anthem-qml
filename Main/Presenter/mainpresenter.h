@@ -34,7 +34,9 @@ private:
 public:
     explicit MainPresenter(QObject *parent, IdGenerator* id);
 
-     void patch(QString operation, QString from, QString path, rapidjson::Value& value);
+    // These are virtual functions in Communicator
+    void patch(QString operation, QString from, QString path, rapidjson::Value& value);
+    void liveUpdate(uint64_t controlId, float value);
 
     // List of currently open projects
     QVector<QSharedPointer<Project>> projects;

@@ -11,6 +11,7 @@ class Communicator : public QObject
 public:
     explicit Communicator(QObject* parent);
     virtual void patch(QString operation, QString from, QString path, rapidjson::Value& value) = 0;
+    virtual void liveUpdate(uint64_t controlId, float value) = 0;
     void patchAdd(QString path, rapidjson::Value& value);
     void patchRemove(QString path);
     void patchReplace(QString path, rapidjson::Value& value);
