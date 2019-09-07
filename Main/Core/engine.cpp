@@ -68,7 +68,7 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
-    addRPCHeaders(json, "controlUpdate");
+    addRPCHeaders(json, "ControlUpdate");
 
     Value params(Type::kObjectType);
 
@@ -101,7 +101,7 @@ void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t dat
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
-    addRPCHeaders(json, "midiNoteEvent");
+    addRPCHeaders(json, "MidiNoteEvent");
 
     Value params(Type::kObjectType);
 
@@ -136,7 +136,7 @@ void Engine::sendPatch(QString operation, QString from, QString path, Value& val
     Document json;
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
-    addRPCHeaders(json, "patch");
+    addRPCHeaders(json, "Patch");
 
     Value params(Type::kObjectType);
     Value payload(Type::kObjectType);
