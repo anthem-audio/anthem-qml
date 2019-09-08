@@ -13,12 +13,15 @@ class Control : public ModelItem
 private:
     uint64_t id;
     float initialValue;
+    float ui_currentValue;
     float minimum;
     float maximum;
     float step;
-    // control symbol??
+    // control symbol
     // connection
     bool overrideAutomation;
+
+    void setOverrideState(bool isOverridden);
 public:
     // Derive information from existing JSON node
     Control(ModelItem *parent, rapidjson::Value* controlNode);
@@ -32,6 +35,10 @@ public:
             float maximum,
             float initialValue,
             float step);
+
+
+    void set(float val, bool isFinal);
+    float get();
 
 signals:
 

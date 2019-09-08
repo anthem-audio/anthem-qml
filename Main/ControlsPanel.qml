@@ -442,8 +442,8 @@ Panel {
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
 
-                        highBound: 48
-                        lowBound: -48
+                        highBound: 12
+                        lowBound: -12
 
                         onValueChanged: {
                             Anthem.setMasterPitch(value, false);

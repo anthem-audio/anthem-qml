@@ -6,6 +6,7 @@
 
 ProjectFile::ProjectFile() {
     // There's probably a Better Way
+    // TODO: Add model constructors that give back a emtpy but valid state
     auto emptyProject =
         "{"
         "    \"software_version\": \"0.0.1\","
@@ -15,7 +16,15 @@ ProjectFile::ProjectFile() {
         "            \"arrangements\": []"
         "        },"
         "        \"transport\": {"
-        "            \"master_pitch\": 0"
+        "            \"master_pitch\": {"
+        "                \"id\": 0,"
+        "                \"initial_value\": 0,"
+        "                \"minimum\": 12,"
+        "                \"maximum\": -12,"
+        "                \"step\": 1,"
+        "                \"connection\": null,"
+        "                \"override_automation\": false"
+        "            }"
         "        },"
         "        \"mixer\": {},"
         "        \"generators\": []"

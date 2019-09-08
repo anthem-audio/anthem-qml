@@ -84,18 +84,18 @@ void MainPresenter::saveActiveProject() {
 }
 
 int MainPresenter::getMasterPitch() {
-    return activeProject->transport->getMasterPitch();
+    return static_cast<int>(activeProject->transport->masterPitch->get() + 0.5f);
 }
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
-    activeProject->transport->setMasterPitch(pitch);
+    activeProject->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
     if (isFinal) {
         emit masterPitchChanged(pitch);
     }
 }
 
 void MainPresenter::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
-    engine->sendPatch(operation, from, path, value);
+    engine->sendPatch(operation, from, "/" + path, value);
 }
 
 void MainPresenter::liveUpdate(uint64_t controlId, float value) {
