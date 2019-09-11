@@ -30,22 +30,32 @@ void Control::setOverrideState(bool isOverridden) {
     patchReplace("override_automation", jsonNode->operator[]("override_automation"));
 }
 
+// TODO: Set override state depending on whether project is playing or not
 void Control::set(float val, bool isFinal) {
+    bool changeMade = false;
+
     if (!isFinal && !overrideAutomation) {
-        setOverrideState(true);
+//        setOverrideState(true);
+//        changeMade = true;
     }
 
     if (isFinal) {
         initialValue = val;
         jsonNode->operator[]("initial_value") = val;
         patchReplace("initial_value", jsonNode->operator[]("initial_value"));
+        changeMade = true;
     }
     else {
         liveUpdate(id, val);
     }
 
     if (isFinal && overrideAutomation) {
-        setOverrideState(false);
+//        setOverrideState(false);
+//        changeMade = true;
+    }
+
+    if (changeMade) {
+        sendPatch();
     }
 }
 

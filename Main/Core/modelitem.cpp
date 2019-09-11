@@ -8,13 +8,42 @@ ModelItem::ModelItem(Communicator* parent, QString jsonKey) : Communicator(stati
 
 ModelItem::~ModelItem() {}
 
-void ModelItem::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
-    parent->patch(
-        operation,
-        from.isNull() || from.isEmpty() ? from : key + "/" + from,
+void ModelItem::patchAdd(QString path, rapidjson::Value& value) {
+    parent->patchAdd(
         key + "/" + path,
         value
     );
+}
+
+void ModelItem::patchRemove(QString path) {
+    parent->patchRemove(
+        key + "/" + path
+    );
+}
+
+void ModelItem::patchReplace(QString path, rapidjson::Value& value) {
+    parent->patchReplace(
+        key + "/" + path,
+        value
+    );
+}
+
+void ModelItem::patchCopy(QString from, QString path) {
+    parent->patchCopy(
+        key + "/" + from,
+        key + "/" + path
+    );
+}
+
+void ModelItem::patchMove(QString from, QString path) {
+    parent->patchMove(
+        key + "/" + from,
+        key + "/" + path
+    );
+}
+
+void ModelItem::sendPatch() {
+    parent->sendPatch();
 }
 
 void ModelItem::liveUpdate(uint64_t controlId, float value) {

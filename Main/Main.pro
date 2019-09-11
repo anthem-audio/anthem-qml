@@ -22,6 +22,8 @@ SOURCES += \
         Presenter/mainpresenter.cpp \
         Utilities/idgenerator.cpp \
         Utilities/mousehelper.cpp \
+        Utilities/patch.cpp \
+        Utilities/patchfragment.cpp \
         Utilities/projectfile.cpp \
         main.cpp
 
@@ -86,4 +88,6 @@ HEADERS += \
     Utilities/exceptions.h \
     Utilities/idgenerator.h \
     Utilities/mousehelper.h \
+    Utilities/patch.h \
+    Utilities/patchfragment.h \
     Utilities/projectfile.h

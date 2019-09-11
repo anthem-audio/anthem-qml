@@ -31,6 +31,7 @@ public:
     // TODO: Add play, pause, stop, seek, etc.
 
     void sendPatch(QString operation, QString from, QString path, rapidjson::Value &value);
+    void sendPatchList(rapidjson::Value& patchList);
 
 signals:
     void engineStarted();

@@ -164,3 +164,16 @@ void Engine::sendPatch(QString operation, QString from, QString path, Value& val
 
     write(json);
 }
+
+void Engine::sendPatchList(rapidjson::Value& patchList) {
+    Document json;
+    json.SetObject();
+    Document::AllocatorType& allocator = json.GetAllocator();
+    addRPCHeaders(json, "Patch");
+
+    Value params(Type::kObjectType);
+    params.AddMember("payload", patchList, allocator);
+    json.AddMember("params", params, allocator);
+
+    write(json);
+}

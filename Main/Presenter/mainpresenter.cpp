@@ -9,6 +9,11 @@
 
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
 {
+    projectHistory = QVector<Patch*>();
+    historyPointer = -1;
+
+    isPatchInProgress = false;
+
     this->id = id;
 
     isInInitialState = true;
@@ -94,8 +99,65 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     }
 }
 
-void MainPresenter::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
-    engine->sendPatch(operation, from, "/" + path, value);
+//void MainPresenter::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
+//    engine->sendPatch(operation, from, "/" + path, value);
+//}
+
+void MainPresenter::initializeNewPatchIfNeeded() {
+    if (isPatchInProgress) {
+        return;
+    }
+
+    isPatchInProgress = true;
+
+    historyPointer++;
+
+//    if (historyPointer != projectHistory.length()) {
+//        projectHistory.remove(historyPointer, projectHistory.length() - historyPointer);
+//    }
+
+    projectHistory.append(
+        new Patch(this, projectFiles[activeProjectIndex]->document)
+    );
+}
+
+void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
+    initializeNewPatchIfNeeded();
+    Patch& patch = *projectHistory[historyPointer];
+    patch.patchAdd("/" + path, value);
+}
+
+void MainPresenter::patchRemove(QString path) {
+    initializeNewPatchIfNeeded();
+    Patch& patch = *projectHistory[historyPointer];
+    patch.patchRemove("/" + path);
+}
+
+void MainPresenter::patchReplace(QString path, rapidjson::Value& value) {
+    initializeNewPatchIfNeeded();
+    Patch& patch = *projectHistory[historyPointer];
+    patch.patchReplace("/" + path, value);
+}
+
+void MainPresenter::patchCopy(QString from, QString path) {
+    initializeNewPatchIfNeeded();
+    Patch& patch = *projectHistory[historyPointer];
+    patch.patchCopy("/" + from, "/" + path);
+}
+
+void MainPresenter::patchMove(QString from, QString path) {
+    initializeNewPatchIfNeeded();
+    Patch& patch = *projectHistory[historyPointer];
+    patch.patchMove("/" + from, "/" + path);
+}
+
+void MainPresenter::sendPatch() {
+    if (!isPatchInProgress) {
+        throw "sendPatch() was called, but there was nothing to send.";
+    }
+    Patch& patch = *projectHistory[historyPointer];
+    engine->sendPatchList(patch.getPatch());
+    isPatchInProgress = false;
 }
 
 void MainPresenter::liveUpdate(uint64_t controlId, float value) {

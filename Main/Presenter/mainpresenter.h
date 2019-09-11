@@ -13,12 +13,16 @@
 #include "Utilities/idgenerator.h"
 #include "Core/communicator.h"
 #include "Core/engine.h"
+#include "Utilities/patch.h"
 
 class MainPresenter : public Communicator
 {
     Q_OBJECT
 private:
     void updateAll();
+
+    /// If there isn't an active (non-sent) patch in the list, add one
+    void initializeNewPatchIfNeeded();
 
     /// Used to track whether the user has 1) opened a project or
     /// 2) modified the blank project since the software was
@@ -31,22 +35,34 @@ private:
     /// Handles engine lifecycle and communication.
     Engine* engine;
 
+    QVector<Patch*> projectHistory;
+    bool isPatchInProgress;
+
 public:
     explicit MainPresenter(QObject *parent, IdGenerator* id);
 
     // These are virtual functions in Communicator
-    void patch(QString operation, QString from, QString path, rapidjson::Value& value);
+    void patchAdd(QString path, rapidjson::Value& value);
+    void patchRemove(QString path);
+    void patchReplace(QString path, rapidjson::Value& value);
+    void patchCopy(QString from, QString path);
+    void patchMove(QString from, QString path);
+    void sendPatch();
+
     void liveUpdate(uint64_t controlId, float value);
 
-    // List of currently open projects
+    /// List of currently open projects
     QVector<QSharedPointer<Project>> projects;
 
-    // List of project files (mirrors list of projects)
+    /// List of project files (mirrors list of projects)
     QVector<QSharedPointer<ProjectFile>> projectFiles;
 
-    // Project that is currently loaded
+    /// Project that is currently loaded
     QSharedPointer<Project> activeProject;
     int activeProjectIndex;
+
+    /// Current place in the history
+    int historyPointer;
 
 signals:
     void masterPitchChanged(int pitch);
