@@ -1,13 +1,14 @@
 #ifndef PATCHFRAGMENT_H
 #define PATCHFRAGMENT_H
 
+#include <QObject>
 #include <QString>
 
 #include "Include/rapidjson/document.h"
 
 /// Describes one step of a patch
-class PatchFragment
-{
+class PatchFragment : QObject {
+Q_OBJECT
 public:
     enum PatchType {
         ADD,
@@ -19,7 +20,7 @@ public:
 
     rapidjson::Value patch;
 
-    PatchFragment(rapidjson::Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value);
+    PatchFragment(QObject* parent, rapidjson::Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value);
 };
 
 #endif // PATCHFRAGMENT_H

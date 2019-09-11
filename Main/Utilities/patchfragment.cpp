@@ -2,7 +2,7 @@
 
 using namespace rapidjson;
 
-PatchFragment::PatchFragment(Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value) {
+PatchFragment::PatchFragment(QObject* parent, Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value) : QObject(parent) {
     patch.SetObject();
 
     QString op;

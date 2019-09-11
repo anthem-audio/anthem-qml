@@ -17,14 +17,16 @@ Patch::Patch(QObject* parent, Document& project) : QObject(parent)
 void Patch::patchAdd(QString path, rapidjson::Value &value) {
     Value nullVal(kNullType);
 
-    PatchFragment forwardFragment = PatchFragment(
+    PatchFragment* forwardFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::ADD,
                 QString(),
                 path,
                 value);
 
-    PatchFragment reverseFragment = PatchFragment(
+    PatchFragment* reverseFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::REMOVE,
                 QString(),
@@ -38,14 +40,16 @@ void Patch::patchAdd(QString path, rapidjson::Value &value) {
 void Patch::patchRemove(QString path) {
     Value nullVal(kNullType);
 
-    PatchFragment forwardFragment = PatchFragment(
+    PatchFragment* forwardFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::REMOVE,
                 QString(),
                 path,
                 nullVal);
 
-    PatchFragment reverseFragment = PatchFragment(
+    PatchFragment* reverseFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::ADD,
                 QString(),
@@ -60,14 +64,16 @@ void Patch::patchRemove(QString path) {
 // TODO: these things lol
 
 void Patch::patchReplace(QString path, rapidjson::Value &value) {
-    PatchFragment forwardFragment = PatchFragment(
+    PatchFragment* forwardFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::REPLACE,
                 QString(),
                 path,
                 value);
 
-    PatchFragment reverseFragment = PatchFragment(
+    PatchFragment* reverseFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::REPLACE,
                 QString(),
@@ -82,14 +88,16 @@ void Patch::patchReplace(QString path, rapidjson::Value &value) {
 void Patch::patchCopy(QString from, QString path) {
     Value nullVal(kNullType);
 
-    PatchFragment forwardFragment = PatchFragment(
+    PatchFragment* forwardFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::COPY,
                 from,
                 path,
                 nullVal);
 
-    PatchFragment reverseFragment = PatchFragment(
+    PatchFragment* reverseFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::REMOVE,
                 QString(),
@@ -103,14 +111,16 @@ void Patch::patchCopy(QString from, QString path) {
 void Patch::patchMove(QString from, QString path) {
     Value nullVal(kNullType);
 
-    PatchFragment forwardFragment = PatchFragment(
+    PatchFragment* forwardFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::MOVE,
                 from,
                 path,
                 nullVal);
 
-    PatchFragment reverseFragment = PatchFragment(
+    PatchFragment* reverseFragment = new PatchFragment(
+                this,
                 *project,
                 PatchFragment::PatchType::MOVE,
                 path,
@@ -122,17 +132,25 @@ void Patch::patchMove(QString from, QString path) {
 }
 
 Value& Patch::getPatch() {
+    patch.Clear();
+    for (int i = 0; i < patchList.length(); i++) {
+        patch.PushBack(patchList[i]->patch, project->GetAllocator());
+    }
     return patch;
 }
 
 Value& Patch::getUndoPatch() {
+    undoPatch.Clear();
+    for (int i = undoPatchList.length() - 1; i >= 0; i--) {
+        undoPatch.PushBack(undoPatchList[i]->patch, project->GetAllocator());
+    }
     return undoPatch;
 }
 
-void Patch::addFragmentToForward(PatchFragment& fragment) {
-    patch.PushBack(fragment.patch, project->GetAllocator());
+void Patch::addFragmentToForward(PatchFragment* fragment) {
+    patchList.append(fragment);
 }
 
-void Patch::addFragmentToReverse(PatchFragment& fragment) {
-    undoPatch.PushFront(fragment.patch, project->GetAllocator());
+void Patch::addFragmentToReverse(PatchFragment* fragment) {
+    undoPatchList.append(fragment);
 }

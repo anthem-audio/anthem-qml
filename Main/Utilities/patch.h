@@ -11,12 +11,16 @@
 
 class Patch : QObject {
 Q_OBJECT
+    rapidjson::Document* project;
+
     rapidjson::Value patch;
     rapidjson::Value undoPatch;
 
-    void addFragmentToPatch(PatchFragment& source, rapidjson::Value& destination);
-    void addFragmentToForward(PatchFragment& fragment);
-    void addFragmentToReverse(PatchFragment& fragment);
+    QVector<PatchFragment*> patchList;
+    QVector<PatchFragment*> undoPatchList;
+
+    void addFragmentToForward(PatchFragment* fragment);
+    void addFragmentToReverse(PatchFragment* fragment);
 public:
     Patch(QObject* parent, rapidjson::Document& project);
 
@@ -28,8 +32,6 @@ public:
 
     rapidjson::Value& getPatch();
     rapidjson::Value& getUndoPatch();
-
-    rapidjson::Document* project;
 };
 
 #endif // PATCH_H
