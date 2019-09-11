@@ -1681,6 +1681,69 @@ public:
         return PushBack(v, allocator);
     }
 
+    //! Prepend a GenericValue to the beginning of the array.
+    /*! \param value        Value to be prepended.
+        \param allocator    Allocator for reallocating memory. It must be the same one as used before. Commonly use GenericDocument::GetAllocator().
+        \pre IsArray() == true
+        \post value.IsNull() == true
+        \return The value itself for fluent API.
+        \note The ownership of \c value will be transferred to this array on success.
+        \note If the number of elements to be prepended is known, calls Reserve() once first may be more efficient.
+        \note Linear time complexity.
+    */
+    GenericValue& PushFront(GenericValue& value, Allocator& allocator) {
+        RAPIDJSON_ASSERT(IsArray());
+        if (data_.a.size >= data_.a.capacity)
+            Reserve(data_.a.capacity == 0 ? kDefaultArrayCapacity : (data_.a.capacity + (data_.a.capacity + 1) / 2), allocator);
+        std::memmove(Begin(), End(), sizeof(GenericValue));
+        GetElementsPointer()[0].RawAssign(value);
+        data_.a.size++;
+        return *this;
+    }
+
+#if RAPIDJSON_HAS_CXX11_RVALUE_REFS
+    GenericValue& PushFront(GenericValue&& value, Allocator& allocator) {
+        return PushFront(value, allocator);
+    }
+#endif // RAPIDJSON_HAS_CXX11_RVALUE_REFS
+
+    //! Prepend a constant string reference to the beginning of the array.
+    /*! \param value        Constant string reference to be prepended.
+        \param allocator    Allocator for reallocating memory. It must be the same one used previously. Commonly use GenericDocument::GetAllocator().
+        \pre IsArray() == true
+        \return The value itself for fluent API.
+        \note If the number of elements to be prepended is known, calls Reserve() once first may be more efficient.
+        \note Linear time complexity.
+        \see GenericStringRef
+    */
+    GenericValue& PushFront(StringRefType value, Allocator& allocator) {
+        return (*this).template PushFront<StringRefType>(value, allocator);
+    }
+
+    //! Prepend a primitive value at the beginning of the array.
+    /*! \tparam T Either \ref Type, \c int, \c unsigned, \c int64_t, \c uint64_t
+        \param value Value of primitive type T to be prepended.
+        \param allocator    Allocator for reallocating memory. It must be the same one as used before. Commonly use GenericDocument::GetAllocator().
+        \pre IsArray() == true
+        \return The value itself for fluent API.
+        \note If the number of elements to be prepended is known, calls Reserve() once first may be more efficient.
+
+        \note The source type \c T explicitly disallows all pointer types,
+            especially (\c const) \ref Ch*.  This helps avoiding implicitly
+            referencing character strings with insufficient lifetime, use
+            \ref PushFront(GenericValue&, Allocator&) or \ref
+            PushFront(StringRefType, Allocator&).
+            All other pointer types would implicitly convert to \c bool,
+            use an explicit cast instead, if needed.
+        \note Linear time complexity.
+    */
+    template <typename T>
+    RAPIDJSON_DISABLEIF_RETURN((internal::OrExpr<internal::IsPointer<T>, internal::IsGenericValue<T> >), (GenericValue&))
+    PushFront(T value, Allocator& allocator) {
+        GenericValue v(value);
+        return PushFront(v, allocator);
+    }
+
     //! Remove the last element in the array.
     /*!
         \note Constant time complexity.
@@ -1690,6 +1753,14 @@ public:
         RAPIDJSON_ASSERT(!Empty());
         GetElementsPointer()[--data_.a.size].~GenericValue();
         return *this;
+    }
+
+    //! Remove the first element in the array.
+    /*!
+        \note Linear time complexity.
+    */
+    GenericValue& PopFront() {
+        return Erase(Begin());
     }
 
     //! Remove an element of array by iterator.
