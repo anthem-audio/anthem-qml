@@ -32,6 +32,12 @@ public:
 
     rapidjson::Value& getPatch();
     rapidjson::Value& getUndoPatch();
+
+    /// Apply this patch to the project provided in the constructor
+    void apply();
+
+    /// Apply the contained undo operation to the project provided in the constructor
+    void applyUndo();
 };
 
 #endif // PATCH_H

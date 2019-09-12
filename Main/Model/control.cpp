@@ -26,7 +26,7 @@ void Control::setOverrideState(bool isOverridden) {
         return;
 
     overrideAutomation = isOverridden;
-    jsonNode->operator[]("override_automation") = isOverridden;
+//    jsonNode->operator[]("override_automation") = isOverridden;
     patchReplace("override_automation", jsonNode->operator[]("override_automation"));
 }
 
@@ -41,8 +41,8 @@ void Control::set(float val, bool isFinal) {
 
     if (isFinal) {
         initialValue = val;
-        jsonNode->operator[]("initial_value") = val;
-        patchReplace("initial_value", jsonNode->operator[]("initial_value"));
+        Value v(val);
+        patchReplace("initial_value", v);
         changeMade = true;
     }
     else {

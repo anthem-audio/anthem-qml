@@ -17,10 +17,14 @@ public:
         COPY,
         MOVE
     };
-
+private:
+    PatchType type;
+public:
     rapidjson::Value patch;
 
     PatchFragment(QObject* parent, rapidjson::Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value);
+    PatchType getType();
+    void apply(rapidjson::Document& doc);
 };
 
 #endif // PATCHFRAGMENT_H

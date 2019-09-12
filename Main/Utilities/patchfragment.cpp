@@ -1,4 +1,6 @@
-#include "patchfragment.h"
+﻿#include "patchfragment.h"
+
+#include "Include/rapidjson/pointer.h"
 
 using namespace rapidjson;
 
@@ -6,6 +8,8 @@ PatchFragment::PatchFragment(QObject* parent, Document& doc, PatchType type, QSt
     patch.SetObject();
 
     QString op;
+
+    this->type = type;
 
     if (type == PatchType::ADD)
         op = "add";
@@ -31,5 +35,36 @@ PatchFragment::PatchFragment(QObject* parent, Document& doc, PatchType type, QSt
 
     if (!value.IsNull()) {
         patch.AddMember("value", value, doc.GetAllocator());
+    }
+}
+
+PatchFragment::PatchType PatchFragment::getType() {
+    return type;
+}
+
+void PatchFragment::apply(Document &doc) {
+    switch (type) {
+        case PatchType::ADD:
+            Pointer(patch["path"].GetString())
+                    .Set(doc, patch["value"]);
+            break;
+        case PatchType::REMOVE:
+            Pointer(patch["path"].GetString())
+                    .Erase(doc);
+            break;
+        case PatchType::REPLACE:
+            Pointer(patch["path"].GetString())
+                    .Set(doc, patch["value"]);
+            break;
+        case PatchType::COPY:
+            Pointer(patch["path"].GetString())
+                    .Set(doc, Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType));
+            break;
+        case PatchType::MOVE:
+            Pointer(patch["path"].GetString())
+                    .Set(doc, Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType));
+            Pointer(patch["path"].GetString())
+                    .Erase(doc);
+            break;
     }
 }

@@ -63,7 +63,7 @@ void Patch::patchRemove(QString path) {
 
 // TODO: these things lol
 
-void Patch::patchReplace(QString path, rapidjson::Value &value) {
+void Patch::patchReplace(QString path, rapidjson::Value& value) {
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
                 *project,
@@ -153,4 +153,16 @@ void Patch::addFragmentToForward(PatchFragment* fragment) {
 
 void Patch::addFragmentToReverse(PatchFragment* fragment) {
     undoPatchList.append(fragment);
+}
+
+void Patch::apply() {
+    for (int i = 0; i < patchList.length(); i++) {
+        patchList[i]->apply(*project);
+    }
+}
+
+void Patch::applyUndo() {
+    for (int i = undoPatchList.length() - 1; i >= 0; i--) {
+        undoPatchList[i]->apply(*project);
+    }
 }

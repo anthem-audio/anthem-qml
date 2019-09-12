@@ -99,9 +99,11 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     }
 }
 
-//void MainPresenter::patch(QString operation, QString from, QString path, rapidjson::Value &value) {
-//    engine->sendPatch(operation, from, "/" + path, value);
-//}
+// The patch logic below assumes that only one operation
+// will happen at once. If two separate model items
+// initiate patch builds, they will be grouped together,
+// and possibly malformed in some cases, especially when
+// it comes to undo/redo.
 
 void MainPresenter::initializeNewPatchIfNeeded() {
     if (isPatchInProgress) {
@@ -156,6 +158,7 @@ void MainPresenter::sendPatch() {
         throw "sendPatch() was called, but there was nothing to send.";
     }
     Patch& patch = *projectHistory[historyPointer];
+    patch.apply();
     engine->sendPatchList(patch.getPatch());
     isPatchInProgress = false;
 }
