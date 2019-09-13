@@ -24,7 +24,7 @@ void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
     // The ID is assumed to never change.
     QString initialValueStr = "/initial_value";
     QString overrideAutomationStr = "/override_automation";
-    QString minimumStr = "/minium";
+    QString minimumStr = "/minimum";
     QString maximumStr = "/maximum";
     QString stepStr = "/step";
     // TODO: control symbol, connection
@@ -39,15 +39,15 @@ void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
         overrideAutomation = patch.patch["value"].GetBool();
     }
     else if (pointer.startsWith(minimumStr)) {
-        minimum = patch.patch["value"].GetBool();
+        minimum = patch.patch["value"].GetFloat();
         // TODO: emit update
     }
     else if (pointer.startsWith(maximumStr)) {
-        maximum = patch.patch["value"].GetBool();
+        maximum = patch.patch["value"].GetFloat();
         // TODO: emit update
     }
     else if (pointer.startsWith(stepStr)) {
-        step = patch.patch["value"].GetBool();
+        step = patch.patch["value"].GetFloat();
         // TODO: emit update
     }
 }
