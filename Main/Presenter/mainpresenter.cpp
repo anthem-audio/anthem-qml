@@ -131,7 +131,10 @@ void MainPresenter::initializeNewPatchIfNeeded() {
     historyPointer++;
 
     if (historyPointer != projectHistory.length()) {
-        projectHistory.remove(historyPointer, projectHistory.length() - historyPointer);
+        for (int i = projectHistory.length() - 1; i >= historyPointer; i--) {
+            projectHistory[i]->~Patch();
+            projectHistory.pop_back();
+        }
     }
 
     projectHistory.append(
