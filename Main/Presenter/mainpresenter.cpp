@@ -1,11 +1,15 @@
 #include "mainpresenter.h"
 
+#include "Include/rapidjson/document.h"
+
 #include <QFileInfo>
 #include <QDir>
 #include <QStringList>
 #include <QSysInfo>
 
-#include <cstdio>
+#include <math.h>
+
+using namespace rapidjson;
 
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
 {
@@ -19,16 +23,28 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
     isInInitialState = true;
 
     // Initialize with blank project
-    auto projectFile = QSharedPointer<ProjectFile>(new ProjectFile());
-    auto projectModel = QSharedPointer<Project>(new Project(this, projectFile));
+    auto projectFile = new ProjectFile(this);
+    auto projectModel = new Project(this, projectFile);
     projectFiles.append(projectFile);
     projects.append(projectModel);
     activeProject = projectModel;
     activeProjectIndex = 0;
 
+    // Connect change signals from the model to the UI
+    connectUiUpdateSignals(activeProject);
+
     // Start the engine
     engine = new Engine(dynamic_cast<QObject*>(this));
     engine->start();
+}
+
+void MainPresenter::connectUiUpdateSignals(Project* project) {
+    QObject::connect(project->transport->masterPitch, SIGNAL(displayValueChanged(float)),
+                     this,                            SLOT(ui_updateMasterPitch(float)));
+}
+
+void MainPresenter::ui_updateMasterPitch(float pitch) {
+    emit masterPitchChanged(static_cast<int>(std::round(pitch)));
 }
 
 void MainPresenter::loadProject(QString path) {
@@ -48,7 +64,7 @@ void MainPresenter::loadProject(QString path) {
 
     auto i = projectFiles.length();
 
-    auto projectFile = QSharedPointer<ProjectFile>(new ProjectFile(path));
+    auto projectFile = new ProjectFile(this, path);
 
     if (isInInitialState)
         projectFiles[0] = projectFile;
@@ -64,7 +80,7 @@ void MainPresenter::loadProject(QString path) {
     }
 
     // Initialize model with JSON
-    QSharedPointer<Project> project = QSharedPointer<Project>(new Project(this, projectFile));
+    Project* project = new Project(this, projectFile);
     if (isInInitialState) {
         projects[0] = project;
         activeProjectIndex = 0;
@@ -114,19 +130,20 @@ void MainPresenter::initializeNewPatchIfNeeded() {
 
     historyPointer++;
 
-//    if (historyPointer != projectHistory.length()) {
-//        projectHistory.remove(historyPointer, projectHistory.length() - historyPointer);
-//    }
+    if (historyPointer != projectHistory.length()) {
+        projectHistory.remove(historyPointer, projectHistory.length() - historyPointer);
+    }
 
     projectHistory.append(
-        new Patch(this, projectFiles[activeProjectIndex]->document)
+        new Patch(this, activeProject, projectFiles[activeProjectIndex]->document)
     );
 }
 
 void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
     Patch& patch = *projectHistory[historyPointer];
-    patch.patchAdd("/" + path, value);
+    Value copiedValue(value, projectFiles[activeProjectIndex]->document.GetAllocator());
+    patch.patchAdd("/" + path, copiedValue);
 }
 
 void MainPresenter::patchRemove(QString path) {
@@ -138,7 +155,8 @@ void MainPresenter::patchRemove(QString path) {
 void MainPresenter::patchReplace(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
     Patch& patch = *projectHistory[historyPointer];
-    patch.patchReplace("/" + path, value);
+    Value copiedValue(value, projectFiles[activeProjectIndex]->document.GetAllocator());
+    patch.patchReplace("/" + path, copiedValue);
 }
 
 void MainPresenter::patchCopy(QString from, QString path) {
@@ -165,4 +183,28 @@ void MainPresenter::sendPatch() {
 
 void MainPresenter::liveUpdate(uint64_t controlId, float value) {
     engine->sendLiveControlUpdate(controlId, value);
+}
+
+
+void MainPresenter::undo() {
+    if (historyPointer == -1)
+        return;
+
+    Patch& undoPatch = *projectHistory[historyPointer];
+    undoPatch.applyUndo();
+    Value& undoPatchVal = undoPatch.getUndoPatch();
+    engine->sendPatchList(undoPatchVal);
+
+    historyPointer--;
+}
+
+void MainPresenter::redo() {
+    if (historyPointer >= projectHistory.length() - 1)
+        return;
+
+    historyPointer++;
+
+    Patch& redoPatch = *projectHistory[historyPointer];
+    redoPatch.apply();
+    engine->sendPatchList(redoPatch.getPatch());
 }

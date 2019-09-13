@@ -5,5 +5,12 @@ using namespace rapidjson;
 Transport::Transport(ModelItem* parent, Value* projectNode) : ModelItem(parent, "transport")
 {
     this->jsonNode = &(projectNode->operator[]("transport"));
-    this->masterPitch = new Control(this, &this->jsonNode->operator[]("master_pitch"));
+    this->masterPitch = new Control(this, "master_pitch", &this->jsonNode->operator[]("master_pitch"));
+}
+
+void Transport::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+    QString masterPitchStr = "/master_pitch";
+    if (pointer.startsWith(masterPitchStr)) {
+        masterPitch->externalUpdate(pointer.mid(masterPitchStr.length()), patch);
+    }
 }

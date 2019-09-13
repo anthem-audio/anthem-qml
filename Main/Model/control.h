@@ -23,11 +23,11 @@ private:
 
     void setOverrideState(bool isOverridden);
 public:
-    // Derive information from existing JSON node
-    Control(ModelItem *parent, rapidjson::Value* controlNode);
+    /// Derive information from existing JSON node
+    Control(ModelItem *parent, QString name, rapidjson::Value* controlNode);
 
-    // Generate new JSON node and add as field under parentNode
-    // parentNode[controlName] = {...newly generated control...}
+    /// Generate new JSON node and add as field under parentNode
+    /// parentNode[controlName] = {...newly generated control...}
     Control(QObject *parent,
             rapidjson::Value* parentNode,
             std::string controlName,
@@ -37,10 +37,12 @@ public:
             float step);
 
 
+    void externalUpdate(QStringRef pointer, PatchFragment& patch);
     void set(float val, bool isFinal);
     float get();
 
 signals:
+    void displayValueChanged(float value);
 
 public slots:
 };

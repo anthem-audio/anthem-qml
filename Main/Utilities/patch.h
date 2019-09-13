@@ -8,10 +8,12 @@
 #include "Include/rapidjson/document.h"
 
 #include "patchfragment.h"
+#include "Model/project.h"
 
 class Patch : QObject {
 Q_OBJECT
-    rapidjson::Document* project;
+    Project* cppModel;
+    rapidjson::Document* jsonModel;
 
     rapidjson::Value patch;
     rapidjson::Value undoPatch;
@@ -22,7 +24,7 @@ Q_OBJECT
     void addFragmentToForward(PatchFragment* fragment);
     void addFragmentToReverse(PatchFragment* fragment);
 public:
-    Patch(QObject* parent, rapidjson::Document& project);
+    Patch(QObject* parent, Project* cppModel, rapidjson::Document& jsonModel);
 
     void patchAdd(QString path, rapidjson::Value& value);
     void patchRemove(QString path);

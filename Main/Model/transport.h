@@ -14,6 +14,7 @@ class Transport : public ModelItem
 private:
 public:
     Transport(ModelItem* parent, rapidjson::Value* projectNode);
+    void externalUpdate(QStringRef pointer, PatchFragment& patch);
 
     Control* masterPitch;
 

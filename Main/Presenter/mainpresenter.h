@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
-#include <QSharedPointer>
 
 #include "Include/rapidjson/document.h"
 
@@ -20,6 +19,8 @@ class MainPresenter : public Communicator
     Q_OBJECT
 private:
     void updateAll();
+    // TODO: disconnect UI signals when changing projects?
+    void connectUiUpdateSignals(Project* project);
 
     /// If there isn't an active (non-sent) patch in the list, add one
     void initializeNewPatchIfNeeded();
@@ -52,13 +53,13 @@ public:
     void liveUpdate(uint64_t controlId, float value);
 
     /// List of currently open projects
-    QVector<QSharedPointer<Project>> projects;
+    QVector<Project*> projects;
 
     /// List of project files (mirrors list of projects)
-    QVector<QSharedPointer<ProjectFile>> projectFiles;
+    QVector<ProjectFile*> projectFiles;
 
     /// Project that is currently loaded
-    QSharedPointer<Project> activeProject;
+    Project* activeProject;
     int activeProjectIndex;
 
     /// Current place in the history
@@ -73,6 +74,11 @@ public slots:
 
     int getMasterPitch();
     void setMasterPitch(int pitch, bool isFinal);
+
+    void ui_updateMasterPitch(float pitch);
+
+    void undo();
+    void redo();
 };
 
 #endif // MAINPRESENTER_H

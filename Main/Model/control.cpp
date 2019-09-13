@@ -2,8 +2,7 @@
 
 using namespace rapidjson;
 
-// TODO: controls have names, don't just use "control" when initializing parent ModelItem
-Control::Control(ModelItem *parent, Value* controlNode) : ModelItem(parent, "control")
+Control::Control(ModelItem *parent, QString name, Value* controlNode) : ModelItem(parent, name)
 {
     jsonNode = controlNode;
     id = controlNode->operator[]("id").GetUint64();
@@ -20,6 +19,38 @@ Control::Control(ModelItem *parent, Value* controlNode) : ModelItem(parent, "con
 // parentNode[controlName] = {...newly generated control...}
 
 
+
+void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+    // The ID is assumed to never change.
+    QString initialValueStr = "/initial_value";
+    QString overrideAutomationStr = "/override_automation";
+    QString minimumStr = "/minium";
+    QString maximumStr = "/maximum";
+    QString stepStr = "/step";
+    // TODO: control symbol, connection
+
+    if (pointer.startsWith(initialValueStr)) {
+        float val = patch.patch["value"].GetFloat();
+        initialValue = val;
+        ui_currentValue = val;
+        emit displayValueChanged(ui_currentValue);
+    }
+    else if (pointer.startsWith(overrideAutomationStr)) {
+        overrideAutomation = patch.patch["value"].GetBool();
+    }
+    else if (pointer.startsWith(minimumStr)) {
+        minimum = patch.patch["value"].GetBool();
+        // TODO: emit update
+    }
+    else if (pointer.startsWith(maximumStr)) {
+        maximum = patch.patch["value"].GetBool();
+        // TODO: emit update
+    }
+    else if (pointer.startsWith(stepStr)) {
+        step = patch.patch["value"].GetBool();
+        // TODO: emit update
+    }
+}
 
 void Control::setOverrideState(bool isOverridden) {
     if (overrideAutomation == isOverridden)

@@ -2,7 +2,6 @@
 #define PROJECT_H
 
 #include <QObject>
-#include <QSharedPointer>
 
 #include "Include/rapidjson/document.h"
 
@@ -17,7 +16,9 @@ class Project : public ModelItem
 private:
 public:
     Transport* transport;
-    Project(Communicator* parent, QSharedPointer<ProjectFile> projectFile);
+    Project(Communicator* parent, ProjectFile* projectFile);
+
+    void externalUpdate(QStringRef pointer, PatchFragment& patch);
 
 signals:
 

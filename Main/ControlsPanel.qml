@@ -76,8 +76,6 @@ Panel {
             }
         }
 
-
-
         Button {
             id: btnSave
             anchors.top: parent.top
@@ -104,6 +102,10 @@ Panel {
             imageSource: "Images/Undo.svg"
             imageWidth: 15
             imageHeight: 15
+
+            onPress: {
+                Anthem.undo();
+            }
         }
 
         Button {
@@ -117,6 +119,10 @@ Panel {
             imageSource: "Images/Redo.svg"
             imageWidth: 15
             imageHeight: 15
+
+            onPress: {
+                Anthem.redo();
+            }
         }
 
 

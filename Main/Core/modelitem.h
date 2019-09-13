@@ -1,10 +1,10 @@
 #ifndef MODELITEM_H
 #define MODELITEM_H
 
-#include <QSharedPointer>
 #include <QObject>
 
 #include "communicator.h"
+#include "Utilities/patchfragment.h"
 
 #include "Include/rapidjson/document.h"
 
@@ -14,6 +14,11 @@ class ModelItem : public Communicator
 private:
     QString key;
 public:
+    /// Apply a patch to the C++ model. Used for undo and redo.
+    /// "pointer" is expected to be relative to the ModelItem this
+    ///     function is called on.
+    virtual void externalUpdate(QStringRef pointer, PatchFragment& patch) = 0;
+
     ModelItem(Communicator* parent, QString jsonKey);
 
     void patchAdd(QString path, rapidjson::Value& value);
@@ -25,6 +30,7 @@ public:
     void liveUpdate(uint64_t controlId, float value);
 
     rapidjson::Value* jsonNode;
+    rapidjson::Document* project;
     Communicator* parent;
 
     virtual ~ModelItem();

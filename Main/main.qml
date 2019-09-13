@@ -17,6 +17,16 @@ Window {
 
     color: "#454545"
 
+    Shortcut {
+        sequence: "Ctrl+Z"
+        onActivated: Anthem.undo()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+Shift+Z"
+        onActivated: Anthem.redo()
+    }
+
     Image {
         id: asdf
         source: "Images/pretty.jpg"

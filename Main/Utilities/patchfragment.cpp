@@ -1,6 +1,10 @@
 ﻿#include "patchfragment.h"
 
 #include "Include/rapidjson/pointer.h"
+#include "Include/rapidjson/stringbuffer.h"
+#include "Include/rapidjson/writer.h"
+
+#include <QDebug>
 
 using namespace rapidjson;
 
@@ -46,7 +50,7 @@ void PatchFragment::apply(Document &doc) {
     switch (type) {
         case PatchType::ADD:
             Pointer(patch["path"].GetString())
-                    .Set(doc, patch["value"]);
+                    .Set(doc, Value(patch["value"], doc.GetAllocator()));
             break;
         case PatchType::REMOVE:
             Pointer(patch["path"].GetString())
@@ -54,15 +58,19 @@ void PatchFragment::apply(Document &doc) {
             break;
         case PatchType::REPLACE:
             Pointer(patch["path"].GetString())
-                    .Set(doc, patch["value"]);
+                    .Set(doc, Value(patch["value"], doc.GetAllocator()));
             break;
         case PatchType::COPY:
             Pointer(patch["path"].GetString())
-                    .Set(doc, Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType));
+                    .Set(doc, Value(
+                             Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType), doc.GetAllocator()
+                         ));
             break;
         case PatchType::MOVE:
             Pointer(patch["path"].GetString())
-                    .Set(doc, Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType));
+                    .Set(doc, Value(
+                        Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType), doc.GetAllocator()
+                    ));
             Pointer(patch["path"].GetString())
                     .Erase(doc);
             break;

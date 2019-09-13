@@ -4,7 +4,7 @@
 #include "Include/rapidjson/filewritestream.h"
 #include "Include/rapidjson/writer.h"
 
-ProjectFile::ProjectFile() {
+ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
     // There's probably a Better Way
     // TODO: Add model constructors that give back a emtpy but valid state
     auto emptyProject =
@@ -34,7 +34,7 @@ ProjectFile::ProjectFile() {
     document.Parse(emptyProject);
 }
 
-ProjectFile::ProjectFile(QString path) {
+ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     this->path = path;
 
     // Attempt to load the file as JSON
