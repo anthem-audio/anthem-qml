@@ -51,6 +51,7 @@ Item {
         }
 
         onDragEnd: {
+            accumulator = 0;
             control.valueChangeCompleted(control.value);
         }
     }
