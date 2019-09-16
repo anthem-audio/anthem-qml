@@ -3,9 +3,10 @@
 
 // https://github.com/Shenggan/SnowFlake/blob/master/SnowFlake.h
 // lightlog.h has been replaced by throw.
+// gettimeofday() and friends have been replaced by Qt equivalents.
 // Original file licensed under MIT.
 #include <stdint.h>
-#include <sys/time.h>
+#include <QDateTime>
 #include <stdexcept>
 #include <mutex>
 
@@ -38,13 +39,8 @@ private:
     }
 
     uint64_t getNewstmp() {
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
-
-        uint64_t time = tv.tv_usec;
-        time /= 1000;
-        time += (tv.tv_sec * 1000);
-        return time;
+        QDateTime now = QDateTime::currentDateTimeUtc();
+        return uint64_t(now.toMSecsSinceEpoch());
     }
 
 public:
