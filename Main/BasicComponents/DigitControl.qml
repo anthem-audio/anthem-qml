@@ -36,18 +36,26 @@ Item {
         onDrag: {
             accumulator += deltaY
 
+            let tempVal = value;
+
             while(Math.abs(accumulator) > slownessMultiplier) {
                 if (accumulator > slownessMultiplier) {
-                    if (!(hasBound && value >= highBound))
-                        value++;
+                    if (!(hasBound && tempVal >= highBound))
+                        tempVal++;
+                    else
+                        break;
                     accumulator -= slownessMultiplier;
                 }
                 else if (accumulator < -slownessMultiplier) {
-                    if (!(hasBound && value <= lowBound))
-                        value--;
+                    if (!(hasBound && tempVal <= lowBound))
+                        tempVal--;
+                    else
+                        break;
                     accumulator += slownessMultiplier;
                 }
             }
+
+            value = tempVal;
         }
 
         onDragEnd: {
