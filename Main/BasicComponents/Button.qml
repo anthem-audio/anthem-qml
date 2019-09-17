@@ -6,6 +6,7 @@ Item {
     id: button
 
     property bool   showBorder: true
+    property bool   showBackground: true
     property bool   isPressed: false
     property bool   isToggleButton: false
 
@@ -43,8 +44,9 @@ Item {
     Rectangle {
         id: inside
 
+        visible: showBackground
+
         anchors.fill: parent
-//        anchors.margins: showBorder ? 2 : 1
         anchors.margins: showBorder ? 1 : 0
 
         radius: 1
@@ -78,12 +80,10 @@ Item {
 
     GradientBorder {
         id: highlight
-
         anchors.fill: parent
-
         anchors.margins: showBorder ? 1 : 0
-
         borderWidth: 1
+        visible: showBackground
     }
 
     Rectangle {
