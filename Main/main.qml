@@ -40,11 +40,10 @@ Window {
         radius: 128
     }
 
-    Rectangle {
+    Item {
         id: header
         width: parent.width
         height: 30
-        color: "transparent"
 
         anchors.top: parent.top
 
@@ -58,11 +57,18 @@ Window {
             anchors.rightMargin: margin
             height: 20
 
+            TabGroup {
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.right: windowButtonsContainer.left
+            }
+
             // We need a ButtonGroup here, but as of writing this comment, I haven't created one yet.
             //   -- Joshua Wade, Jun 4, 2019
 
             Rectangle {
-                id: buttonContainer
+                id: windowButtonsContainer
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
@@ -87,20 +93,12 @@ Window {
 
                     showBorder: false
 
+                    imageSource: "Images/Minimize.svg"
+                    imageWidth: 8
+                    imageHeight: 8
+
                     onPress: {
                         mainWindow.showMinimized()
-                    }
-
-                    Rectangle {
-                        anchors.bottom: parent.bottom
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottomMargin: 5
-
-                        height: 1
-                        width: 8
-                        radius: 1
-
-                        color: Qt.rgba(1, 1, 1, 0.65)
                     }
                 }
                 Rectangle {
@@ -125,6 +123,10 @@ Window {
 
                     showBorder: false
 
+                    imageSource: "Images/Maximize.svg"
+                    imageWidth: 8
+                    imageHeight: 8
+
                     onPress: {
                         if (mainWindow.isMaximized)
                             mainWindow.showNormal();
@@ -132,22 +134,6 @@ Window {
                             mainWindow.showMaximized();
 
                         mainWindow.isMaximized = !mainWindow.isMaximized;
-                    }
-
-                    Rectangle {
-                        anchors.bottom: parent.bottom
-                        anchors.top: parent.top
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottomMargin: 5
-                        anchors.topMargin: 5
-
-                        width: 8
-                        radius: 1
-
-                        color: "transparent"
-
-                        border.color: Qt.rgba(1, 1, 1, 0.65)
-                        border.width: 1
                     }
                 }
                 Rectangle {
@@ -173,34 +159,12 @@ Window {
 
                     showBorder: false
 
+                    imageSource: "Images/Close.svg"
+                    imageWidth: 8
+                    imageHeight: 8
+
                     onPress: {
                         mainWindow.close()
-                    }
-
-                    Shape {
-                        anchors.bottom: parent.bottom
-                        anchors.top: parent.top
-                        anchors.horizontalCenter: parent.horizontalCenter
-                        anchors.bottomMargin: 5
-                        anchors.topMargin: 5
-
-                        width: 8
-
-                        ShapePath {
-                            startX: 0.5; startY: 0.5
-                            PathLine { x: 7.5; y: 7.5 }
-
-                            strokeWidth: 1
-                            strokeColor: Qt.rgba(1, 1, 1, 0.65)
-                        }
-
-                        ShapePath {
-                            startX: 7.5; startY: 0.5
-                            PathLine { x: 0.5; y: 7.5 }
-
-                            strokeWidth: 1
-                            strokeColor: Qt.rgba(1, 1, 1, 0.65)
-                        }
                     }
                 }
             }
@@ -254,7 +218,6 @@ Window {
 
         anchors.leftMargin: 5
         anchors.rightMargin: 5
-        anchors.topMargin: 5
         anchors.bottomMargin: 5
 
         ControlsPanel {
