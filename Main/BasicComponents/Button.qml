@@ -17,6 +17,7 @@ Item {
     property real   imageHeight: 1
 
     property string textContent: ""
+    property string textFloat: "center"
 
     QtObject {
         id: buttonProps
@@ -100,7 +101,11 @@ Item {
         id: text
         text: qsTr(textContent)
         font: Fonts.notoSansRegular.name
-        anchors.centerIn: parent
+        anchors.centerIn: textFloat == "center" ? parent : undefined
+        anchors.left: textFloat == "left" ? parent.left : undefined
+        anchors.right: textFloat == "right" ? parent.right : undefined
+        anchors.verticalCenter: textFloat == "left" || textFloat == "right" ? parent.verticalCenter : undefined
+        anchors.margins: 4
         property int colorVal: isToggleButton && isPressed ? 0 : 1
         color: Qt.rgba(colorVal, colorVal, colorVal, 1)
         opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
