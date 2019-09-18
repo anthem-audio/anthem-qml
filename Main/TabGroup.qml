@@ -2,6 +2,8 @@ import QtQuick 2.13
 import "BasicComponents"
 
 Item {
+    width: 124
+
     Button {
         height: parent.height
         anchors.left: parent.left

@@ -17,6 +17,11 @@ Window {
 
     color: "#454545"
 
+    ResizeHandles {
+        anchors.fill: parent
+        mainWindow: mainWindow
+    }
+
     Shortcut {
         sequence: "Ctrl+Z"
         onActivated: Anthem.undo()
@@ -57,11 +62,16 @@ Window {
             anchors.rightMargin: margin
             height: 20
 
+            MoveHandle {
+                mainWindow: mainWindow
+                anchors.fill: parent
+            }
+
             TabGroup {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                anchors.right: windowButtonsContainer.left
+                // Width is managed internally by TabGroup
             }
 
             // We need a ButtonGroup here, but as of writing this comment, I haven't created one yet.
@@ -169,43 +179,6 @@ Window {
                 }
             }
         }
-
-        MouseArea {
-            anchors.fill: parent
-            anchors.rightMargin: 28 + 26 + 28 + margin // close buttons width + margin
-
-            onPressed: {
-                previousX = mouseX
-                previousY = mouseY
-            }
-
-            onReleased: {
-                if (mainWindow.y + mouseY < 1) {
-                    mainWindow.isMaximized = true;
-                    mainWindow.showMaximized();
-                }
-            }
-
-            onMouseXChanged: {
-                if (mainWindow.isMaximized) {
-                    mainWindow.isMaximized = false;
-                    mainWindow.showNormal();
-                }
-
-                var dx = mouseX - previousX
-                mainWindow.setX(mainWindow.x + dx)
-            }
-
-            onMouseYChanged: {
-                if (mainWindow.isMaximized) {
-                    mainWindow.isMaximized = false;
-                    mainWindow.showNormal();
-                }
-
-                var dy = mouseY - previousY
-                mainWindow.setY(mainWindow.y + dy)
-            }
-        }
     }
 
     Item {
@@ -243,86 +216,5 @@ Window {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 30
-    }
-
-    // Resize right
-    MouseArea {
-        width: 5
-
-        anchors {
-            right: parent.right
-            top: parent.top
-            bottom: parent.bottom
-        }
-
-        cursorShape: Qt.SizeHorCursor
-
-        onPressed: previousX = mouseX
-
-        onMouseXChanged: {
-            var dx = mouseX - previousX
-            mainWindow.setWidth(parent.width + dx)
-            mainWindow.set
-        }
-
-    }
-
-    // Resize top
-    MouseArea {
-        height: 5
-        anchors {
-            top: parent.top
-            left: parent.left
-            right: parent.right
-        }
-
-        cursorShape: Qt.SizeVerCursor
-
-        onPressed: previousY = mouseY
-
-        onMouseYChanged: {
-            var dy = mouseY - previousY
-            mainWindow.setY(mainWindow.y + dy)
-            mainWindow.setHeight(mainWindow.height - dy)
-        }
-    }
-
-    // Resize bottom
-    MouseArea {
-        height: 5
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
-
-        cursorShape: Qt.SizeVerCursor
-
-        onPressed: previousY = mouseY
-
-        onMouseYChanged: {
-            var dy = mouseY - previousY
-            mainWindow.setHeight(mainWindow.height + dy)
-        }
-    }
-
-    // Resize left
-    MouseArea {
-        width: 5
-        anchors {
-            top: parent.top
-            left: parent.left
-            bottom: parent.bottom
-        }
-
-        cursorShape: Qt.SizeHorCursor
-
-        onPressed: previousX = mouseX
-
-        onMouseYChanged: {
-            var dx = mouseX - previousX
-            mainWindow.setX(mainWindow.x + dx)
-            mainWindow.setWidth(mainWindow.width - dx)
-        }
     }
 }
