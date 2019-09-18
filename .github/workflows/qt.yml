@@ -25,7 +25,7 @@ jobs:
            make INSTALL_ROOT=appdir -j$(nproc) install ; sudo find / -name "appdir"
     - name: Generate AppImage
       run: |
-           ls -la /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main
+           ls -la /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin
            echo "\n"
            wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
            chmod a+x linuxdeployqt-continuous-x86_64.AppImage
