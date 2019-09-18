@@ -30,6 +30,7 @@ jobs:
            echo ""
            wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
            chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-           ./linuxdeployqt-continuous-x86_64.AppImage /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/Main -appimage
+           mv /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/Main /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/Main.desktop
+           ./linuxdeployqt-continuous-x86_64.AppImage /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/*.desktop -appimage
            ls /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/
 
