@@ -9,6 +9,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: Download Dependencies
+      run: sudo apt-get install libxkbcommon-x11-0 -y
     - name: Download submodules
       run: git submodule update --init --recursive
     - name: Download Qt
@@ -23,8 +25,9 @@ jobs:
            qmake ./Prototyping.pro CONFIG+=release PREFIX=/usr
            make -j$(nproc)
            make INSTALL_ROOT=appdir -j$(nproc) install ; sudo find / -name "appdir"
-           ls -la /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin
-           echo "$PATH"
+           echo "Finding missing plugin"
+           sudo find / -name "libqgtk2.so"
+           echo ""
            wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
            chmod a+x linuxdeployqt-continuous-x86_64.AppImage
            ./linuxdeployqt-continuous-x86_64.AppImage /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/Main -appimage
