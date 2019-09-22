@@ -47,6 +47,11 @@ void MainPresenter::ui_updateMasterPitch(float pitch) {
     emit masterPitchChanged(static_cast<int>(std::round(pitch)));
 }
 
+void MainPresenter::newProject() {
+    emit tabAdd("New project");
+    // Switch active model, start new engine, switch selected tab
+}
+
 void MainPresenter::loadProject(QString path) {
     // TODO: display errors to user
 
@@ -66,10 +71,14 @@ void MainPresenter::loadProject(QString path) {
 
     auto projectFile = new ProjectFile(this, path);
 
-    if (isInInitialState)
+    if (isInInitialState) {
         projectFiles[0] = projectFile;
-    else
+        emit tabRename(0, fileInfo.fileName());
+    }
+    else {
         projectFiles.append(projectFile);
+        emit tabAdd(fileInfo.fileName());
+    }
 
     // TODO: If something goes wrong and this error case trips, the list
     // of project files and project models will become desynced. This

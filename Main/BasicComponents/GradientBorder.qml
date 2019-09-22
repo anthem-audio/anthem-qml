@@ -6,6 +6,8 @@ Rectangle {
     id: root
     property Gradient borderGradient: borderGradient
     property int borderWidth: 1
+    property real hue: 162 / 360;
+    property bool showHighlightColor: false;
     implicitWidth: 26
     implicitHeight: 26
     radius: 1
@@ -23,14 +25,25 @@ Rectangle {
     Gradient {
         id: borderGradient
         GradientStop {
-           position: 0.000
+           position: 0
            color: Qt.rgba(1, 1, 1, 0.1)
         }
         GradientStop {
             position: 1
             color: Qt.rgba(0,0,0,0)
         }
+    }
 
+    Gradient {
+        id: highlightGradient
+        GradientStop {
+           position: 0
+           color: Qt.hsla(hue, 0.5, 0.43, 1)
+        }
+        GradientStop {
+            position: 1
+            color: Qt.hsla(hue, 0.5, 0.43, 1)
+        }
     }
 
     Component {
@@ -39,7 +52,7 @@ Rectangle {
             Rectangle {
                 id: borderFill
                 anchors.fill: parent
-                gradient: borderGradient
+                gradient: showHighlightColor ? highlightGradient : borderGradient
                 visible: false
             }
 

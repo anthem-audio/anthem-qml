@@ -71,7 +71,6 @@ Window {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                // Width is managed internally by TabGroup
             }
 
             // We need a ButtonGroup here, but as of writing this comment, I haven't created one yet.

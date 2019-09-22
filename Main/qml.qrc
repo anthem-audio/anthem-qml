@@ -39,5 +39,6 @@
         <file>Images/Minimize.svg</file>
         <file>ResizeHandles.qml</file>
         <file>MoveHandle.qml</file>
+        <file>BasicComponents/TabHandle.qml</file>
     </qresource>
 </RCC>

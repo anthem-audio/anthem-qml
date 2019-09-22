@@ -46,6 +46,7 @@ Panel {
 
                 MenuItem {
                     text: 'New project'
+                    onTriggered: Anthem.newProject()
                 }
                 MenuItem {
                     FileDialog {

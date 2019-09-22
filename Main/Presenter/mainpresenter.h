@@ -67,8 +67,13 @@ public:
 
 signals:
     void masterPitchChanged(int pitch);
+    void tabAdd(QString name);
+    void tabRename(int index, QString name);
+    void tabSelect(int index);
+    void tabRemove(int index);
 
 public slots:
+    void newProject();
     void loadProject(QString path);
     void saveActiveProject();
 

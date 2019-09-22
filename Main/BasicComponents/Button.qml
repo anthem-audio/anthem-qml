@@ -9,7 +9,7 @@ Item {
     property bool   showBackground: true
     property bool   isPressed: false
     property bool   isToggleButton: false
-
+    property bool   isHighlighted: false
     property bool   hasMenuIndicator: false
 
     property string imageSource: ""
@@ -29,13 +29,9 @@ Item {
 
     Rectangle {
         id: border
-
         visible: showBorder
-
         anchors.fill: parent
-
         color: "transparent"
-
         radius: 2
 
         border.width: 1
@@ -46,27 +42,33 @@ Item {
         id: inside
 
         visible: showBackground
-
         anchors.fill: parent
         anchors.margins: showBorder ? 1 : 0
-
         radius: 1
 
         QtObject {
             id: insideProps
 
             property real opacity:
-                (
-                    isToggleButton ?
-                               (isPressed ? (buttonProps.isMouseDown ? 0.8 : 1) :
-                                    (buttonProps.isMouseDown ? 0.09 :
-                                        (buttonProps.isHoverActive ? 0.17 : 0.12)
-                                    )
-                               )
-                    :
-                        (isPressed ? 0.09 :
-                                    (buttonProps.isHoverActive ? 0.17 : 0.12)
+                isHighlighted ? (
+                    0
+                )
+                : (
+                    isToggleButton ? (
+                        isPressed ? (
+                            buttonProps.isMouseDown ? 0.8 : 1
                         )
+                        : (
+                            buttonProps.isMouseDown ? 0.09 : (
+                                buttonProps.isHoverActive ? 0.17 : 0.12
+                            )
+                        )
+                    )
+                    : (
+                        isPressed ? 0.09 : (
+                            buttonProps.isHoverActive ? 0.17 : 0.12
+                        )
+                    )
                 )
 
             property bool hasHighlightColor: buttonProps.isPressed ? true : false
@@ -74,9 +76,8 @@ Item {
 
         property real h: 162 / 360 // change to be dynamic based on user settings
         property real s: isToggleButton && isPressed ? 0.5 : 0
-        property real l: isToggleButton && isPressed ? 0.43 : 100
+        property real l: isToggleButton && isPressed ? 0.43 : 1
         color: Qt.hsla(h, s, l, insideProps.opacity)
-
     }
 
     GradientBorder {
@@ -85,6 +86,8 @@ Item {
         anchors.margins: showBorder ? 1 : 0
         borderWidth: 1
         visible: showBackground
+        hue: inside.h
+        showHighlightColor: isHighlighted
     }
 
     Rectangle {
@@ -107,8 +110,10 @@ Item {
         anchors.verticalCenter: textFloat == "left" || textFloat == "right" ? parent.verticalCenter : undefined
         anchors.margins: 4
         property int colorVal: isToggleButton && isPressed ? 0 : 1
-        color: Qt.rgba(colorVal, colorVal, colorVal, 1)
-        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
+        color: isHighlighted ? Qt.hsla(inside.h, 0.5, 0.43, 1) : Qt.rgba(colorVal, colorVal, colorVal, 1)
+        opacity: isHighlighted ? 1 : (
+                     buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
+                 )
     }
 
     Image {
@@ -126,8 +131,9 @@ Item {
         anchors.fill: icon
         source: icon
         property int colorVal: isToggleButton && isPressed ? 0 : 1
-        color: Qt.rgba(colorVal, colorVal, colorVal, 1)
-        opacity: buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
+        color: text.color
+        opacity: text.opacity
+        visible: true;
     }
 
     Rectangle {
