@@ -5,6 +5,15 @@ import "../Global"
 Item {
     id: button
 
+    // Used to describe the visual state of the button
+    enum State {
+        Inactive,
+        Hovered,
+        Highlighted, // currently only used for tabs
+        Pressed,
+        Active       // for toggle buttons
+    }
+
     property bool   showBorder: true
     property bool   showBackground: true
     property bool   isPressed: false
@@ -19,10 +28,65 @@ Item {
     property string textContent: ""
     property string textFloat: "center"
 
+    function getState() {
+        if (isHighlighted) {
+            return Button.State.Highlighted;
+        }
+        else if (buttonProps.isMouseDown) {
+            return Button.State.Pressed;
+        }
+        else if (isToggleButton && isPressed) {
+            return Button.State.Active;
+        }
+        else if (buttonProps.isHoverActive) {
+            return Button.State.Hovered;
+        }
+        else {
+            return Button.State.Inactive;
+        }
+    }
+
+    property int    state: getState()
+
     QtObject {
         id: buttonProps
         property bool isHoverActive: false
         property bool isMouseDown: false
+        property real hue: 162 / 360 // change to be dynamic based on user settings
+
+        function getContentColor() {
+            switch (button.state) {
+            case Button.State.Inactive:
+                return Qt.hsla(0, 0, 1, 1); // 70% opacity white
+            case Button.State.Hovered:
+                return Qt.hsla(0, 0, 1, 1); // 80% opacity white
+            case Button.State.Highlighted:
+                return Qt.hsla(hue, 0.5, 0.43, 1); // #37a483 (+ hue shift)
+            case Button.State.Pressed:
+                return Qt.hsla(0, 0, 1, 1); // 70% opacity white
+            case Button.State.Active:
+                return Qt.hsla(0, 0, 0, 1); // 60% opacity black
+            }
+        }
+
+        property color contentColor: getContentColor()
+
+        function getContentOpacity() {
+            switch (button.state) {
+            case Button.State.Inactive:
+                return 0.7; // 70% opacity white
+            case Button.State.Hovered:
+                return 0.8; // 80% opacity white
+            case Button.State.Highlighted:
+                return 1; // #37a483 (+ hue shift)
+            case Button.State.Pressed:
+                return 0.7; // #37a483 (+ hue shift), 50% opacity
+            case Button.State.Active:
+                return 0.6; // 60% opacity black
+            }
+        }
+
+        property real contentOpacity: getContentOpacity()
     }
 
     signal press()
@@ -49,35 +113,43 @@ Item {
         QtObject {
             id: insideProps
 
-            property real opacity:
-                isHighlighted ? (
-                    0
-                )
-                : (
-                    isToggleButton ? (
-                        isPressed ? (
-                            buttonProps.isMouseDown ? 0.8 : 1
-                        )
-                        : (
-                            buttonProps.isMouseDown ? 0.09 : (
-                                buttonProps.isHoverActive ? 0.17 : 0.12
-                            )
-                        )
-                    )
-                    : (
-                        isPressed ? 0.09 : (
-                            buttonProps.isHoverActive ? 0.17 : 0.12
-                        )
-                    )
-                )
+            function getOpacity() {
+                switch (button.state) {
+                case Button.State.Inactive:
+                    return 0.12; // 12% opacity white
+                case Button.State.Hovered:
+                    return 0.18; // 18% opacity white
+                case Button.State.Highlighted:
+                    return 0; // transparent
+                case Button.State.Pressed:
+                    return 0.5; // #37a483 (+ hue shift), 50% opacity
+                case Button.State.Active:
+                    return 1; // #37a483 (+ hue shift)
+                }
+            }
 
-            property bool hasHighlightColor: buttonProps.isPressed ? true : false
+            property real opacity: getOpacity()
+
+            function getColor() {
+                switch (button.state) {
+                case Button.State.Inactive:
+                    return Qt.hsla(0, 0, 1, 1); // 12% opacity white
+                case Button.State.Hovered:
+                    return Qt.hsla(0, 0, 1, 1); // 18% opacity white
+                case Button.State.Highlighted:
+                    return Qt.hsla(0, 0, 0, 1); // transparent
+                case Button.State.Pressed:
+                    return Qt.hsla(buttonProps.hue, 0.5, 0.43, 1); // #37a483 (+ hue shift), 50% opacity
+                case Button.State.Active:
+                    return Qt.hsla(buttonProps.hue, 0.5, 0.43, 1); // #37a483 (+ hue shift)
+                }
+            }
+
+            property color color: getColor()
         }
 
-        property real h: 162 / 360 // change to be dynamic based on user settings
-        property real s: isToggleButton && isPressed ? 0.5 : 0
-        property real l: isToggleButton && isPressed ? 0.43 : 1
-        color: Qt.hsla(h, s, l, insideProps.opacity)
+        color: insideProps.color
+        opacity: insideProps.opacity
     }
 
     GradientBorder {
@@ -86,8 +158,9 @@ Item {
         anchors.margins: showBorder ? 1 : 0
         borderWidth: 1
         visible: showBackground
-        hue: inside.h
-        showHighlightColor: isHighlighted
+        hue: buttonProps.hue
+        showHighlightColor: button.state === Button.State.Highlighted ||
+                            button.state === Button.State.Pressed
     }
 
     Rectangle {
@@ -110,10 +183,8 @@ Item {
         anchors.verticalCenter: textFloat == "left" || textFloat == "right" ? parent.verticalCenter : undefined
         anchors.margins: 4
         property int colorVal: isToggleButton && isPressed ? 0 : 1
-        color: isHighlighted ? Qt.hsla(inside.h, 0.5, 0.43, 1) : Qt.rgba(colorVal, colorVal, colorVal, 1)
-        opacity: isHighlighted ? 1 : (
-                     buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : (colorVal == 1 ? 0.7 : 0.6)
-                 )
+        color: buttonProps.contentColor
+        opacity: buttonProps.contentOpacity
     }
 
     Image {
@@ -131,9 +202,9 @@ Item {
         anchors.fill: icon
         source: icon
         property int colorVal: isToggleButton && isPressed ? 0 : 1
-        color: text.color
-        opacity: text.opacity
         visible: true;
+        color: buttonProps.contentColor
+        opacity: buttonProps.contentOpacity
     }
 
     Rectangle {
