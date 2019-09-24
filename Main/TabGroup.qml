@@ -12,8 +12,8 @@ Item {
 
     TabHandle {
         height: parent.height
-        anchors.left: parent.left
-        anchors.top: parent.top
+        x: parent.x
+        y: parent.y
         width: tabWidth
         isSelected: true
         index: 0
@@ -63,11 +63,6 @@ Item {
     }
 
     function removeTab(index) {
-        if (index === 0)
-            tabGroup.children[index].anchors.left = undefined;
-        else if (index !== tabCount - 1)
-            tabGroup.children[index].anchors.left = undefined;
-
         for (let i = index; i < tabCount; i++) {
             tabGroup.children[i].index--;
             tabGroup.children[i].x -= (tabWidth + 3);
@@ -76,7 +71,6 @@ Item {
         let isLastTab = false;
 
         if (selectedTabIndex === tabCount - 1) {
-            selectedTabIndex--;
             isLastTab = true;
         }
 
@@ -86,6 +80,9 @@ Item {
             else
                 selectTab(selectedTabIndex + 1);
         }
+
+        if (index < selectedTabIndex)
+            selectedTabIndex--;
 
         tabGroup.children[index].destroy();
         tabCount--;
