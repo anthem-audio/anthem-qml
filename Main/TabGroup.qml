@@ -18,8 +18,8 @@ Item {
         isSelected: true
         index: 0
 
-        onSelected: selectTab(index)
-        onBtnClosePressed: removeTab(index)
+        onSelected: doOnTabPressed(index)
+        onBtnClosePressed: doOnTabClosePressed(index)
     }
 
     function addTab(tabName) {
@@ -38,9 +38,8 @@ Item {
             }
 
             let tab = tabComponent.createObject(tabGroup, options);
-            tab.selected.connect(selectTab);
-            tab.btnClosePressed.connect(removeTab);
-            selectTab(tabCount);
+            tab.selected.connect(doOnTabPressed);
+            tab.btnClosePressed.connect(doOnTabClosePressed);
             tabCount++;
         }
         else if (tabComponent.status === Component.Error) {
@@ -56,10 +55,16 @@ Item {
     }
 
     function selectTab(index) {
+        console.log('select', index);
         tabGroup.children[selectedTabIndex].isSelected = false;
         tabGroup.children[index].isSelected = true;
         selectedTabIndex = index;
-        // TODO: tell the presenter to switch the active tab
+    }
+
+    function doOnTabPressed(index) {
+        console.log('do on tab pressed', index);
+        selectTab(index);
+        Anthem.switchActiveProject(index);
     }
 
     function removeTab(index) {
@@ -86,8 +91,12 @@ Item {
 
         tabGroup.children[index].destroy();
         tabCount--;
+    }
 
-        // TODO: Tell the presenter to clean up the closed tab
+    function doOnTabClosePressed(index) {
+        removeTab(index);
+        Anthem.closeProject(index);
+        Anthem.switchActiveProject(selectedTabIndex);
     }
 
     Connections {

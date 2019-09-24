@@ -22,6 +22,7 @@ private:
 public:
     explicit
     Engine(QObject *parent);
+    ~Engine();
 
     void start();
     void stop();

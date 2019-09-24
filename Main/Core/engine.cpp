@@ -4,8 +4,7 @@
 
 using namespace rapidjson;
 
-Engine::Engine(QObject* parent) : QObject(parent)
-{
+Engine::Engine(QObject* parent) : QObject(parent) {
     engine = new QProcess(this);
     QObject::connect(engine, &QProcess::started,
                      this,   &Engine::onEngineStart);
@@ -15,12 +14,17 @@ Engine::Engine(QObject* parent) : QObject(parent)
     engine->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 }
 
+Engine::~Engine() {
+    stop();
+}
+
 // TODO: propagate errors to user
 void Engine::start() {
     engine->start("mock-engine");
 }
 
 // TODO: propagate errors to user
+// TODO: don't just kill; tell the engine process to stop, and let it stop itself
 void Engine::stop() {
     engine->kill();
 }

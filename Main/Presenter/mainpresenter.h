@@ -19,8 +19,9 @@ class MainPresenter : public Communicator
     Q_OBJECT
 private:
     void updateAll();
-    // TODO: disconnect UI signals when changing projects?
+
     void connectUiUpdateSignals(Project* project);
+    void disconnectUiUpdateSignals(Project* project);
 
     /// If there isn't an active (non-sent) patch in the list, add one
     void initializeNewPatchIfNeeded();
@@ -31,12 +32,20 @@ private:
     /// should replace the current tab or use a new one.
     bool isInInitialState;
 
-    IdGenerator* id;
+    bool isActiveProjectValid;
+
+    /// List of currently open projects
+    QVector<Project*> projects;
+
+    /// List of project files (mirrors list of projects)
+    QVector<ProjectFile*> projectFiles;
 
     /// Handles engine lifecycle and communication.
-    Engine* engine;
+    QVector<Engine*> engines;
 
-    QVector<Patch*> projectHistory;
+    IdGenerator* id;
+
+    QVector<QVector<Patch*>> projectHistories;
     bool isPatchInProgress;
 
 public:
@@ -52,18 +61,18 @@ public:
 
     void liveUpdate(uint64_t controlId, float value);
 
-    /// List of currently open projects
-    QVector<Project*> projects;
-
-    /// List of project files (mirrors list of projects)
-    QVector<ProjectFile*> projectFiles;
-
     /// Project that is currently loaded
-    Project* activeProject;
     int activeProjectIndex;
 
     /// Current place in the history
-    int historyPointer;
+    QVector<int> historyPointers;
+
+    // Used to access and manipulate project data
+    void addProject(Project* project, ProjectFile* projectFile, Engine* engine);
+    Project* getProjectAt(int index);
+    ProjectFile* getProjectFileAt(int index);
+    Engine* getEngineAt(int index);
+    void removeProjectAt(int index);
 
 signals:
     void masterPitchChanged(int pitch);
@@ -80,10 +89,17 @@ public slots:
     int getMasterPitch();
     void setMasterPitch(int pitch, bool isFinal);
 
+    // Functions with the ui_ prefix are used for propagating value
+    // changes up to the UI from the model, such as undos and redos.
     void ui_updateMasterPitch(float pitch);
 
     void undo();
     void redo();
+
+    // These functions do not update the tab state in the UI
+    void switchActiveProject(int index);
+    /// Does not update the active project
+    void closeProject(int index);
 };
 
 #endif // MAINPRESENTER_H

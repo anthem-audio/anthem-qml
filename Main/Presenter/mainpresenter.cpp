@@ -13,10 +13,13 @@ using namespace rapidjson;
 
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
 {
-    projectHistory = QVector<Patch*>();
-    historyPointer = -1;
+    projectHistories = QVector<QVector<Patch*>>();
+    projectHistories.append(QVector<Patch*>());
+    historyPointers = QVector<int>();
+    historyPointers.append(-1);
 
     isPatchInProgress = false;
+    isActiveProjectValid = true;
 
     this->id = id;
 
@@ -25,17 +28,57 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
     // Initialize with blank project
     auto projectFile = new ProjectFile(this);
     auto projectModel = new Project(this, projectFile);
-    projectFiles.append(projectFile);
-    projects.append(projectModel);
-    activeProject = projectModel;
     activeProjectIndex = 0;
 
     // Connect change signals from the model to the UI
-    connectUiUpdateSignals(activeProject);
+    connectUiUpdateSignals(projectModel);
 
     // Start the engine
-    engine = new Engine(dynamic_cast<QObject*>(this));
+    auto engine = new Engine(dynamic_cast<QObject*>(this));
     engine->start();
+
+    addProject(projectModel, projectFile, engine);
+}
+
+void MainPresenter::addProject(Project* project, ProjectFile* projectFile, Engine* engine) {
+    projects.append(project);
+    projectFiles.append(projectFile);
+    engines.append(engine);
+    projectHistories.append(QVector<Patch*>());
+    historyPointers.append(-1);
+}
+
+Project* MainPresenter::getProjectAt(int index) {
+    return projects[index];
+}
+
+ProjectFile* MainPresenter::getProjectFileAt(int index) {
+    return projectFiles[index];
+}
+
+Engine* MainPresenter::getEngineAt(int index) {
+    return engines[index];
+}
+
+void MainPresenter::removeProjectAt(int index) {
+    projects[index]->~Project();
+    projectFiles[index]->~ProjectFile();
+    engines[index]->~Engine();
+    projects.removeAt(index);
+    projectFiles.removeAt(index);
+    engines.removeAt(index);
+
+    // If the active project is closed, the index will be set to -1.
+    if (index == activeProjectIndex) {
+        isActiveProjectValid = false;
+        activeProjectIndex = -1;
+    }
+    // This prevents the active project index from becoming desynced in
+    // cases where the active projct is positioned after the tab that was
+    // closed.
+    else if (index < activeProjectIndex) {
+        activeProjectIndex--;
+    }
 }
 
 void MainPresenter::connectUiUpdateSignals(Project* project) {
@@ -43,14 +86,25 @@ void MainPresenter::connectUiUpdateSignals(Project* project) {
                      this,                            SLOT(ui_updateMasterPitch(float)));
 }
 
+// This should mirror the function above
+void MainPresenter::disconnectUiUpdateSignals(Project* project) {
+    QObject::disconnect(project->transport->masterPitch, SIGNAL(displayValueChanged(float)),
+                        this,                            SLOT(ui_updateMasterPitch(float)));
+}
+
 void MainPresenter::ui_updateMasterPitch(float pitch) {
     emit masterPitchChanged(static_cast<int>(std::round(pitch)));
 }
 
 void MainPresenter::newProject() {
+    auto projectFile = new ProjectFile(this);
+    auto projectModel = new Project(this, projectFile);
+    auto engine = new Engine(this);
+    engine->start();
+    addProject(projectModel, projectFile, engine);
+    switchActiveProject(projects.length() - 1);
     emit tabAdd("New project");
-    // Switch active model, start new engine.
-    // Presenter code necessary for switching the active tab will be a slot called from selectTab() in TabGroup.qml
+    emit tabSelect(activeProjectIndex);
 }
 
 void MainPresenter::loadProject(QString path) {
@@ -99,11 +153,12 @@ void MainPresenter::loadProject(QString path) {
         projects.append(project);
         activeProjectIndex = i;
     }
-    activeProject = project;
 
     updateAll();
 
     isInInitialState = false;
+
+    // TODO: start new engine
 }
 
 void MainPresenter::updateAll() {
@@ -115,11 +170,11 @@ void MainPresenter::saveActiveProject() {
 }
 
 int MainPresenter::getMasterPitch() {
-    return static_cast<int>(activeProject->transport->masterPitch->get() + 0.5f);
+    return static_cast<int>(projects[activeProjectIndex]->transport->masterPitch->get() + 0.5f);
 }
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
-    activeProject->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
+    projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
     if (isFinal) {
         emit masterPitchChanged(pitch);
     }
@@ -138,49 +193,49 @@ void MainPresenter::initializeNewPatchIfNeeded() {
 
     isPatchInProgress = true;
 
-    historyPointer++;
+    historyPointers[activeProjectIndex]++;
 
-    if (historyPointer != projectHistory.length()) {
-        for (int i = projectHistory.length() - 1; i >= historyPointer; i--) {
-            projectHistory[i]->~Patch();
-            projectHistory.pop_back();
+    if (historyPointers[activeProjectIndex] != projectHistories[activeProjectIndex].length()) {
+        for (int i = projectHistories[activeProjectIndex].length() - 1; i >= historyPointers[activeProjectIndex]; i--) {
+            projectHistories[activeProjectIndex][i]->~Patch();
+            projectHistories[activeProjectIndex].pop_back();
         }
     }
 
-    projectHistory.append(
-        new Patch(this, activeProject, projectFiles[activeProjectIndex]->document)
+    projectHistories[activeProjectIndex].append(
+        new Patch(this, projects[activeProjectIndex], projectFiles[activeProjectIndex]->document)
     );
 }
 
 void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistory[historyPointer];
+    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     Value copiedValue(value, projectFiles[activeProjectIndex]->document.GetAllocator());
     patch.patchAdd("/" + path, copiedValue);
 }
 
 void MainPresenter::patchRemove(QString path) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistory[historyPointer];
+    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     patch.patchRemove("/" + path);
 }
 
 void MainPresenter::patchReplace(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistory[historyPointer];
+    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     Value copiedValue(value, projectFiles[activeProjectIndex]->document.GetAllocator());
     patch.patchReplace("/" + path, copiedValue);
 }
 
 void MainPresenter::patchCopy(QString from, QString path) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistory[historyPointer];
+    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     patch.patchCopy("/" + from, "/" + path);
 }
 
 void MainPresenter::patchMove(QString from, QString path) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistory[historyPointer];
+    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     patch.patchMove("/" + from, "/" + path);
 }
 
@@ -188,36 +243,49 @@ void MainPresenter::sendPatch() {
     if (!isPatchInProgress) {
         throw "sendPatch() was called, but there was nothing to send.";
     }
-    Patch& patch = *projectHistory[historyPointer];
+    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     patch.apply();
-    engine->sendPatchList(patch.getPatch());
+    engines[activeProjectIndex]->sendPatchList(patch.getPatch());
     isPatchInProgress = false;
 }
 
 void MainPresenter::liveUpdate(uint64_t controlId, float value) {
-    engine->sendLiveControlUpdate(controlId, value);
+    engines[activeProjectIndex]->sendLiveControlUpdate(controlId, value);
 }
 
 
 void MainPresenter::undo() {
-    if (historyPointer == -1)
+    if (historyPointers[activeProjectIndex] == -1)
         return;
 
-    Patch& undoPatch = *projectHistory[historyPointer];
+    Patch& undoPatch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     undoPatch.applyUndo();
     Value& undoPatchVal = undoPatch.getUndoPatch();
-    engine->sendPatchList(undoPatchVal);
+    engines[activeProjectIndex]->sendPatchList(undoPatchVal);
 
-    historyPointer--;
+    historyPointers[activeProjectIndex]--;
 }
 
 void MainPresenter::redo() {
-    if (historyPointer >= projectHistory.length() - 1)
+    if (historyPointers[activeProjectIndex] >= projectHistories[activeProjectIndex].length() - 1)
         return;
 
-    historyPointer++;
+    historyPointers[activeProjectIndex]++;
 
-    Patch& redoPatch = *projectHistory[historyPointer];
+    Patch& redoPatch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
     redoPatch.apply();
-    engine->sendPatchList(redoPatch.getPatch());
+    engines[activeProjectIndex]->sendPatchList(redoPatch.getPatch());
+}
+
+void MainPresenter::switchActiveProject(int index) {
+    if (isActiveProjectValid)
+        disconnectUiUpdateSignals(projects[activeProjectIndex]);
+    activeProjectIndex = index;
+    connectUiUpdateSignals(projects[activeProjectIndex]);
+    updateAll();
+    isActiveProjectValid = true;
+}
+
+void MainPresenter::closeProject(int index) {
+    removeProjectAt(index);
 }
