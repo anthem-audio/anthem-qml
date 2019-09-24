@@ -49,7 +49,8 @@ void MainPresenter::ui_updateMasterPitch(float pitch) {
 
 void MainPresenter::newProject() {
     emit tabAdd("New project");
-    // Switch active model, start new engine, switch selected tab
+    // Switch active model, start new engine.
+    // Presenter code necessary for switching the active tab will be a slot called from selectTab() in TabGroup.qml
 }
 
 void MainPresenter::loadProject(QString path) {
