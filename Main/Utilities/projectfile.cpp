@@ -53,12 +53,14 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
 void ProjectFile::save() {
     bool isWindows = QSysInfo::kernelType() == "winnt";
     FILE* fp = std::fopen((path).toUtf8(), isWindows ? "wb" : "w");
-
     char writeBuffer[65536];
     rapidjson::FileWriteStream stream(fp, writeBuffer, sizeof(writeBuffer));
-
     rapidjson::Writer<rapidjson::FileWriteStream> writer(stream);
     document.Accept(writer);
-
     fclose(fp);
+}
+
+void ProjectFile::saveAs(QString path) {
+    this->path = path;
+    save();
 }

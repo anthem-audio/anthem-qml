@@ -85,12 +85,19 @@ public slots:
     void newProject();
     void loadProject(QString path);
     void saveActiveProject();
+    void saveActiveProjectAs(QString path);
 
+    // Getters and setters for model properties
     int getMasterPitch();
     void setMasterPitch(int pitch, bool isFinal);
 
-    // Functions with the ui_ prefix are used for propagating value
-    // changes up to the UI from the model, such as undos and redos.
+    bool isActiveProjectSaved();
+
+    // Functions with the ui_ prefix are used as receiver slots
+    // for model change signals. Each ui_ function should:
+    //     a) always be connected to the relevant model's update
+    //        signals, and
+    //     b) emit the relevant update signal.
     void ui_updateMasterPitch(float pitch);
 
     void undo();

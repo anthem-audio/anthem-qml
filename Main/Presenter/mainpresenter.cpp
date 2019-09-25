@@ -106,6 +106,7 @@ void MainPresenter::newProject() {
     switchActiveProject(projects.length() - 1);
     emit tabAdd("New project");
     emit tabSelect(activeProjectIndex);
+    isInInitialState = false;
 }
 
 void MainPresenter::loadProject(QString path) {
@@ -170,6 +171,10 @@ void MainPresenter::saveActiveProject() {
     projectFiles[activeProjectIndex]->save();
 }
 
+void MainPresenter::saveActiveProjectAs(QString path) {
+    projectFiles[activeProjectIndex]->saveAs(path);
+}
+
 int MainPresenter::getMasterPitch() {
     return static_cast<int>(std::round(projects[activeProjectIndex]->transport->masterPitch->get()));
 }
@@ -179,6 +184,11 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     if (isFinal) {
         emit masterPitchChanged(pitch);
     }
+}
+
+bool MainPresenter::isActiveProjectSaved() {
+    return !projectFiles[activeProjectIndex]->path.isNull() &&
+               !projectFiles[activeProjectIndex]->path.isEmpty();
 }
 
 // The patch logic below assumes that only one operation
@@ -192,6 +202,7 @@ void MainPresenter::initializeNewPatchIfNeeded() {
         return;
     }
 
+    isInInitialState = false;
     isPatchInProgress = true;
 
     historyPointers[activeProjectIndex]++;

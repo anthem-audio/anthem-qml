@@ -13,11 +13,15 @@ Q_OBJECT
 public:
     // Empty project file
     ProjectFile(QObject* parent);
+
+    // Project from path
     ProjectFile(QObject* parent, QString path);
+
     rapidjson::Document document;
     QString path;
 
     void save();
+    void saveAs(QString path);
 };
 
 #endif // DOCUMENTWRAPPER_H

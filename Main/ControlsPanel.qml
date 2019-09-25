@@ -6,6 +6,35 @@ import "BasicComponents"
 import "Global"
 
 Panel {
+    FileDialog {
+        id: loadFileDialog
+        title: "Select a project"
+        selectExisting: true
+        folder: shortcuts.home
+        nameFilters: ["Anthem project files (*.anthem)"]
+        onAccepted: {
+            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
+        }
+    }
+
+    FileDialog {
+        id: saveFileDialog
+        title: "Save as"
+        selectExisting: false
+        folder: shortcuts.home
+        nameFilters: ["Anthem project files (*.anthem)"]
+        onAccepted: {
+            Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
+        }
+    }
+
+    function save() {
+        if (Anthem.isActiveProjectSaved())
+            Anthem.saveActiveProject();
+        else
+            saveFileDialog.open();
+    }
+
     height: 44
     Item {
         id: controlPanelSpacer
@@ -49,26 +78,17 @@ Panel {
                     onTriggered: Anthem.newProject()
                 }
                 MenuItem {
-                    FileDialog {
-                        id: loadFileDialog
-                        title: "Select a project"
-                        folder: shortcuts.home
-                        nameFilters: ["Anthem project files (*.anthem)"]
-                        onAccepted: {
-                            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
-                        }
-                    }
-
                     text: 'Open...'
                     onTriggered: loadFileDialog.open()
                 }
                 MenuSeparator {}
                 MenuItem {
                     text: 'Save'
-                    onTriggered: Anthem.saveActiveProject()
+                    onTriggered: save()
                 }
                 MenuItem {
                     text: 'Save as...'
+                    onTriggered: saveFileDialog.open()
                 }
                 MenuSeparator {}
                 MenuItem {
@@ -89,7 +109,7 @@ Panel {
             imageWidth: 16
             imageHeight: 16
 
-            onPress: Anthem.saveActiveProject()
+            onPress: save()
         }
 
         Button {
