@@ -170,7 +170,7 @@ void MainPresenter::saveActiveProject() {
 }
 
 int MainPresenter::getMasterPitch() {
-    return static_cast<int>(projects[activeProjectIndex]->transport->masterPitch->get() + 0.5f);
+    return static_cast<int>(std::round(projects[activeProjectIndex]->transport->masterPitch->get()));
 }
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
