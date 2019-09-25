@@ -67,6 +67,7 @@ void MainPresenter::removeProjectAt(int index) {
     projects.removeAt(index);
     projectFiles.removeAt(index);
     engines.removeAt(index);
+    historyPointers.removeAt(index);
 
     // If the active project is closed, the index will be set to -1.
     if (index == activeProjectIndex) {
@@ -253,9 +254,8 @@ void MainPresenter::liveUpdate(uint64_t controlId, float value) {
     engines[activeProjectIndex]->sendLiveControlUpdate(controlId, value);
 }
 
-
 void MainPresenter::undo() {
-    if (historyPointers[activeProjectIndex] == -1)
+    if (historyPointers[activeProjectIndex] <= -1)
         return;
 
     Patch& undoPatch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
