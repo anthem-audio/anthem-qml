@@ -124,17 +124,17 @@ void MainPresenter::loadProject(QString path) {
         return;
     }
 
-    auto i = projectFiles.length();
-
     auto projectFile = new ProjectFile(this, path);
 
+    QString fileName = fileInfo.fileName();
+    fileName.chop(fileInfo.completeSuffix().length() + 1);
+
     if (isInInitialState) {
-        projectFiles[0] = projectFile;
-        emit tabRename(0, fileInfo.fileName());
+        removeProjectAt(0);
+        emit tabRename(0, fileName);
     }
     else {
-        projectFiles.append(projectFile);
-        emit tabAdd(fileInfo.fileName());
+        emit tabAdd(fileName);
     }
 
     // TODO: If something goes wrong and this error case trips, the list
@@ -147,20 +147,16 @@ void MainPresenter::loadProject(QString path) {
 
     // Initialize model with JSON
     Project* project = new Project(this, projectFile);
-    if (isInInitialState) {
-        projects[0] = project;
-        activeProjectIndex = 0;
-    }
-    else {
-        projects.append(project);
-        activeProjectIndex = i;
-    }
 
+    // Create and start new engine
+    // TODO: Once engines can be stared and stopped by the user, don't start immediately. (?)
+    Engine* engine = new Engine(this);
+    engine->start();
+
+    addProject(project, projectFile, engine);
+    activeProjectIndex = projects.length() - 1;
     updateAll();
-
     isInInitialState = false;
-
-    // TODO: start new engine
 }
 
 void MainPresenter::updateAll() {
@@ -173,6 +169,10 @@ void MainPresenter::saveActiveProject() {
 
 void MainPresenter::saveActiveProjectAs(QString path) {
     projectFiles[activeProjectIndex]->saveAs(path);
+    QFileInfo fileInfo(path);
+    QString fileName = fileInfo.fileName();
+    fileName.chop(fileInfo.completeSuffix().length() + 1);
+    emit tabRename(activeProjectIndex, fileName);
 }
 
 int MainPresenter::getMasterPitch() {

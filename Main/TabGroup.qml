@@ -55,14 +55,12 @@ Item {
     }
 
     function selectTab(index) {
-        console.log('select', index);
         tabGroup.children[selectedTabIndex].isSelected = false;
         tabGroup.children[index].isSelected = true;
         selectedTabIndex = index;
     }
 
     function doOnTabPressed(index) {
-        console.log('do on tab pressed', index);
         selectTab(index);
         Anthem.switchActiveProject(index);
     }
@@ -105,7 +103,7 @@ Item {
             addTab(name);
         }
         onTabRename: {
-            renameTab(index, tab);
+            renameTab(index, name);
         }
         onTabSelect: {
             selectTab(index);
