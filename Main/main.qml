@@ -17,6 +17,11 @@ Window {
 
     color: "#454545"
 
+    function closeWithSavePrompt() {
+        // TODO: if project has unsaved changes, prompt to save
+        close();
+    }
+
     ResizeHandles {
         anchors.fill: parent
         mainWindow: mainWindow
@@ -72,6 +77,8 @@ Window {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 // Width is managed internally by TabGroup
+
+                onLastTabClosed: mainWindow.closeWithSavePrompt()
             }
 
             // We need a ButtonGroup here, but as of writing this comment, I haven't created one yet.
@@ -174,7 +181,7 @@ Window {
                     imageHeight: 8
 
                     onPress: {
-                        mainWindow.close()
+                        mainWindow.closeWithSavePrompt();
                     }
                 }
             }
