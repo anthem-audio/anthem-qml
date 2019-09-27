@@ -33,5 +33,12 @@
         <file>BasicComponents/Menu.qml</file>
         <file>BasicComponents/MenuItem.qml</file>
         <file>BasicComponents/MenuSeparator.qml</file>
+        <file>TabGroup.qml</file>
+        <file>Images/Close.svg</file>
+        <file>Images/Maximize.svg</file>
+        <file>Images/Minimize.svg</file>
+        <file>ResizeHandles.qml</file>
+        <file>MoveHandle.qml</file>
+        <file>BasicComponents/TabHandle.qml</file>
     </qresource>
 </RCC>

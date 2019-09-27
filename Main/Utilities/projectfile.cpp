@@ -1,11 +1,12 @@
 #include "projectfile.h"
 
-#include "Include/rapidjson/include/rapidjson/filereadstream.h"
-#include "Include/rapidjson/include/rapidjson/filewritestream.h"
-#include "Include/rapidjson/include/rapidjson/writer.h"
+#include "Include/rapidjson/filereadstream.h"
+#include "Include/rapidjson/filewritestream.h"
+#include "Include/rapidjson/writer.h"
 
-ProjectFile::ProjectFile() {
+ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
     // There's probably a Better Way
+    // TODO: Add model constructors that give back a emtpy but valid state
     auto emptyProject =
         "{"
         "    \"software_version\": \"0.0.1\","
@@ -15,7 +16,15 @@ ProjectFile::ProjectFile() {
         "            \"arrangements\": []"
         "        },"
         "        \"transport\": {"
-        "            \"master_pitch\": 0"
+        "            \"master_pitch\": {"
+        "                \"id\": 0,"
+        "                \"initial_value\": 0,"
+        "                \"minimum\": 12,"
+        "                \"maximum\": -12,"
+        "                \"step\": 1,"
+        "                \"connection\": null,"
+        "                \"override_automation\": false"
+        "            }"
         "        },"
         "        \"mixer\": {},"
         "        \"generators\": []"
@@ -25,7 +34,7 @@ ProjectFile::ProjectFile() {
     document.Parse(emptyProject);
 }
 
-ProjectFile::ProjectFile(QString path) {
+ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     this->path = path;
 
     // Attempt to load the file as JSON
@@ -44,12 +53,14 @@ ProjectFile::ProjectFile(QString path) {
 void ProjectFile::save() {
     bool isWindows = QSysInfo::kernelType() == "winnt";
     FILE* fp = std::fopen((path).toUtf8(), isWindows ? "wb" : "w");
-
     char writeBuffer[65536];
     rapidjson::FileWriteStream stream(fp, writeBuffer, sizeof(writeBuffer));
-
     rapidjson::Writer<rapidjson::FileWriteStream> writer(stream);
     document.Accept(writer);
-
     fclose(fp);
+}
+
+void ProjectFile::saveAs(QString path) {
+    this->path = path;
+    save();
 }

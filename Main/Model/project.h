@@ -2,22 +2,22 @@
 #define PROJECT_H
 
 #include <QObject>
-#include <QSharedPointer>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/document.h"
 
+#include "Core/communicator.h"
 #include "transport.h"
-
 #include "Core/modelitem.h"
 #include "Utilities/projectfile.h"
 
-class Project : public QObject, ModelItem
-{
+class Project : public ModelItem {
     Q_OBJECT
 private:
 public:
     Transport* transport;
-    Project(QObject* parent, QSharedPointer<ProjectFile> projectFile);
+    Project(Communicator* parent, ProjectFile* projectFile);
+
+    void externalUpdate(QStringRef pointer, PatchFragment& patch);
 
 signals:
 

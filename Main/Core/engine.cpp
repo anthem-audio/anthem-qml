@@ -2,8 +2,9 @@
 
 #include <QDebug>
 
-Engine::Engine(QObject* parent) : QObject(parent)
-{
+using namespace rapidjson;
+
+Engine::Engine(QObject* parent) : QObject(parent) {
     engine = new QProcess(this);
     QObject::connect(engine, &QProcess::started,
                      this,   &Engine::onEngineStart);
@@ -13,12 +14,17 @@ Engine::Engine(QObject* parent) : QObject(parent)
     engine->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
 }
 
+Engine::~Engine() {
+    stop();
+}
+
 // TODO: propagate errors to user
 void Engine::start() {
     engine->start("mock-engine");
 }
 
 // TODO: propagate errors to user
+// TODO: don't just kill; tell the engine process to stop, and let it stop itself
 void Engine::stop() {
     engine->kill();
 }
@@ -38,13 +44,17 @@ void Engine::write(Document &json) {
 
     const char* output = buffer.GetString();
     engine->write(output);
+    engine->write("\n");
 }
 
-void Engine::addRPCHeaders(Document &json, Document::AllocatorType& allocator) {
+void Engine::addRPCHeaders(Document &json, std::string method) {
     Value jsonrpcVal(Type::kStringType);
     jsonrpcVal.SetString("2.0");
+    json.AddMember("jsonrpc", jsonrpcVal, json.GetAllocator());
 
-    json.AddMember("jsonrpc", jsonrpcVal, allocator);
+    Value methodVal(Type::kStringType);
+    methodVal.SetString(method, json.GetAllocator());
+    json.AddMember("method", methodVal, json.GetAllocator());
 }
 
 /*
@@ -62,12 +72,7 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
-    addRPCHeaders(json, allocator);
-
-    Value methodVal(Type::kStringType);
-    methodVal.SetString("ControlUpdate");
-
-    json.AddMember("method", methodVal, allocator);
+    addRPCHeaders(json, "ControlUpdate");
 
     Value params(Type::kObjectType);
 
@@ -100,12 +105,7 @@ void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t dat
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
 
-    addRPCHeaders(json, allocator);
-
-    Value methodVal(Type::kStringType);
-    methodVal.SetString("MidiNoteEvent");
-
-    json.AddMember("method", methodVal, allocator);
+    addRPCHeaders(json, "MidiNoteEvent");
 
     Value params(Type::kObjectType);
 
@@ -131,6 +131,52 @@ void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t dat
 
     params.AddMember("message", message, allocator);
 
+    json.AddMember("params", params, allocator);
+
+    write(json);
+}
+
+void Engine::sendPatch(QString operation, QString from, QString path, Value& value) {
+    Document json;
+    json.SetObject();
+    Document::AllocatorType& allocator = json.GetAllocator();
+    addRPCHeaders(json, "Patch");
+
+    Value params(Type::kObjectType);
+    Value payload(Type::kObjectType);
+
+    Value operationVal(Type::kStringType);
+    operationVal.SetString(operation.toStdString(), allocator);
+    payload.AddMember("op", operationVal, allocator);
+
+    if (!from.isNull() && !from.isEmpty()) {
+        Value fromVal(Type::kStringType);
+        fromVal.SetString(from.toStdString(), allocator);
+        payload.AddMember("from", fromVal, allocator);
+    }
+
+    Value pathVal(Type::kStringType);
+    pathVal.SetString(path.toStdString(), allocator);
+    payload.AddMember("path", pathVal, allocator);
+
+    if (!value.IsNull()) {
+        payload.AddMember("value", value, allocator);
+    }
+
+    params.AddMember("payload", payload, allocator);
+    json.AddMember("params", params, allocator);
+
+    write(json);
+}
+
+void Engine::sendPatchList(rapidjson::Value& patchList) {
+    Document json;
+    json.SetObject();
+    Document::AllocatorType& allocator = json.GetAllocator();
+    addRPCHeaders(json, "Patch");
+
+    Value params(Type::kObjectType);
+    params.AddMember("payload", patchList, allocator);
     json.AddMember("params", params, allocator);
 
     write(json);
