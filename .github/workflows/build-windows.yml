@@ -1,0 +1,15 @@
+name: Windows Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download and install Qt
+      run: powershell %$GITHUB_WORKSPACE%\daw-prototype\actions\windows\get-qt.ps1
+    - name: Build Anthem
+      run: echo build anthem :)
