@@ -10,8 +10,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Download and install Qt
-      run: |
-            dir %GITHUB_WORKSPACE%
-            powershell %GITHUB_WORKSPACE%\daw-prototype\actions\windows\get-qt.ps1
+      run: powershell %GITHUB_WORKSPACE%\actions\windows\get-qt.ps1
     - name: Build Anthem
       run: echo build anthem :)
