@@ -8,8 +8,7 @@
 #include "Core/modelitem.h"
 #include "Model/control.h"
 
-class Transport : public ModelItem
-{
+class Transport : public ModelItem {
     Q_OBJECT
 private:
 public:

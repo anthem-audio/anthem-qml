@@ -4,8 +4,8 @@ using namespace rapidjson;
 
 Transport::Transport(ModelItem* parent, Value* projectNode) : ModelItem(parent, "transport")
 {
-    this->jsonNode = &(projectNode->operator[]("transport"));
-    this->masterPitch = new Control(this, "master_pitch", &this->jsonNode->operator[]("master_pitch"));
+    jsonNode = &(projectNode->operator[]("transport"));
+    masterPitch = new Control(this, "master_pitch", &jsonNode->operator[]("master_pitch"));
 }
 
 void Transport::externalUpdate(QStringRef pointer, PatchFragment& patch) {

@@ -6,8 +6,7 @@
 
 #include "Include/rapidjson/document.h"
 
-class Communicator : public QObject
-{
+class Communicator : public QObject {
 public:
     explicit Communicator(QObject* parent);
     virtual void sendPatch() = 0;

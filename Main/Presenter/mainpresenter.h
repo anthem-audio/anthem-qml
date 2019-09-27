@@ -14,8 +14,7 @@
 #include "Core/engine.h"
 #include "Utilities/patch.h"
 
-class MainPresenter : public Communicator
-{
+class MainPresenter : public Communicator {
     Q_OBJECT
 private:
     void updateAll();

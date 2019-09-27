@@ -10,8 +10,7 @@
 #include "Core/modelitem.h"
 #include "Utilities/projectfile.h"
 
-class Project : public ModelItem
-{
+class Project : public ModelItem {
     Q_OBJECT
 private:
 public:

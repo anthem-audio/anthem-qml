@@ -8,8 +8,7 @@
 
 #include "Include/rapidjson/document.h"
 
-class ModelItem : public Communicator
-{
+class ModelItem : public Communicator {
     Q_OBJECT
 private:
     QString key;

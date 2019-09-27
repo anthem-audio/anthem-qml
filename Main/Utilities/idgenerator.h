@@ -3,8 +3,7 @@
 
 #include "Include/snowflake.h"
 
-class IdGenerator
-{
+class IdGenerator {
     SnowFlake* snowflake;
 public:
     IdGenerator();

@@ -11,8 +11,7 @@
 #include "Include/rapidjson/stringbuffer.h"
 #include "Include/rapidjson/writer.h"
 
-class Engine : public QObject
-{
+class Engine : public QObject {
     Q_OBJECT
 private:
     QProcess* engine;

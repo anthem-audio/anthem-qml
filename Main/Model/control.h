@@ -7,8 +7,7 @@
 
 #include "Core/modelitem.h"
 
-class Control : public ModelItem
-{
+class Control : public ModelItem {
     Q_OBJECT
 private:
     uint64_t id;
