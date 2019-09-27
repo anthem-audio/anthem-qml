@@ -1,6 +1,6 @@
 name: Linux Build
 
-on: [push]
+on: []
 
 jobs:
   build:
