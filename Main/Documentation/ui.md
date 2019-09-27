@@ -131,7 +131,7 @@ Finally, we need to update the default empty project with our new control. Right
     "software_version": "0.0.1",
     "project": {
         "my_digit_control": {
-            "id": 1928375, // must be unique
+            "id": 1928375,
             "initial_value": 0,
             "minimum": 0,
             "maximum": 100,
@@ -140,16 +140,12 @@ Finally, we need to update the default empty project with our new control. Right
             "override_automation": false
         }
         
-        "song": {
-            ...
-        }
-        "transport": {
-            ...
-        }
-        ...
+        //...
     }
 }
 ```
+
+Note: `"id"` must have a unique value.
 
 ### Step 3: tying it all together
 
