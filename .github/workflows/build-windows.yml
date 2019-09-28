@@ -9,8 +9,10 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
-    - name: Download and install Qt
+    - name: Download Qt
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
+    - name: Install Qt
+      run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
     - name: Build Anthem
       run: dir D:\qt
