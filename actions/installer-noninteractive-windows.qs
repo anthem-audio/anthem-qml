@@ -5,7 +5,7 @@ function Controller() {
     })
 }
 
-Component.prototype.createOperations = function()
+Controller.prototype.createOperations = function()
 {
     // Call the base createOperations and afterwards set some registry settings
     // so that the simulator finds its fonts and applications find the simulator
