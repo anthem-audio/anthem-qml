@@ -1,1 +1,0 @@
-(new-object System.Net.WebClient).DownloadFile('http://qt.mirror.constant.com/archive/qt/5.13/5.13.1/qt-opensource-windows-x86-5.13.1.exe',$Env:GITHUB_WORKSPACE + '/qt-install.exe')
