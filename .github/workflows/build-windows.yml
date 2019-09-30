@@ -15,4 +15,9 @@ jobs:
     - name: Install Qt
       run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
     - name: Build Anthem
-      run: dir D:\qt
+      run: |
+            dir D:\Qt\5.13.1\mingw73_64\bin
+            D:\Qt\5.13.1\mingw73_64\bin\qtenv2.bat
+            cd %GITHUB_WORKSPACE%
+            qmake
+            dir %GITHUB_WORKSPACE%
