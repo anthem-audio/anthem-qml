@@ -4,7 +4,7 @@ function Controller() {
     installer.setMessageBoxAutomaticAnswer("installationError", QMessageBox.Ignore);
     installer.installationFinished.connect(function() {
         gui.clickButton(buttons.NextButton);
-    })
+    });
 }
 
 Controller.prototype.WelcomePageCallback = function() {
