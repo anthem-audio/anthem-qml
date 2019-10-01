@@ -72,12 +72,14 @@ void Control::set(float val, bool isFinal) {
 
     if (isFinal) {
         initialValue = val;
+        ui_currentValue = val;
         Value v(val);
         patchReplace("initial_value", v);
         changeMade = true;
     }
     else {
         liveUpdate(id, val);
+        ui_currentValue = val;
     }
 
     if (isFinal && overrideAutomation) {
@@ -91,5 +93,6 @@ void Control::set(float val, bool isFinal) {
 }
 
 float Control::get() {
-    return initialValue;
+    // ui_currentValue should always be the most up-to-date.
+    return ui_currentValue;
 }
