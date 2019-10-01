@@ -42,6 +42,9 @@ private:
     /// Handles engine lifecycle and communication.
     QVector<Engine*> engines;
 
+    /// Current place in the history
+    QVector<int> historyPointers;
+
     IdGenerator* id;
 
     QVector<QVector<Patch*>> projectHistories;
@@ -62,9 +65,6 @@ public:
 
     /// Project that is currently loaded
     int activeProjectIndex;
-
-    /// Current place in the history
-    QVector<int> historyPointers;
 
     // Used to access and manipulate project data
     void addProject(Project* project, ProjectFile* projectFile, Engine* engine);
