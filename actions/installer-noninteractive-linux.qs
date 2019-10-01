@@ -7,7 +7,7 @@ function Controller() {
 
 Controller.prototype.WelcomePageCallback = function() {
     // click delay here because the next button is initially disabled for ~1 second
-    gui.clickButton(buttons.NextButton, 30000);
+    gui.clickButton(buttons.NextButton, 10000);
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
@@ -29,8 +29,6 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
 
     widget.deselectAll();
     widget.selectComponent("qt.qt5.5131.gcc_64");
-    // widget.selectComponent("qt.qt5.5131.win64_mingw73");
-    // widget.selectComponent("qt.tools.win64_mingw730");
 
     gui.clickButton(buttons.NextButton);
 }
