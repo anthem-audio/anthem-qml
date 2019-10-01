@@ -9,4 +9,4 @@ cd Anthem
 D:\Qt\5.13.1\mingw73_64\bin\windeployqt.exe Main.exe --qmldir $env:GITHUB_WORKSPACE\Main
 cd ..
 7z a Anthem.zip Anthem
-Move-Item Anthem.zip $env:GITHUB_WORKSPACE
+Move-Item Anthem.zip D:\

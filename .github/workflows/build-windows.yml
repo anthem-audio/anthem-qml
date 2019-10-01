@@ -8,9 +8,6 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/checkout@v1
-        name: test artifact
-        path: '%GITHUB_WORKSPACE%\Prototyping.pro'
     - uses: actions/upload-artifact@master
     - name: Download Qt
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
@@ -23,4 +20,4 @@ jobs:
     - uses: actions/upload-artifact@master
       with:
         name: Anthem - Windows build
-        path: '%GITHUB_WORKSPACE%\Anthem.zip'
+        path: 'D:\Anthem.zip'
