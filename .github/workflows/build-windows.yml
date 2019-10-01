@@ -9,6 +9,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+        name: test artifact
+        path: '%GITHUB_WORKSPACE%\Prototyping.pro'
+    - uses: actions/upload-artifact@master
     - name: Download Qt
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
@@ -17,3 +20,7 @@ jobs:
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem.ps1"'
       shell: powershell
+    - uses: actions/upload-artifact@master
+      with:
+        name: Anthem - Windows build
+        path: '%GITHUB_WORKSPACE%\Anthem.zip'
