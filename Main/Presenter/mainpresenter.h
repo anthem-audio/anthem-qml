@@ -45,10 +45,11 @@ private:
     /// Current place in the history
     QVector<int> historyPointers;
 
-    IdGenerator* id;
-
+    /// List of project histories
     QVector<QVector<Patch*>> projectHistories;
     bool isPatchInProgress;
+
+    IdGenerator* id;
 
 public:
     explicit MainPresenter(QObject *parent, IdGenerator* id);

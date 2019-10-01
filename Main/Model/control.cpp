@@ -65,10 +65,10 @@ void Control::setOverrideState(bool isOverridden) {
 void Control::set(float val, bool isFinal) {
     bool changeMade = false;
 
-    if (!isFinal && !overrideAutomation) {
+//    if (!isFinal && !overrideAutomation) {
 //        setOverrideState(true);
 //        changeMade = true;
-    }
+//    }
 
     if (isFinal) {
         initialValue = val;
@@ -82,10 +82,10 @@ void Control::set(float val, bool isFinal) {
         ui_currentValue = val;
     }
 
-    if (isFinal && overrideAutomation) {
+//    if (isFinal && overrideAutomation) {
 //        setOverrideState(false);
 //        changeMade = true;
-    }
+//    }
 
     if (changeMade) {
         sendPatch();
