@@ -8,7 +8,6 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/upload-artifact@master
     - name: Download Qt
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
