@@ -17,6 +17,9 @@ jobs:
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem.ps1"'
       shell: powershell
+    - name: Run tests
+      run: D:\Anthem\Main.exe --test
+      continue-on-error: true
     - uses: actions/upload-artifact@master
       with:
         name: Anthem - Windows build
