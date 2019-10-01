@@ -1,4 +1,5 @@
 QT += quick
+QT += testlib
 CONFIG += c++11
 
 # The following define makes your compiler emit warnings if you use
@@ -85,6 +86,7 @@ HEADERS += \
     Model/project.h \
     Model/transport.h \
     Presenter/mainpresenter.h \
+    Tests/modeltests.h \
     Utilities/exceptions.h \
     Utilities/idgenerator.h \
     Utilities/mousehelper.h \
