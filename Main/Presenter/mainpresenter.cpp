@@ -60,6 +60,14 @@ Engine* MainPresenter::getEngineAt(int index) {
     return engines[index];
 }
 
+QVector<Patch*> MainPresenter::getProjectHistoryAt(int index) {
+    return projectHistories[index];
+}
+
+int MainPresenter::getHistoryPointerAt(int index) {
+    return historyPointers[index];
+}
+
 void MainPresenter::removeProjectAt(int index) {
     projects[index]->~Project();
     projectFiles[index]->~ProjectFile();

@@ -48,16 +48,24 @@ private slots:
 
         Project* project = presenter->getProjectAt(0);
 
+
+
         qDebug() << "Initial project state";
         QCOMPARE(project->transport->masterPitch->get(), 0.0f);
 
+
+
         qDebug() << "Direct item set";
+
         // Set the value to -5, but send a live update instead of a patch.
         project->transport->masterPitch->set(-5.0f, false);
+
         // The control should report the newly set value.
         QCOMPARE(project->transport->masterPitch->get(), -5.0f);
+
         // The JSON model should not have been updated.
         QCOMPARE(project->transport->masterPitch->jsonNode->operator[]("initial_value").GetFloat(), 0.0f);
+
         // The signal for updating the UI should not have fired because the change does
         // not represent a change to the model. Arguably it shouldn't fire at all, but
         // I've made the decision to update the UI on any final model change so I don't
@@ -67,16 +75,37 @@ private slots:
         // for a single value it doesn't seem too bad. We'll see if I change my mind :)
         QCOMPARE(eventCounter->masterPitchEventCount, 0);
 
+
+
         // Set the value to 10, and send a patch (final value in a channge operation).
         project->transport->masterPitch->set(10.0f, true);
+
         // The control should report the newly set value.
         QCOMPARE(project->transport->masterPitch->get(), 10.0f);
+
         // The JSON model should be updated this time.
         QCOMPARE(project->transport->masterPitch->jsonNode->operator[]("initial_value").GetFloat(), 10.0f);
+
         // This is a final (patch-emitting) change, so the UI should have been notified
         // (see above)
         QCOMPARE(eventCounter->masterPitchEventCount, 1);
         QCOMPARE(eventCounter->mostRecentMasterPitch, 10);
+
+
+
+        qDebug() << "Verify correct patch generation via undo history";
+
+        // At this point there should be one patch for 0.0f -> 10.0f
+        rapidjson::Value& patch = presenter->getProjectHistoryAt(0)[0]->getPatch();
+        QCOMPARE(patch[0]["op"].GetString(), "replace");
+        QCOMPARE(patch[0]["path"].GetString(), "/project/transport/master_pitch/initial_value");
+        QCOMPARE(patch[0]["value"].GetFloat(), 10.0f);
+
+        // ... and a corresponding undo patch for 10.0f -> 0.0f
+        rapidjson::Value& undoPatch = presenter->getProjectHistoryAt(0)[0]->getUndoPatch();
+        QCOMPARE(undoPatch[0]["op"].GetString(), "replace");
+        QCOMPARE(undoPatch[0]["path"].GetString(), "/project/transport/master_pitch/initial_value");
+        QCOMPARE(undoPatch[0]["value"].GetFloat(), 0.0f);
     }
 
     void mySecondTest() {
