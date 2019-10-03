@@ -4,8 +4,6 @@
 #include "Include/rapidjson/stringbuffer.h"
 #include "Include/rapidjson/writer.h"
 
-#include <QDebug>
-
 using namespace rapidjson;
 
 PatchFragment::PatchFragment(QObject* parent, Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value) : QObject(parent) {
@@ -71,7 +69,7 @@ void PatchFragment::apply(Document &doc) {
                     .Set(doc, Value(
                         Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType), doc.GetAllocator()
                     ));
-            Pointer(patch["path"].GetString())
+            Pointer(patch["from"].GetString())
                     .Erase(doc);
             break;
     }
