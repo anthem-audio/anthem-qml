@@ -165,7 +165,6 @@ void MainPresenter::loadProject(QString path) {
 
     addProject(project, projectFile, engine);
     switchActiveProject(projects.length() - 1);
-    updateAll();
     isInInitialState = false;
 }
 
@@ -200,9 +199,8 @@ bool MainPresenter::isActiveProjectSaved() {
 
 // The patch logic below assumes that only one operation
 // will happen at once. If two separate model items
-// initiate patch builds, they will be grouped together,
-// and possibly malformed in some cases, especially when
-// it comes to undo/redo.
+// initiate patch builds at the same time, they will be
+// grouped together and possibly malformed in some cases.
 
 void MainPresenter::initializeNewPatchIfNeeded() {
     if (isPatchInProgress) {

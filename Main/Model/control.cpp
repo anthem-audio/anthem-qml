@@ -7,6 +7,7 @@ Control::Control(ModelItem *parent, QString name, Value* controlNode) : ModelIte
     jsonNode = controlNode;
     id = controlNode->operator[]("id").GetUint64();
     initialValue = controlNode->operator[]("initial_value").GetFloat();
+    ui_currentValue = initialValue;
     minimum = controlNode->operator[]("minimum").GetFloat();
     maximum = controlNode->operator[]("maximum").GetFloat();
     step = controlNode->operator[]("step").GetFloat();
