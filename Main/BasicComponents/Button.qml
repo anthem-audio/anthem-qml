@@ -27,6 +27,7 @@ Item {
 
     property string textContent: ""
     property string textFloat: "center"
+    property real textPixelSize: 11
 
     function getState() {
         if (isHighlighted) {
@@ -176,7 +177,8 @@ Item {
     Text {
         id: text
         text: qsTr(textContent)
-        font: Fonts.notoSansRegular.name
+        font.family: Fonts.notoSansRegular.name
+        font.pixelSize: textPixelSize
         anchors.centerIn: textFloat == "center" ? parent : undefined
         anchors.left: textFloat == "left" ? parent.left : undefined
         anchors.right: textFloat == "right" ? parent.right : undefined
