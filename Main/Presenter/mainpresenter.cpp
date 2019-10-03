@@ -72,10 +72,17 @@ void MainPresenter::removeProjectAt(int index) {
     projects[index]->~Project();
     projectFiles[index]->~ProjectFile();
     engines[index]->~Engine();
+
     projects.removeAt(index);
     projectFiles.removeAt(index);
     engines.removeAt(index);
     historyPointers.removeAt(index);
+
+    for (int i = 0; i < projectHistories[index].length(); i++) {
+        projectHistories[index][i]->~Patch();
+    }
+
+    projectHistories.removeAt(index);
 
     // If the active project is closed, the index will be set to -1.
     if (index == activeProjectIndex) {
