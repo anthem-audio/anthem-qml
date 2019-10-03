@@ -97,12 +97,12 @@ Item {
         if (tabCount <= 1) {
             // TODO: prompt for save before closing
             tabGroup.children[0].destroy();
-            lastTabClosed();
             Anthem.closeProject(index);
             lastTabClosed();
         }
         else {
             removeTab(index);
+            Anthem.closeProject(index);
             Anthem.switchActiveProject(selectedTabIndex);
         }
     }

@@ -42,10 +42,14 @@ private:
     /// Handles engine lifecycle and communication.
     QVector<Engine*> engines;
 
-    IdGenerator* id;
+    /// Current place in the history
+    QVector<int> historyPointers;
 
+    /// List of project histories
     QVector<QVector<Patch*>> projectHistories;
     bool isPatchInProgress;
+
+    IdGenerator* id;
 
 public:
     explicit MainPresenter(QObject *parent, IdGenerator* id);
@@ -63,15 +67,14 @@ public:
     /// Project that is currently loaded
     int activeProjectIndex;
 
-    /// Current place in the history
-    QVector<int> historyPointers;
-
     // Used to access and manipulate project data
     void addProject(Project* project, ProjectFile* projectFile, Engine* engine);
+    void removeProjectAt(int index);
     Project* getProjectAt(int index);
     ProjectFile* getProjectFileAt(int index);
     Engine* getEngineAt(int index);
-    void removeProjectAt(int index);
+    QVector<Patch*> getProjectHistoryAt(int index);
+    int getHistoryPointerAt(int index);
 
 signals:
     void masterPitchChanged(int pitch);

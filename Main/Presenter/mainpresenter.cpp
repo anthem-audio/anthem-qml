@@ -13,11 +13,6 @@ using namespace rapidjson;
 
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
 {
-    projectHistories = QVector<QVector<Patch*>>();
-    projectHistories.append(QVector<Patch*>());
-    historyPointers = QVector<int>();
-    historyPointers.append(-1);
-
     isPatchInProgress = false;
     isActiveProjectValid = true;
 
@@ -60,14 +55,29 @@ Engine* MainPresenter::getEngineAt(int index) {
     return engines[index];
 }
 
+QVector<Patch*> MainPresenter::getProjectHistoryAt(int index) {
+    return projectHistories[index];
+}
+
+int MainPresenter::getHistoryPointerAt(int index) {
+    return historyPointers[index];
+}
+
 void MainPresenter::removeProjectAt(int index) {
     projects[index]->~Project();
     projectFiles[index]->~ProjectFile();
     engines[index]->~Engine();
+
     projects.removeAt(index);
     projectFiles.removeAt(index);
     engines.removeAt(index);
     historyPointers.removeAt(index);
+
+    for (int i = 0; i < projectHistories[index].length(); i++) {
+        projectHistories[index][i]->~Patch();
+    }
+
+    projectHistories.removeAt(index);
 
     // If the active project is closed, the index will be set to -1.
     if (index == activeProjectIndex) {
@@ -154,8 +164,7 @@ void MainPresenter::loadProject(QString path) {
     engine->start();
 
     addProject(project, projectFile, engine);
-    activeProjectIndex = projects.length() - 1;
-    updateAll();
+    switchActiveProject(projects.length() - 1);
     isInInitialState = false;
 }
 
@@ -181,9 +190,6 @@ int MainPresenter::getMasterPitch() {
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
-    if (isFinal) {
-        emit masterPitchChanged(pitch);
-    }
 }
 
 bool MainPresenter::isActiveProjectSaved() {
@@ -193,9 +199,8 @@ bool MainPresenter::isActiveProjectSaved() {
 
 // The patch logic below assumes that only one operation
 // will happen at once. If two separate model items
-// initiate patch builds, they will be grouped together,
-// and possibly malformed in some cases, especially when
-// it comes to undo/redo.
+// initiate patch builds at the same time, they will be
+// grouped together and possibly malformed in some cases.
 
 void MainPresenter::initializeNewPatchIfNeeded() {
     if (isPatchInProgress) {

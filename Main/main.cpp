@@ -6,8 +6,14 @@
 #include "Utilities/idgenerator.h"
 #include "Presenter/mainpresenter.h"
 
-int main(int argc, char *argv[])
-{
+#include "Tests/modeltests.h"
+
+int main(int argc, char *argv[]) {
+    // Simplistic check for -test or --test in first argument position
+    if (argc > 1 && (strncmp(argv[1], "-test", 6) == 0 || strncmp(argv[1], "--test", 7) == 0)) {
+        ModelTests modelTests;
+        return QTest::qExec(&modelTests);
+    }
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);

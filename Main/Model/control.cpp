@@ -7,6 +7,7 @@ Control::Control(ModelItem *parent, QString name, Value* controlNode) : ModelIte
     jsonNode = controlNode;
     id = controlNode->operator[]("id").GetUint64();
     initialValue = controlNode->operator[]("initial_value").GetFloat();
+    ui_currentValue = initialValue;
     minimum = controlNode->operator[]("minimum").GetFloat();
     maximum = controlNode->operator[]("maximum").GetFloat();
     step = controlNode->operator[]("step").GetFloat();
@@ -65,25 +66,27 @@ void Control::setOverrideState(bool isOverridden) {
 void Control::set(float val, bool isFinal) {
     bool changeMade = false;
 
-    if (!isFinal && !overrideAutomation) {
+//    if (!isFinal && !overrideAutomation) {
 //        setOverrideState(true);
 //        changeMade = true;
-    }
+//    }
 
     if (isFinal) {
         initialValue = val;
+        ui_currentValue = val;
         Value v(val);
         patchReplace("initial_value", v);
         changeMade = true;
     }
     else {
         liveUpdate(id, val);
+        ui_currentValue = val;
     }
 
-    if (isFinal && overrideAutomation) {
+//    if (isFinal && overrideAutomation) {
 //        setOverrideState(false);
 //        changeMade = true;
-    }
+//    }
 
     if (changeMade) {
         sendPatch();
@@ -91,5 +94,6 @@ void Control::set(float val, bool isFinal) {
 }
 
 float Control::get() {
-    return initialValue;
+    // ui_currentValue should always be the most up-to-date.
+    return ui_currentValue;
 }
