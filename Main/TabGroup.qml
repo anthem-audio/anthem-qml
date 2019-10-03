@@ -103,6 +103,7 @@ Item {
         }
         else {
             removeTab(index);
+            Anthem.closeProject(index);
             Anthem.switchActiveProject(selectedTabIndex);
         }
     }
