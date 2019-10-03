@@ -264,7 +264,7 @@ private slots:
         QCOMPARE(eventCounter->masterPitchEventCount, 1);
         QCOMPARE(presenter->getProjectHistoryAt(0).length(), 1);
         Patch& patch2 = *presenter->getProjectHistoryAt(0)[0];
-        QCOMPARE(patch2.getPatch().Size(), 1);
+        QCOMPARE(patch2.getPatch().Size(), 1u);
         QCOMPARE(patch2.getPatch()[0]["op"].GetString(), "replace");
         QCOMPARE(patch2.getUndoPatch()[0]["op"].GetString(), "replace");
         QCOMPARE(patch2.getPatch()[0]["path"].GetString(), "/project/transport/master_pitch/initial_value");
