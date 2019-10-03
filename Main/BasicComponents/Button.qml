@@ -27,7 +27,7 @@ Item {
 
     property string textContent: ""
     property string textFloat: "center"
-    property real textPixelSize: 11
+    property real   textPixelSize: 11
 
     function getState() {
         if (isHighlighted) {

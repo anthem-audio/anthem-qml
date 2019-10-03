@@ -194,7 +194,6 @@ void MainPresenter::disconnectUiUpdateSignals(Project* project) {
 }
 
 void MainPresenter::ui_updateMyDigitControl(float value) {
-    //...
     emit myDigitControlChanged(static_cast<int>(std::round(value)));
 }
 
@@ -209,9 +208,6 @@ int MainPresenter::getMyDigitControl() {
 
 void MainPresenter::setMyDigitControl(int value, bool isFinal) {
     projects[activeProjectIndex]->myDigitControl->set(static_cast<float>(value), isFinal);
-    if (isFinal) {
-        emit myDigitControlChanged(value);
-    }
 }
 ```
 

@@ -196,9 +196,6 @@ int MainPresenter::getMasterPitch() {
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
-    if (isFinal) {
-        emit masterPitchChanged(pitch);
-    }
 }
 
 bool MainPresenter::isActiveProjectSaved() {
