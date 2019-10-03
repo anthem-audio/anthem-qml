@@ -235,8 +235,179 @@ private slots:
         }
     }
 
-    void cleanupTestCase() {
+    void presenterTests() {
+        // Remove the current testing project and open a new one
+        presenter->removeProjectAt(0);
+        presenter->newProject();
+        eventCounter->~PresenterEventCounter();
+        eventCounter = new PresenterEventCounter(this);
 
+        QObject::connect(presenter,    SIGNAL(masterPitchChanged(int)),
+                         eventCounter, SLOT(masterPitchChanged(int)));
+
+
+        // The new project should have no undo history
+        QCOMPARE(presenter->getHistoryPointerAt(0), -1);
+
+        // Undo and redo shouldn't do or break anything
+        presenter->undo();
+        QCOMPARE(presenter->getHistoryPointerAt(0), -1);
+        QCOMPARE(eventCounter->masterPitchEventCount, 0);
+        presenter->redo();
+        QCOMPARE(presenter->getHistoryPointerAt(0), -1);
+        QCOMPARE(eventCounter->masterPitchEventCount, 0);
+
+        // Performing an action should add an undo step
+        presenter->setMasterPitch(3, true);
+        QCOMPARE(presenter->getMasterPitch(), 3);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 0);
+        QCOMPARE(eventCounter->masterPitchEventCount, 1);
+        QCOMPARE(presenter->getProjectHistoryAt(0).length(), 1);
+        Patch& patch2 = *presenter->getProjectHistoryAt(0)[0];
+        QCOMPARE(patch2.getPatch().Size(), 1);
+        QCOMPARE(patch2.getPatch()[0]["op"].GetString(), "replace");
+        QCOMPARE(patch2.getUndoPatch()[0]["op"].GetString(), "replace");
+        QCOMPARE(patch2.getPatch()[0]["path"].GetString(), "/project/transport/master_pitch/initial_value");
+        QCOMPARE(patch2.getUndoPatch()[0]["path"].GetString(), "/project/transport/master_pitch/initial_value");
+        QCOMPARE(patch2.getPatch()[0]["value"].GetFloat(), 3.0f);
+        QCOMPARE(patch2.getUndoPatch()[0]["value"].GetFloat(), 0.0f);
+
+        // The undo history should not update after an intermediate (live update) change
+        presenter->setMasterPitch(-1, false);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 0);
+        // ... but getMasterPitch should still reflect the proper value
+        QCOMPARE(presenter->getMasterPitch(), -1);
+
+        // The undo history should be accurate after multiple actions
+        presenter->setMasterPitch(1, true);
+        presenter->setMasterPitch(2, true);
+        presenter->setMasterPitch(3, true);
+        presenter->setMasterPitch(4, true);
+        presenter->setMasterPitch(5, true);
+        QCOMPARE(presenter->getMasterPitch(), 5);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 5);
+        QCOMPARE(presenter->getProjectHistoryAt(0).length(), 6);
+        Patch& patch3 = *presenter->getProjectHistoryAt(0)[5];
+        QCOMPARE(patch3.getPatch()[0]["value"].GetFloat(), 5.0f);
+        QCOMPARE(patch3.getUndoPatch()[0]["value"].GetFloat(), 4.0f);
+        Patch& patch4 = *presenter->getProjectHistoryAt(0)[4];
+        QCOMPARE(patch4.getPatch()[0]["value"].GetFloat(), 4.0f);
+        QCOMPARE(patch4.getUndoPatch()[0]["value"].GetFloat(), 3.0f);
+        Patch& patch5 = *presenter->getProjectHistoryAt(0)[3];
+        QCOMPARE(patch5.getPatch()[0]["value"].GetFloat(), 3.0f);
+        QCOMPARE(patch5.getUndoPatch()[0]["value"].GetFloat(), 2.0f);
+        Patch& patch6 = *presenter->getProjectHistoryAt(0)[2];
+        QCOMPARE(patch6.getPatch()[0]["value"].GetFloat(), 2.0f);
+        QCOMPARE(patch6.getUndoPatch()[0]["value"].GetFloat(), 1.0f);
+        Patch& patch7 = *presenter->getProjectHistoryAt(0)[1];
+        QCOMPARE(patch7.getPatch()[0]["value"].GetFloat(), 1.0f);
+        QCOMPARE(patch7.getUndoPatch()[0]["value"].GetFloat(), 3.0f);
+
+        // Undo should work as expected
+        presenter->undo();
+        presenter->undo();
+        QCOMPARE(presenter->getMasterPitch(), 3);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 3);
+
+        // Redo should work as expected
+        presenter->redo();
+        presenter->redo();
+        QCOMPARE(presenter->getMasterPitch(), 5);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 5);
+
+        // Undo + change should erase part of the undo history
+        presenter->undo();
+        presenter->undo();
+        presenter->undo();
+        presenter->setMasterPitch(12, true);
+        QCOMPARE(presenter->getMasterPitch(), 12);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 3);
+
+        // Lots of undos shouldn't break anything
+        presenter->undo();
+        presenter->undo();
+        presenter->undo();
+        presenter->undo();
+        presenter->undo();
+        presenter->undo();
+        QCOMPARE(presenter->getMasterPitch(), 0);
+        QCOMPARE(presenter->getHistoryPointerAt(0), -1);
+
+        // Lots of redos shouldn't break anything
+        presenter->redo();
+        presenter->redo();
+        presenter->redo();
+        presenter->redo();
+        presenter->redo();
+        presenter->redo();
+        QCOMPARE(presenter->getMasterPitch(), 12);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 3);
+
+
+        // Creating a new project should work as expected
+        presenter->newProject();
+        qDebug() << "Checking for two open projects.";
+        presenter->getProjectAt(0);
+        presenter->getProjectAt(1);
+        presenter->getEngineAt(1);
+        presenter->getProjectFileAt(1);
+        presenter->getHistoryPointerAt(1);
+        presenter->getProjectHistoryAt(1);
+        QCOMPARE(presenter->activeProjectIndex, 1);
+
+        // We should be able to switch tabs
+        presenter->setMasterPitch(6, true);
+        presenter->setMasterPitch(7, true);
+        presenter->undo();
+        QCOMPARE(presenter->getMasterPitch(), 6);
+        QCOMPARE(presenter->getHistoryPointerAt(1), 0);
+
+        presenter->switchActiveProject(0);
+        QCOMPARE(presenter->activeProjectIndex, 0);
+        presenter->setMasterPitch(6, true);
+        presenter->setMasterPitch(7, true);
+        QCOMPARE(presenter->getMasterPitch(), 7);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 5);
+
+        presenter->switchActiveProject(1);
+        QCOMPARE(presenter->activeProjectIndex, 1);
+        QCOMPARE(presenter->getHistoryPointerAt(1), 0);
+        presenter->redo();
+        QCOMPARE(presenter->getHistoryPointerAt(1), 1);
+        presenter->setMasterPitch(8, true);
+        presenter->setMasterPitch(9, true);
+        QCOMPARE(presenter->getMasterPitch(), 9);
+        QCOMPARE(presenter->getHistoryPointerAt(1), 3);
+
+        // We should be able to close the first tab
+        presenter->closeProject(0);
+        presenter->switchActiveProject(0);
+        QCOMPARE(presenter->activeProjectIndex, 0);
+        QCOMPARE(presenter->getMasterPitch(), 9);
+        QCOMPARE(presenter->getHistoryPointerAt(0), 3);
+
+        // Save and load should work as expected
+        auto path = QDir::currentPath() + "/test.anthem";
+        qDebug() << path;
+        presenter->setMasterPitch(10, true);
+        presenter->saveActiveProjectAs(path);
+        presenter->loadProject(path);
+        QCOMPARE(presenter->activeProjectIndex, 1);
+        QCOMPARE(presenter->getMasterPitch(), 10);
+        QCOMPARE(presenter->getHistoryPointerAt(1), -1);
+
+        presenter->setMasterPitch(-12, true);
+        presenter->saveActiveProject();
+        presenter->loadProject(path);
+        QCOMPARE(presenter->activeProjectIndex, 2);
+        QCOMPARE(presenter->getMasterPitch(), -12);
+        QCOMPARE(presenter->getHistoryPointerAt(2), -1);
+    }
+
+    void cleanupTestCase() {
+        auto path = QDir::currentPath() + "/test.anthem";
+        QFile file(path);
+        file.remove();
     }
 };
 
