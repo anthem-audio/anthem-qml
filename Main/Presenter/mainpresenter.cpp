@@ -13,11 +13,6 @@ using namespace rapidjson;
 
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
 {
-    projectHistories = QVector<QVector<Patch*>>();
-    projectHistories.append(QVector<Patch*>());
-    historyPointers = QVector<int>();
-    historyPointers.append(-1);
-
     isPatchInProgress = false;
     isActiveProjectValid = true;
 

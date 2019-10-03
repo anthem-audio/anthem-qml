@@ -69,12 +69,12 @@ public:
 
     // Used to access and manipulate project data
     void addProject(Project* project, ProjectFile* projectFile, Engine* engine);
+    void removeProjectAt(int index);
     Project* getProjectAt(int index);
     ProjectFile* getProjectFileAt(int index);
     Engine* getEngineAt(int index);
     QVector<Patch*> getProjectHistoryAt(int index);
     int getHistoryPointerAt(int index);
-    void removeProjectAt(int index);
 
 signals:
     void masterPitchChanged(int pitch);
