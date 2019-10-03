@@ -7,6 +7,11 @@
 
 #include "Presenter/mainpresenter.h"
 
+#include "Include/rapidjson/pointer.h"
+
+Q_DECLARE_METATYPE(PatchFragment::PatchType);
+Q_DECLARE_METATYPE(rapidjson::Value*);
+
 class PresenterEventCounter : public QObject {
 Q_OBJECT
 
@@ -28,28 +33,48 @@ class ModelTests : public QObject {
 Q_OBJECT
 
 private:
-    bool myCondition() {
-        return true;
-    }
+    IdGenerator* id;
+    MainPresenter* presenter;
+    PresenterEventCounter* eventCounter;
+    Project* project;
+
+    rapidjson::Document doc;
+
+    rapidjson::Value basicAddValue;
+    rapidjson::Value basicRemoveValue;
+    rapidjson::Value basicReplaceValue;
+    rapidjson::Value basicCopyValue;
+    rapidjson::Value basicMoveValue;
 
 private slots:
     void initTestCase() {
+        id = new IdGenerator();
+        presenter = new MainPresenter(this, id);
 
-    }
-
-    void emptyProject() {
-        IdGenerator* id = new IdGenerator();
-        MainPresenter* presenter = new MainPresenter(this, id);
-
-        PresenterEventCounter* eventCounter = new PresenterEventCounter(this);
+        eventCounter = new PresenterEventCounter(this);
 
         QObject::connect(presenter,    SIGNAL(masterPitchChanged(int)),
                          eventCounter, SLOT(masterPitchChanged(int)));
 
-        Project* project = presenter->getProjectAt(0);
+        project = presenter->getProjectAt(0);
 
+        doc.Parse(
+            "{"
+            "    \"basic_remove\": \"init value\","
+            "    \"basic_replace\": \"init value\","
+            "    \"basic_copy_source\": \"init value\","
+            "    \"basic_move_source\": \"init value\""
+            "}"
+        );
 
+        basicAddValue.SetString("add");
+        basicRemoveValue.SetNull();
+        basicReplaceValue.SetString("replace");
+        basicCopyValue.SetNull();
+        basicRemoveValue.SetNull();
+    }
 
+    void emptyProject() {
         qDebug() << "Initial project state";
         QCOMPARE(project->transport->masterPitch->get(), 0.0f);
 
@@ -108,8 +133,106 @@ private slots:
         QCOMPARE(undoPatch[0]["value"].GetFloat(), 0.0f);
     }
 
-    void mySecondTest() {
-        QVERIFY(myCondition());
+    void patch_data() {
+        // Note: a document is defined in initTestCase()
+        // that will be used for each of the tests below.
+
+        QTest::addColumn<PatchFragment::PatchType>("patchType");
+        QTest::addColumn<QString>("from");
+        QTest::addColumn<QString>("path");
+        QTest::addColumn<rapidjson::Value*>("value");
+
+        QTest::addRow("basic add")         << PatchFragment::PatchType::ADD      << QString()            << "/basic_add"              << &basicAddValue;
+        QTest::addRow("basic remove")      << PatchFragment::PatchType::REMOVE   << QString()            << "/basic_remove"           << &basicRemoveValue;
+        QTest::addRow("basic replace")     << PatchFragment::PatchType::REPLACE  << QString()            << "/basic_replace"          << &basicReplaceValue;
+        QTest::addRow("basic copy")        << PatchFragment::PatchType::COPY     << "/basic_copy_source" << "/basic_copy_destination" << &basicCopyValue;
+        QTest::addRow("basic move")        << PatchFragment::PatchType::MOVE     << "/basic_move_source" << "/basic_move_destination" << &basicMoveValue;
+    }
+
+    void patch() {
+        QFETCH(PatchFragment::PatchType, patchType);
+        QFETCH(QString, from);
+        QFETCH(QString, path);
+        QFETCH(rapidjson::Value*, value);
+
+        rapidjson::Document startDoc;
+        startDoc.CopyFrom(doc, startDoc.GetAllocator());
+
+        Patch patch(this, presenter->getProjectAt(0), doc);
+        switch (patchType) {
+        case PatchFragment::PatchType::ADD:
+            patch.patchAdd(path, *value);
+            break;
+        case PatchFragment::PatchType::REMOVE:
+            patch.patchRemove(path);
+            break;
+        case PatchFragment::PatchType::REPLACE:
+            patch.patchReplace(path, *value);
+            break;
+        case PatchFragment::PatchType::COPY:
+            patch.patchCopy(from, path);
+            break;
+        case PatchFragment::PatchType::MOVE:
+            patch.patchMove(from, path);
+            break;
+        }
+
+        patch.apply();
+
+        rapidjson::Document afterPatchDoc;
+        afterPatchDoc.CopyFrom(doc, afterPatchDoc.GetAllocator());
+
+        switch (patchType) {
+        case PatchFragment::PatchType::ADD:
+            QCOMPARE(rapidjson::Pointer(path.toStdString()).Get(afterPatchDoc)->GetString(), "add");
+            break;
+        case PatchFragment::PatchType::REMOVE:
+            QVERIFY(rapidjson::Pointer(path.toStdString()).GetWithDefault(afterPatchDoc, rapidjson::kNullType).IsNull());
+            break;
+        case PatchFragment::PatchType::REPLACE:
+            QCOMPARE(rapidjson::Pointer(path.toStdString()).Get(afterPatchDoc)->GetString(), "replace");
+            break;
+        case PatchFragment::PatchType::COPY:
+            QCOMPARE(rapidjson::Pointer(from.toStdString()).Get(afterPatchDoc)->GetString(),
+                     rapidjson::Pointer(path.toStdString()).Get(afterPatchDoc)->GetString());
+            break;
+        case PatchFragment::PatchType::MOVE:
+            QCOMPARE(rapidjson::Pointer(from.toStdString()).Get(startDoc)->GetString(),
+                     rapidjson::Pointer(path.toStdString()).Get(afterPatchDoc)->GetString());
+            QVERIFY(rapidjson::Pointer(from.toStdString()).GetWithDefault(afterPatchDoc, rapidjson::kNullType).IsNull());
+            break;
+        }
+
+        patch.applyUndo();
+
+        rapidjson::Document afterUndoDoc;
+        afterUndoDoc.CopyFrom(doc, afterUndoDoc.GetAllocator());
+
+        switch (patchType) {
+        case PatchFragment::PatchType::ADD:
+            QVERIFY(rapidjson::Pointer(path.toStdString()).GetWithDefault(afterUndoDoc, rapidjson::kNullType).IsNull());
+            break;
+        case PatchFragment::PatchType::REMOVE:
+            QCOMPARE(rapidjson::Pointer(path.toStdString()).Get(afterUndoDoc)->GetString(),
+                     rapidjson::Pointer(path.toStdString()).Get(startDoc)->GetString());
+            break;
+        case PatchFragment::PatchType::REPLACE:
+            QCOMPARE(rapidjson::Pointer(path.toStdString()).Get(afterUndoDoc)->GetString(),
+                     rapidjson::Pointer(path.toStdString()).Get(startDoc)->GetString());
+            QVERIFY(rapidjson::Pointer(path.toStdString()).Get(afterUndoDoc)->GetString() !=
+                    rapidjson::Pointer(path.toStdString()).Get(afterPatchDoc)->GetString());
+            break;
+        case PatchFragment::PatchType::COPY:
+            QCOMPARE(rapidjson::Pointer(from.toStdString()).Get(afterUndoDoc)->GetString(),
+                     rapidjson::Pointer(from.toStdString()).Get(startDoc)->GetString());
+            QVERIFY(rapidjson::Pointer(path.toStdString()).GetWithDefault(afterUndoDoc, rapidjson::kNullType).IsNull());
+            break;
+        case PatchFragment::PatchType::MOVE:
+            QCOMPARE(rapidjson::Pointer(from.toStdString()).Get(afterUndoDoc)->GetString(),
+                     rapidjson::Pointer(from.toStdString()).Get(startDoc)->GetString());
+            QVERIFY(rapidjson::Pointer(path.toStdString()).GetWithDefault(afterUndoDoc, rapidjson::kNullType).IsNull());
+            break;
+        }
     }
 
     void cleanupTestCase() {
