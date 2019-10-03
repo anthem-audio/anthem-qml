@@ -164,7 +164,7 @@ void MainPresenter::loadProject(QString path) {
     engine->start();
 
     addProject(project, projectFile, engine);
-    activeProjectIndex = projects.length() - 1;
+    switchActiveProject(projects.length() - 1);
     updateAll();
     isInInitialState = false;
 }
