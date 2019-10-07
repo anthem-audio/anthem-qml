@@ -40,5 +40,7 @@
         <file>ResizeHandles.qml</file>
         <file>MoveHandle.qml</file>
         <file>BasicComponents/TabHandle.qml</file>
+        <file>Dialogs/DialogBase.qml</file>
+        <file>BasicComponents/WindowControls.qml</file>
     </qresource>
 </RCC>
