@@ -68,7 +68,7 @@ Window {
             height: 20
 
             MoveHandle {
-                mainWindow: mainWindow
+                window: mainWindow
                 anchors.fill: parent
             }
 

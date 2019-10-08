@@ -1,7 +1,7 @@
 import QtQuick 2.0
 
 Item {
-    property var mainWindow
+    property var window
 
     MouseArea {
         anchors.fill: parent
@@ -13,30 +13,30 @@ Item {
         }
 
         onReleased: {
-            if (mainWindow.y + mouseY < 1) {
-                mainWindow.isMaximized = true;
-                mainWindow.showMaximized();
+            if (window.y + mouseY < 1) {
+                window.isMaximized = true;
+                window.showMaximized();
             }
         }
 
         onMouseXChanged: {
-            if (mainWindow.isMaximized) {
-                mainWindow.isMaximized = false;
-                mainWindow.showNormal();
+            if (window.isMaximized) {
+                window.isMaximized = false;
+                window.showNormal();
             }
 
             var dx = mouseX - previousX
-            mainWindow.setX(mainWindow.x + dx)
+            window.setX(window.x + dx)
         }
 
         onMouseYChanged: {
-            if (mainWindow.isMaximized) {
-                mainWindow.isMaximized = false;
-                mainWindow.showNormal();
+            if (window.isMaximized) {
+                window.isMaximized = false;
+                window.showNormal();
             }
 
             var dy = mouseY - previousY
-            mainWindow.setY(mainWindow.y + dy)
+            window.setY(window.y + dy)
         }
     }
 }
