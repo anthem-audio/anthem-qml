@@ -20,8 +20,13 @@ Controller.prototype.IntroductionPageCallback = function() {
     gui.clickButton(buttons.NextButton);
 }
 
-Controller.prototype.TargetDirectoryPageCallback = function()
-{
+Controller.prototype.DynamicTelemetryPluginFormCallback = function() {
+    var widget = gui.currentPageWidget();
+    widget.TelemetryPluginForm.statisticGroupBox.disableStatisticRadioButton.checked = true;
+    gui.clickButton(buttons.NextButton);
+}
+
+Controller.prototype.TargetDirectoryPageCallback = function() {
     gui.currentPageWidget().TargetDirectoryLineEdit.setText("D:\\qt");
     gui.clickButton(buttons.NextButton);
 }
@@ -51,9 +56,9 @@ Controller.prototype.ReadyForInstallationPageCallback = function()
 }
 
 Controller.prototype.FinishedPageCallback = function() {
-var checkBoxForm = gui.currentPageWidget().LaunchQtCreatorCheckBoxForm;
-if (checkBoxForm && checkBoxForm.launchQtCreatorCheckBox) {
-    checkBoxForm.launchQtCreatorCheckBox.checked = false;
-}
+    var checkBoxForm = gui.currentPageWidget().LaunchQtCreatorCheckBoxForm;
+    if (checkBoxForm && checkBoxForm.launchQtCreatorCheckBox) {
+        checkBoxForm.launchQtCreatorCheckBox.checked = false;
+    }
     gui.clickButton(buttons.FinishButton);
 }

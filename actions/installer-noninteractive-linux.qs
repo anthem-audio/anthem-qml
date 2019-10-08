@@ -48,9 +48,9 @@ Controller.prototype.ReadyForInstallationPageCallback = function()
 }
 
 Controller.prototype.FinishedPageCallback = function() {
-var checkBoxForm = gui.currentPageWidget().LaunchQtCreatorCheckBoxForm;
-if (checkBoxForm && checkBoxForm.launchQtCreatorCheckBox) {
-    checkBoxForm.launchQtCreatorCheckBox.checked = false;
-}
+    var checkBoxForm = gui.currentPageWidget().LaunchQtCreatorCheckBoxForm;
+    if (checkBoxForm && checkBoxForm.launchQtCreatorCheckBox) {
+        checkBoxForm.launchQtCreatorCheckBox.checked = false;
+    }
     gui.clickButton(buttons.FinishButton);
 }
