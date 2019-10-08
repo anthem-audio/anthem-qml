@@ -6,6 +6,10 @@ import QtQuick 2.13
 Rectangle {
     id: windowButtonsContainer
 
+    property bool disableMinimize: false
+    property bool disableMaximize: false
+    property bool disableClose:    false
+
     width: 28 + 26 + 28
     color: "transparent"
     border.color: Qt.rgba(0, 0, 0, 0.4)
@@ -31,6 +35,8 @@ Rectangle {
         imageSource: "Images/Minimize.svg"
         imageWidth: 8
         imageHeight: 8
+
+        isDisabled: disableMaximize
 
         onPress: {
             windowButtonsContainer.minimizePressed();
@@ -62,6 +68,8 @@ Rectangle {
         imageWidth: 8
         imageHeight: 8
 
+        isDisabled: disableMinimize
+
         onPress: {
             windowButtonsContainer.maximizePressed();
         }
@@ -92,6 +100,8 @@ Rectangle {
         imageSource: "Images/Close.svg"
         imageWidth: 8
         imageHeight: 8
+
+        isDisabled: disableClose
 
         onPress: {
             windowButtonsContainer.closePressed();
