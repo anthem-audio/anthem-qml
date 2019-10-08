@@ -32,6 +32,9 @@ Window {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
+            disableMinimize: true
+            disableMaximize: true
+
             onClosePressed: {
                 dialog.close()
             }
