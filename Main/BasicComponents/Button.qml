@@ -11,7 +11,8 @@ Item {
         Hovered,
         Highlighted, // currently only used for tabs
         Pressed,
-        Active       // for toggle buttons
+        Active,      // for toggle buttons
+        Disabled
     }
 
     property bool   showBorder: true
@@ -20,6 +21,8 @@ Item {
     property bool   isToggleButton: false
     property bool   isHighlighted: false
     property bool   hasMenuIndicator: false
+    property bool   isDisabled: false
+    property bool   allowPressEventsOnDisable: false
 
     property string imageSource: ""
     property real   imageWidth: 1
@@ -30,7 +33,10 @@ Item {
     property real   textPixelSize: 11
 
     function getState() {
-        if (isHighlighted) {
+        if (isDisabled) {
+            return Button.State.Disabled;
+        }
+        else if (isHighlighted) {
             return Button.State.Highlighted;
         }
         else if (buttonProps.isMouseDown) {
@@ -67,6 +73,8 @@ Item {
                 return Qt.hsla(0, 0, 1, 1); // 70% opacity white
             case Button.State.Active:
                 return Qt.hsla(0, 0, 0, 1); // 60% opacity black
+            case Button.State.Disabled:
+                return Qt.hsla(0, 0, 1, 1) // 25% opacity white
             }
         }
 
@@ -84,6 +92,8 @@ Item {
                 return 0.7; // #37a483 (+ hue shift), 50% opacity
             case Button.State.Active:
                 return 0.6; // 60% opacity black
+            case Button.State.Disabled:
+                return 0.25 // 25% opacity white
             }
         }
 
@@ -126,6 +136,8 @@ Item {
                     return 0.5; // #37a483 (+ hue shift), 50% opacity
                 case Button.State.Active:
                     return 1; // #37a483 (+ hue shift)
+                case Button.State.Disabled:
+                    return 0.04 // 4% opacity white
                 }
             }
 
@@ -143,6 +155,8 @@ Item {
                     return Qt.hsla(buttonProps.hue, 0.5, 0.43, 1); // #37a483 (+ hue shift), 50% opacity
                 case Button.State.Active:
                     return Qt.hsla(buttonProps.hue, 0.5, 0.43, 1); // #37a483 (+ hue shift)
+                case Button.State.Disabled:
+                    return Qt.hsla(0, 0, 1, 1); // 4% opacity white
                 }
             }
 
@@ -158,7 +172,7 @@ Item {
         anchors.fill: parent
         anchors.margins: showBorder ? 1 : 0
         borderWidth: 1
-        visible: showBackground
+        visible: showBackground && button.state !== Button.State.Disabled
         hue: buttonProps.hue
         showHighlightColor: button.state === Button.State.Highlighted ||
                             button.state === Button.State.Pressed
@@ -236,7 +250,11 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: parent.press()
+        onClicked: {
+            if (isDisabled && !allowPressEventsOnDisable)
+                return;
+            parent.press();
+        }
 
         onPressed: {
             if (!isToggleButton)
