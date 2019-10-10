@@ -30,7 +30,7 @@ Controller.prototype.DynamicTelemetryPluginFormCallback = function() {
 }
 
 Controller.prototype.TargetDirectoryPageCallback = function() {
-    gui.currentPageWidget().TargetDirectoryLineEdit.setText("C:\\qtasdf");
+    gui.currentPageWidget().TargetDirectoryLineEdit.setText("D:\\qt");
     gui.clickButton(buttons.NextButton);
 }
 
