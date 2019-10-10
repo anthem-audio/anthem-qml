@@ -1,3 +1,6 @@
+// Here's a more complete example, including strings representing all available components as of 10/10/19:
+// https://github.com/appveyor/build-images/blob/615af0becbbc30d3350de9ace7d2095f9e2c6338/scripts/Windows/qt-installer-windows.qs
+
 function Controller() {
     installer.autoRejectMessageBoxes();
     installer.setMessageBoxAutomaticAnswer("installationErrorWithRetry", QMessageBox.Ignore);
@@ -27,11 +30,19 @@ Controller.prototype.DynamicTelemetryPluginFormCallback = function() {
 }
 
 Controller.prototype.TargetDirectoryPageCallback = function() {
-    gui.currentPageWidget().TargetDirectoryLineEdit.setText("D:\\qt");
+    gui.currentPageWidget().TargetDirectoryLineEdit.setText("C:\\qtasdf");
     gui.clickButton(buttons.NextButton);
 }
 
 Controller.prototype.ComponentSelectionPageCallback = function() {
+    var page = gui.pageWidgetByObjectName("ComponentSelectionPage");
+
+    var checkBox = gui.findChild(page, "Latest releases");
+    var fetchButton = gui.findChild(page, "FetchCategoryButton");
+
+    checkBox.click();
+    fetchButton.click();
+    
     var widget = gui.currentPageWidget();
 
     widget.deselectAll();
@@ -50,8 +61,7 @@ Controller.prototype.StartMenuDirectoryPageCallback = function() {
     gui.clickButton(buttons.NextButton);
 }
 
-Controller.prototype.ReadyForInstallationPageCallback = function()
-{
+Controller.prototype.ReadyForInstallationPageCallback = function() {
     gui.clickButton(buttons.NextButton);
 }
 
