@@ -1,6 +1,7 @@
 import QtQuick 2.13
 import QtQuick.Window 2.13
 import "../BasicComponents"
+import "../Global"
 import ".."
 
 Window {
@@ -9,6 +10,9 @@ Window {
     modality: Qt.ApplicationModal
     width: 500
     height: 200
+
+    property string title: "Anthem"
+
     readonly property int margin: 5
 
     Rectangle {
@@ -21,22 +25,42 @@ Window {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: margin
-        anchors.leftMargin: margin
-        anchors.rightMargin: margin
-        height: 20
+        height: 30
 
-        WindowControls {
-            id: windowControlButtons
-            anchors.right: parent.right
+        Item {
+            id: headerControls
             anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.bottom: parent.bottom
+            anchors.topMargin: margin
+            anchors.leftMargin: margin
+            anchors.rightMargin: margin
+            anchors.bottomMargin: margin
 
-            disableMinimize: true
-            disableMaximize: true
+            Text {
+                text: title
+                anchors.left: parent.left
+                anchors.top: parent.top
+                font.family: Fonts.notoSansRegular.name
+                font.pixelSize: 11
+                color: Qt.hsla(0, 0, 1, 0.7)
+                anchors.topMargin: 2
+                anchors.leftMargin: 5
+            }
 
-            onClosePressed: {
-                dialog.close()
+            WindowControls {
+                id: windowControlButtons
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+
+                disableMinimize: true
+                disableMaximize: true
+
+                onClosePressed: {
+                    dialog.close()
+                }
             }
         }
 
