@@ -23,6 +23,7 @@ Item {
     property bool   hasMenuIndicator: false
     property bool   isDisabled: false
     property bool   allowPressEventsOnDisable: false
+    property int    margin: 5
 
     property string imageSource: ""
     property real   imageWidth: 1
@@ -31,6 +32,9 @@ Item {
     property string textContent: ""
     property string textFloat: "center"
     property real   textPixelSize: 11
+    property bool   textAutoWidth: false
+
+    width: textAutoWidth ? text.width + margin * 2 + 3 : null
 
     function getState() {
         if (isDisabled) {
