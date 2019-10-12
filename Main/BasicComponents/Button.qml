@@ -34,6 +34,8 @@ Item {
     property real   textPixelSize: 11
     property bool   textAutoWidth: false
 
+    readonly property real textWidth: text.width
+
     width: textAutoWidth ? text.width + margin * 2 + 3 : null
 
     function getState() {

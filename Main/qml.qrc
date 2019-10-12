@@ -42,5 +42,7 @@
         <file>BasicComponents/TabHandle.qml</file>
         <file>Dialogs/DialogBase.qml</file>
         <file>BasicComponents/WindowControls.qml</file>
+        <file>Dialogs/OkCancelDialog.qml</file>
+        <file>Dialogs/SaveDiscardCancelDialog.qml</file>
     </qresource>
 </RCC>

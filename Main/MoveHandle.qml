@@ -2,6 +2,7 @@ import QtQuick 2.0
 
 Item {
     property var window
+    property int margin: 5
 
     MouseArea {
         anchors.fill: parent

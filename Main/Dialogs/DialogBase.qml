@@ -12,8 +12,8 @@ Window {
     height: 200
 
     property string title: "Anthem"
-
-    readonly property int margin: 5
+    readonly property int dialogMargin: 5
+    readonly property int dialogTitleBarHeight: 30
 
     Rectangle {
         anchors.fill: parent
@@ -25,7 +25,7 @@ Window {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 30
+        height: dialogTitleBarHeight
 
         Item {
             id: headerControls
@@ -33,20 +33,19 @@ Window {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.topMargin: margin
-            anchors.leftMargin: margin
-            anchors.rightMargin: margin
-            anchors.bottomMargin: margin
+            anchors.topMargin: dialogMargin
+            anchors.leftMargin: dialogMargin
+            anchors.rightMargin: dialogMargin
+            anchors.bottomMargin: dialogMargin
 
             Text {
                 text: title
                 anchors.left: parent.left
-                anchors.top: parent.top
                 font.family: Fonts.notoSansRegular.name
                 font.pixelSize: 11
                 color: Qt.hsla(0, 0, 1, 0.7)
-                anchors.topMargin: 2
-                anchors.leftMargin: 5
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: dialogMargin
             }
 
             WindowControls {
