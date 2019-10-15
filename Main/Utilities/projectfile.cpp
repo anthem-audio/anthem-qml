@@ -5,6 +5,8 @@
 #include "Include/rapidjson/writer.h"
 
 ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
+    dirty = false;
+
     // There's probably a Better Way
     // TODO: Add model constructors that give back a emtpy but valid state
     auto emptyProject =
@@ -35,6 +37,8 @@ ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
 }
 
 ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
+    dirty = false;
+
     this->path = path;
 
     // Attempt to load the file as JSON
@@ -58,9 +62,22 @@ void ProjectFile::save() {
     rapidjson::Writer<rapidjson::FileWriteStream> writer(stream);
     document.Accept(writer);
     fclose(fp);
+    markClean();
 }
 
 void ProjectFile::saveAs(QString path) {
     this->path = path;
     save();
+}
+
+void ProjectFile::markDirty() {
+    dirty = true;
+}
+
+void ProjectFile::markClean() {
+    dirty = false;
+}
+
+bool ProjectFile::isDirty() {
+    return dirty;
 }

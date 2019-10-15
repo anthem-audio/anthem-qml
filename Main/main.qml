@@ -2,6 +2,7 @@ import QtQuick 2.13
 import QtQuick.Window 2.13
 import QtQuick.Shapes 1.13
 import QtGraphicalEffects 1.13
+import QtQuick.Dialogs 1.2
 import "BasicComponents"
 
 Window {
@@ -17,9 +18,50 @@ Window {
 
     color: "#454545"
 
+    Connections {
+        target: Anthem
+        onSaveDialogRequest: {
+            saveFileDialog.open();
+        }
+    }
+
     function closeWithSavePrompt() {
         // TODO: if project has unsaved changes, prompt to save
-        close();
+        Qt.quit()
+    }
+
+    function save() {
+        if (Anthem.isProjectSaved(Anthem.activeProjectIndex))
+            Anthem.saveActiveProject();
+        else
+            saveFileDialog.open();
+    }
+
+
+    FileDialog {
+        id: loadFileDialog
+        title: "Select a project"
+        selectExisting: true
+        folder: shortcuts.home
+        nameFilters: ["Anthem project files (*.anthem)"]
+        onAccepted: {
+            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
+        }
+    }
+
+    FileDialog {
+        id: saveFileDialog
+        title: "Save as"
+        selectExisting: false
+        folder: shortcuts.home
+        nameFilters: ["Anthem project files (*.anthem)"]
+        onAccepted: {
+            Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
+            Anthem.notifySaveCompleted();
+        }
+        onRejected: {
+            Anthem.notifySaveCancelled();
+        }
     }
 
     ResizeHandles {

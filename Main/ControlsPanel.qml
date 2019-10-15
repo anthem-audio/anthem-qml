@@ -6,35 +6,6 @@ import "BasicComponents"
 import "Global"
 
 Panel {
-    FileDialog {
-        id: loadFileDialog
-        title: "Select a project"
-        selectExisting: true
-        folder: shortcuts.home
-        nameFilters: ["Anthem project files (*.anthem)"]
-        onAccepted: {
-            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
-        }
-    }
-
-    FileDialog {
-        id: saveFileDialog
-        title: "Save as"
-        selectExisting: false
-        folder: shortcuts.home
-        nameFilters: ["Anthem project files (*.anthem)"]
-        onAccepted: {
-            Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
-        }
-    }
-
-    function save() {
-        if (Anthem.isActiveProjectSaved())
-            Anthem.saveActiveProject();
-        else
-            saveFileDialog.open();
-    }
-
     height: 44
     Item {
         id: controlPanelSpacer

@@ -1,5 +1,6 @@
 import QtQuick 2.13
 import "BasicComponents"
+import "Dialogs"
 
 Item {
     id: tabGroup
@@ -8,9 +9,20 @@ Item {
     property int selectedTabIndex: 0
     property int tabCount: 1
     property int tabWidth: 124
+
+    QtObject {
+        id: tabGroupProps
+        property bool isSaveInProgress: false
+        property int  currentSavingTabIndex: -1
+    }
+
     width: tabCount * (tabWidth + 3)
 
     signal lastTabClosed()
+
+    SaveDiscardCancelDialog {
+        id: saveConfirmDialog
+    }
 
     TabHandle {
         height: parent.height
@@ -93,17 +105,51 @@ Item {
         tabCount--;
     }
 
-    function doOnTabClosePressed(index) {
+    function doOnCloseConfirmation(index) {
+        if (index === undefined) {
+            index = tabGroupProps.currentSavingTabIndex;
+        }
+
         if (tabCount <= 1) {
-            // TODO: prompt for save before closing
             tabGroup.children[0].destroy();
-            Anthem.closeProject(index);
+            Anthem.closeProject(0);
             lastTabClosed();
         }
         else {
             removeTab(index);
             Anthem.closeProject(index);
             Anthem.switchActiveProject(selectedTabIndex);
+        }
+    }
+
+    function doOnTabClosePressed(index) {
+        if (Anthem.projectHasUnsavedChanges(index)) {
+            console.log(`Checked index ${index}. Project did have unsaved changes.`);
+            tabGroupProps.currentSavingTabIndex = index;
+            let projectName = tabGroup.children[index].title;
+            saveConfirmDialog.title = projectName;
+            saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
+            saveConfirmDialog.show();
+        }
+        else {
+            doOnCloseConfirmation(index);
+        }
+    }
+
+    Connections {
+        target: saveConfirmDialog
+        onSavePressed: {
+            if (Anthem.isProjectSaved(tabGroupProps.currentSavingTabIndex)) {
+                Anthem.saveActiveProject();
+                doOnCloseConfirmation();
+            }
+            else {
+                tabGroupProps.isSaveInProgress = true;
+                Anthem.openSaveDialog();
+            }
+        }
+        onDiscardPressed: {
+            doOnCloseConfirmation();
         }
     }
 
@@ -120,6 +166,17 @@ Item {
         }
         onTabRemove: {
             removeTab(index);
+        }
+        onSaveCompleted: {
+            if (tabGroupProps.isSaveInProgress) {
+                doOnCloseConfirmation();
+            }
+            tabGroupProps.isSaveInProgress = false;
+            tabGroupProps.currentSavingTabIndex = -1;
+        }
+        onSaveCancelled: {
+            tabGroupProps.isSaveInProgress = false;
+            tabGroupProps.currentSavingTabIndex = -1;
         }
     }
 }

@@ -83,6 +83,15 @@ signals:
     void tabSelect(int index);
     void tabRemove(int index);
 
+    /// Signal to tell the UI to open a save dialog
+    void saveDialogRequest();
+
+    /// Emitted when a save has been completed.
+    void saveCompleted();
+
+    /// Emitted when a save has been cancelled.
+    void saveCancelled();
+
 public slots:
     void newProject();
     void loadProject(QString path);
@@ -93,7 +102,20 @@ public slots:
     int getMasterPitch();
     void setMasterPitch(int pitch, bool isFinal);
 
-    bool isActiveProjectSaved();
+    /// Checks if the given project has ever been saved, or was opened from a file
+    bool isProjectSaved(int projectIndex);
+
+    /// Checks if the given project has unsaved changes
+    bool projectHasUnsavedChanges(int projectIndex);
+
+    /// Raises a signal to tell the UI to open a save dialog.
+    void openSaveDialog();
+
+    /// Raises a signal notifying listeners that a save operation has completed successfully
+    void notifySaveCancelled();
+
+    /// Raises a signal notifying listeners that a save operation was cancelled by the user.
+    void notifySaveCompleted();
 
     // Functions with the ui_ prefix are used as receiver slots
     // for model change signals. Each ui_ function should:
