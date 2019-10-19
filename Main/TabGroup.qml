@@ -39,6 +39,7 @@ Item {
 
     SaveDiscardCancelDialog {
         id: saveConfirmDialog
+        title: "Unsaved changes"
     }
 
     TabHandle {
@@ -154,7 +155,6 @@ Item {
             console.log(`Checked index ${index}. Project did have unsaved changes.`);
             tabGroupProps.currentSavingTabIndex = index;
             let projectName = tabGroup.children[index].title;
-            saveConfirmDialog.title = projectName;
             saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
             saveConfirmDialog.show();
         }

@@ -23,6 +23,7 @@ Window {
 
     SaveDiscardCancelDialog {
         id: saveConfirmDialog
+        title: "Unsaved changes"
         onCancelPressed: {
             isClosing = false;
             tabsRemaining = -1;
@@ -56,7 +57,6 @@ Window {
                 tabGroup.selectTab(0);
 
                 let projectName = tabGroup.children[0].title;
-                saveConfirmDialog.title = projectName;
                 saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
                 saveConfirmDialog.show();
 
