@@ -51,8 +51,8 @@ DialogBase {
             anchors.verticalCenter: parent.verticalCenter
             textContent: okButtonText
             onPress: {
-                okPressed()
                 dialog.close()
+                okPressed()
             }
         }
 
@@ -65,8 +65,8 @@ DialogBase {
             anchors.verticalCenter: parent.verticalCenter
             textContent: cancelButtonText
             onPress: {
-                cancelPressed()
                 dialog.close()
+                cancelPressed()
             }
         }
     }

@@ -53,8 +53,8 @@ DialogBase {
             anchors.verticalCenter: parent.verticalCenter
             textContent: saveButtonText
             onPress: {
-                savePressed()
                 dialog.close()
+                savePressed()
             }
         }
 
@@ -67,8 +67,8 @@ DialogBase {
             anchors.verticalCenter: parent.verticalCenter
             textContent: discardButtonText
             onPress: {
-                discardPressed()
                 dialog.close()
+                discardPressed()
             }
         }
 
@@ -81,8 +81,8 @@ DialogBase {
             anchors.verticalCenter: parent.verticalCenter
             textContent: cancelButtonText
             onPress: {
-                cancelPressed()
                 dialog.close()
+                cancelPressed()
             }
         }
     }
