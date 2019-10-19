@@ -2,6 +2,23 @@ import QtQuick 2.13
 import "BasicComponents"
 import "Dialogs"
 
+/*
+  It's worth leaving a note about the offset
+  variable in some of the functions below,
+  calculated as
+    let offset = children.length - tabCount;
+
+  When a child item is removed programmatically,
+  it does not immediately disappear. The Qt
+  Quick engine takes care of removing it before
+  the next frame. "Oh, I'll do it sometime
+  before the next frame" gives no guarantee
+  that the item will be gone by the time we are
+  ready to manipulate the children again, and
+  so this occasional discrepency must be
+  accounted for.
+*/
+
 Item {
     id: tabGroup
 
@@ -65,22 +82,27 @@ Item {
     }
 
     function renameTab(index, name) {
-        tabGroup.children[index].title = name;
+        let offset = children.length - tabCount;
+        tabGroup.children[index + offset].title = name;
     }
 
     function selectTab(index) {
-        tabGroup.children[selectedTabIndex].isSelected = false;
-        tabGroup.children[index].isSelected = true;
+        let offset = children.length - tabCount;
+        tabGroup.children[selectedTabIndex + offset].isSelected = false;
+        tabGroup.children[index + offset].isSelected = true;
         selectedTabIndex = index;
     }
 
     function doOnTabPressed(index) {
-        selectTab(index);
-        Anthem.switchActiveProject(index);
+        let offset = children.length - tabCount;
+        selectTab(index + offset);
+        Anthem.switchActiveProject(index + offset);
     }
 
     function removeTab(index) {
-        for (let i = index; i < tabCount; i++) {
+        let offset = children.length - tabCount;
+
+        for (let i = index + offset; i < tabCount + offset; i++) {
             tabGroup.children[i].index--;
             tabGroup.children[i].x -= (tabWidth + 3);
         }
@@ -101,8 +123,13 @@ Item {
         if (index < selectedTabIndex)
             selectedTabIndex--;
 
-        tabGroup.children[index].destroy();
+        tabGroup.children[index + offset].destroy();
         tabCount--;
+    }
+
+    function getTabAtIndex(index) {
+        let offset = children.length - tabCount;
+        return children[index + offset]
     }
 
     function doOnCloseConfirmation(index) {

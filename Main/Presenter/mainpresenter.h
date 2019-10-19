@@ -117,6 +117,8 @@ public slots:
     /// Raises a signal notifying listeners that a save operation was cancelled by the user.
     void notifySaveCompleted();
 
+    int getNumOpenProjects();
+
     // Functions with the ui_ prefix are used as receiver slots
     // for model change signals. Each ui_ function should:
     //     a) always be connected to the relevant model's update

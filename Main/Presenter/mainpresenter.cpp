@@ -306,6 +306,10 @@ void MainPresenter::switchActiveProject(int index) {
     isActiveProjectValid = true;
 }
 
+int MainPresenter::getNumOpenProjects() {
+    return projects.count();
+}
+
 void MainPresenter::closeProject(int index) {
     removeProjectAt(index);
 }

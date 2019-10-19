@@ -4,6 +4,7 @@ import QtQuick.Shapes 1.13
 import QtGraphicalEffects 1.13
 import QtQuick.Dialogs 1.2
 import "BasicComponents"
+import "Dialogs"
 
 Window {
     id: mainWindow
@@ -14,9 +15,25 @@ Window {
     property int previousX
     property int previousY
     property bool isMaximized: false
+    property bool isClosing: false
+    property int tabsRemaining: -1
     readonly property int margin: 5
 
     color: "#454545"
+
+    SaveDiscardCancelDialog {
+        id: saveConfirmDialog
+        onCancelPressed: {
+            isClosing = false;
+            tabsRemaining = -1;
+        }
+        onDiscardPressed: {
+            closeWithSavePrompt();
+        }
+        onSavePressed: {
+            save();
+        }
+    }
 
     Connections {
         target: Anthem
@@ -26,15 +43,56 @@ Window {
     }
 
     function closeWithSavePrompt() {
-        // TODO: if project has unsaved changes, prompt to save
-        Qt.quit()
+        let checkForUnsaved = () => {
+            if (!isClosing) {
+                isClosing = true;
+                tabsRemaining = tabGroup.children.length;
+            }
+            if (Anthem.getNumOpenProjects() <= 0) {
+                Qt.quit();
+            }
+            else if (Anthem.projectHasUnsavedChanges(0)) {
+                Anthem.switchActiveProject(0);
+                tabGroup.selectTab(0);
+
+                let projectName = tabGroup.children[0].title;
+                saveConfirmDialog.title = projectName;
+                saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
+                saveConfirmDialog.show();
+
+                return;
+            }
+            else {
+                closeWithSavePrompt();
+                return;
+            }
+        }
+
+        if (isClosing) {
+            if (tabGroup.tabCount <= 1) {
+                Qt.quit();
+            }
+
+            Anthem.closeProject(0);
+            tabGroup.getTabAtIndex(0).Component.destruction.connect(checkForUnsaved);
+            tabGroup.removeTab(0);
+            tabsRemaining = tabsRemaining - 1;
+        }
+        else {
+            checkForUnsaved();
+        }
     }
 
     function save() {
-        if (Anthem.isProjectSaved(Anthem.activeProjectIndex))
+        if (Anthem.isProjectSaved(Anthem.activeProjectIndex)) {
             Anthem.saveActiveProject();
-        else
+            if (isClosing) {
+                closeWithSavePrompt();
+            }
+        }
+        else {
             saveFileDialog.open();
+        }
     }
 
 
@@ -58,9 +116,14 @@ Window {
         onAccepted: {
             Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
             Anthem.notifySaveCompleted();
+            if (isClosing) {
+                closeWithSavePrompt();
+            }
         }
         onRejected: {
             Anthem.notifySaveCancelled();
+            isClosing = false;
+            tabsRemaining = -1;
         }
     }
 
@@ -115,12 +178,13 @@ Window {
             }
 
             TabGroup {
+                id: tabGroup
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 // Width is managed internally by TabGroup
 
-                onLastTabClosed: mainWindow.closeWithSavePrompt()
+                onLastTabClosed: Qt.quit()
             }
 
             WindowControls {
