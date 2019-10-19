@@ -2,7 +2,9 @@ import QtQuick 2.13
 import QtQuick.Window 2.13
 import QtQuick.Shapes 1.13
 import QtGraphicalEffects 1.13
+import QtQuick.Dialogs 1.2
 import "BasicComponents"
+import "Dialogs"
 
 Window {
     id: mainWindow
@@ -13,13 +15,116 @@ Window {
     property int previousX
     property int previousY
     property bool isMaximized: false
+    property bool isClosing: false
+    property int tabsRemaining: -1
     readonly property int margin: 5
 
     color: "#454545"
 
+    SaveDiscardCancelDialog {
+        id: saveConfirmDialog
+        title: "Unsaved changes"
+        onCancelPressed: {
+            isClosing = false;
+            tabsRemaining = -1;
+        }
+        onDiscardPressed: {
+            closeWithSavePrompt();
+        }
+        onSavePressed: {
+            save();
+        }
+    }
+
+    Connections {
+        target: Anthem
+        onSaveDialogRequest: {
+            saveFileDialog.open();
+        }
+    }
+
     function closeWithSavePrompt() {
-        // TODO: if project has unsaved changes, prompt to save
-        close();
+        let checkForUnsaved = () => {
+            if (!isClosing) {
+                isClosing = true;
+                tabsRemaining = tabGroup.children.length;
+            }
+            if (Anthem.getNumOpenProjects() <= 0) {
+                Qt.quit();
+            }
+            else if (Anthem.projectHasUnsavedChanges(0)) {
+                Anthem.switchActiveProject(0);
+                tabGroup.selectTab(0);
+
+                let projectName = tabGroup.children[0].title;
+                saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
+                saveConfirmDialog.show();
+
+                return;
+            }
+            else {
+                closeWithSavePrompt();
+                return;
+            }
+        }
+
+        if (isClosing) {
+            if (tabGroup.tabCount <= 1) {
+                Qt.quit();
+            }
+
+            Anthem.closeProject(0);
+            tabGroup.getTabAtIndex(0).Component.destruction.connect(checkForUnsaved);
+            tabGroup.removeTab(0);
+            tabsRemaining = tabsRemaining - 1;
+        }
+        else {
+            checkForUnsaved();
+        }
+    }
+
+    function save() {
+        if (Anthem.isProjectSaved(Anthem.activeProjectIndex)) {
+            Anthem.saveActiveProject();
+            if (isClosing) {
+                closeWithSavePrompt();
+            }
+        }
+        else {
+            saveFileDialog.open();
+        }
+    }
+
+
+    FileDialog {
+        id: loadFileDialog
+        title: "Select a project"
+        selectExisting: true
+        folder: shortcuts.home
+        nameFilters: ["Anthem project files (*.anthem)"]
+        onAccepted: {
+            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
+        }
+    }
+
+    FileDialog {
+        id: saveFileDialog
+        title: "Save as"
+        selectExisting: false
+        folder: shortcuts.home
+        nameFilters: ["Anthem project files (*.anthem)"]
+        onAccepted: {
+            Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
+            Anthem.notifySaveCompleted();
+            if (isClosing) {
+                closeWithSavePrompt();
+            }
+        }
+        onRejected: {
+            Anthem.notifySaveCancelled();
+            isClosing = false;
+            tabsRemaining = -1;
+        }
     }
 
     ResizeHandles {
@@ -68,121 +173,41 @@ Window {
             height: 20
 
             MoveHandle {
-                mainWindow: mainWindow
+                window: mainWindow
                 anchors.fill: parent
             }
 
             TabGroup {
+                id: tabGroup
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 // Width is managed internally by TabGroup
 
-                onLastTabClosed: mainWindow.closeWithSavePrompt()
+                onLastTabClosed: Qt.quit()
             }
 
-            // We need a ButtonGroup here, but as of writing this comment, I haven't created one yet.
-            //   -- Joshua Wade, Jun 4, 2019
-
-            Rectangle {
-                id: windowButtonsContainer
+            WindowControls {
+                id: windowControlButtons
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
-                width: 28 + 26 + 28
 
-                color: "transparent"
-                border.color: Qt.rgba(0, 0, 0, 0.4)
-                radius: 2
-                antialiasing: true
-
-
-                Button {
-                    id: btnMinimize
-                    width: 26
-                    anchors.right: spacer1.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-
-                    anchors.leftMargin: 1
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-
-                    showBorder: false
-
-                    imageSource: "Images/Minimize.svg"
-                    imageWidth: 8
-                    imageHeight: 8
-
-                    onPress: {
-                        mainWindow.showMinimized()
-                    }
+                onMinimizePressed: {
+                    mainWindow.showMinimized();
                 }
-                Rectangle {
-                    id: spacer1
-                    width: 1
-                    anchors.right: btnMaximize.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-                    color: Qt.rgba(0, 0, 0, 0.4)
+
+                onMaximizePressed: {
+                    if (mainWindow.isMaximized)
+                        mainWindow.showNormal();
+                    else
+                        mainWindow.showMaximized();
+
+                    mainWindow.isMaximized = !mainWindow.isMaximized;
                 }
-                Button {
-                    id: btnMaximize
-                    width: 26
-                    anchors.right: spacer2.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
 
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-
-                    showBorder: false
-
-                    imageSource: "Images/Maximize.svg"
-                    imageWidth: 8
-                    imageHeight: 8
-
-                    onPress: {
-                        if (mainWindow.isMaximized)
-                            mainWindow.showNormal();
-                        else
-                            mainWindow.showMaximized();
-
-                        mainWindow.isMaximized = !mainWindow.isMaximized;
-                    }
-                }
-                Rectangle {
-                    id: spacer2
-                    width: 1
-                    anchors.right: btnClose.left
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-                    color: Qt.rgba(0, 0, 0, 0.4)
-                }
-                Button {
-                    id: btnClose
-                    width: 26
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-
-                    anchors.rightMargin: 1
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-
-                    showBorder: false
-
-                    imageSource: "Images/Close.svg"
-                    imageWidth: 8
-                    imageHeight: 8
-
-                    onPress: {
-                        mainWindow.closeWithSavePrompt();
-                    }
+                onClosePressed: {
+                    mainWindow.closeWithSavePrompt();
                 }
             }
         }

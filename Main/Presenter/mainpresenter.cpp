@@ -11,8 +11,7 @@
 
 using namespace rapidjson;
 
-MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent)
-{
+MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent) {
     isPatchInProgress = false;
     isActiveProjectValid = true;
 
@@ -192,9 +191,13 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
 }
 
-bool MainPresenter::isActiveProjectSaved() {
-    return !projectFiles[activeProjectIndex]->path.isNull() &&
-               !projectFiles[activeProjectIndex]->path.isEmpty();
+bool MainPresenter::isProjectSaved(int projectIndex) {
+    return !projectFiles[projectIndex]->path.isNull() &&
+               !projectFiles[projectIndex]->path.isEmpty();
+}
+
+bool MainPresenter::projectHasUnsavedChanges(int projectIndex) {
+    return projectFiles[projectIndex]->isDirty();
 }
 
 // The patch logic below assumes that only one operation
@@ -264,6 +267,7 @@ void MainPresenter::sendPatch() {
     patch.apply();
     engines[activeProjectIndex]->sendPatchList(patch.getPatch());
     isPatchInProgress = false;
+    projectFiles[activeProjectIndex]->markDirty();
 }
 
 void MainPresenter::liveUpdate(uint64_t controlId, float value) {
@@ -302,6 +306,22 @@ void MainPresenter::switchActiveProject(int index) {
     isActiveProjectValid = true;
 }
 
+int MainPresenter::getNumOpenProjects() {
+    return projects.count();
+}
+
 void MainPresenter::closeProject(int index) {
     removeProjectAt(index);
+}
+
+void MainPresenter::openSaveDialog() {
+    emit saveDialogRequest();
+}
+
+void MainPresenter::notifySaveCancelled() {
+    emit saveCancelled();
+}
+
+void MainPresenter::notifySaveCompleted() {
+    emit saveCompleted();
 }

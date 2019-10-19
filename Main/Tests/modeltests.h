@@ -249,13 +249,18 @@ private slots:
         // The new project should have no undo history
         QCOMPARE(presenter->getHistoryPointerAt(0), -1);
 
+        // The new project should not be marked as having unsaved changes
+        QCOMPARE(presenter->projectHasUnsavedChanges(0), false);
+
         // Undo and redo shouldn't do or break anything
         presenter->undo();
         QCOMPARE(presenter->getHistoryPointerAt(0), -1);
         QCOMPARE(eventCounter->masterPitchEventCount, 0);
+        QCOMPARE(presenter->projectHasUnsavedChanges(0), false);
         presenter->redo();
         QCOMPARE(presenter->getHistoryPointerAt(0), -1);
         QCOMPARE(eventCounter->masterPitchEventCount, 0);
+        QCOMPARE(presenter->projectHasUnsavedChanges(0), false);
 
         // Performing an action should add an undo step
         presenter->setMasterPitch(3, true);
@@ -263,6 +268,8 @@ private slots:
         QCOMPARE(presenter->getHistoryPointerAt(0), 0);
         QCOMPARE(eventCounter->masterPitchEventCount, 1);
         QCOMPARE(presenter->getProjectHistoryAt(0).length(), 1);
+        QCOMPARE(presenter->projectHasUnsavedChanges(0), true);
+        QCOMPARE(presenter->isProjectSaved(0), false);
         Patch& patch2 = *presenter->getProjectHistoryAt(0)[0];
         QCOMPARE(patch2.getPatch().Size(), 1u);
         QCOMPARE(patch2.getPatch()[0]["op"].GetString(), "replace");
@@ -351,9 +358,13 @@ private slots:
         presenter->getProjectAt(1);
         presenter->getEngineAt(1);
         presenter->getProjectFileAt(1);
-        presenter->getHistoryPointerAt(1);
+        QCOMPARE(presenter->getHistoryPointerAt(1), -1);
         presenter->getProjectHistoryAt(1);
         QCOMPARE(presenter->activeProjectIndex, 1);
+        QCOMPARE(presenter->projectHasUnsavedChanges(0), true);
+        QCOMPARE(presenter->isProjectSaved(0), false);
+        QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
+        QCOMPARE(presenter->isProjectSaved(1), false);
 
         // We should be able to switch tabs
         presenter->setMasterPitch(6, true);
@@ -391,17 +402,27 @@ private slots:
         qDebug() << path;
         presenter->setMasterPitch(10, true);
         presenter->saveActiveProjectAs(path);
+        QCOMPARE(presenter->projectHasUnsavedChanges(0), false);
+        QCOMPARE(presenter->isProjectSaved(0), true);
         presenter->loadProject(path);
         QCOMPARE(presenter->activeProjectIndex, 1);
         QCOMPARE(presenter->getMasterPitch(), 10);
         QCOMPARE(presenter->getHistoryPointerAt(1), -1);
+        QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
+        QCOMPARE(presenter->isProjectSaved(1), true);
 
         presenter->setMasterPitch(-12, true);
+        QCOMPARE(presenter->projectHasUnsavedChanges(1), true);
+        QCOMPARE(presenter->isProjectSaved(1), true);
         presenter->saveActiveProject();
         presenter->loadProject(path);
         QCOMPARE(presenter->activeProjectIndex, 2);
         QCOMPARE(presenter->getMasterPitch(), -12);
         QCOMPARE(presenter->getHistoryPointerAt(2), -1);
+        QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
+        QCOMPARE(presenter->isProjectSaved(1), true);
+        QCOMPARE(presenter->projectHasUnsavedChanges(2), false);
+        QCOMPARE(presenter->isProjectSaved(2), true);
     }
 
     void cleanupTestCase() {

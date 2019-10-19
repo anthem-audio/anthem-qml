@@ -10,6 +10,8 @@
 
 class ProjectFile : QObject {
 Q_OBJECT
+private:
+    bool dirty;
 public:
     // Empty project file
     ProjectFile(QObject* parent);
@@ -19,6 +21,10 @@ public:
 
     rapidjson::Document document;
     QString path;
+
+    void markDirty();
+    void markClean();
+    bool isDirty();
 
     void save();
     void saveAs(QString path);
