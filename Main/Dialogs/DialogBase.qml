@@ -47,20 +47,6 @@ Window {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: dialogMargin
             }
-
-            WindowControls {
-                id: windowControlButtons
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-
-                disableMinimize: true
-                disableMaximize: true
-
-                onClosePressed: {
-                    dialog.close()
-                }
-            }
         }
 
         MoveHandle {
