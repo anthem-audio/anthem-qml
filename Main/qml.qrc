@@ -44,5 +44,6 @@
         <file>BasicComponents/WindowControls.qml</file>
         <file>Dialogs/OkCancelDialog.qml</file>
         <file>Dialogs/SaveDiscardCancelDialog.qml</file>
+        <file>Dialogs/InformationDialog.qml</file>
     </qresource>
 </RCC>

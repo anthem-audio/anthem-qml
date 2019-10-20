@@ -1,6 +1,7 @@
 #include "mainpresenter.h"
 
 #include "Include/rapidjson/document.h"
+#include "Utilities/exceptions.h"
 
 #include <QFileInfo>
 #include <QDir>
@@ -125,15 +126,25 @@ void MainPresenter::loadProject(QString path) {
 
     // Check if the path exists and is a file
     if (!fileInfo.exists() || !fileInfo.isFile()) {
+        emit informationDialogRequest("Error", "That project does not exist.");
         return;
     }
 
     // Ensure the file ends with ".anthem"
     if (fileInfo.suffix() != "anthem") {
+        emit informationDialogRequest("Error", "That is not a *.anthem file. If you think the file you chose is valid, please rename it so it has a \".anthem\" extension.");
         return;
     }
 
-    auto projectFile = new ProjectFile(this, path);
+    ProjectFile* projectFile;
+
+    try {
+        projectFile = new ProjectFile(this, path);
+    }
+    catch (const InvalidProjectException& ex) {
+        emit informationDialogRequest("Error", ex.what());
+        return;
+    }
 
     QString fileName = fileInfo.fileName();
     fileName.chop(fileInfo.completeSuffix().length() + 1);
@@ -146,19 +157,29 @@ void MainPresenter::loadProject(QString path) {
         emit tabAdd(fileName);
     }
 
-    // TODO: If something goes wrong and this error case trips, the list
-    // of project files and project models will become desynced. This
-    // should really be solved by creating helper functions to manipulate
-    // both lists at once.
     if (projectFile->document.IsNull()) {
+        // This should never trip and will be removed in a future PR.
+        emit informationDialogRequest("Error", "Something is very wrong.");
+        projectFile->~ProjectFile();
         return;
     }
 
-    // Initialize model with JSON
-    Project* project = new Project(this, projectFile);
+    Project* project;
+
+    try {
+        // Initialize model with JSON
+        project = new Project(this, projectFile);
+    }
+    catch (const InvalidProjectException& ex) {
+        QString errorText = "The project file failed to load. ";
+        emit informationDialogRequest("Error", errorText.append(ex.what()));
+        projectFile->~ProjectFile();
+        return;
+    }
 
     // Create and start new engine
     // TODO: Once engines can be stared and stopped by the user, don't start immediately. (?)
+    // TODO: Engine may have errors when starting. Report these to the user.
     Engine* engine = new Engine(this);
     engine->start();
 

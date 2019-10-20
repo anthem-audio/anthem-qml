@@ -1,4 +1,5 @@
 #include "projectfile.h"
+#include "exceptions.h"
 
 #include "Include/rapidjson/filereadstream.h"
 #include "Include/rapidjson/filewritestream.h"
@@ -50,6 +51,11 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     rapidjson::FileReadStream stream(fp, readBuffer, sizeof(readBuffer));
 
     document.ParseStream(stream);
+
+    if (document.HasParseError()) {
+        fclose(fp);
+        throw InvalidProjectException("This project is corrupted and could not be opened.");
+    }
 
     fclose(fp);
 }
