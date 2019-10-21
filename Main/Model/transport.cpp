@@ -1,16 +1,16 @@
 #include "transport.h"
 
-Transport::Transport(QObject* parent, rapidjson::Value* projectNode) : QObject(parent)
+using namespace rapidjson;
+
+Transport::Transport(ModelItem* parent, Value* projectNode) : ModelItem(parent, "transport")
 {
-    this->jsonNode = &(projectNode->operator[]("transport"));
-    this->masterPitch = this->jsonNode->operator[]("master_pitch").GetInt();
+    jsonNode = &(projectNode->operator[]("transport"));
+    masterPitch = new Control(this, "master_pitch", &jsonNode->operator[]("master_pitch"));
 }
 
-void Transport::setMasterPitch(int pitch) {
-    this->masterPitch = pitch;
-    this->jsonNode->operator[]("master_pitch") = pitch;
-}
-
-int Transport::getMasterPitch() {
-    return this->masterPitch;
+void Transport::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+    QString masterPitchStr = "/master_pitch";
+    if (pointer.startsWith(masterPitchStr)) {
+        masterPitch->externalUpdate(pointer.mid(masterPitchStr.length()), patch);
+    }
 }

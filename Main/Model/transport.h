@@ -3,19 +3,19 @@
 
 #include <QObject>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
+#include "Include/rapidjson/document.h"
 
 #include "Core/modelitem.h"
+#include "Model/control.h"
 
-class Transport : public QObject, ModelItem
-{
+class Transport : public ModelItem {
+    Q_OBJECT
 private:
-    int masterPitch;
 public:
-    Transport(QObject* parent, rapidjson::Value* projectNode);
+    Transport(ModelItem* parent, rapidjson::Value* projectNode);
+    void externalUpdate(QStringRef pointer, PatchFragment& patch);
 
-    void setMasterPitch(int pitch);
-    int getMasterPitch();
+    Control* masterPitch;
 
 signals:
 

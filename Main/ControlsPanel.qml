@@ -46,28 +46,20 @@ Panel {
 
                 MenuItem {
                     text: 'New project'
+                    onTriggered: Anthem.newProject()
                 }
                 MenuItem {
-                    FileDialog {
-                        id: loadFileDialog
-                        title: "Select a project"
-                        folder: shortcuts.home
-                        nameFilters: ["Anthem project files (*.anthem)"]
-                        onAccepted: {
-                            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
-                        }
-                    }
-
                     text: 'Open...'
                     onTriggered: loadFileDialog.open()
                 }
                 MenuSeparator {}
                 MenuItem {
                     text: 'Save'
-                    onTriggered: Anthem.saveActiveProject()
+                    onTriggered: save()
                 }
                 MenuItem {
                     text: 'Save as...'
+                    onTriggered: saveFileDialog.open()
                 }
                 MenuSeparator {}
                 MenuItem {
@@ -75,8 +67,6 @@ Panel {
                 }
             }
         }
-
-
 
         Button {
             id: btnSave
@@ -90,7 +80,7 @@ Panel {
             imageWidth: 16
             imageHeight: 16
 
-            onPress: Anthem.saveActiveProject()
+            onPress: save()
         }
 
         Button {
@@ -104,6 +94,10 @@ Panel {
             imageSource: "Images/Undo.svg"
             imageWidth: 15
             imageHeight: 15
+
+            onPress: {
+                Anthem.undo();
+            }
         }
 
         Button {
@@ -117,6 +111,10 @@ Panel {
             imageSource: "Images/Redo.svg"
             imageWidth: 15
             imageHeight: 15
+
+            onPress: {
+                Anthem.redo();
+            }
         }
 
 
@@ -442,8 +440,8 @@ Panel {
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
 
-                        highBound: 48
-                        lowBound: -48
+                        highBound: 12
+                        lowBound: -12
 
                         onValueChanged: {
                             Anthem.setMasterPitch(value, false);

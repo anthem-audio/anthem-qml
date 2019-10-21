@@ -4,8 +4,7 @@
 #include <QObject>
 #include <QCursor>
 
-class MouseHelper : public QObject
-{
+class MouseHelper : public QObject {
     Q_OBJECT
 public:
     explicit MouseHelper(QObject *parent = nullptr);

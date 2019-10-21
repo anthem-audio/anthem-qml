@@ -7,23 +7,21 @@
 #include <QObject>
 #include <QProcess>
 
-#include "Include/rapidjson/include/rapidjson/document.h"
-#include "Include/rapidjson/include/rapidjson/stringbuffer.h"
-#include "Include/rapidjson/include/rapidjson/writer.h"
+#include "Include/rapidjson/document.h"
+#include "Include/rapidjson/stringbuffer.h"
+#include "Include/rapidjson/writer.h"
 
-using namespace rapidjson;
-
-class Engine : public QObject
-{
+class Engine : public QObject {
     Q_OBJECT
 private:
     QProcess* engine;
-    void addRPCHeaders(Document& json, Document::AllocatorType& allocator);
-    void write(Document& json);
+    void addRPCHeaders(rapidjson::Document& json, std::string headers);
+    void write(rapidjson::Document& json);
 
 public:
     explicit
     Engine(QObject *parent);
+    ~Engine();
 
     void start();
     void stop();
@@ -32,7 +30,8 @@ public:
     void sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2);
     // TODO: Add play, pause, stop, seek, etc.
 
-    void sendPatch();
+    void sendPatch(QString operation, QString from, QString path, rapidjson::Value &value);
+    void sendPatchList(rapidjson::Value& patchList);
 
 signals:
     void engineStarted();

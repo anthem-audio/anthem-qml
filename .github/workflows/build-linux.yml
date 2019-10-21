@@ -1,0 +1,35 @@
+name: Linux Build
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-16.04
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Dependencies
+      run: sudo apt-get install libxkbcommon-x11-0 -y
+    - name: Download submodules
+      run: git submodule update --init --recursive
+    - name: Download Qt
+      run: wget http://qt.mirror.constant.com/archive/qt/5.13/5.13.0/qt-opensource-linux-x64-5.13.0.run
+    - name: Install Qt       
+      run: |
+           chmod +x ./qt-opensource-linux-x64-5.13.0.run
+           ./qt-opensource-linux-x64-5.13.0.run --script ./actions/installer-noninteractive.qs --platform minimal
+    - name: Build Anthem and generate Appimage
+      run: |
+           export PATH=$PATH:/qt/5.13.0/gcc_64/bin/
+           qmake ./Prototyping.pro CONFIG+=release PREFIX=/usr
+           make -j$(nproc)
+           make INSTALL_ROOT=appdir -j$(nproc) install ; sudo find / -name "appdir"
+           echo "Finding missing plugin"
+           sudo find / -name "libqgtk2.so"
+           echo ""
+           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+           mv /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/Main /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/Main.desktop
+           ./linuxdeployqt-continuous-x86_64.AppImage /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/*.desktop -appimage
+           ls /home/runner/work/daw-prototype/daw-prototype/Main/appdir/opt/Main/bin/

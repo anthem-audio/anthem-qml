@@ -7,7 +7,7 @@ function Controller() {
 
 Controller.prototype.WelcomePageCallback = function() {
     // click delay here because the next button is initially disabled for ~1 second
-    gui.clickButton(buttons.NextButton, 30000);
+    gui.clickButton(buttons.NextButton, 10000);
 }
 
 Controller.prototype.CredentialsPageCallback = function() {
@@ -28,9 +28,7 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
     var widget = gui.currentPageWidget();
 
     widget.deselectAll();
-    widget.selectComponent("qt.qt5.5130.gcc_64");
-    // widget.selectComponent("qt.qt5.5130.win64_mingw73");
-    // widget.selectComponent("qt.tools.win64_mingw730");
+    widget.selectComponent("qt.qt5.5131.gcc_64");
 
     gui.clickButton(buttons.NextButton);
 }
@@ -50,9 +48,9 @@ Controller.prototype.ReadyForInstallationPageCallback = function()
 }
 
 Controller.prototype.FinishedPageCallback = function() {
-var checkBoxForm = gui.currentPageWidget().LaunchQtCreatorCheckBoxForm;
-if (checkBoxForm && checkBoxForm.launchQtCreatorCheckBox) {
-    checkBoxForm.launchQtCreatorCheckBox.checked = false;
-}
+    var checkBoxForm = gui.currentPageWidget().LaunchQtCreatorCheckBoxForm;
+    if (checkBoxForm && checkBoxForm.launchQtCreatorCheckBox) {
+        checkBoxForm.launchQtCreatorCheckBox.checked = false;
+    }
     gui.clickButton(buttons.FinishButton);
 }
