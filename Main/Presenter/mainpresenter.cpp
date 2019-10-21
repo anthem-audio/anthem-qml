@@ -149,10 +149,6 @@ void MainPresenter::loadProject(QString path) {
 
     if (isInInitialState) {
         removeProjectAt(0);
-        emit tabRename(0, fileName);
-    }
-    else {
-        emit tabAdd(fileName);
     }
 
     if (projectFile->document.IsNull()) {
@@ -183,6 +179,15 @@ void MainPresenter::loadProject(QString path) {
 
     addProject(project, projectFile, engine);
     switchActiveProject(projects.length() - 1);
+
+    if (isInInitialState) {
+        emit tabRename(0, fileName);
+    }
+    else {
+        emit tabAdd(fileName);
+        emit tabSelect(getNumOpenProjects() - 1);
+    }
+
     isInInitialState = false;
 }
 
