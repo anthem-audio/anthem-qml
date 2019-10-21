@@ -36,10 +36,19 @@ Window {
         }
     }
 
+    InformationDialog {
+        id: infoDialog
+    }
+
     Connections {
         target: Anthem
         onSaveDialogRequest: {
             saveFileDialog.open();
+        }
+        onInformationDialogRequest: {
+            infoDialog.title = title;
+            infoDialog.message = notification;
+            infoDialog.show();
         }
     }
 

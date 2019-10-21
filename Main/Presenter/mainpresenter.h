@@ -86,6 +86,9 @@ signals:
     /// Signal to tell the UI to open a save dialog
     void saveDialogRequest();
 
+    /// Signal to tell the UI to display an information dialog to the user
+    void informationDialogRequest(QString title, QString notification);
+
     /// Emitted when a save has been completed.
     void saveCompleted();
 
