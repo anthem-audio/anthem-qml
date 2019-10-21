@@ -120,8 +120,6 @@ void MainPresenter::newProject() {
 }
 
 void MainPresenter::loadProject(QString path) {
-    // TODO: display errors to user
-
     QFileInfo fileInfo(path);
 
     // Check if the path exists and is a file
