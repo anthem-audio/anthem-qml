@@ -27,7 +27,4 @@ jobs:
            export PATH=$PATH:/qt/5.13.1/gcc_64/bin/
            qmake ./Prototyping.pro CONFIG+=release PREFIX=/usr
            make -j$(nproc)
-           wget https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage -O ./linuxdeployqt.AppImage
-           sudo chmod a+x ./linuxdeployqt.AppImage
-           ./linuxdeployqt.AppImage ./Main/appdir -appimage
-           ls
+           ./Main/Main --test
