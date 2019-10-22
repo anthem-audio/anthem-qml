@@ -6,6 +6,8 @@
 #include "Include/rapidjson/writer.h"
 #include "Include/rapidjson/schema.h"
 
+using namespace rapidjson;
+
 ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
     dirty = false;
 
@@ -41,7 +43,7 @@ ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
 ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     // Below are JSON schemas (https://json-schema.org/) for validating project files. Use another editor to modify them.
     auto schema_0_0_1 = R"(
-        {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","properties":{"software_version":{"type":"string","pattern":"0.0.1"},"project":{"type":"object","properties":{"song":{"type":"object","properties":{"patterns":{"type":"array"},"arrangements":{"type":"array"}}},"transport":{"type":"object","properties":{"master_pitch":{"$ref":"#/definitions/control"}},"required":["master_pitch"]},"mixer":{"type":"object"},"generators":{"type":"array"}},"required":["transport"]}},"required":["software_version","project"],"title":"The Root Schema","definitions":{"control":{"type":"object","properties":{"id":{"type":"number"},"initial_value":{"type":"number"},"minimum":{"type":"number"},"maximum":{"type":"number"},"step":{"type":"number"},"connection":{"type":"null"},"override_automation":{"type":"boolean"}},"required":["id","initial_value","minimum","maximum","step","connection","override_automation"]}}}
+        {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","properties":{"software_version":{"type":"string","pattern":"0.0.1"},"project":{"$ref":"#/definitions/Project"}},"required":["software_version","project"],"title":"The Root Schema","definitions":{"Project":{"type":"object","properties":{"song":{"type":"object","properties":{"patterns":{"type":"array"},"arrangements":{"type":"array"}}},"transport":{"$ref":"#/definitions/Transport"},"mixer":{"type":"object"},"generators":{"type":"array"}},"required":["transport"]},"Transport":{"type":"object","properties":{"master_pitch":{"$ref":"#/definitions/Control"}},"required":["master_pitch"]},"Control":{"type":"object","properties":{"id":{"type":"number"},"initial_value":{"type":"number"},"minimum":{"type":"number"},"maximum":{"type":"number"},"step":{"type":"number"},"connection":{"type":"null"},"override_automation":{"type":"boolean"}},"required":["id","initial_value","minimum","maximum","step","connection","override_automation"]}}}
     )";
 
 
@@ -56,7 +58,7 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     FILE* fp = std::fopen(path.toUtf8(), isWindows ? "rb" : "r");
 
     char readBuffer[65536];
-    rapidjson::FileReadStream stream(fp, readBuffer, sizeof(readBuffer));
+    FileReadStream stream(fp, readBuffer, sizeof(readBuffer));
 
     document.ParseStream(stream);
 
@@ -94,20 +96,20 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
 
     // Validate project JSON against schema
 
-    rapidjson::Document sd;
+    Document sd;
     sd.Parse(schemaForValidation);
     if (sd.HasParseError()) {
         fclose(fp);
         throw InvalidProjectException("Schema is invalid. This is a bug; please report it on Github.");
     }
-    rapidjson::SchemaDocument schema(sd);
+    SchemaDocument schema(sd);
 
     // TODO: user-friendly but still informative error message
-    rapidjson::SchemaValidator validator(schema);
+    SchemaValidator validator(schema);
     if (!document.Accept(validator)) {
         // Input JSON is invalid according to the schema
         // Output diagnostic information
-        rapidjson::StringBuffer sb;
+        StringBuffer sb;
         validator.GetInvalidSchemaPointer().StringifyUriFragment(sb);
         QString err = "This project is corrupted and could not be loaded.";
         // For debugging:
@@ -131,20 +133,31 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     fclose(fp);
 }
 
-void ProjectFile::save() {
+void ProjectFile::save(Project& project) {
+    Document doc;
+    doc.SetObject();
+    Value versionVal("0.0.1");
+    doc.AddMember("software_version", versionVal, doc.GetAllocator());
+
+    Value projectVal(kObjectType);
+    project.serialize(projectVal, doc);
+    doc.AddMember("project", projectVal, doc.GetAllocator());
+
     bool isWindows = QSysInfo::kernelType() == "winnt";
     FILE* fp = std::fopen((path).toUtf8(), isWindows ? "wb" : "w");
     char writeBuffer[65536];
-    rapidjson::FileWriteStream stream(fp, writeBuffer, sizeof(writeBuffer));
-    rapidjson::Writer<rapidjson::FileWriteStream> writer(stream);
-    document.Accept(writer);
+    FileWriteStream stream(fp, writeBuffer, sizeof(writeBuffer));
+    Writer<FileWriteStream> writer(stream);
+    doc.Accept(writer);
     fclose(fp);
+
+    document.CopyFrom(doc, document.GetAllocator());
     markClean();
 }
 
-void ProjectFile::saveAs(QString path) {
+void ProjectFile::saveAs(Project& project, QString path) {
     this->path = path;
-    save();
+    save(project);
 }
 
 void ProjectFile::markDirty() {

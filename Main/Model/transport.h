@@ -12,8 +12,9 @@ class Transport : public ModelItem {
     Q_OBJECT
 private:
 public:
-    Transport(ModelItem* parent, rapidjson::Value* projectNode);
-    void externalUpdate(QStringRef pointer, PatchFragment& patch);
+    Transport(ModelItem* parent, rapidjson::Value& projectNode);
+    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
+    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
     Control* masterPitch;
 

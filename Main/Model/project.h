@@ -8,16 +8,17 @@
 #include "Core/communicator.h"
 #include "transport.h"
 #include "Core/modelitem.h"
-#include "Utilities/projectfile.h"
 
 class Project : public ModelItem {
     Q_OBJECT
 private:
 public:
     Transport* transport;
-    Project(Communicator* parent, ProjectFile* projectFile);
+    Project(Communicator* parent, rapidjson::Value& projectVal);
 
-    void externalUpdate(QStringRef pointer, PatchFragment& patch);
+    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
+
+    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
 signals:
 

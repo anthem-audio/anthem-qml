@@ -23,7 +23,7 @@ private:
     void setOverrideState(bool isOverridden);
 public:
     /// Derive information from existing JSON node
-    Control(ModelItem *parent, QString name, rapidjson::Value* controlNode);
+    Control(ModelItem *parent, QString name, rapidjson::Value& controlNode);
 
     /// Generate new JSON node and add as field under parentNode
     /// parentNode[controlName] = {...newly generated control...}
@@ -36,7 +36,8 @@ public:
             float step);
 
 
-    void externalUpdate(QStringRef pointer, PatchFragment& patch);
+    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
+    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
     void set(float val, bool isFinal);
     float get();
 

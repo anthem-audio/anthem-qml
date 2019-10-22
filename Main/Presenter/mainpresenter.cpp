@@ -22,7 +22,7 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
 
     // Initialize with blank project
     auto projectFile = new ProjectFile(this);
-    auto projectModel = new Project(this, projectFile);
+    auto projectModel = new Project(this, projectFile->document["project"]);
     activeProjectIndex = 0;
 
     // Connect change signals from the model to the UI
@@ -109,7 +109,7 @@ void MainPresenter::ui_updateMasterPitch(float pitch) {
 
 void MainPresenter::newProject() {
     auto projectFile = new ProjectFile(this);
-    auto projectModel = new Project(this, projectFile);
+    auto projectModel = new Project(this, projectFile->document["project"]);
     auto engine = new Engine(this);
     engine->start();
     addProject(projectModel, projectFile, engine);
@@ -140,7 +140,7 @@ void MainPresenter::loadProject(QString path) {
         projectFile = new ProjectFile(this, path);
     }
     catch (const InvalidProjectException& ex) {
-        emit informationDialogRequest("Error", ex.what());
+        emit informationDialogRequest("Error", QString(ex.what()));
         return;
     }
 
@@ -162,7 +162,7 @@ void MainPresenter::loadProject(QString path) {
 
     try {
         // Initialize model with JSON
-        project = new Project(this, projectFile);
+        project = new Project(this, projectFile->document["project"]);
     }
     catch (const InvalidProjectException& ex) {
         QString errorText = "The project file failed to load. ";
@@ -196,11 +196,11 @@ void MainPresenter::updateAll() {
 }
 
 void MainPresenter::saveActiveProject() {
-    projectFiles[activeProjectIndex]->save();
+    projectFiles[activeProjectIndex]->save(*projects[activeProjectIndex]);
 }
 
 void MainPresenter::saveActiveProjectAs(QString path) {
-    projectFiles[activeProjectIndex]->saveAs(path);
+    projectFiles[activeProjectIndex]->saveAs(*projects[activeProjectIndex], path);
     QFileInfo fileInfo(path);
     QString fileName = fileInfo.fileName();
     fileName.chop(fileInfo.completeSuffix().length() + 1);

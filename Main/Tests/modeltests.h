@@ -88,9 +88,6 @@ private slots:
         // The control should report the newly set value.
         QCOMPARE(project->transport->masterPitch->get(), -5.0f);
 
-        // The JSON model should not have been updated.
-        QCOMPARE(project->transport->masterPitch->jsonNode->operator[]("initial_value").GetFloat(), 0.0f);
-
         // The signal for updating the UI should not have fired because the change does
         // not represent a change to the model. Arguably it shouldn't fire at all, but
         // I've made the decision to update the UI on any final model change so I don't
@@ -107,9 +104,6 @@ private slots:
 
         // The control should report the newly set value.
         QCOMPARE(project->transport->masterPitch->get(), 10.0f);
-
-        // The JSON model should be updated this time.
-        QCOMPARE(project->transport->masterPitch->jsonNode->operator[]("initial_value").GetFloat(), 10.0f);
 
         // This is a final (patch-emitting) change, so the UI should have been notified
         // (see above)

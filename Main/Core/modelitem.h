@@ -18,6 +18,9 @@ public:
     ///     function is called on.
     virtual void externalUpdate(QStringRef pointer, PatchFragment& patch) = 0;
 
+    /// Serialize model item state into the given value
+    virtual void serialize(rapidjson::Value& value, rapidjson::Document& doc) = 0;
+
     ModelItem(Communicator* parent, QString jsonKey);
 
     void patchAdd(QString path, rapidjson::Value& value);
@@ -28,8 +31,6 @@ public:
     void sendPatch();
     void liveUpdate(uint64_t controlId, float value);
 
-    rapidjson::Value* jsonNode;
-    rapidjson::Document* project;
     Communicator* parent;
 
     virtual ~ModelItem();

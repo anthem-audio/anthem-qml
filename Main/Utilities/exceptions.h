@@ -7,7 +7,7 @@
 struct InvalidProjectException : public std::exception {
     InvalidProjectException(QString const &message) : _message(message) {}
     const char* what() const noexcept {
-        return _message.toStdString().c_str();
+        return _message.toUtf8();
     }
 
 private:
