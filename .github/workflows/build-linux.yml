@@ -29,5 +29,5 @@ jobs:
            make -j$(nproc)
            wget https://github.com/probonopd/linuxdeployqt/releases/download/6/linuxdeployqt-6-x86_64.AppImage -O ./linuxdeployqt.AppImage
            sudo chmod a+x ./linuxdeployqt.AppImage
-           ./linuxdeployqt.AppImage Main/appdir/opt/Main/bin/Main -appimage
+           ./linuxdeployqt.AppImage ./Main/appdir -appimage
            ls
