@@ -2,9 +2,8 @@
 
 #include "Utilities/exceptions.h"
 
-Project::Project(Communicator* parent, ProjectFile* projectFile) : ModelItem(parent, "project") {
-    jsonNode = &(projectFile->document["project"]);
-    transport = new Transport(this, jsonNode);
+Project::Project(Communicator* parent, rapidjson::Value& projectVal) : ModelItem(parent, "project") {
+    transport = new Transport(this, projectVal["transport"]);
 }
 
 void Project::externalUpdate(QStringRef pointer, PatchFragment& patch) {
@@ -12,4 +11,12 @@ void Project::externalUpdate(QStringRef pointer, PatchFragment& patch) {
     if (pointer.startsWith(transportStr)) {
         transport->externalUpdate(pointer.mid(transportStr.length()), patch);
     }
+}
+
+void Project::serialize(rapidjson::Value& value, rapidjson::Document& doc) {
+    value.SetObject();
+
+    rapidjson::Value transportValue;
+    transport->serialize(transportValue, doc);
+    value.AddMember("transport", transportValue, doc.GetAllocator());
 }

@@ -2,16 +2,15 @@
 
 using namespace rapidjson;
 
-Control::Control(ModelItem *parent, QString name, Value* controlNode) : ModelItem(parent, name)
+Control::Control(ModelItem *parent, QString name, Value& controlNode) : ModelItem(parent, name)
 {
-    jsonNode = controlNode;
-    id = controlNode->operator[]("id").GetUint64();
-    initialValue = controlNode->operator[]("initial_value").GetFloat();
+    id = controlNode["id"].GetUint64();
+    initialValue = controlNode["initial_value"].GetFloat();
     ui_currentValue = initialValue;
-    minimum = controlNode->operator[]("minimum").GetFloat();
-    maximum = controlNode->operator[]("maximum").GetFloat();
-    step = controlNode->operator[]("step").GetFloat();
-    overrideAutomation = controlNode->operator[]("override_automation").GetBool();
+    minimum = controlNode["minimum"].GetFloat();
+    maximum = controlNode["maximum"].GetFloat();
+    step = controlNode["step"].GetFloat();
+    overrideAutomation = controlNode["override_automation"].GetBool();
 }
 
 // please write constructor for this
@@ -53,13 +52,26 @@ void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
     }
 }
 
+void Control::serialize(rapidjson::Value& value, rapidjson::Document& doc) {
+    value.SetObject();
+
+    value.AddMember("id", id, doc.GetAllocator());
+    value.AddMember("initial_value", initialValue, doc.GetAllocator());
+    value.AddMember("minimum", minimum, doc.GetAllocator());
+    value.AddMember("maximum", maximum, doc.GetAllocator());
+    value.AddMember("step", step, doc.GetAllocator());
+    value.AddMember("override_automation", overrideAutomation, doc.GetAllocator());
+    value.AddMember("connection", kNullType, doc.GetAllocator());
+}
+
 void Control::setOverrideState(bool isOverridden) {
     if (overrideAutomation == isOverridden)
         return;
 
     overrideAutomation = isOverridden;
 //    jsonNode->operator[]("override_automation") = isOverridden;
-    patchReplace("override_automation", jsonNode->operator[]("override_automation"));
+    Value overrideVal(overrideAutomation);
+    patchReplace("override_automation", overrideVal);
 }
 
 // TODO: Set override state depending on whether project is playing or not
