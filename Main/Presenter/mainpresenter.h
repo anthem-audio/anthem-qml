@@ -77,7 +77,6 @@ public:
     int getHistoryPointerAt(int index);
 
 signals:
-    void masterPitchChanged(int pitch);
     void tabAdd(QString name);
     void tabRename(int index, QString name);
     void tabSelect(int index);
@@ -95,15 +94,16 @@ signals:
     /// Emitted when a save has been cancelled.
     void saveCancelled();
 
+
+    // Update signals for UI elements
+    void masterPitchChanged(int pitch);
+    void beatsPerMinuteChanged(float bpm);
+
 public slots:
     void newProject();
     void loadProject(QString path);
     void saveActiveProject();
     void saveActiveProjectAs(QString path);
-
-    // Getters and setters for model properties
-    int getMasterPitch();
-    void setMasterPitch(int pitch, bool isFinal);
 
     /// Checks if the given project has ever been saved, or was opened from a file
     bool isProjectSaved(int projectIndex);
@@ -136,6 +136,13 @@ public slots:
     void switchActiveProject(int index);
     /// Does not update the active project
     void closeProject(int index);
+
+
+    // Getters and setters for model properties
+    int getMasterPitch();
+    void setMasterPitch(int pitch, bool isFinal);
+    float getBeatsPerMinute();
+    void setBeatsPerMinute(float bpm, bool isFinal);
 };
 
 #endif // MAINPRESENTER_H

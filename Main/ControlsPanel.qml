@@ -321,20 +321,20 @@ Panel {
 
                         fontPixelSize: 13
 
-//                        onValueChanged: {
-//                            Anthem.setMasterPitch(value, false);
-//                        }
+                        onValueChanged: {
+                            Anthem.setBeatsPerMinute(value, false);
+                        }
 
-//                        onValueChangeCompleted: {
-//                            Anthem.setMasterPitch(value, true);
-//                        }
+                        onValueChangeCompleted: {
+                            Anthem.setBeatsPerMinute(value, true);
+                        }
 
-//                        Connections {
-//                            target: Anthem
-//                            onMasterPitchChanged: {
-//                                masterPitchControl.value = pitch;
-//                            }
-//                        }
+                        Connections {
+                            target: Anthem
+                            onBeatsPerMinuteChanged: {
+                                tempoControl.value = pitch;
+                            }
+                        }
 
                         // This MouseArea changes the step on tempoControl
                         // depending on which digit is clicked.

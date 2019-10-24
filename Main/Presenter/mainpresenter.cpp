@@ -191,10 +191,6 @@ void MainPresenter::loadProject(QString path) {
     isInInitialState = false;
 }
 
-void MainPresenter::updateAll() {
-    emit masterPitchChanged(getMasterPitch());
-}
-
 void MainPresenter::saveActiveProject() {
     projectFiles[activeProjectIndex]->save(*projects[activeProjectIndex]);
 }
@@ -205,14 +201,6 @@ void MainPresenter::saveActiveProjectAs(QString path) {
     QString fileName = fileInfo.fileName();
     fileName.chop(fileInfo.completeSuffix().length() + 1);
     emit tabRename(activeProjectIndex, fileName);
-}
-
-int MainPresenter::getMasterPitch() {
-    return static_cast<int>(std::round(projects[activeProjectIndex]->transport->masterPitch->get()));
-}
-
-void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
-    projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
 }
 
 bool MainPresenter::isProjectSaved(int projectIndex) {
@@ -348,4 +336,32 @@ void MainPresenter::notifySaveCancelled() {
 
 void MainPresenter::notifySaveCompleted() {
     emit saveCompleted();
+}
+
+
+
+
+//****************************//
+// Control-specific functions //
+//****************************//
+
+void MainPresenter::updateAll() {
+    emit masterPitchChanged(getMasterPitch());
+    emit beatsPerMinuteChanged(getBeatsPerMinute());
+}
+
+int MainPresenter::getMasterPitch() {
+    return static_cast<int>(std::round(projects[activeProjectIndex]->transport->masterPitch->get()));
+}
+
+void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
+    projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
+}
+
+float MainPresenter::getBeatsPerMinute() {
+    return projects[activeProjectIndex]->transport->beatsPerMinute->get();
+}
+
+void MainPresenter::setBeatsPerMinute(float bpm, bool isFinal) {
+    projects[activeProjectIndex]->transport->beatsPerMinute->set(bpm, isFinal);
 }

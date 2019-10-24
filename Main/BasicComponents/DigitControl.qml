@@ -42,7 +42,7 @@ Item {
         property bool hasBound: highBound != lowBound
 
         onDrag: {
-            let delta = ((deltaY) * 0.1 * step) + remainder;
+            let delta = ((deltaY) * 0.08 * step) + remainder;
             let roundedDelta = roundToPrecision(delta, step);
             remainder = delta - roundedDelta;
             let newValue = value + roundedDelta;
