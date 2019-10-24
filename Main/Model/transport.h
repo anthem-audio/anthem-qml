@@ -17,6 +17,7 @@ public:
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
     Control* masterPitch;
+    Control* beatsPerMinute;
 
 signals:
 

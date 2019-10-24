@@ -13,29 +13,9 @@ ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
 
     // There's probably a Better Way
     // TODO: Add model constructors that give back a emtpy but valid state
-    auto emptyProject =
-        "{"
-        "    \"software_version\": \"0.0.1\","
-        "    \"project\": {"
-        "        \"song\": {"
-        "            \"patterns\": [],"
-        "            \"arrangements\": []"
-        "        },"
-        "        \"transport\": {"
-        "            \"master_pitch\": {"
-        "                \"id\": 0,"
-        "                \"initial_value\": 0,"
-        "                \"minimum\": 12,"
-        "                \"maximum\": -12,"
-        "                \"step\": 1,"
-        "                \"connection\": null,"
-        "                \"override_automation\": false"
-        "            }"
-        "        },"
-        "        \"mixer\": {},"
-        "        \"generators\": []"
-        "    }"
-        "}";
+    auto emptyProject = R"(
+        {"software_version":"0.0.1","project":{"song":{"patterns":[],"arrangements":[]},"transport":{"master_pitch":{"id":0,"initial_value":0,"minimum":-12,"maximum":12,"step":1,"connection":null,"override_automation":false},"beats_per_minute":{"id":1,"initial_value":140,"minimum":10,"maximum":999.99,"step":0.01,"connection":null,"override_automation":false}},"mixer":{},"generators":[]}}
+    )";
 
     document.Parse(emptyProject);
 }
@@ -43,7 +23,7 @@ ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
 ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     // Below are JSON schemas (https://json-schema.org/) for validating project files. Use another editor to modify them.
     auto schema_0_0_1 = R"(
-        {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","properties":{"software_version":{"type":"string","pattern":"0.0.1"},"project":{"$ref":"#/definitions/Project"}},"required":["software_version","project"],"title":"The Root Schema","definitions":{"Project":{"type":"object","properties":{"song":{"type":"object","properties":{"patterns":{"type":"array"},"arrangements":{"type":"array"}}},"transport":{"$ref":"#/definitions/Transport"},"mixer":{"type":"object"},"generators":{"type":"array"}},"required":["transport"]},"Transport":{"type":"object","properties":{"master_pitch":{"$ref":"#/definitions/Control"}},"required":["master_pitch"]},"Control":{"type":"object","properties":{"id":{"type":"number"},"initial_value":{"type":"number"},"minimum":{"type":"number"},"maximum":{"type":"number"},"step":{"type":"number"},"connection":{"type":"null"},"override_automation":{"type":"boolean"}},"required":["id","initial_value","minimum","maximum","step","connection","override_automation"]}}}
+        {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","properties":{"software_version":{"type":"string","pattern":"0.0.1"},"project":{"$ref":"#/definitions/Project"}},"required":["software_version","project"],"title":"The Root Schema","definitions":{"Project":{"type":"object","properties":{"song":{"type":"object","properties":{"patterns":{"type":"array"},"arrangements":{"type":"array"}}},"transport":{"$ref":"#/definitions/Transport"},"mixer":{"type":"object"},"generators":{"type":"array"}},"required":["transport"]},"Transport":{"type":"object","properties":{"master_pitch":{"$ref":"#/definitions/Control"},"beats_per_minute":{"$ref":"#/definitions/Control"}},"required":["master_pitch"]},"Control":{"type":"object","properties":{"id":{"type":"number"},"initial_value":{"type":"number"},"minimum":{"type":"number"},"maximum":{"type":"number"},"step":{"type":"number"},"connection":{"type":"null"},"override_automation":{"type":"boolean"}},"required":["id","initial_value","minimum","maximum","step","connection","override_automation"]}}}
     )";
 
 
