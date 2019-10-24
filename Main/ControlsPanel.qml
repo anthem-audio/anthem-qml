@@ -308,16 +308,58 @@ Panel {
                     height: parent.height * 0.5;
                     anchors.rightMargin: 7
 
-                    Text {
-                        text: qsTr("128.00")
-                        font.family: Fonts.sourceCodeProSemiBold.name
-                        font.weight: Font.Bold
-                        font.pointSize: 10
+                    DigitControl {
+                        id: tempoControl
                         anchors.fill: parent
                         anchors.topMargin: 2
-                        color: "#1ac18f"
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
+
+                        lowBound: 10
+                        highBound: 999
+                        step: 0.01
+                        decimalPlaces: 2
+                        value: 140
+
+                        fontPixelSize: 13
+
+//                        onValueChanged: {
+//                            Anthem.setMasterPitch(value, false);
+//                        }
+
+//                        onValueChangeCompleted: {
+//                            Anthem.setMasterPitch(value, true);
+//                        }
+
+//                        Connections {
+//                            target: Anthem
+//                            onMasterPitchChanged: {
+//                                masterPitchControl.value = pitch;
+//                            }
+//                        }
+
+                        // This MouseArea changes the step on tempoControl
+                        // depending on which digit is clicked.
+                        MouseArea {
+                            anchors.fill: parent
+                            onPressed: {
+                                mouse.accepted = false;
+                                let distanceFromRight = parent.width - mouseX;
+                                if (distanceFromRight <= 8) {
+                                    tempoControl.step = 0.01;
+                                }
+                                else if (distanceFromRight <= 16) {
+                                    tempoControl.step = 0.1;
+                                }
+                                else {
+                                    tempoControl.step = 1;
+                                }
+                            }
+                            onReleased: {
+                                mouse.accepted = false;
+                            }
+                            onPositionChanged: {
+                                mouse.accepted = false;
+                            }
+                        }
                     }
                 }
 
@@ -439,6 +481,8 @@ Panel {
                         anchors.right: parent.right
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
+
+                        fontFamily: Fonts.notoSansRegular.name
 
                         highBound: 12
                         lowBound: -12

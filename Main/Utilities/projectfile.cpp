@@ -14,7 +14,7 @@ ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
     // There's probably a Better Way
     // TODO: Add model constructors that give back a emtpy but valid state
     auto emptyProject = R"(
-        {"software_version":"0.0.1","project":{"song":{"patterns":[],"arrangements":[]},"transport":{"master_pitch":{"id":0,"initial_value":0,"minimum":-12,"maximum":12,"step":1,"connection":null,"override_automation":false},"beats_per_minute":{"id":1,"initial_value":140,"minimum":10,"maximum":999.99,"step":0.01,"connection":null,"override_automation":false}},"mixer":{},"generators":[]}}
+        {"software_version":"0.0.1","project":{"song":{"patterns":[],"arrangements":[]},"transport":{"master_pitch":{"id":0,"initial_value":0,"minimum":-12,"maximum":12,"step":1,"connection":null,"override_automation":false},"beats_per_minute":{"id":1,"initial_value":140,"minimum":10,"maximum":999,"step":0.01,"connection":null,"override_automation":false}},"mixer":{},"generators":[]}}
     )";
 
     document.Parse(emptyProject);

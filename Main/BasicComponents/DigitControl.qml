@@ -4,18 +4,27 @@ import "../Global"
 
 Item {
     id: control
-    property int value: 0
-    property int highBound
-    property int lowBound
+    property real value: 0
+    property real highBound
+    property real lowBound
+    property real step: 1
+    property int decimalPlaces: 0
     property int alignment: Text.AlignRight
+    property var fontFamily: Fonts.sourceCodeProSemiBold.name
+    property int fontPixelSize: 11
 
-    signal valueChangeCompleted(int value);
+    signal valueChangeCompleted(real value)
+
+    function roundToPrecision(x, precision) {
+        var y = + x + precision / 2;
+        return y - (y % precision);
+    }
 
     Text {
         id: pitchLabel
-        text: qsTr(value.toString())
-        font.family: Fonts.notoSansRegular.name
-        font.pointSize: 8
+        text: qsTr(value.toFixed(decimalPlaces))
+        font.family: fontFamily
+        font.pixelSize: fontPixelSize
         horizontalAlignment: alignment
         verticalAlignment: Text.AlignVCenter
         anchors.fill: parent
@@ -27,39 +36,33 @@ Item {
 
         anchors.fill: parent
 
-        property int accumulator: 0
-        property int slownessMultiplier: 12
+        property real remainder
 
-        // If both highBound and lowBound are unset, they will both be 0
+        // If highBound and lowBound are unset, they will both be 0
         property bool hasBound: highBound != lowBound
 
         onDrag: {
-            accumulator += deltaY
-
-            let tempVal = value;
-
-            while(Math.abs(accumulator) > slownessMultiplier) {
-                if (accumulator > slownessMultiplier) {
-                    if (!(hasBound && tempVal >= highBound))
-                        tempVal++;
-                    else
-                        break;
-                    accumulator -= slownessMultiplier;
+            let delta = ((deltaY) * 0.1 * step) + remainder;
+            let roundedDelta = roundToPrecision(delta, step);
+            remainder = delta - roundedDelta;
+            let newValue = value + roundedDelta;
+            if (hasBound) {
+                if (newValue < lowBound) {
+                    remainder += newValue - lowBound;
+                    value = lowBound;
                 }
-                else if (accumulator < -slownessMultiplier) {
-                    if (!(hasBound && tempVal <= lowBound))
-                        tempVal--;
-                    else
-                        break;
-                    accumulator += slownessMultiplier;
+                else if (newValue > highBound) {
+                    remainder += newValue - highBound;
+                    value = highBound;
+                }
+                else {
+                    value = newValue;
                 }
             }
-
-            value = tempVal;
         }
 
         onDragEnd: {
-            accumulator = 0;
+            remainder = 0;
             control.valueChangeCompleted(control.value);
         }
     }
