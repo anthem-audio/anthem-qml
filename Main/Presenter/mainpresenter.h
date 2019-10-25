@@ -122,13 +122,6 @@ public slots:
 
     int getNumOpenProjects();
 
-    // Functions with the ui_ prefix are used as receiver slots
-    // for model change signals. Each ui_ function should:
-    //     a) always be connected to the relevant model's update
-    //        signals, and
-    //     b) emit the relevant update signal.
-    void ui_updateMasterPitch(float pitch);
-
     void undo();
     void redo();
 
@@ -143,6 +136,14 @@ public slots:
     void setMasterPitch(int pitch, bool isFinal);
     float getBeatsPerMinute();
     void setBeatsPerMinute(float bpm, bool isFinal);
+
+    // Functions with the ui_ prefix are used as receiver slots
+    // for model change signals. Each ui_ function should:
+    //     a) always be connected to the relevant model's update
+    //        signals, and
+    //     b) emit the relevant update signal.
+    void ui_updateMasterPitch(float pitch);
+    void ui_updateBeatsPerMinute(float bpm);
 };
 
 #endif // MAINPRESENTER_H

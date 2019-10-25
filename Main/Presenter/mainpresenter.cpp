@@ -92,21 +92,6 @@ void MainPresenter::removeProjectAt(int index) {
     }
 }
 
-void MainPresenter::connectUiUpdateSignals(Project* project) {
-    QObject::connect(project->transport->masterPitch, SIGNAL(displayValueChanged(float)),
-                     this,                            SLOT(ui_updateMasterPitch(float)));
-}
-
-// This should mirror the function above
-void MainPresenter::disconnectUiUpdateSignals(Project* project) {
-    QObject::disconnect(project->transport->masterPitch, SIGNAL(displayValueChanged(float)),
-                        this,                            SLOT(ui_updateMasterPitch(float)));
-}
-
-void MainPresenter::ui_updateMasterPitch(float pitch) {
-    emit masterPitchChanged(static_cast<int>(std::round(pitch)));
-}
-
 void MainPresenter::newProject() {
     auto projectFile = new ProjectFile(this);
     auto projectModel = new Project(this, projectFile->document["project"]);
@@ -350,6 +335,23 @@ void MainPresenter::updateAll() {
     emit beatsPerMinuteChanged(getBeatsPerMinute());
 }
 
+void MainPresenter::connectUiUpdateSignals(Project* project) {
+    QObject::connect(project->transport->masterPitch,    SIGNAL(displayValueChanged(float)),
+                     this,                               SLOT(ui_updateMasterPitch(float)));
+    QObject::connect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
+                     this,                               SLOT(ui_updateBeatsPerMinute(float)));
+}
+
+// This should mirror the function above
+void MainPresenter::disconnectUiUpdateSignals(Project* project) {
+    QObject::disconnect(project->transport->masterPitch,    SIGNAL(displayValueChanged(float)),
+                        this,                               SLOT(ui_updateMasterPitch(float)));
+    QObject::disconnect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
+                        this,                               SLOT(ui_updateBeatsPerMinute(float)));
+}
+
+
+
 int MainPresenter::getMasterPitch() {
     return static_cast<int>(std::round(projects[activeProjectIndex]->transport->masterPitch->get()));
 }
@@ -358,10 +360,18 @@ void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
 }
 
+void MainPresenter::ui_updateMasterPitch(float pitch) {
+    emit masterPitchChanged(static_cast<int>(std::round(pitch)));
+}
+
 float MainPresenter::getBeatsPerMinute() {
     return projects[activeProjectIndex]->transport->beatsPerMinute->get();
 }
 
 void MainPresenter::setBeatsPerMinute(float bpm, bool isFinal) {
     projects[activeProjectIndex]->transport->beatsPerMinute->set(bpm, isFinal);
+}
+
+void MainPresenter::ui_updateBeatsPerMinute(float bpm) {
+    emit beatsPerMinuteChanged(bpm);
 }

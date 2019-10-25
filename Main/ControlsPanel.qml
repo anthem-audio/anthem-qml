@@ -332,7 +332,7 @@ Panel {
                         Connections {
                             target: Anthem
                             onBeatsPerMinuteChanged: {
-                                tempoControl.value = pitch;
+                                tempoControl.value = bpm;
                             }
                         }
 
