@@ -14,8 +14,8 @@ jobs:
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
     - name: Install Qt
-      run: '${env:GITHUB_WORKSPACE}\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
-      shell: powershell
+      run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
+      shell: cmd
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem.ps1"'
       shell: powershell
