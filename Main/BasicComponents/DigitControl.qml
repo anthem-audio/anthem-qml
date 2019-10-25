@@ -8,10 +8,14 @@ Item {
     property real highBound
     property real lowBound
     property real step: 1
-    property int decimalPlaces: 0
-    property int alignment: Text.AlignRight
-    property var fontFamily: Fonts.sourceCodeProSemiBold.name
-    property int fontPixelSize: 11
+    property real speedMultiplier: 1
+    property int  decimalPlaces: 0
+    property int  alignment: Text.AlignRight
+    property var  fontFamily: Fonts.sourceCodeProSemiBold.name
+    property int  fontPixelSize: 11
+    property var  acceptedValues: []
+    property bool shouldUseAcceptedValues: acceptedValues.length !== 0
+    property var  acceptedValueIndex: shouldUseAcceptedValues ? acceptedValues.indexOf(value) : undefined;
 
     signal valueChangeCompleted(real value)
 
@@ -42,11 +46,20 @@ Item {
         property bool hasBound: highBound != lowBound
 
         onDrag: {
-            let delta = ((deltaY) * 0.08 * step) + remainder;
+            let delta = ((deltaY) * 0.08 * speedMultiplier * step) + remainder;
             let roundedDelta = roundToPrecision(delta, step);
             remainder = delta - roundedDelta;
             let newValue = value + roundedDelta;
-            if (hasBound) {
+
+            if (shouldUseAcceptedValues) {
+                acceptedValueIndex += Math.round(roundedDelta);
+                if (acceptedValueIndex < 0)
+                    acceptedValueIndex = 0;
+                else if (acceptedValueIndex >= acceptedValues.length)
+                    acceptedValueIndex = acceptedValues.length - 1;
+                value = acceptedValues[acceptedValueIndex]
+            }
+            else if (hasBound) {
                 if (newValue < lowBound) {
                     remainder += newValue - lowBound;
                     value = lowBound;
@@ -58,6 +71,9 @@ Item {
                 else {
                     value = newValue;
                 }
+            }
+            else {
+                value = newValue;
             }
         }
 

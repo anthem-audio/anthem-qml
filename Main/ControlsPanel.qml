@@ -371,16 +371,79 @@ Panel {
                     anchors.bottom: parent.bottom
                     anchors.rightMargin: 7
 
+                    DigitControl {
+                        id: timeSignatureNumeratorControl
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: timeSignatureSlash.left
+                        width: 16
+
+                        fontPixelSize: 13
+
+                        lowBound: 1
+                        highBound: 16
+                        value: 4
+                        speedMultiplier: 0.4
+
+
+//                        onValueChanged: {
+//                            Anthem.setMasterPitch(value, false);
+//                        }
+
+//                        onValueChangeCompleted: {
+//                            Anthem.setMasterPitch(value, true);
+//                        }
+
+//                        Connections {
+//                            target: Anthem
+//                            onMasterPitchChanged: {
+//                                masterPitchControl.value = pitch;
+//                            }
+//                        }
+                    }
+
                     Text {
-                        text: qsTr("4/4")
+                        id: timeSignatureSlash
+                        text: qsTr("/")
                         font.family: Fonts.sourceCodeProSemiBold.name
                         font.weight: Font.Bold
-                        font.pointSize: 10
-                        anchors.fill: parent
-                        anchors.bottomMargin: 2
+                        font.pixelSize: 13
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: timeSignatureDenominatorControl.left
                         color: "#1ac18f"
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
+                    }
+
+                    DigitControl {
+                        id: timeSignatureDenominatorControl
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: value === 16 ? 16 : 8
+
+                        fontPixelSize: 13
+                        alignment: Text.AlignLeft
+
+                        value: 4
+                        acceptedValues: [1, 2, 4, 8, 16]
+                        speedMultiplier: 0.4
+
+//                        onValueChanged: {
+//                            Anthem.setMasterPitch(value, false);
+//                        }
+
+//                        onValueChangeCompleted: {
+//                            Anthem.setMasterPitch(value, true);
+//                        }
+
+//                        Connections {
+//                            target: Anthem
+//                            onMasterPitchChanged: {
+//                                masterPitchControl.value = pitch;
+//                            }
+//                        }
                     }
                 }
             }
