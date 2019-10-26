@@ -386,13 +386,13 @@ Panel {
                         speedMultiplier: 0.4
 
 
-                        onValueChanged: {
+//                        onValueChanged: {
+//                            Anthem.setTimeSignatureNumerator(value);
+//                        }
+
+                        onValueChangeCompleted: {
                             Anthem.setTimeSignatureNumerator(value);
                         }
-
-//                        onValueChangeCompleted: {
-//                            Anthem.setMasterPitch(value, true);
-//                        }
 
                         Connections {
                             target: Anthem
@@ -430,13 +430,13 @@ Panel {
                         acceptedValues: [1, 2, 4, 8, 16]
                         speedMultiplier: 0.4
 
-                        onValueChanged: {
+//                        onValueChanged: {
+//                            Anthem.setTimeSignatureDenominator(value);
+//                        }
+
+                        onValueChangeCompleted: {
                             Anthem.setTimeSignatureDenominator(value);
                         }
-
-//                        onValueChangeCompleted: {
-//                            Anthem.setMasterPitch(value, true);
-//                        }
 
                         Connections {
                             target: Anthem
