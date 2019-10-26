@@ -29,9 +29,8 @@ Item {
         _valueSource = Math.round(value * _valueScale);
     }
 
-    function roundToPrecision(x, precision) {
-        var y = + x + precision / 2;
-        return y - (y % precision);
+    onValueChanged: {
+        _valueSource = Math.round(value * _valueScale);
     }
 
     Text {
