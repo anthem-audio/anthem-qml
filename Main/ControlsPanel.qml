@@ -386,20 +386,20 @@ Panel {
                         speedMultiplier: 0.4
 
 
-//                        onValueChanged: {
-//                            Anthem.setMasterPitch(value, false);
-//                        }
+                        onValueChanged: {
+                            Anthem.setTimeSignatureNumerator(value);
+                        }
 
 //                        onValueChangeCompleted: {
 //                            Anthem.setMasterPitch(value, true);
 //                        }
 
-//                        Connections {
-//                            target: Anthem
-//                            onMasterPitchChanged: {
-//                                masterPitchControl.value = pitch;
-//                            }
-//                        }
+                        Connections {
+                            target: Anthem
+                            onTimeSignatureNumeratorChanged: {
+                                timeSignatureNumeratorControl.value = numerator;
+                            }
+                        }
                     }
 
                     Text {
@@ -430,20 +430,20 @@ Panel {
                         acceptedValues: [1, 2, 4, 8, 16]
                         speedMultiplier: 0.4
 
-//                        onValueChanged: {
-//                            Anthem.setMasterPitch(value, false);
-//                        }
+                        onValueChanged: {
+                            Anthem.setTimeSignatureDenominator(value);
+                        }
 
 //                        onValueChangeCompleted: {
 //                            Anthem.setMasterPitch(value, true);
 //                        }
 
-//                        Connections {
-//                            target: Anthem
-//                            onMasterPitchChanged: {
-//                                masterPitchControl.value = pitch;
-//                            }
-//                        }
+                        Connections {
+                            target: Anthem
+                            onTimeSignatureDenominatorChanged: {
+                                timeSignatureDenominatorControl.value = denominator;
+                            }
+                        }
                     }
                 }
             }

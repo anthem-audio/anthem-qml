@@ -333,6 +333,8 @@ void MainPresenter::notifySaveCompleted() {
 void MainPresenter::updateAll() {
     emit masterPitchChanged(getMasterPitch());
     emit beatsPerMinuteChanged(getBeatsPerMinute());
+    emit timeSignatureNumeratorChanged(getTimeSignatureNumerator());
+    emit timeSignatureDenominatorChanged(getTimeSignatureDenominator());
 }
 
 void MainPresenter::connectUiUpdateSignals(Project* project) {
@@ -340,6 +342,10 @@ void MainPresenter::connectUiUpdateSignals(Project* project) {
                      this,                               SLOT(ui_updateMasterPitch(float)));
     QObject::connect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
                      this,                               SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::connect(project->transport,                 SIGNAL(numeratorDisplayValueChanged(quint8)),
+                     this,                               SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::connect(project->transport,                 SIGNAL(denominatorDisplayValueChanged(quint8)),
+                     this,                               SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 // This should mirror the function above
@@ -348,6 +354,10 @@ void MainPresenter::disconnectUiUpdateSignals(Project* project) {
                         this,                               SLOT(ui_updateMasterPitch(float)));
     QObject::disconnect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
                         this,                               SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::disconnect(project->transport,                 SIGNAL(numeratorDisplayValueChanged(quint8)),
+                        this,                               SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::disconnect(project->transport,                 SIGNAL(denominatorDisplayValueChanged(quint8)),
+                        this,                               SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 
@@ -364,6 +374,7 @@ void MainPresenter::ui_updateMasterPitch(float pitch) {
     emit masterPitchChanged(static_cast<int>(std::round(pitch)));
 }
 
+
 float MainPresenter::getBeatsPerMinute() {
     return projects[activeProjectIndex]->transport->beatsPerMinute->get();
 }
@@ -374,4 +385,30 @@ void MainPresenter::setBeatsPerMinute(float bpm, bool isFinal) {
 
 void MainPresenter::ui_updateBeatsPerMinute(float bpm) {
     emit beatsPerMinuteChanged(bpm);
+}
+
+
+quint8 MainPresenter::getTimeSignatureNumerator() {
+    return projects[activeProjectIndex]->transport->getNumerator();
+}
+
+void MainPresenter::setTimeSignatureNumerator(quint8 numerator) {
+    projects[activeProjectIndex]->transport->setNumerator(numerator);
+}
+
+void MainPresenter::ui_updateTimeSignatureNumerator(quint8 numerator) {
+    emit timeSignatureNumeratorChanged(numerator);
+}
+
+
+quint8 MainPresenter::getTimeSignatureDenominator() {
+    return projects[activeProjectIndex]->transport->getDenominator();
+}
+
+void MainPresenter::setTimeSignatureDenominator(quint8 denominator) {
+    projects[activeProjectIndex]->transport->setDenominator(denominator);
+}
+
+void MainPresenter::ui_updateTimeSignatureDenominator(quint8 denominator) {
+    emit timeSignatureDenominatorChanged(denominator);
 }

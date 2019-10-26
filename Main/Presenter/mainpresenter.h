@@ -98,6 +98,8 @@ signals:
     // Update signals for UI elements
     void masterPitchChanged(int pitch);
     void beatsPerMinuteChanged(float bpm);
+    void timeSignatureNumeratorChanged(quint8 numerator);
+    void timeSignatureDenominatorChanged(quint8 denominator);
 
 public slots:
     void newProject();
@@ -136,6 +138,10 @@ public slots:
     void setMasterPitch(int pitch, bool isFinal);
     float getBeatsPerMinute();
     void setBeatsPerMinute(float bpm, bool isFinal);
+    quint8 getTimeSignatureNumerator();
+    void setTimeSignatureNumerator(quint8 numerator);
+    quint8 getTimeSignatureDenominator();
+    void setTimeSignatureDenominator(quint8 denominator);
 
     // Functions with the ui_ prefix are used as receiver slots
     // for model change signals. Each ui_ function should:
@@ -144,6 +150,8 @@ public slots:
     //     b) emit the relevant update signal.
     void ui_updateMasterPitch(float pitch);
     void ui_updateBeatsPerMinute(float bpm);
+    void ui_updateTimeSignatureNumerator(quint8 numerator);
+    void ui_updateTimeSignatureDenominator(quint8 denominator);
 };
 
 #endif // MAINPRESENTER_H
