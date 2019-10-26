@@ -316,6 +316,7 @@ Panel {
                         lowBound: 10
                         highBound: 999
                         step: 0.01
+                        smallestIncrement: 0.01
                         decimalPlaces: 2
                         value: 140
 
@@ -383,7 +384,7 @@ Panel {
                         lowBound: 1
                         highBound: 16
                         value: 4
-                        speedMultiplier: 0.4
+                        speedMultiplier: 0.5
 
 
 //                        onValueChanged: {
@@ -428,7 +429,7 @@ Panel {
 
                         value: 4
                         acceptedValues: [1, 2, 4, 8, 16]
-                        speedMultiplier: 0.4
+                        speedMultiplier: 0.5
 
 //                        onValueChanged: {
 //                            Anthem.setTimeSignatureDenominator(value);
