@@ -56,8 +56,8 @@ public:
 
     // These are virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
-    void patchRemove(QString path);
-    void patchReplace(QString path, rapidjson::Value& value);
+    void patchRemove(QString path, rapidjson::Value& oldValue);
+    void patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();

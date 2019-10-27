@@ -2,7 +2,15 @@
 
 using namespace rapidjson;
 
-Transport::Transport(ModelItem* parent, Value& projectNode) : ModelItem(parent, "transport")
+Transport::Transport(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "transport") {
+    this->id = id;
+    masterPitch = new Control(this, "master_pitch", *id, 0, -12, 12, 1);
+    beatsPerMinute = new Control(this, "beats_per_minute", *id, 140, 10, 999, 0.01f);
+    defaultNumerator = 4;
+    defaultDenominator = 4;
+}
+
+Transport::Transport(ModelItem* parent, IdGenerator* id, Value& projectNode) : ModelItem(parent, "transport")
 {
     masterPitch = new Control(this, "master_pitch", projectNode["master_pitch"]);
     beatsPerMinute = new Control(this, "beats_per_minute", projectNode["beats_per_minute"]);
@@ -52,9 +60,11 @@ void Transport::serialize(Value& value, Document& doc) {
 }
 
 void Transport::setNumerator(quint8 numerator) {
+    auto oldNumerator = defaultNumerator;
     defaultNumerator = numerator;
     Value v(numerator);
-    patchReplace("default_numerator", v);
+    Value vOld(oldNumerator);
+    patchReplace("default_numerator", vOld, v);
     sendPatch();
 }
 
@@ -63,9 +73,11 @@ quint8 Transport::getNumerator() {
 }
 
 void Transport::setDenominator(quint8 denominator) {
+    auto oldDenominator = defaultDenominator;
     defaultDenominator = denominator;
     Value v(denominator);
-    patchReplace("default_denominator", v);
+    Value vOld(oldDenominator);
+    patchReplace("default_denominator", vOld, v);
     sendPatch();
 }
 

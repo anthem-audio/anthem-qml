@@ -10,14 +10,7 @@ using namespace rapidjson;
 
 ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
     dirty = false;
-
-    // There's probably a Better Way
-    // TODO: Add model constructors that give back a emtpy but valid state
-    auto emptyProject = R"(
-        {"software_version":"0.0.1","project":{"song":{"patterns":[],"arrangements":[]},"transport":{"master_pitch":{"id":0,"initial_value":0,"minimum":-12,"maximum":12,"step":1,"connection":null,"override_automation":false},"beats_per_minute":{"id":1,"initial_value":140,"minimum":10,"maximum":999,"step":0.01,"connection":null,"override_automation":false},"default_numerator":4,"default_denominator":4},"mixer":{},"generators":[]}}
-    )";
-
-    document.Parse(emptyProject);
+    document.SetObject();
 }
 
 ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {

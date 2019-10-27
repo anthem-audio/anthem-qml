@@ -6,7 +6,7 @@
 
 using namespace rapidjson;
 
-PatchFragment::PatchFragment(QObject* parent, Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value) : QObject(parent) {
+PatchFragment::PatchFragment(QObject* parent, PatchType type, QString from, QString path, rapidjson::Value& value) : QObject(parent) {
     patch.SetObject();
 
     QString op;
@@ -25,18 +25,18 @@ PatchFragment::PatchFragment(QObject* parent, Document& doc, PatchType type, QSt
         op = "move";
 
     Value opVal(kStringType);
-    opVal.SetString(op.toStdString(), doc.GetAllocator());
+    opVal.SetString(op.toStdString(), patch.GetAllocator());
 
-    patch.AddMember("op", opVal, doc.GetAllocator());
+    patch.AddMember("op", opVal, patch.GetAllocator());
 
     if (!from.isNull()) {
-        patch.AddMember("from", from.toStdString(), doc.GetAllocator());
+        patch.AddMember("from", from.toStdString(), patch.GetAllocator());
     }
 
-    patch.AddMember("path", path.toStdString(), doc.GetAllocator());
+    patch.AddMember("path", path.toStdString(), patch.GetAllocator());
 
     if (!value.IsNull()) {
-        patch.AddMember("value", value, doc.GetAllocator());
+        patch.AddMember("value", value, patch.GetAllocator());
     }
 }
 

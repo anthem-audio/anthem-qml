@@ -7,6 +7,8 @@
 
 #include "Core/modelitem.h"
 
+#include "Utilities/idgenerator.h"
+
 class Control : public ModelItem {
     Q_OBJECT
 private:
@@ -22,8 +24,11 @@ private:
 
     void setOverrideState(bool isOverridden);
 public:
+    /// Create new control with the given values
+    Control(ModelItem* parent, QString name, IdGenerator& idGenerator, float initialValue, float minimum, float maximum, float step);
+
     /// Derive information from existing JSON node
-    Control(ModelItem *parent, QString name, rapidjson::Value& controlNode);
+    Control(ModelItem* parent, QString name, rapidjson::Value& controlNode);
 
     /// Generate new JSON node and add as field under parentNode
     /// parentNode[controlName] = {...newly generated control...}

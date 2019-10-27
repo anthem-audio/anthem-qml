@@ -13,9 +13,11 @@ class Transport : public ModelItem {
 private:
     quint8 defaultNumerator;
     quint8 defaultDenominator;
+    IdGenerator* id;
 
 public:
-    Transport(ModelItem* parent, rapidjson::Value& projectNode);
+    Transport(ModelItem* parent, IdGenerator* id);
+    Transport(ModelItem* parent, IdGenerator* id, rapidjson::Value& projectNode);
     void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 

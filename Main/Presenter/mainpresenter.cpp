@@ -22,7 +22,7 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
 
     // Initialize with blank project
     auto projectFile = new ProjectFile(this);
-    auto projectModel = new Project(this, projectFile->document["project"]);
+    auto projectModel = new Project(this, id);
     activeProjectIndex = 0;
 
     // Connect change signals from the model to the UI
@@ -94,7 +94,7 @@ void MainPresenter::removeProjectAt(int index) {
 
 void MainPresenter::newProject() {
     auto projectFile = new ProjectFile(this);
-    auto projectModel = new Project(this, projectFile->document["project"]);
+    auto projectModel = new Project(this, id);
     auto engine = new Engine(this);
     engine->start();
     addProject(projectModel, projectFile, engine);
@@ -147,7 +147,7 @@ void MainPresenter::loadProject(QString path) {
 
     try {
         // Initialize model with JSON
-        project = new Project(this, projectFile->document["project"]);
+        project = new Project(this, id, projectFile->document["project"]);
     }
     catch (const InvalidProjectException& ex) {
         QString errorText = "The project file failed to load. ";
@@ -220,28 +220,30 @@ void MainPresenter::initializeNewPatchIfNeeded() {
     }
 
     projectHistories[activeProjectIndex].append(
-        new Patch(this, projects[activeProjectIndex], projectFiles[activeProjectIndex]->document)
+        new Patch(this, projects[activeProjectIndex])
     );
 }
 
 void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
     Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
-    Value copiedValue(value, projectFiles[activeProjectIndex]->document.GetAllocator());
+    Value copiedValue(value, *patch.getPatchAllocator());
     patch.patchAdd("/" + path, copiedValue);
 }
 
-void MainPresenter::patchRemove(QString path) {
+void MainPresenter::patchRemove(QString path, rapidjson::Value& oldValue) {
     initializeNewPatchIfNeeded();
     Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
-    patch.patchRemove("/" + path);
+    Value copiedValue(oldValue, *patch.getUndoPatchAllocator());
+    patch.patchRemove("/" + path, copiedValue);
 }
 
-void MainPresenter::patchReplace(QString path, rapidjson::Value& value) {
+void MainPresenter::patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) {
     initializeNewPatchIfNeeded();
     Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
-    Value copiedValue(value, projectFiles[activeProjectIndex]->document.GetAllocator());
-    patch.patchReplace("/" + path, copiedValue);
+    Value copiedOldValue(oldValue, *patch.getUndoPatchAllocator());
+    Value copiedNewValue(newValue, *patch.getPatchAllocator());
+    patch.patchReplace("/" + path, copiedOldValue, copiedNewValue);
 }
 
 void MainPresenter::patchCopy(QString from, QString path) {

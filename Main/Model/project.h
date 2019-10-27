@@ -12,9 +12,11 @@
 class Project : public ModelItem {
     Q_OBJECT
 private:
+    IdGenerator* id;
 public:
     Transport* transport;
-    Project(Communicator* parent, rapidjson::Value& projectVal);
+    Project(Communicator* parent, IdGenerator* id);
+    Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projectVal);
 
     void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
 
