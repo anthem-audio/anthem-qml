@@ -12,6 +12,7 @@ Transport::Transport(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "tr
 
 Transport::Transport(ModelItem* parent, IdGenerator* id, Value& projectNode) : ModelItem(parent, "transport")
 {
+    this->id = id;
     masterPitch = new Control(this, "master_pitch", projectNode["master_pitch"]);
     beatsPerMinute = new Control(this, "beats_per_minute", projectNode["beats_per_minute"]);
     defaultNumerator = static_cast<quint8>(projectNode["default_numerator"].GetUint());
