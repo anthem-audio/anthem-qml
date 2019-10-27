@@ -107,7 +107,7 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
         err += sb.GetString();
         err += "\n";
         */
-        throw InvalidProjectException(err);
+        throw InvalidProjectException(err.toUtf8());
     }
 
     fclose(fp);
