@@ -1,7 +1,10 @@
 import QtQuick 2.0
 import io.github.anthem.utilities.mousehelper 1.0
 
-Item {
+MouseArea {
+    id: mouseArea
+    hoverEnabled: true
+
     MouseHelper {
         id: mouseHelper
     }
@@ -18,42 +21,36 @@ Item {
     signal drag(real deltaX, real deltaY)
     signal dragEnd()
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: parent
-        hoverEnabled: true
+    onPressed: {
+        mouseHelper.setCursorToBlank();
 
-        onPressed: {
-            mouseHelper.setCursorToBlank();
+        let mousePos = mouseHelper.getCursorPosition();
+        props.currentSnapX = mousePos.x;
+        props.currentSnapY = mousePos.y;
 
-            let mousePos = mouseHelper.getCursorPosition();
-            props.currentSnapX = mousePos.x;
-            props.currentSnapY = mousePos.y;
+        isDragActive = true;
+        dragStart();
+    }
 
-            parent.isDragActive = true;
-            parent.dragStart();
-        }
+    onReleased: {
+        mouseHelper.setCursorToArrow();
 
-        onReleased: {
-            mouseHelper.setCursorToArrow();
+        isDragActive = false;
+        dragEnd();
+    }
 
-            parent.isDragActive = false;
-            parent.dragEnd();
-        }
+    onPositionChanged: {
+        if (!isDragActive)
+            return;
 
-        onPositionChanged: {
-            if (!parent.isDragActive)
-                return;
+        let mousePos = mouseHelper.getCursorPosition();
+        let deltaX = mousePos.x - props.currentSnapX;
+        let deltaY = props.currentSnapY - mousePos.y;
 
-            let mousePos = mouseHelper.getCursorPosition();
-            let deltaX = mousePos.x - props.currentSnapX;
-            let deltaY = props.currentSnapY - mousePos.y;
+        if (deltaX === 0 && deltaY === 0)
+            return;
 
-            if (deltaX === 0 && deltaY === 0)
-                return;
-
-            parent.drag(deltaX, deltaY);
-            mouseHelper.setCursorPosition(props.currentSnapX, props.currentSnapY);
-        }
+        drag(deltaX, deltaY);
+        mouseHelper.setCursorPosition(props.currentSnapX, props.currentSnapY);
     }
 }

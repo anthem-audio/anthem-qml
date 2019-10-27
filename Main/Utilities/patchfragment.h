@@ -20,9 +20,9 @@ public:
 private:
     PatchType type;
 public:
-    rapidjson::Value patch;
+    rapidjson::Document patch;
 
-    PatchFragment(QObject* parent, rapidjson::Document& doc, PatchType type, QString from, QString path, rapidjson::Value& value);
+    PatchFragment(QObject* parent, PatchType type, QString from, QString path, rapidjson::Value& value);
     PatchType getType();
     void apply(rapidjson::Document& doc);
 };

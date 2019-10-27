@@ -2,6 +2,21 @@
 
 using namespace rapidjson;
 
+#include "Include/rapidjson/stringbuffer.h"
+#include "Include/rapidjson/writer.h"
+
+#include <QDebug>
+
+Control::Control(ModelItem* parent, QString name, IdGenerator& idGenerator, float initialValue, float minimum, float maximum, float step) : ModelItem(parent, name) {
+    id = idGenerator.get();
+    this->initialValue = initialValue;
+    ui_currentValue = initialValue;
+    this->minimum = minimum;
+    this->maximum = maximum;
+    this->step = step;
+    overrideAutomation = false;
+}
+
 Control::Control(ModelItem *parent, QString name, Value& controlNode) : ModelItem(parent, name)
 {
     id = controlNode["id"].GetUint64();
@@ -13,13 +28,6 @@ Control::Control(ModelItem *parent, QString name, Value& controlNode) : ModelIte
     overrideAutomation = controlNode["override_automation"].GetBool();
 }
 
-// please write constructor for this
-
-// Generate new JSON node and add as field under parentNode
-// parentNode[controlName] = {...newly generated control...}
-
-
-
 void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
     // The ID is assumed to never change.
     QString initialValueStr = "/initial_value";
@@ -30,6 +38,11 @@ void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
     // TODO: control symbol, connection
 
     if (pointer.startsWith(initialValueStr)) {
+        StringBuffer buffer;
+        Writer<StringBuffer> writer(buffer);
+        patch.patch.Accept(writer);
+        qDebug() << buffer.GetString();
+
         float val = patch.patch["value"].GetFloat();
         initialValue = val;
         ui_currentValue = val;
@@ -69,9 +82,9 @@ void Control::setOverrideState(bool isOverridden) {
         return;
 
     overrideAutomation = isOverridden;
-//    jsonNode->operator[]("override_automation") = isOverridden;
     Value overrideVal(overrideAutomation);
-    patchReplace("override_automation", overrideVal);
+    Value oldOverrideVal(!overrideAutomation);
+    patchReplace("override_automation", oldOverrideVal, overrideVal);
 }
 
 // TODO: Set override state depending on whether project is playing or not
@@ -84,10 +97,12 @@ void Control::set(float val, bool isFinal) {
 //    }
 
     if (isFinal) {
+        auto oldVal = initialValue;
         initialValue = val;
         ui_currentValue = val;
         Value v(val);
-        patchReplace("initial_value", v);
+        Value vOld(oldVal);
+        patchReplace("initial_value", vOld, v);
         changeMade = true;
     }
     else {

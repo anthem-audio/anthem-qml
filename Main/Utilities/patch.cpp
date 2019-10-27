@@ -3,10 +3,9 @@
 
 using namespace rapidjson;
 
-Patch::Patch(QObject* parent, Project* cppModel, Document& jsonModel) : QObject(parent)
+Patch::Patch(QObject* parent, Project* model) : QObject(parent)
 {
-    this->cppModel = cppModel;
-    this->jsonModel = &jsonModel;
+    this->model = model;
 
     patch.SetArray();
     undoPatch.SetArray();
@@ -17,7 +16,6 @@ void Patch::patchAdd(QString path, rapidjson::Value &value) {
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::ADD,
                 QString(),
                 path,
@@ -25,7 +23,6 @@ void Patch::patchAdd(QString path, rapidjson::Value &value) {
 
     PatchFragment* reverseFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::REMOVE,
                 QString(),
                 path,
@@ -35,53 +32,41 @@ void Patch::patchAdd(QString path, rapidjson::Value &value) {
     addFragmentToReverse(reverseFragment);
 }
 
-void Patch::patchRemove(QString path) {
+void Patch::patchRemove(QString path, Value& oldValue) {
     Value nullVal(kNullType);
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::REMOVE,
                 QString(),
                 path,
                 nullVal);
 
-    Value undoVal(Pointer(path.toStdString())
-                        .GetWithDefault(*jsonModel, kNullType),
-                  jsonModel->GetAllocator());
-
     PatchFragment* reverseFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::ADD,
                 QString(),
                 path,
-                undoVal);
+                oldValue);
 
     addFragmentToForward(forwardFragment);
     addFragmentToReverse(reverseFragment);
 }
 
-void Patch::patchReplace(QString path, rapidjson::Value& value) {
+void Patch::patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) {
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::REPLACE,
                 QString(),
                 path,
-                value);
-
-    Value undoVal(Value(Pointer(path.toStdString())
-                        .GetWithDefault(*jsonModel, kNullType),
-                  jsonModel->GetAllocator()));
+                newValue);
 
     PatchFragment* reverseFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::REPLACE,
                 QString(),
                 path,
-                undoVal);
+                oldValue);
 
     addFragmentToForward(forwardFragment);
     addFragmentToReverse(reverseFragment);
@@ -92,7 +77,6 @@ void Patch::patchCopy(QString from, QString path) {
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::COPY,
                 from,
                 path,
@@ -100,7 +84,6 @@ void Patch::patchCopy(QString from, QString path) {
 
     PatchFragment* reverseFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::REMOVE,
                 QString(),
                 path,
@@ -115,7 +98,6 @@ void Patch::patchMove(QString from, QString path) {
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::MOVE,
                 from,
                 path,
@@ -123,7 +105,6 @@ void Patch::patchMove(QString from, QString path) {
 
     PatchFragment* reverseFragment = new PatchFragment(
                 this,
-                *jsonModel,
                 PatchFragment::PatchType::MOVE,
                 path,
                 from,
@@ -140,7 +121,7 @@ Value& Patch::getPatch() {
         patch.SetArray();
 
     for (int i = 0; i < patchList.length(); i++) {
-        patch.PushBack(Value(patchList[i]->patch, jsonModel->GetAllocator()), jsonModel->GetAllocator());
+        patch.PushBack(Value(patchList[i]->patch, patch.GetAllocator()), patch.GetAllocator());
     }
 
     return patch;
@@ -153,7 +134,7 @@ Value& Patch::getUndoPatch() {
         undoPatch.SetArray();
 
     for (int i = undoPatchList.length() - 1; i >= 0; i--) {
-        undoPatch.PushBack(Value(undoPatchList[i]->patch, jsonModel->GetAllocator()), jsonModel->GetAllocator());
+        undoPatch.PushBack(Value(undoPatchList[i]->patch, patch.GetAllocator()), patch.GetAllocator());
     }
 
     return undoPatch;
@@ -169,20 +150,28 @@ void Patch::addFragmentToReverse(PatchFragment* fragment) {
 
 void Patch::apply() {
     for (int i = 0; i < patchList.length(); i++) {
-        patchList[i]->apply(*jsonModel);
+//        patchList[i]->apply(*jsonModel);
 
         // Update C++ model and UI
         QString path(patchList[i]->patch["path"].GetString());
-        cppModel->externalUpdate(QStringRef(&path).mid(QString("/project").length()), *patchList[i]);
+        model->externalUpdate(QStringRef(&path).mid(QString("/project").length()), *patchList[i]);
     }
 }
 
 void Patch::applyUndo() {
     for (int i = undoPatchList.length() - 1; i >= 0; i--) {
-        undoPatchList[i]->apply(*jsonModel);
+//        undoPatchList[i]->apply(*jsonModel);
 
         // Update C++ model and UI
         QString path(undoPatchList[i]->patch["path"].GetString());
-        cppModel->externalUpdate(QStringRef(&path).mid(QString("/project").length()), *undoPatchList[i]);
+        model->externalUpdate(QStringRef(&path).mid(QString("/project").length()), *undoPatchList[i]);
     }
+}
+
+Document::AllocatorType* Patch::getPatchAllocator() {
+    return &patch.GetAllocator();
+}
+
+Document::AllocatorType* Patch::getUndoPatchAllocator() {
+    return &undoPatch.GetAllocator();
 }

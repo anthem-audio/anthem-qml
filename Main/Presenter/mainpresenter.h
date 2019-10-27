@@ -56,8 +56,8 @@ public:
 
     // These are virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
-    void patchRemove(QString path);
-    void patchReplace(QString path, rapidjson::Value& value);
+    void patchRemove(QString path, rapidjson::Value& oldValue);
+    void patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();
@@ -77,7 +77,6 @@ public:
     int getHistoryPointerAt(int index);
 
 signals:
-    void masterPitchChanged(int pitch);
     void tabAdd(QString name);
     void tabRename(int index, QString name);
     void tabSelect(int index);
@@ -95,15 +94,18 @@ signals:
     /// Emitted when a save has been cancelled.
     void saveCancelled();
 
+
+    // Update signals for UI elements
+    void masterPitchChanged(int pitch);
+    void beatsPerMinuteChanged(float bpm);
+    void timeSignatureNumeratorChanged(quint8 numerator);
+    void timeSignatureDenominatorChanged(quint8 denominator);
+
 public slots:
     void newProject();
     void loadProject(QString path);
     void saveActiveProject();
     void saveActiveProjectAs(QString path);
-
-    // Getters and setters for model properties
-    int getMasterPitch();
-    void setMasterPitch(int pitch, bool isFinal);
 
     /// Checks if the given project has ever been saved, or was opened from a file
     bool isProjectSaved(int projectIndex);
@@ -122,13 +124,6 @@ public slots:
 
     int getNumOpenProjects();
 
-    // Functions with the ui_ prefix are used as receiver slots
-    // for model change signals. Each ui_ function should:
-    //     a) always be connected to the relevant model's update
-    //        signals, and
-    //     b) emit the relevant update signal.
-    void ui_updateMasterPitch(float pitch);
-
     void undo();
     void redo();
 
@@ -136,6 +131,27 @@ public slots:
     void switchActiveProject(int index);
     /// Does not update the active project
     void closeProject(int index);
+
+
+    // Getters and setters for model properties
+    int getMasterPitch();
+    void setMasterPitch(int pitch, bool isFinal);
+    float getBeatsPerMinute();
+    void setBeatsPerMinute(float bpm, bool isFinal);
+    quint8 getTimeSignatureNumerator();
+    void setTimeSignatureNumerator(quint8 numerator);
+    quint8 getTimeSignatureDenominator();
+    void setTimeSignatureDenominator(quint8 denominator);
+
+    // Functions with the ui_ prefix are used as receiver slots
+    // for model change signals. Each ui_ function should:
+    //     a) always be connected to the relevant model's update
+    //        signals, and
+    //     b) emit the relevant update signal.
+    void ui_updateMasterPitch(float pitch);
+    void ui_updateBeatsPerMinute(float bpm);
+    void ui_updateTimeSignatureNumerator(quint8 numerator);
+    void ui_updateTimeSignatureDenominator(quint8 denominator);
 };
 
 #endif // MAINPRESENTER_H

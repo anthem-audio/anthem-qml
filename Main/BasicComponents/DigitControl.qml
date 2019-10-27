@@ -4,18 +4,40 @@ import "../Global"
 
 Item {
     id: control
-    property int value: 0
-    property int highBound
-    property int lowBound
-    property int alignment: Text.AlignRight
+    property real value: 0
+    property int  _valueSource
+    property real highBound
+    property int  _scaledHighBound: Math.round(highBound * _valueScale);
+    property real lowBound
+    property int  _scaledLowBound: Math.round(lowBound * _valueScale);
+    property real step: 1
+    property real smallestIncrement: step
+    property real _valueScale: 1/smallestIncrement
+    property real _stepsPerIncrement: step/smallestIncrement
+    property real speedMultiplier: 1
+    property int  decimalPlaces: 0
+    property int  alignment: Text.AlignRight
+    property var  fontFamily: Fonts.sourceCodeProSemiBold.name
+    property int  fontPixelSize: 11
+    property var  acceptedValues: []
+    property bool _shouldUseAcceptedValues: acceptedValues.length !== 0
+    property var  _acceptedValueIndex: _shouldUseAcceptedValues ? acceptedValues.indexOf(value) : undefined;
 
-    signal valueChangeCompleted(int value);
+    signal valueChangeCompleted(real value)
+
+    Component.onCompleted: {
+        _valueSource = Math.round(value * _valueScale);
+    }
+
+    onValueChanged: {
+        _valueSource = Math.round(value * _valueScale);
+    }
 
     Text {
         id: pitchLabel
-        text: qsTr(value.toString())
-        font.family: Fonts.notoSansRegular.name
-        font.pointSize: 8
+        text: qsTr(value.toFixed(decimalPlaces))
+        font.family: fontFamily
+        font.pixelSize: fontPixelSize
         horizontalAlignment: alignment
         verticalAlignment: Text.AlignVCenter
         anchors.fill: parent
@@ -27,39 +49,47 @@ Item {
 
         anchors.fill: parent
 
-        property int accumulator: 0
-        property int slownessMultiplier: 12
+        property real remainder
 
-        // If both highBound and lowBound are unset, they will both be 0
+        // If highBound and lowBound are unset, they will both be 0
         property bool hasBound: highBound != lowBound
 
         onDrag: {
-            accumulator += deltaY
+            let delta = ((deltaY) * 0.07 * speedMultiplier * _stepsPerIncrement) + remainder;
+            let roundedDelta = Math.round(Math.round(delta / _stepsPerIncrement) * _stepsPerIncrement);
+            remainder = delta - roundedDelta;
+            let newValueSource = _valueSource + roundedDelta;
 
-            let tempVal = value;
-
-            while(Math.abs(accumulator) > slownessMultiplier) {
-                if (accumulator > slownessMultiplier) {
-                    if (!(hasBound && tempVal >= highBound))
-                        tempVal++;
-                    else
-                        break;
-                    accumulator -= slownessMultiplier;
-                }
-                else if (accumulator < -slownessMultiplier) {
-                    if (!(hasBound && tempVal <= lowBound))
-                        tempVal--;
-                    else
-                        break;
-                    accumulator += slownessMultiplier;
-                }
+            if (_shouldUseAcceptedValues) {
+                _acceptedValueIndex += Math.round(roundedDelta);
+                if (_acceptedValueIndex < 0)
+                    _acceptedValueIndex = 0;
+                else if (_acceptedValueIndex >= acceptedValues.length)
+                    _acceptedValueIndex = acceptedValues.length - 1;
+                value = acceptedValues[_acceptedValueIndex]
             }
-
-            value = tempVal;
+            else if (hasBound) {
+                if (newValueSource < _scaledLowBound) {
+                    remainder += newValueSource - _scaledLowBound;
+                    _valueSource = _scaledLowBound;
+                }
+                else if (newValueSource > _scaledHighBound) {
+                    remainder += newValueSource - _scaledHighBound;
+                    _valueSource = _scaledHighBound;
+                }
+                else {
+                    _valueSource = newValueSource;
+                }
+                value = _valueSource * smallestIncrement;
+            }
+            else {
+                _valueSource = newValueSource;
+                value = _valueSource * smallestIncrement;
+            }
         }
 
         onDragEnd: {
-            accumulator = 0;
+            remainder = 0;
             control.valueChangeCompleted(control.value);
         }
     }

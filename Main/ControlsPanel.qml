@@ -308,16 +308,59 @@ Panel {
                     height: parent.height * 0.5;
                     anchors.rightMargin: 7
 
-                    Text {
-                        text: qsTr("128.00")
-                        font.family: Fonts.sourceCodeProSemiBold.name
-                        font.weight: Font.Bold
-                        font.pointSize: 10
+                    DigitControl {
+                        id: tempoControl
                         anchors.fill: parent
                         anchors.topMargin: 2
-                        color: "#1ac18f"
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
+
+                        lowBound: 10
+                        highBound: 999
+                        step: 0.01
+                        smallestIncrement: 0.01
+                        decimalPlaces: 2
+                        value: 140
+
+                        fontPixelSize: 13
+
+                        onValueChanged: {
+                            Anthem.setBeatsPerMinute(value, false);
+                        }
+
+                        onValueChangeCompleted: {
+                            Anthem.setBeatsPerMinute(value, true);
+                        }
+
+                        Connections {
+                            target: Anthem
+                            onBeatsPerMinuteChanged: {
+                                tempoControl.value = bpm;
+                            }
+                        }
+
+                        // This MouseArea changes the step on tempoControl
+                        // depending on which digit is clicked.
+                        MouseArea {
+                            anchors.fill: parent
+                            onPressed: {
+                                mouse.accepted = false;
+                                let distanceFromRight = parent.width - mouseX;
+                                if (distanceFromRight <= 8) {
+                                    tempoControl.step = 0.01;
+                                }
+                                else if (distanceFromRight <= 16) {
+                                    tempoControl.step = 0.1;
+                                }
+                                else {
+                                    tempoControl.step = 1;
+                                }
+                            }
+                            onReleased: {
+                                mouse.accepted = false;
+                            }
+                            onPositionChanged: {
+                                mouse.accepted = false;
+                            }
+                        }
                     }
                 }
 
@@ -329,16 +372,79 @@ Panel {
                     anchors.bottom: parent.bottom
                     anchors.rightMargin: 7
 
+                    DigitControl {
+                        id: timeSignatureNumeratorControl
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: timeSignatureSlash.left
+                        width: 16
+
+                        fontPixelSize: 13
+
+                        lowBound: 1
+                        highBound: 16
+                        value: 4
+                        speedMultiplier: 0.5
+
+
+//                        onValueChanged: {
+//                            Anthem.setTimeSignatureNumerator(value);
+//                        }
+
+                        onValueChangeCompleted: {
+                            Anthem.setTimeSignatureNumerator(value);
+                        }
+
+                        Connections {
+                            target: Anthem
+                            onTimeSignatureNumeratorChanged: {
+                                timeSignatureNumeratorControl.value = numerator;
+                            }
+                        }
+                    }
+
                     Text {
-                        text: qsTr("4/4")
+                        id: timeSignatureSlash
+                        text: qsTr("/")
                         font.family: Fonts.sourceCodeProSemiBold.name
                         font.weight: Font.Bold
-                        font.pointSize: 10
-                        anchors.fill: parent
-                        anchors.bottomMargin: 2
+                        font.pixelSize: 13
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.right: timeSignatureDenominatorControl.left
                         color: "#1ac18f"
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
+                    }
+
+                    DigitControl {
+                        id: timeSignatureDenominatorControl
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: value === 16 ? 16 : 8
+
+                        fontPixelSize: 13
+                        alignment: Text.AlignLeft
+
+                        value: 4
+                        acceptedValues: [1, 2, 4, 8, 16]
+                        speedMultiplier: 0.5
+
+//                        onValueChanged: {
+//                            Anthem.setTimeSignatureDenominator(value);
+//                        }
+
+                        onValueChangeCompleted: {
+                            Anthem.setTimeSignatureDenominator(value);
+                        }
+
+                        Connections {
+                            target: Anthem
+                            onTimeSignatureDenominatorChanged: {
+                                timeSignatureDenominatorControl.value = denominator;
+                            }
+                        }
                     }
                 }
             }
@@ -439,6 +545,8 @@ Panel {
                         anchors.right: parent.right
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
+
+                        fontFamily: Fonts.notoSansRegular.name
 
                         highBound: 12
                         lowBound: -12

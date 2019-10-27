@@ -15,16 +15,18 @@ void ModelItem::patchAdd(QString path, rapidjson::Value& value) {
     );
 }
 
-void ModelItem::patchRemove(QString path) {
+void ModelItem::patchRemove(QString path, rapidjson::Value& oldValue) {
     parent->patchRemove(
-        key + "/" + path
+        key + "/" + path,
+        oldValue
     );
 }
 
-void ModelItem::patchReplace(QString path, rapidjson::Value& value) {
+void ModelItem::patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) {
     parent->patchReplace(
         key + "/" + path,
-        value
+        oldValue,
+        newValue
     );
 }
 

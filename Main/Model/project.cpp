@@ -2,8 +2,14 @@
 
 #include "Utilities/exceptions.h"
 
-Project::Project(Communicator* parent, rapidjson::Value& projectVal) : ModelItem(parent, "project") {
-    transport = new Transport(this, projectVal["transport"]);
+Project::Project(Communicator* parent, IdGenerator* id) : ModelItem(parent, "project") {
+    this->id = id;
+    transport = new Transport(this, id);
+}
+
+Project::Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projectVal) : ModelItem(parent, "project") {
+    this->id = id;
+    transport = new Transport(this, id, projectVal["transport"]);
 }
 
 void Project::externalUpdate(QStringRef pointer, PatchFragment& patch) {
