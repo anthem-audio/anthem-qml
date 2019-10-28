@@ -17,7 +17,7 @@ Item {
 
     property bool   showBorder: true
     property bool   showBackground: true
-    property bool   isPressed: false
+    property bool   pressed: false
     property bool   isToggleButton: false
     property bool   isHighlighted: false
     property bool   hasMenuIndicator: false
@@ -36,7 +36,7 @@ Item {
 
     readonly property real textWidth: text.width
 
-    width: textAutoWidth ? text.width + margin * 2 + 3 : null
+    width: textAutoWidth ? text.width + margin * 2 + 3 : undefined
 
     function getState() {
         if (isDisabled) {
@@ -48,8 +48,13 @@ Item {
         else if (buttonProps.isMouseDown) {
             return Button.State.Pressed;
         }
-        else if (isToggleButton && isPressed) {
-            return Button.State.Active;
+        else if (isToggleButton && pressed) {
+            if (isToggleButton && !showBackground) {
+                return Button.State.Highlighted;
+            }
+            else {
+                return Button.State.Active;
+            }
         }
         else if (buttonProps.isHoverActive) {
             return Button.State.Hovered;
@@ -204,7 +209,7 @@ Item {
         anchors.right: textFloat == "right" ? parent.right : undefined
         anchors.verticalCenter: textFloat == "left" || textFloat == "right" ? parent.verticalCenter : undefined
         anchors.margins: 4
-        property int colorVal: isToggleButton && isPressed ? 0 : 1
+        property int colorVal: isToggleButton && pressed ? 0 : 1
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
     }
@@ -223,7 +228,7 @@ Item {
     ColorOverlay {
         anchors.fill: icon
         source: icon
-        property int colorVal: isToggleButton && isPressed ? 0 : 1
+        property int colorVal: isToggleButton && pressed ? 0 : 1
         visible: true;
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
@@ -264,15 +269,15 @@ Item {
 
         onPressed: {
             if (!isToggleButton)
-                isPressed = true
+                button.pressed = true
             buttonProps.isMouseDown = true
         }
 
         onReleased: {
             if (!isToggleButton)
-                isPressed = false
+                button.pressed = false
             else
-                isPressed = !isPressed
+                button.pressed = !button.pressed
             buttonProps.isMouseDown = false
         }
 

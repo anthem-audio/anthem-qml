@@ -232,7 +232,7 @@ Window {
 
         anchors.leftMargin: 5
         anchors.rightMargin: 5
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 10
 
         ControlsPanel {
             id: controlsPanel
@@ -242,12 +242,13 @@ Window {
         }
 
         MainStack {
+            id: mainStack
             anchors.top: controlsPanel.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-
             anchors.topMargin: 4
+            showControllerRack: btnShowControllerRack.pressed
         }
     }
 
@@ -256,6 +257,25 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        height: 30
+        anchors.bottomMargin: 10
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
+        height: 15
+
+        Button {
+            id: btnShowControllerRack
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin: 15
+            width: 15
+            imageSource: "Images/Controllers.svg"
+            imageWidth: 15
+            imageHeight: 15
+            showBorder: false
+            showBackground: false
+            isToggleButton: true
+            pressed: true
+        }
     }
 }

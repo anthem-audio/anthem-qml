@@ -4,6 +4,7 @@ import "BasicComponents"
 
 SplitView {
     orientation: Qt.Horizontal
+    property bool showControllerRack
     Panel {
         implicitWidth: 200
         SplitView.minimumWidth: 200
@@ -14,6 +15,7 @@ SplitView {
     }
 
     Panel {
+        visible: showControllerRack
         implicitWidth: 200
         SplitView.minimumWidth: 200
     }

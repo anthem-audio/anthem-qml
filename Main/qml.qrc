@@ -45,5 +45,6 @@
         <file>Dialogs/OkCancelDialog.qml</file>
         <file>Dialogs/SaveDiscardCancelDialog.qml</file>
         <file>Dialogs/InformationDialog.qml</file>
+        <file>Images/Controllers.svg</file>
     </qresource>
 </RCC>
