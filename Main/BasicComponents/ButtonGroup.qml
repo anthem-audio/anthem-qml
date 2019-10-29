@@ -22,6 +22,10 @@ Flow {
     property bool showBackground: true
     property real defaultWidth
     property real defaultHeight
+    property real defaultLeftMargin
+    property real defaultTopMargin
+    property bool buttonAutoWidth: false
+    property real defaultInnerMargin
 
     Repeater {
         anchors.fill: parent
@@ -30,34 +34,35 @@ Flow {
             width: {
                 let baseWidth;
 
-                if (modelData.autoWidth) {
+                if (modelData.autoWidth || (modelData.autoWidth === undefined && buttonAutoWidth)) {
                     baseWidth = btn.width;
                 }
                 else {
                     baseWidth = modelData.width || defaultWidth;
                 }
 
-                return baseWidth + (modelData.leftMargin || 0)
+                return baseWidth + (modelData.leftMargin || defaultLeftMargin || 0)
             }
-            height: (modelData.height || defaultHeight) + (modelData.topMargin || 0)
+            height: (modelData.height || defaultHeight) + (modelData.topMargin || defaultTopMargin || 0)
             Button {
                 id: btn
                 anchors.left: parent.left
                 anchors.top: parent.top
                 width: modelData.autoWidth ? undefined : (modelData.width || defaultWidth)
-                textAutoWidth: modelData.autoWidth || false
+                textAutoWidth: modelData.autoWidth || buttonAutoWidth || false
 
                 height: modelData.height || defaultHeight
-                anchors.leftMargin: modelData.leftMargin || 0
-                anchors.topMargin: modelData.topMargin || 0
+                anchors.leftMargin: modelData.leftMargin || defaultLeftMargin || 0
+                anchors.topMargin: modelData.topMargin || defaultTopMargin || 0
 
                 textContent: modelData.textContent || ""
+                margin: modelData.innerMargin || defaultInnerMargin
                 pressed: modelData.pressed || false
                 showBackground: buttonGroup.showBackground
                 showBorder: buttonGroup.showBackground
 
-                imageWidth: modelData.imageWidth || 0
-                imageHeight: modelData.imageHeight || 0
+                imageWidth: modelData.imageWidth || defaultWidth
+                imageHeight: modelData.imageHeight || defaultHeight
                 imageSource: modelData.imagePath || ""
             }
         }

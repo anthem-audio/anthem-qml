@@ -46,5 +46,11 @@
         <file>Dialogs/SaveDiscardCancelDialog.qml</file>
         <file>Dialogs/InformationDialog.qml</file>
         <file>Images/Controllers.svg</file>
+        <file>Images/Document.svg</file>
+        <file>Images/File.svg</file>
+        <file>Images/Automation.svg</file>
+        <file>Images/Mixer.svg</file>
+        <file>Images/Piano Roll.svg</file>
+        <file>Images/Plugin.svg</file>
     </qresource>
 </RCC>

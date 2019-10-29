@@ -23,7 +23,7 @@ Item {
     property bool   hasMenuIndicator: false
     property bool   isDisabled: false
     property bool   allowPressEventsOnDisable: false
-    property int    margin: 5
+    property real   margin: 5
 
     property string imageSource: ""
     property real   imageWidth: 1

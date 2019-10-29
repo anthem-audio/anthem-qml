@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.13
 import QtQuick.Dialogs 1.2
 import "BasicComponents"
 import "Dialogs"
+import "Global"
 
 Window {
     id: mainWindow
@@ -261,6 +262,126 @@ Window {
         anchors.leftMargin: 5
         anchors.rightMargin: 5
         height: 15
+        width: 65
+
+        ButtonGroup {
+            id: fileExplorerTabs
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            showBackground: false
+            defaultWidth: 15
+            defaultHeight: 15
+            defaultLeftMargin: 20
+
+            model: [
+                {
+                    leftMargin: 15,
+                    imagePath: "Images/File.svg",
+                    pressed: true
+                },
+                {
+                    width: 11,
+                    imagePath: "Images/Document.svg",
+                    imageWidth: 11,
+                    pressed: false
+                }
+            ]
+        }
+
+        Rectangle {
+            id: spacer1
+            width: 2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: fileExplorerTabs.right
+            anchors.leftMargin: 20
+            color: Qt.rgba(1, 1, 1, 0.11)
+        }
+
+        ButtonGroup {
+            id: layoutTabs
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: spacer1.right
+            anchors.leftMargin: 5
+            showBackground: false
+            defaultHeight: 15
+            defaultLeftMargin: 15
+            buttonAutoWidth: true
+            defaultInnerMargin: 0
+
+            model: [
+                {
+                    textContent: "ARRANGE"
+                },
+                {
+                    textContent: "MIX"
+                },
+                {
+                    textContent: "EDIT"
+                }
+            ]
+        }
+
+        Rectangle {
+            id: spacer2
+            width: 2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: layoutTabs.right
+            anchors.leftMargin: 20
+            color: Qt.rgba(1, 1, 1, 0.11)
+        }
+
+        ButtonGroup {
+            id: editorPanelTabs
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: spacer2.right
+            showBackground: false
+            defaultWidth: 15
+            defaultHeight: 15
+            defaultLeftMargin: 20
+            defaultTopMargin: 0
+            width: 140
+
+            model: [
+                {
+                    imagePath: "Images/Piano Roll.svg",
+                },
+                {
+                    imagePath: "Images/Automation.svg",
+                },
+                {
+                    imagePath: "Images/Plugin.svg",
+                },
+                {
+                    imagePath: "Images/Mixer.svg",
+                }
+            ]
+        }
+
+        Rectangle {
+            id: spacer3
+            width: 2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: editorPanelTabs.right
+            anchors.leftMargin: 20
+            color: Qt.rgba(1, 1, 1, 0.11)
+        }
+
+        Text {
+            anchors.left: spacer3.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 20
+            text: "Status bar, warnings, info, suggestions..."
+            font.family: Fonts.notoSansRegular.name
+            font.pixelSize: 11
+            color: Qt.rgba(1, 1, 1, 0.6)
+        }
 
         Button {
             id: btnShowControllerRack
