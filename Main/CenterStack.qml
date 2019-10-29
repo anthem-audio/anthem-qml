@@ -4,6 +4,7 @@ import "BasicComponents"
 
 SplitView {
     orientation: Qt.Vertical
+    property bool showEditors
 
     Panel {
         SplitView.fillHeight: true
@@ -18,6 +19,7 @@ SplitView {
     Panel {
         implicitHeight: 350
         SplitView.minimumHeight: 250
+        visible: showEditors
     }
 
     handle: Rectangle {

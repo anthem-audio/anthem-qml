@@ -17,7 +17,7 @@ import QtQuick 2.13
 
 Flow {
     id: buttonGroup
-    property var model: []
+    property var  model: []
     property bool isSelector: false
     property bool showBackground: true
     property real defaultWidth
@@ -26,8 +26,33 @@ Flow {
     property real defaultTopMargin
     property bool buttonAutoWidth: false
     property real defaultInnerMargin
+    property int  managementType: ButtonGroup.ManagementType.None
+    property int  selectedIndex: -1
+    property int  _oldSelectedIndex: selectedIndex
+    property bool allowDeselection: false
+
+    onSelectedIndexChanged: {
+        if (repeater.itemAt(0) === null) {
+            return;
+        }
+
+        if (_oldSelectedIndex > -1) {
+            repeater.itemAt(_oldSelectedIndex).children[0].pressed = false;
+        }
+        if (selectedIndex > -1) {
+            repeater.itemAt(selectedIndex).children[0].pressed = true;
+        }
+
+        _oldSelectedIndex = selectedIndex;
+    }
+
+    enum ManagementType {
+        None,
+        Selector
+    }
 
     Repeater {
+        id: repeater
         anchors.fill: parent
         model: buttonGroup.model
         Item {
@@ -57,13 +82,28 @@ Flow {
 
                 textContent: modelData.textContent || ""
                 margin: modelData.innerMargin || defaultInnerMargin
-                pressed: modelData.pressed || false
+                isToggleButton: managementType === ButtonGroup.ManagementType.Selector
+                pressed: index == selectedIndex
                 showBackground: buttonGroup.showBackground
                 showBorder: buttonGroup.showBackground
 
                 imageWidth: modelData.imageWidth || defaultWidth
                 imageHeight: modelData.imageHeight || defaultHeight
                 imageSource: modelData.imagePath || ""
+            }
+            MouseArea {
+                anchors.fill: btn
+                onClicked: {
+                    if (managementType === ButtonGroup.ManagementType.None) {
+                        mouse.accepted = false;
+                    }
+                    else if (managementType === ButtonGroup.ManagementType.Selector) {
+                        if (selectedIndex == index && allowDeselection)
+                            selectedIndex = -1;
+                        else
+                            selectedIndex = index;
+                    }
+                }
             }
         }
     }

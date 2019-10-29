@@ -250,6 +250,8 @@ Window {
             anchors.bottom: parent.bottom
             anchors.topMargin: 4
             showControllerRack: btnShowControllerRack.pressed
+            showExplorer: explorerTabs.selectedIndex > -1
+            showEditors: editorPanelTabs.selectedIndex > -1
         }
     }
 
@@ -265,7 +267,7 @@ Window {
         width: 65
 
         ButtonGroup {
-            id: fileExplorerTabs
+            id: explorerTabs
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
@@ -273,18 +275,19 @@ Window {
             defaultWidth: 15
             defaultHeight: 15
             defaultLeftMargin: 20
+            managementType: ButtonGroup.ManagementType.Selector
+            selectedIndex: 0
+            allowDeselection: true
 
             model: [
                 {
                     leftMargin: 15,
-                    imagePath: "Images/File.svg",
-                    pressed: true
+                    imagePath: "Images/File.svg"
                 },
                 {
                     width: 11,
                     imagePath: "Images/Document.svg",
-                    imageWidth: 11,
-                    pressed: false
+                    imageWidth: 11
                 }
             ]
         }
@@ -294,7 +297,7 @@ Window {
             width: 2
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.left: fileExplorerTabs.right
+            anchors.left: explorerTabs.right
             anchors.leftMargin: 20
             color: Qt.rgba(1, 1, 1, 0.11)
         }
@@ -310,6 +313,8 @@ Window {
             defaultLeftMargin: 15
             buttonAutoWidth: true
             defaultInnerMargin: 0
+            managementType: ButtonGroup.ManagementType.Selector
+            selectedIndex: 0
 
             model: [
                 {
@@ -345,19 +350,22 @@ Window {
             defaultLeftMargin: 20
             defaultTopMargin: 0
             width: 140
+            managementType: ButtonGroup.ManagementType.Selector
+            selectedIndex: 3
+            allowDeselection: true
 
             model: [
                 {
-                    imagePath: "Images/Piano Roll.svg",
+                    imagePath: "Images/Piano Roll.svg"
                 },
                 {
-                    imagePath: "Images/Automation.svg",
+                    imagePath: "Images/Automation.svg"
                 },
                 {
-                    imagePath: "Images/Plugin.svg",
+                    imagePath: "Images/Plugin.svg"
                 },
                 {
-                    imagePath: "Images/Mixer.svg",
+                    imagePath: "Images/Mixer.svg"
                 }
             ]
         }
