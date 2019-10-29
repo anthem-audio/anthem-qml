@@ -36,7 +36,11 @@ Item {
 
     readonly property real textWidth: text.width
 
-    width: textAutoWidth ? text.width + margin * 2 + 3 : undefined
+    Component.onCompleted: {
+        if (textAutoWidth) {
+            width = text.width + margin * 2 + 3;
+        }
+    }
 
     function getState() {
         if (isDisabled) {

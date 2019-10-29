@@ -8,9 +8,7 @@ import QtQuick 2.13
     height:       real,
     autoWidth:    bool,
     leftMargin:   real,
-    rightMargin:  real,
     topMargin:    real,
-    bottomMargin: real,
     textContent:  string,
     imagePath:    string,
     pressed:      bool,
@@ -29,18 +27,34 @@ Flow {
         anchors.fill: parent
         model: buttonGroup.model
         Item {
-            width: (modelData.width || defaultWidth) + (modelData.leftMargin || 0) + (modelData.rightMargin || 0)
-            height: (modelData.height || defaultHeight) + (modelData.topMargin || 0) + (modelData.bottomMargin || 0)
+            width: {
+                let baseWidth;
+
+                if (modelData.autoWidth) {
+                    baseWidth = btn.width;
+                }
+                else {
+                    baseWidth = modelData.width || defaultWidth;
+                }
+
+                return baseWidth + (modelData.leftMargin || 0)
+            }
+            height: (modelData.height || defaultHeight) + (modelData.topMargin || 0)
             Button {
-                anchors.fill: parent
+                id: btn
+                anchors.left: parent.left
+                anchors.top: parent.top
+                width: modelData.autoWidth ? undefined : (modelData.width || defaultWidth)
+                textAutoWidth: modelData.autoWidth || false
+
+                height: modelData.height || defaultHeight
                 anchors.leftMargin: modelData.leftMargin || 0
-                anchors.rightMargin: modelData.rightMargin || 0
                 anchors.topMargin: modelData.topMargin || 0
-                anchors.bottomMargin: modelData.bottomMargin || 0
 
                 textContent: modelData.textContent || ""
                 pressed: modelData.pressed || false
                 showBackground: buttonGroup.showBackground
+                showBorder: buttonGroup.showBackground
 
                 imageWidth: modelData.imageWidth || 0
                 imageHeight: modelData.imageHeight || 0
