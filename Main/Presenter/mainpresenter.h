@@ -94,6 +94,9 @@ signals:
     /// Emitted when a save has been cancelled.
     void saveCancelled();
 
+    /// Emitted when a status message should be displayed
+    void statusMessageRequest(QString message);
+
 
     // Update signals for UI elements
     void masterPitchChanged(int pitch);
@@ -131,6 +134,9 @@ public slots:
     void switchActiveProject(int index);
     /// Does not update the active project
     void closeProject(int index);
+
+    /// Tells the UI to display the given string as a status message
+    void displayStatusMessage(QString message);
 
 
     // Getters and setters for model properties

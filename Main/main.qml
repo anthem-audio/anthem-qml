@@ -51,6 +51,9 @@ Window {
             infoDialog.message = notification;
             infoDialog.show();
         }
+        onStatusMessageRequest: {
+            statusText.text = message;
+        }
     }
 
     function closeWithSavePrompt() {
@@ -272,7 +275,8 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             showBackground: false
-            defaultWidth: 15
+            defaultWidth: 25
+            defaultImageWidth: 15
             defaultHeight: 15
             defaultLeftMargin: 20
             managementType: ButtonGroup.ManagementType.Selector
@@ -282,12 +286,13 @@ Window {
             model: [
                 {
                     leftMargin: 15,
-                    imagePath: "Images/File.svg"
+                    imagePath: "Images/File.svg",
+                    hoverMessage: "File explorer"
                 },
                 {
-                    width: 11,
                     imagePath: "Images/Document.svg",
-                    imageWidth: 11
+                    imageWidth: 11,
+                    hoverMessage: "Project explorer"
                 }
             ]
         }
@@ -318,13 +323,16 @@ Window {
 
             model: [
                 {
-                    textContent: "ARRANGE"
+                    textContent: "ARRANGE",
+                    hoverMessage: "Arrangement layout"
                 },
                 {
-                    textContent: "MIX"
+                    textContent: "MIX",
+                    hoverMessage: "Mixing layout"
                 },
                 {
-                    textContent: "EDIT"
+                    textContent: "EDIT",
+                    hoverMessage: "Editor layout"
                 }
             ]
         }
@@ -345,9 +353,10 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: spacer2.right
             showBackground: false
-            defaultWidth: 15
+            defaultWidth: 25
+            defaultImageWidth: 15
             defaultHeight: 15
-            defaultLeftMargin: 20
+            defaultLeftMargin: 10
             defaultTopMargin: 0
             width: 140
             managementType: ButtonGroup.ManagementType.Selector
@@ -356,16 +365,20 @@ Window {
 
             model: [
                 {
-                    imagePath: "Images/Piano Roll.svg"
+                    imagePath: "Images/Piano Roll.svg",
+                    hoverMessage: "Piano roll"
                 },
                 {
-                    imagePath: "Images/Automation.svg"
+                    imagePath: "Images/Automation.svg",
+                    hoverMessage: "Automation editor"
                 },
                 {
-                    imagePath: "Images/Plugin.svg"
+                    imagePath: "Images/Plugin.svg",
+                    hoverMessage: "Plugin rack"
                 },
                 {
-                    imagePath: "Images/Mixer.svg"
+                    imagePath: "Images/Mixer.svg",
+                    hoverMessage: "Mixer"
                 }
             ]
         }
@@ -381,11 +394,12 @@ Window {
         }
 
         Text {
+            id: statusText
             anchors.left: spacer3.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.leftMargin: 20
-            text: "Status bar, warnings, info, suggestions..."
+            text: ""
             font.family: Fonts.notoSansRegular.name
             font.pixelSize: 11
             color: Qt.rgba(1, 1, 1, 0.6)
@@ -405,6 +419,7 @@ Window {
             showBackground: false
             isToggleButton: true
             pressed: true
+            hoverMessage: pressed ? "Hide controller rack" : "Show controller rack"
         }
     }
 }

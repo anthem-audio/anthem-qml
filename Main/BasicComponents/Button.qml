@@ -24,6 +24,13 @@ Item {
     property bool   isDisabled: false
     property bool   allowPressEventsOnDisable: false
     property real   margin: 5
+    property string hoverMessage: ""
+
+    onHoverMessageChanged: {
+        if (mouseArea.hoverActive) {
+            Anthem.displayStatusMessage(hoverMessage);
+        }
+    }
 
     property string imageSource: ""
     property real   imageWidth: 1
@@ -264,6 +271,7 @@ Item {
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         onClicked: {
             if (isDisabled && !allowPressEventsOnDisable)
@@ -288,7 +296,14 @@ Item {
         property alias hoverActive: buttonProps.isHoverActive
 
         hoverEnabled: true
-        onEntered: hoverActive = true
-        onExited: hoverActive = false
+        onEntered: {
+            hoverActive = true
+            if (hoverMessage !== "")
+                Anthem.displayStatusMessage(hoverMessage);
+        }
+        onExited: {
+            hoverActive = false
+            Anthem.displayStatusMessage("");
+        }
     }
 }

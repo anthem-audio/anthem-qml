@@ -15,15 +15,18 @@ Panel {
         // Float left
 
         Button {
-            id: btnLogo // No idea what this button does. Possibly opens up a dialog with info about the software? Or a welcome dialog or something.
+            id: btnLogo
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             width: parent.height // makes it square :)
+            isToggleButton: true
 
             imageSource: "Images/Logo.svg"
             imageWidth: 14
             imageHeight: 12
+
+            hoverMessage: btnLogo.pressed ? "Stop engine for this tab" : "Start engine for this tab"
         }
 
         Button {
@@ -75,6 +78,7 @@ Panel {
             anchors.left: btnFile.right
             anchors.leftMargin: 20
             width: parent.height
+            hoverMessage: "Save project"
 
             imageSource: "Images/Save.svg"
             imageWidth: 16
@@ -90,6 +94,7 @@ Panel {
             anchors.left: btnSave.right
             anchors.leftMargin: 2
             width: parent.height
+            hoverMessage: "Undo"
 
             imageSource: "Images/Undo.svg"
             imageWidth: 15
@@ -107,6 +112,7 @@ Panel {
             anchors.left: btnUndo.right
             anchors.leftMargin: 2
             width: parent.height
+            hoverMessage: "Redo"
 
             imageSource: "Images/Redo.svg"
             imageWidth: 15
@@ -143,6 +149,7 @@ Panel {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 width: parent.height
+                hoverMessage: "Toggle metronome"
 
                 isToggleButton: true
 
@@ -180,6 +187,8 @@ Panel {
                     anchors.left: parent.left
                     anchors.bottom: parent.bottom
                     width: parent.height - 2
+                    isToggleButton: true
+                    hoverMessage: "Play"
 
                     anchors.topMargin: 1
                     anchors.leftMargin: 1
@@ -197,6 +206,8 @@ Panel {
                     anchors.left: btnPlay.right
                     anchors.bottom: parent.bottom
                     width: parent.height - 2
+                    isToggleButton: true
+                    hoverMessage: "Record"
 
                     anchors.topMargin: 1
                     anchors.leftMargin: 1
@@ -214,6 +225,7 @@ Panel {
                     anchors.left: btnRecord.right
                     anchors.bottom: parent.bottom
                     width: parent.height - 2
+                    hoverMessage: "Record immediately"
 
                     anchors.topMargin: 1
                     anchors.leftMargin: 1
@@ -231,6 +243,7 @@ Panel {
                     anchors.left: btnPlayRecord.right
                     anchors.bottom: parent.bottom
                     width: parent.height - 2
+                    hoverMessage: "Stop"
 
                     anchors.topMargin: 1
                     anchors.leftMargin: 1
@@ -279,6 +292,7 @@ Panel {
                 anchors.left: playbackControlsGroup.right
                 anchors.leftMargin: 3
                 width: parent.height
+                hoverMessage: "Toggle loop points"
 
                 isToggleButton: true
 
@@ -319,6 +333,8 @@ Panel {
                         smallestIncrement: 0.01
                         decimalPlaces: 2
                         value: 140
+                        hoverMessage: "Tempo"
+                        units: "BPM"
 
                         fontPixelSize: 13
 
@@ -378,6 +394,7 @@ Panel {
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
                         width: 16
+                        hoverMessage: "Time signature numerator"
 
                         fontPixelSize: 13
 
@@ -423,6 +440,7 @@ Panel {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         width: value === 16 ? 16 : 8
+                        hoverMessage: "Time signature denominator"
 
                         fontPixelSize: 13
                         alignment: Text.AlignLeft
@@ -545,6 +563,8 @@ Panel {
                         anchors.right: parent.right
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
+                        hoverMessage: "Master pitch"
+                        units: "semitones"
 
                         fontFamily: Fonts.notoSansRegular.name
 
@@ -675,11 +695,12 @@ Panel {
         // Float right
 
         Button {
-            id: btnIGenuinelyDontKnow
+            id: btnMidiLearn // ?
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             width: parent.height
+            hoverMessage: "Midi learn"
 
             imageSource: "Images/Knob.svg"
             imageWidth: 16

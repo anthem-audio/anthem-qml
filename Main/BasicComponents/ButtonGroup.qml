@@ -22,6 +22,8 @@ Flow {
     property bool showBackground: true
     property real defaultWidth
     property real defaultHeight
+    property real defaultImageWidth: defaultWidth
+    property real defaultImageHeight: defaultHeight
     property real defaultLeftMargin
     property real defaultTopMargin
     property bool buttonAutoWidth: false
@@ -87,9 +89,11 @@ Flow {
                 showBackground: buttonGroup.showBackground
                 showBorder: buttonGroup.showBackground
 
-                imageWidth: modelData.imageWidth || defaultWidth
-                imageHeight: modelData.imageHeight || defaultHeight
+                imageWidth: modelData.imageWidth || defaultImageWidth
+                imageHeight: modelData.imageHeight || defaultImageHeight
                 imageSource: modelData.imagePath || ""
+
+                hoverMessage: modelData.hoverMessage || ""
             }
             MouseArea {
                 anchors.fill: btn
