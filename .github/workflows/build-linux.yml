@@ -31,7 +31,7 @@ jobs:
            chmod a+x linuxdeployqt-continuous-x86_64.AppImage
            mv linuxdeployqt-continuous-x86_64.AppImage ./Main/appdir/opt/
            cd ./Main/appdir/opt/
-           mkdir -p ./Main/{lib,share/{applications,icons/hicolor/256x2566/apps}}
+           mkdir -p ./Main/{lib,share/{applications,icons/hicolor/256x256/apps}}
            mv ../../../anthem.desktop ./Main/share/applications/
            mv ../../../Anthem.png ./Main/share/icon/hicolor/256x256/apps/
            ./linuxdeployqt-continuous-x86_64.AppImage ./Main/share/application/*.desktop -appimage
