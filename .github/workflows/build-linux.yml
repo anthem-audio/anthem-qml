@@ -26,5 +26,13 @@ jobs:
            cd $GITHUB_WORKSPACE
            export PATH=$PATH:/qt/5.13.1/gcc_64/bin/
            qmake ./Prototyping.pro CONFIG+=release PREFIX=/usr
-           make -j$(nproc)
-           ./Main/Main --test
+           make INSTALL_ROOT=appdir -j$(nproc) install
+           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
+           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
+           mv linuxdeployqt-continuous-x86_64.AppImage ./Main/appdir/opt/
+           cd ./Main/appdir/opt/
+           mkdir -p ./Main/{lib,share/{applications,icons/hicolor/256x2566/apps}}
+           mv ../../../anthem.desktop ./Main/share/applications/
+           mv ../../../Anthem.png ./Main/share/icon/hicolor/256x256/apps/
+           ./linuxdeployqt-continuous-x86_64.AppImage ./Main/share/application/*.desktop -appimage
+           sudo find / -name "*anthem*"
