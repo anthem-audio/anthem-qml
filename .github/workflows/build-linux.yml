@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v1
     - name: Download Dependencies
       run: |
-           sudo apt-get install libxkbcommon-x11-0 tree -y
+           sudo apt-get install libxkbcommon-x11-0 -y
            sudo apt install libgl1-mesa-dev -y
     - name: Download Qt
       run: |
@@ -32,7 +32,6 @@ jobs:
            mv linuxdeployqt-continuous-x86_64.AppImage $GITHUB_WORKSPACE/Main/appdir/opt/
            cd $GITHUB_WORKSPACE/Main/appdir/opt/
            mkdir -p ./Main/{lib,share/{applications,icons/hicolor/256x256/apps}}
-           tree
            mv ../../../anthem.desktop ./Main/share/applications/
            mv ../../../Anthem.png ./Main/share/icons/hicolor/256x256/apps/
            ./linuxdeployqt-continuous-x86_64.AppImage ./Main/share/application/*.desktop -appimage
