@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Anthem
+Comment=Better LMMS
+Exec=Main
+Icon=Anthem.png
+Categories=Audio;
+X-AppImage-Version=d28392c
