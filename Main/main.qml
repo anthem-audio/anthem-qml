@@ -283,18 +283,23 @@ Window {
             selectedIndex: 0
             allowDeselection: true
 
-            model: [
-                {
-                    leftMargin: 15,
-                    imagePath: "Images/File.svg",
+            ListModel {
+                id: explorerTabsModel
+
+                ListElement {
+                    leftMargin: 15
+                    imagePath: "Images/File.svg"
                     hoverMessage: "File explorer"
-                },
-                {
-                    imagePath: "Images/Document.svg",
-                    imageWidth: 11,
+                }
+
+                ListElement {
+                    imagePath: "Images/Document.svg"
+                    imageWidth: 11
                     hoverMessage: "Project explorer"
                 }
-            ]
+            }
+
+            model: explorerTabsModel
         }
 
         Rectangle {
@@ -321,20 +326,23 @@ Window {
             managementType: ButtonGroup.ManagementType.Selector
             selectedIndex: 0
 
-            model: [
-                {
-                    textContent: "ARRANGE",
+            ListModel {
+                id: layoutTabsModel
+                ListElement {
+                    textContent: "ARRANGE"
                     hoverMessage: "Arrangement layout"
-                },
-                {
-                    textContent: "MIX",
+                }
+                ListElement {
+                    textContent: "MIX"
                     hoverMessage: "Mixing layout"
-                },
-                {
-                    textContent: "EDIT",
+                }
+                ListElement {
+                    textContent: "EDIT"
                     hoverMessage: "Editor layout"
                 }
-            ]
+            }
+
+            model: layoutTabsModel
         }
 
         Rectangle {
@@ -363,24 +371,27 @@ Window {
             selectedIndex: 3
             allowDeselection: true
 
-            model: [
-                {
-                    imagePath: "Images/Piano Roll.svg",
+            ListModel {
+                id: editorPanelTabsModel
+                ListElement {
+                    imagePath: "Images/Piano Roll.svg"
                     hoverMessage: "Piano roll"
-                },
-                {
-                    imagePath: "Images/Automation.svg",
+                }
+                ListElement {
+                    imagePath: "Images/Automation.svg"
                     hoverMessage: "Automation editor"
-                },
-                {
-                    imagePath: "Images/Plugin.svg",
+                }
+                ListElement {
+                    imagePath: "Images/Plugin.svg"
                     hoverMessage: "Plugin rack"
-                },
-                {
-                    imagePath: "Images/Mixer.svg",
+                }
+                ListElement {
+                    imagePath: "Images/Mixer.svg"
                     hoverMessage: "Mixer"
                 }
-            ]
+            }
+
+            model: editorPanelTabsModel
         }
 
         Rectangle {

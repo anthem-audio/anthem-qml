@@ -1,18 +1,25 @@
 import QtQuick 2.13
 
 /*
-  Model structure below.
-  All properties can be omitted except width and height.
-  {
-    width:        real,
-    height:       real,
-    autoWidth:    bool,
-    leftMargin:   real,
-    topMargin:    real,
-    textContent:  string,
-    imagePath:    string,
-    pressed:      bool,
-  }
+    Model structure below.
+    If a property is not given, the default will be used.
+
+    ListModel {
+    // ...
+        ListElement {
+            autoWidth:    (boolean)
+            buttonWidth:  (real)
+            buttonHeight: (real)
+            leftMargin:   (real)
+            topMargin:    (real)
+            textContent:  (string)
+            innerMargin:  (real)
+            imageWidth:   (real)
+            imageHeight:  (real)
+            imagePath:    (string)
+            hoverMessage: (string)
+        }
+    }
   */
 
 Flow {
@@ -58,42 +65,62 @@ Flow {
         anchors.fill: parent
         model: buttonGroup.model
         Item {
+            QtObject {
+                id: props
+                property var _autoWidth: typeof autoWidth !== 'undefined' ? autoWidth : undefined
+                property var _buttonWidth: typeof buttonWidth !== 'undefined' ? buttonWidth : undefined
+                property var _buttonHeight: typeof buttonHeight !== 'undefined' ? buttonHeight : undefined
+                property var _leftMargin: typeof leftMargin !== 'undefined' ? leftMargin : undefined
+                property var _topMargin: typeof topMargin !== 'undefined' ? topMargin : undefined
+                property var _textContent: typeof textContent !== 'undefined' ? textContent : undefined
+                property var _innerMargin: typeof innerMargin !== 'undefined' ? innerMargin : undefined
+                property var _imageWidth: typeof imageWidth !== 'undefined' ? imageWidth : undefined
+                property var _imageHeight: typeof imageHeight !== 'undefined' ? imageHeight : undefined
+                property var _imagePath: typeof imagePath !== 'undefined' ? imagePath : undefined
+                property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
+            }
+
             width: {
                 let baseWidth;
 
-                if (modelData.autoWidth || (modelData.autoWidth === undefined && buttonAutoWidth)) {
+                if (props._autoWidth || (props._autoWidth === undefined && buttonAutoWidth)) {
                     baseWidth = btn.width;
                 }
                 else {
-                    baseWidth = modelData.width || defaultWidth;
+                    baseWidth = props._buttonWidth || defaultWidth;
                 }
 
-                return baseWidth + (modelData.leftMargin || defaultLeftMargin || 0)
+                return baseWidth + (props._leftMargin || defaultLeftMargin || 0)
             }
-            height: (modelData.height || defaultHeight) + (modelData.topMargin || defaultTopMargin || 0)
+            height: (props._buttonHeight || defaultHeight)
+                    +
+                    (props._topMargin || defaultTopMargin || 0)
             Button {
                 id: btn
                 anchors.left: parent.left
                 anchors.top: parent.top
-                width: modelData.autoWidth ? undefined : (modelData.width || defaultWidth)
-                textAutoWidth: modelData.autoWidth || buttonAutoWidth || false
+                width: props._autoWidth ? undefined : (props._buttonWidth || defaultWidth)
 
-                height: modelData.height || defaultHeight
-                anchors.leftMargin: modelData.leftMargin || defaultLeftMargin || 0
-                anchors.topMargin: modelData.topMargin || defaultTopMargin || 0
+                textAutoWidth: props._autoWidth || buttonAutoWidth || false
 
-                textContent: modelData.textContent || ""
-                margin: modelData.innerMargin || defaultInnerMargin
+                height: props._buttonHeight || defaultHeight
+
+                anchors.leftMargin: props._leftMargin || defaultLeftMargin || 0
+
+                anchors.topMargin: props._topMargin || defaultTopMargin || 0
+
+                textContent: props._textContent || ""
+                margin: props._innerMargin || defaultInnerMargin
                 isToggleButton: managementType === ButtonGroup.ManagementType.Selector
                 pressed: index == selectedIndex
                 showBackground: buttonGroup.showBackground
                 showBorder: buttonGroup.showBackground
 
-                imageWidth: modelData.imageWidth || defaultImageWidth
-                imageHeight: modelData.imageHeight || defaultImageHeight
-                imageSource: modelData.imagePath || ""
+                imageWidth: props._imageWidth || defaultImageWidth
+                imageHeight: props._imageHeight || defaultImageHeight
+                imageSource: props._imagePath || ""
 
-                hoverMessage: modelData.hoverMessage || ""
+                hoverMessage: props._hoverMessage || ""
             }
             MouseArea {
                 anchors.fill: btn
