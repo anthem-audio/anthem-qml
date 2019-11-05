@@ -3,6 +3,9 @@ import "BasicComponents"
 import "Dialogs"
 
 /*
+  TabGroup is used to display the tabs at the
+  top of the Anthem window.
+
   It's worth leaving a note about the offset
   variable in some of the functions below,
   calculated as
@@ -11,7 +14,7 @@ import "Dialogs"
   When a child item is removed programmatically,
   it does not immediately disappear. The Qt
   Quick engine takes care of removing it before
-  the next frame. "Oh, I'll do it sometime
+  the next frame. "Oh, I'll do it at some point
   before the next frame" gives no guarantee
   that the item will be gone by the time we are
   ready to manipulate the children again, and

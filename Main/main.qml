@@ -275,9 +275,9 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             showBackground: false
-            defaultWidth: 25
+            defaultButtonWidth: 25
             defaultImageWidth: 15
-            defaultHeight: 15
+            defaultButtonHeight: 15
             defaultLeftMargin: 20
             managementType: ButtonGroup.ManagementType.Selector
             selectedIndex: 0
@@ -319,7 +319,7 @@ Window {
             anchors.left: spacer1.right
             anchors.leftMargin: 5
             showBackground: false
-            defaultHeight: 15
+            defaultButtonHeight: 15
             defaultLeftMargin: 15
             buttonAutoWidth: true
             defaultInnerMargin: 0
@@ -361,9 +361,9 @@ Window {
             anchors.bottom: parent.bottom
             anchors.left: spacer2.right
             showBackground: false
-            defaultWidth: 25
+            defaultButtonWidth: 25
             defaultImageWidth: 15
-            defaultHeight: 15
+            defaultButtonHeight: 15
             defaultLeftMargin: 10
             defaultTopMargin: 0
             width: 140

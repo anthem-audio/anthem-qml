@@ -40,6 +40,7 @@ Item {
     property string textFloat: "center"
     property real   textPixelSize: 11
     property bool   textAutoWidth: false
+    property bool   isMouseDown: false
 
     readonly property real textWidth: text.width
 
@@ -56,7 +57,7 @@ Item {
         else if (isHighlighted) {
             return Button.State.Highlighted;
         }
-        else if (buttonProps.isMouseDown) {
+        else if (button.isMouseDown) {
             return Button.State.Pressed;
         }
         else if (isToggleButton && pressed) {
@@ -80,7 +81,6 @@ Item {
     QtObject {
         id: buttonProps
         property bool isHoverActive: false
-        property bool isMouseDown: false
         property real hue: 162 / 360 // change to be dynamic based on user settings
 
         function getContentColor() {
@@ -111,7 +111,7 @@ Item {
             case Button.State.Highlighted:
                 return 1; // #37a483 (+ hue shift)
             case Button.State.Pressed:
-                return 0.7; // #37a483 (+ hue shift), 50% opacity
+                return 0.6; // #37a483 (+ hue shift), 50% opacity
             case Button.State.Active:
                 return 0.6; // 60% opacity black
             case Button.State.Disabled:
@@ -204,7 +204,7 @@ Item {
         id: btnCorner
         color: 'transparent'
         anchors.fill: parent
-        border.color: Qt.rgba(1, 1, 1, buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7)
+        border.color: Qt.rgba(1, 1, 1, buttonProps.isHoverActive && !button.isMouseDown ? 1 : 0.7)
         anchors.margins: 1
         radius: 1
         visible: false
@@ -282,7 +282,7 @@ Item {
         onPressed: {
             if (!isToggleButton)
                 button.pressed = true
-            buttonProps.isMouseDown = true
+            button.isMouseDown = true
         }
 
         onReleased: {
@@ -290,7 +290,7 @@ Item {
                 button.pressed = false
             else
                 button.pressed = !button.pressed
-            buttonProps.isMouseDown = false
+            button.isMouseDown = false
         }
 
         property alias hoverActive: buttonProps.isHoverActive
