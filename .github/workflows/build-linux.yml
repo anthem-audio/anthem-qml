@@ -15,7 +15,7 @@ jobs:
     - name: Download Qt
       run: |
            cd $GITHUB_WORKSPACE
-           wget http://qt.mirror.constant.com/archive/qt/5.13/5.13.1/qt-opensource-linux-x64-5.13.1.run -O ./qt-install.run
+           wget http://qt.mirror.constant.com/archive/qt/5.13/5.13.2/qt-opensource-linux-x64-5.13.2.run -O ./qt-install.run
     - name: Install Qt
       run: |
            cd $GITHUB_WORKSPACE
