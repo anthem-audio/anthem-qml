@@ -21,18 +21,28 @@ jobs:
            cd $GITHUB_WORKSPACE
            chmod +x ./qt-install.run
            ./qt-install.run --script ./actions/installer-noninteractive-linux.qs --verbose --platform minimal
-    - name: Build Anthem and generate Appimage
+    - name: Build Anthem
       run: |
            cd $GITHUB_WORKSPACE
            export PATH=$PATH:/qt/5.13.1/gcc_64/bin/
-           qmake ./Prototyping.pro CONFIG+=release PREFIX=/usr
-           make INSTALL_ROOT=appdir -j$(nproc) install
-           wget -c -nv "https://github.com/probonopd/linuxdeployqt/releases/download/continuous/linuxdeployqt-continuous-x86_64.AppImage"
-           chmod a+x linuxdeployqt-continuous-x86_64.AppImage
-           mv linuxdeployqt-continuous-x86_64.AppImage $GITHUB_WORKSPACE/Main/appdir/opt/
-           cd $GITHUB_WORKSPACE/Main/appdir/opt/
-           mkdir -p ./Main/{lib,share/{applications,icons/hicolor/256x256/apps}}
-           mv ../../../anthem.desktop ./Main/share/applications/
-           mv ../../../Anthem.png ./Main/share/icons/hicolor/256x256/apps/
-           ./linuxdeployqt-continuous-x86_64.AppImage ./Main/share/applications/*.desktop -appimage
-           sudo find / -name "*anthem*"
+           mkdir build && cd build
+           qmake ..
+           make -j$(nproc)
+           make install
+    - name: Test Anthem
+      run: |
+           cd $GITHUB_WORKSPACE/build/Main
+           ./Main --test
+    - name: Generate AppImage
+      run: |
+           cd $GITHUB_WORKSPACE/build
+           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+           chmod +x linuxdeploy*.AppImage
+           ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ./Main/Main -i ../Anthem.png -d ../anthem.desktop --plugin qt --output appimage
+           mkdir upload
+           mv ./Anthem*.AppImage ./upload
+    - uses: actions/upload-artifact@master
+      with:
+        name: Anthem - Linux build
+        path: '$GITHUB_WORKSPACE/build/upload'
