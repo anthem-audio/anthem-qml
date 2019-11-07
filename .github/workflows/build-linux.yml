@@ -26,7 +26,7 @@ jobs:
            cd $GITHUB_WORKSPACE
            export PATH=$PATH:/qt/5.13.2/gcc_64/bin/
            mkdir build && cd build
-           qmake
+           qmake .. -config release
            make -j$(nproc)
            make install
     - name: Test Anthem
