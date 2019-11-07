@@ -47,7 +47,7 @@ import QtQuick 2.13
     }
 */
 
-Flow {
+Item {
     id: buttonGroup
     property var  model: []
     property bool isSelector: false
@@ -64,6 +64,9 @@ Flow {
     property int  selectedIndex: -1
     property int  _oldSelectedIndex: selectedIndex
     property bool allowDeselection: false
+    property bool fixedWidth: true
+
+    width: fixedWidth ? undefined : contentSpacer.width
 
     onSelectedIndexChanged: {
         if (repeater.itemAt(0) === null) {
@@ -71,10 +74,10 @@ Flow {
         }
 
         if (_oldSelectedIndex > -1) {
-            repeater.itemAt(_oldSelectedIndex).children[0].pressed = false;
+            repeater.itemAt(_oldSelectedIndex).children[2].pressed = false;
         }
         if (selectedIndex > -1) {
-            repeater.itemAt(selectedIndex).children[0].pressed = true;
+            repeater.itemAt(selectedIndex).children[2].pressed = true;
         }
 
         _oldSelectedIndex = selectedIndex;
@@ -85,96 +88,134 @@ Flow {
         Selector
     }
 
-    Repeater {
-        id: repeater
-        anchors.fill: parent
-        model: buttonGroup.model
-        Item {
-            QtObject {
-                id: props
-                property var _autoWidth: typeof autoWidth !== 'undefined' ? autoWidth : undefined
-                property var _buttonWidth: typeof buttonWidth !== 'undefined' ? buttonWidth : undefined
-                property var _buttonHeight: typeof buttonHeight !== 'undefined' ? buttonHeight : undefined
-                property var _leftMargin: typeof leftMargin !== 'undefined' ? leftMargin : undefined
-                property var _topMargin: typeof topMargin !== 'undefined' ? topMargin : undefined
-                property var _textContent: typeof textContent !== 'undefined' ? textContent : undefined
-                property var _innerMargin: typeof innerMargin !== 'undefined' ? innerMargin : undefined
-                property var _imageWidth: typeof imageWidth !== 'undefined' ? imageWidth : undefined
-                property var _imageHeight: typeof imageHeight !== 'undefined' ? imageHeight : undefined
-                property var _imagePath: typeof imagePath !== 'undefined' ? imagePath : undefined
-                property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
-            }
+    Rectangle {
+        id: contentSpacer
+        anchors.fill: fixedWidth ? parent : undefined
+        width: fixedWidth ? undefined : flow.width
+        border.color: Qt.rgba(0, 0, 0, 0.4)
+        border.width: showBackground ? 1 : 0
+        radius: 2
+        color: "transparent"
+        Flow {
+            id: flow
+            anchors.fill: fixedWidth ? parent : undefined
+            anchors.margins: showBackground ? 1 : 0
+            Repeater {
+                id: repeater
+                anchors.fill: parent
+                model: buttonGroup.model
+                Item {
+                    id: btnContainer
 
-            width: {
-                let baseWidth;
-
-                if (props._autoWidth || (props._autoWidth === undefined && buttonAutoWidth)) {
-                    baseWidth = btn.width;
-                }
-                else {
-                    baseWidth = props._buttonWidth || defaultButtonWidth;
-                }
-
-                return baseWidth + (props._leftMargin || defaultLeftMargin || 0)
-            }
-            height: (props._buttonHeight || defaultButtonHeight)
-                    +
-                    (props._topMargin || defaultTopMargin || 0)
-            Button {
-                id: btn
-                anchors.left: parent.left
-                anchors.top: parent.top
-                width: props._autoWidth ? undefined : (props._buttonWidth || defaultButtonWidth)
-
-                textAutoWidth: props._autoWidth || buttonAutoWidth || false
-
-                height: props._buttonHeight || defaultButtonHeight
-
-                anchors.leftMargin: props._leftMargin || defaultLeftMargin || 0
-
-                anchors.topMargin: props._topMargin || defaultTopMargin || 0
-
-                textContent: props._textContent || ""
-                margin: props._innerMargin || defaultInnerMargin
-                isToggleButton: managementType === ButtonGroup.ManagementType.Selector
-                pressed: index == selectedIndex
-                showBackground: buttonGroup.showBackground
-                showBorder: buttonGroup.showBackground
-
-                imageWidth: props._imageWidth || defaultImageWidth
-                imageHeight: props._imageHeight || defaultImageHeight
-                imageSource: props._imagePath || ""
-
-                hoverMessage: props._hoverMessage || ""
-            }
-            MouseArea {
-                anchors.fill: btn
-                onPressed: {
-                    if (managementType === ButtonGroup.ManagementType.None) {
-                        mouse.accepted = false;
+                    QtObject {
+                        id: props
+                        property var _autoWidth: typeof autoWidth !== 'undefined' ? autoWidth : undefined
+                        property var _buttonWidth: typeof buttonWidth !== 'undefined' ? buttonWidth : undefined
+                        property var _buttonHeight: typeof buttonHeight !== 'undefined' ? buttonHeight : undefined
+                        property var _leftMargin: typeof leftMargin !== 'undefined' ? leftMargin : undefined
+                        property var _topMargin: typeof topMargin !== 'undefined' ? topMargin : undefined
+                        property var _textContent: typeof textContent !== 'undefined' ? textContent : undefined
+                        property var _innerMargin: typeof innerMargin !== 'undefined' ? innerMargin : undefined
+                        property var _imageWidth: typeof imageWidth !== 'undefined' ? imageWidth : undefined
+                        property var _imageHeight: typeof imageHeight !== 'undefined' ? imageHeight : undefined
+                        property var _imagePath: typeof imagePath !== 'undefined' ? imagePath : undefined
+                        property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
+                        property int _leftBorderWidth: !showBackground || btnContainer.x - flow.x <= 1 ? 0 : 1
+                        property int _topBorderHeight: !showBackground || btnContainer.y - flow.y <= 1 ? 0 : 1
                     }
-                    else if (managementType === ButtonGroup.ManagementType.Selector) {
-                        if ((!btn.pressed && !allowDeselection) || allowDeselection) {
-                            btn.isMouseDown = true;
+
+                    width: {
+                        let baseWidth;
+
+                        if (props._autoWidth || (props._autoWidth === undefined && buttonAutoWidth)) {
+                            baseWidth = btn.width;
                         }
-                    }
-                }
+                        else {
+                            baseWidth = props._buttonWidth || defaultButtonWidth;
+                        }
 
-                onReleased: {
-                    if (managementType === ButtonGroup.ManagementType.Selector) {
-                        btn.isMouseDown = false;
+                        return baseWidth + (props._leftMargin || defaultLeftMargin || 0) + props._leftBorderWidth
                     }
-                }
+                    height:   (props._buttonHeight || defaultButtonHeight)
+                            + (props._topMargin || defaultTopMargin || 0)
+                            + props._topBorderHeight
 
-                onClicked: {
-                    if (managementType === ButtonGroup.ManagementType.None) {
-                        mouse.accepted = false;
+                    Rectangle {
+                        id: leftBorder
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        width: props._leftBorderWidth
+                        color: Qt.rgba(0, 0, 0, 0.4)
                     }
-                    else if (managementType === ButtonGroup.ManagementType.Selector) {
-                        if (selectedIndex == index && allowDeselection)
-                            selectedIndex = -1;
-                        else
-                            selectedIndex = index;
+
+                    Rectangle {
+                        id: topBorder
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        height: props._topBorderHeight
+                        color: Qt.rgba(0, 0, 0, 0.4)
+                    }
+
+                    Button {
+                        id: btn
+                        anchors.left: leftBorder.right
+                        anchors.top: topBorder.bottom
+                        width: props._autoWidth ? undefined : (props._buttonWidth || defaultButtonWidth)
+
+                        textAutoWidth: props._autoWidth || buttonAutoWidth || false
+
+                        height: props._buttonHeight || defaultButtonHeight
+
+                        anchors.leftMargin: props._leftMargin || defaultLeftMargin || 0
+
+                        anchors.topMargin: props._topMargin || defaultTopMargin || 0
+
+                        textContent: props._textContent || ""
+                        margin: props._innerMargin || defaultInnerMargin
+                        isToggleButton: managementType === ButtonGroup.ManagementType.Selector
+                        pressed: index == selectedIndex
+                        showBackground: buttonGroup.showBackground
+                        showBorder: false
+
+                        imageWidth: props._imageWidth || defaultImageWidth
+                        imageHeight: props._imageHeight || defaultImageHeight
+                        imageSource: props._imagePath || ""
+
+                        hoverMessage: props._hoverMessage || ""
+                    }
+
+                    MouseArea {
+                        anchors.fill: btn
+                        onPressed: {
+                            if (managementType === ButtonGroup.ManagementType.None) {
+                                mouse.accepted = false;
+                            }
+                            else if (managementType === ButtonGroup.ManagementType.Selector) {
+                                if ((!btn.pressed && !allowDeselection) || allowDeselection) {
+                                    btn.isMouseDown = true;
+                                }
+                            }
+                        }
+
+                        onReleased: {
+                            if (managementType === ButtonGroup.ManagementType.Selector) {
+                                btn.isMouseDown = false;
+                            }
+                        }
+
+                        onClicked: {
+                            if (managementType === ButtonGroup.ManagementType.None) {
+                                mouse.accepted = false;
+                            }
+                            else if (managementType === ButtonGroup.ManagementType.Selector) {
+                                if (selectedIndex == index && allowDeselection)
+                                    selectedIndex = -1;
+                                else
+                                    selectedIndex = index;
+                            }
+                        }
                     }
                 }
             }

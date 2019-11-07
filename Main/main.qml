@@ -282,6 +282,7 @@ Window {
             managementType: ButtonGroup.ManagementType.Selector
             selectedIndex: 0
             allowDeselection: true
+            fixedWidth: false
 
             ListModel {
                 id: explorerTabsModel
@@ -295,6 +296,8 @@ Window {
                 ListElement {
                     imagePath: "Images/Document.svg"
                     imageWidth: 11
+                    buttonWidth: 16
+                    leftMargin: 15
                     hoverMessage: "Project explorer"
                 }
             }
@@ -325,6 +328,7 @@ Window {
             defaultInnerMargin: 0
             managementType: ButtonGroup.ManagementType.Selector
             selectedIndex: 0
+            fixedWidth: false
 
             ListModel {
                 id: layoutTabsModel
@@ -366,16 +370,17 @@ Window {
             defaultButtonHeight: 15
             defaultLeftMargin: 10
             defaultTopMargin: 0
-            width: 140
             managementType: ButtonGroup.ManagementType.Selector
             selectedIndex: 3
             allowDeselection: true
+            fixedWidth: false
 
             ListModel {
                 id: editorPanelTabsModel
                 ListElement {
                     imagePath: "Images/Piano Roll.svg"
                     hoverMessage: "Piano roll"
+                    leftMargin: 20
                 }
                 ListElement {
                     imagePath: "Images/Automation.svg"
