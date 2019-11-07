@@ -26,7 +26,7 @@ jobs:
            cd $GITHUB_WORKSPACE
            export PATH=$PATH:/qt/5.13.2/gcc_64/bin/
            mkdir build && cd build
-           qmake -config release
+           qmake
            make -j$(nproc)
            make install
     - name: Test Anthem
@@ -37,7 +37,7 @@ jobs:
       run: |
            cd $GITHUB_WORKSPACE/build
            export PATH=$PATH:/qt/5.13.2/gcc_64/bin/
-           export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/build/Main
+           export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/Main
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
            wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
            chmod +x linuxdeploy*.AppImage
