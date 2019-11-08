@@ -156,6 +156,7 @@ Item {
                         anchors.top: parent.top
                         height: props._topBorderHeight
                         color: Qt.rgba(0, 0, 0, 0.4)
+                        anchors.leftMargin: props._leftBorderWidth != 0 && props._topBorderHeight != 0 ? 1 : 0
                     }
 
                     Button {
