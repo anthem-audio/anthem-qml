@@ -132,8 +132,8 @@ Item {
                         property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
                         property int _leftBorderWidth: !showBackground || btnContainer.x - flow.x <= 1 ? 0 : 1
                         property int _topBorderHeight: !showBackground || btnContainer.y - flow.y <= 1 ? 0 : 1
-                        property var _calculatedWidth: !buttonAutoWidth ? (_buttonWidth || defaultButtonWidth) - 1 - _leftBorderWidth : undefined
-                        property var _calculatedHeight: (_buttonHeight || defaultButtonHeight) - 1 - _topBorderHeight
+                        property var _calculatedWidth: !buttonAutoWidth ? (_buttonWidth || defaultButtonWidth) - 2 + _leftBorderWidth : undefined
+                        property var _calculatedHeight: (_buttonHeight || defaultButtonHeight) - 2 + _topBorderHeight
                         on_CalculatedWidthChanged: {
                             console.log(_calculatedWidth)
                         }
