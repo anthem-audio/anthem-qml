@@ -325,6 +325,10 @@ void MainPresenter::notifySaveCompleted() {
     emit saveCompleted();
 }
 
+void MainPresenter::displayStatusMessage(QString message) {
+    emit statusMessageRequest(message);
+}
+
 
 
 

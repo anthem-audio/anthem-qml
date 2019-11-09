@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.13
 import QtQuick.Dialogs 1.2
 import "BasicComponents"
 import "Dialogs"
+import "Global"
 
 Window {
     id: mainWindow
@@ -49,6 +50,9 @@ Window {
             infoDialog.title = title;
             infoDialog.message = notification;
             infoDialog.show();
+        }
+        onStatusMessageRequest: {
+            statusText.text = message;
         }
     }
 
@@ -232,7 +236,7 @@ Window {
 
         anchors.leftMargin: 5
         anchors.rightMargin: 5
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 10
 
         ControlsPanel {
             id: controlsPanel
@@ -242,12 +246,15 @@ Window {
         }
 
         MainStack {
+            id: mainStack
             anchors.top: controlsPanel.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-
             anchors.topMargin: 4
+            showControllerRack: btnShowControllerRack.pressed
+            showExplorer: explorerTabs.selectedIndex > -1
+            showEditors: editorPanelTabs.selectedIndex > -1
         }
     }
 
@@ -256,6 +263,179 @@ Window {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        height: 30
+        anchors.bottomMargin: 10
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
+        height: 15
+        width: 65
+
+        ButtonGroup {
+            id: explorerTabs
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            showBackground: false
+            defaultButtonWidth: 25
+            defaultImageWidth: 15
+            defaultButtonHeight: 15
+            defaultLeftMargin: 20
+            managementType: ButtonGroup.ManagementType.Selector
+            selectedIndex: 0
+            allowDeselection: true
+            fixedWidth: false
+
+            ListModel {
+                id: explorerTabsModel
+
+                ListElement {
+                    leftMargin: 15
+                    imageSource: "Images/File.svg"
+                    hoverMessage: "File explorer"
+                }
+
+                ListElement {
+                    imageSource: "Images/Document.svg"
+                    imageWidth: 11
+                    buttonWidth: 16
+                    leftMargin: 15
+                    hoverMessage: "Project explorer"
+                }
+            }
+
+            model: explorerTabsModel
+        }
+
+        Rectangle {
+            id: spacer1
+            width: 2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: explorerTabs.right
+            anchors.leftMargin: 20
+            color: Qt.rgba(1, 1, 1, 0.11)
+        }
+
+        ButtonGroup {
+            id: layoutTabs
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: spacer1.right
+            anchors.leftMargin: 5
+            showBackground: false
+            defaultButtonHeight: 15
+            defaultLeftMargin: 15
+            buttonAutoWidth: true
+            defaultInnerMargin: 0
+            managementType: ButtonGroup.ManagementType.Selector
+            selectedIndex: 0
+            fixedWidth: false
+
+            ListModel {
+                id: layoutTabsModel
+                ListElement {
+                    textContent: "ARRANGE"
+                    hoverMessage: "Arrangement layout"
+                }
+                ListElement {
+                    textContent: "MIX"
+                    hoverMessage: "Mixing layout"
+                }
+                ListElement {
+                    textContent: "EDIT"
+                    hoverMessage: "Editor layout"
+                }
+            }
+
+            model: layoutTabsModel
+        }
+
+        Rectangle {
+            id: spacer2
+            width: 2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: layoutTabs.right
+            anchors.leftMargin: 20
+            color: Qt.rgba(1, 1, 1, 0.11)
+        }
+
+        ButtonGroup {
+            id: editorPanelTabs
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: spacer2.right
+            showBackground: false
+            defaultButtonWidth: 25
+            defaultImageWidth: 15
+            defaultButtonHeight: 15
+            defaultLeftMargin: 10
+            defaultTopMargin: 0
+            managementType: ButtonGroup.ManagementType.Selector
+            selectedIndex: 3
+            allowDeselection: true
+            fixedWidth: false
+
+            ListModel {
+                id: editorPanelTabsModel
+                ListElement {
+                    imageSource: "Images/Piano Roll.svg"
+                    hoverMessage: "Piano roll"
+                    leftMargin: 20
+                }
+                ListElement {
+                    imageSource: "Images/Automation.svg"
+                    hoverMessage: "Automation editor"
+                }
+                ListElement {
+                    imageSource: "Images/Plugin.svg"
+                    hoverMessage: "Plugin rack"
+                }
+                ListElement {
+                    imageSource: "Images/Mixer.svg"
+                    hoverMessage: "Mixer"
+                }
+            }
+
+            model: editorPanelTabsModel
+        }
+
+        Rectangle {
+            id: spacer3
+            width: 2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: editorPanelTabs.right
+            anchors.leftMargin: 20
+            color: Qt.rgba(1, 1, 1, 0.11)
+        }
+
+        Text {
+            id: statusText
+            anchors.left: spacer3.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 20
+            text: ""
+            font.family: Fonts.notoSansRegular.name
+            font.pixelSize: 11
+            color: Qt.rgba(1, 1, 1, 0.6)
+        }
+
+        Button {
+            id: btnShowControllerRack
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.rightMargin: 15
+            width: 15
+            imageSource: "Images/Controllers.svg"
+            imageWidth: 15
+            imageHeight: 15
+            showBorder: false
+            showBackground: false
+            isToggleButton: true
+            pressed: true
+            hoverMessage: pressed ? "Hide controller rack" : "Show controller rack"
+        }
     }
 }

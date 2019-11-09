@@ -15,15 +15,18 @@ Panel {
         // Float left
 
         Button {
-            id: btnLogo // No idea what this button does. Possibly opens up a dialog with info about the software? Or a welcome dialog or something.
+            id: btnLogo
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             width: parent.height // makes it square :)
+            isToggleButton: true
 
             imageSource: "Images/Logo.svg"
             imageWidth: 14
             imageHeight: 12
+
+            hoverMessage: btnLogo.pressed ? "Stop engine for this tab" : "Start engine for this tab"
         }
 
         Button {
@@ -75,6 +78,7 @@ Panel {
             anchors.left: btnFile.right
             anchors.leftMargin: 20
             width: parent.height
+            hoverMessage: "Save project"
 
             imageSource: "Images/Save.svg"
             imageWidth: 16
@@ -90,6 +94,7 @@ Panel {
             anchors.left: btnSave.right
             anchors.leftMargin: 2
             width: parent.height
+            hoverMessage: "Undo"
 
             imageSource: "Images/Undo.svg"
             imageWidth: 15
@@ -107,6 +112,7 @@ Panel {
             anchors.left: btnUndo.right
             anchors.leftMargin: 2
             width: parent.height
+            hoverMessage: "Redo"
 
             imageSource: "Images/Redo.svg"
             imageWidth: 15
@@ -143,6 +149,7 @@ Panel {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 width: parent.height
+                hoverMessage: "Toggle metronome"
 
                 isToggleButton: true
 
@@ -160,115 +167,42 @@ Panel {
                 width: 21
             }
 
-            // Still don't have a button group. Not sure how I'd make one.
-            Rectangle {
+            ButtonGroup {
                 id: playbackControlsGroup
-                width: 125
                 anchors.top: parent.top
                 anchors.left: idk.right
                 anchors.bottom: parent.bottom
+                fixedWidth: false
                 anchors.leftMargin: 3
-                radius: 2
-                color: "transparent"
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
 
-                Button {
-                    id: btnPlay
-                    showBorder: false
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.bottom: parent.bottom
-                    width: parent.height - 2
+                defaultImageWidth: 12
+                defaultImageHeight: 12
+                defaultButtonWidth: 32
+                defaultButtonHeight: 32
 
-                    anchors.topMargin: 1
-                    anchors.leftMargin: 1
-                    anchors.bottomMargin: 1
+                model: ListModel {
+                    ListElement {
+                        isToggleButton: true
+                        imageSource: "Images/Play.svg"
+                    }
 
-                    imageSource: "Images/Play.svg"
-                    imageWidth: 12
-                    imageHeight: 12
-                }
+                    ListElement {
+                        isToggleButton: true
+                        hoverMessage: "Record"
+                        imageSource: "Images/Record.svg"
+                    }
 
-                Button {
-                    id: btnRecord
-                    showBorder: false
-                    anchors.top: parent.top
-                    anchors.left: btnPlay.right
-                    anchors.bottom: parent.bottom
-                    width: parent.height - 2
+                    ListElement {
+                        hoverMessage: "Record immediately"
+                        imageSource: "Images/Play and Record.svg"
+                        imageWidth: 16
+                        imageHeight: 16
+                    }
 
-                    anchors.topMargin: 1
-                    anchors.leftMargin: 1
-                    anchors.bottomMargin: 1
-
-                    imageSource: "Images/Record.svg"
-                    imageWidth: 12
-                    imageHeight: 12
-                }
-
-                Button {
-                    id: btnPlayRecord
-                    showBorder: false
-                    anchors.top: parent.top
-                    anchors.left: btnRecord.right
-                    anchors.bottom: parent.bottom
-                    width: parent.height - 2
-
-                    anchors.topMargin: 1
-                    anchors.leftMargin: 1
-                    anchors.bottomMargin: 1
-
-                    imageSource: "Images/Play and Record.svg"
-                    imageWidth: 16
-                    imageHeight: 16
-                }
-
-                Button {
-                    id: btnStop
-                    showBorder: false
-                    anchors.top: parent.top
-                    anchors.left: btnPlayRecord.right
-                    anchors.bottom: parent.bottom
-                    width: parent.height - 2
-
-                    anchors.topMargin: 1
-                    anchors.leftMargin: 1
-                    anchors.bottomMargin: 1
-
-                    imageSource: "Images/Stop.svg"
-                    imageWidth: 12
-                    imageHeight: 12
-                }
-
-                Rectangle {
-                    anchors.left: btnPlay.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-                    color: Qt.rgba(0, 0, 0, 0.4)
-                    width: 1
-                }
-
-                Rectangle {
-                    anchors.left: btnRecord.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-                    color: Qt.rgba(0, 0, 0, 0.4)
-                    width: 1
-                }
-
-                Rectangle {
-                    anchors.left: btnPlayRecord.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
-                    color: Qt.rgba(0, 0, 0, 0.4)
-                    width: 1
+                    ListElement {
+                        hoverMessage: "Stop"
+                        imageSource: "Images/Stop.svg"
+                    }
                 }
             }
 
@@ -279,6 +213,7 @@ Panel {
                 anchors.left: playbackControlsGroup.right
                 anchors.leftMargin: 3
                 width: parent.height
+                hoverMessage: "Toggle loop points"
 
                 isToggleButton: true
 
@@ -319,6 +254,8 @@ Panel {
                         smallestIncrement: 0.01
                         decimalPlaces: 2
                         value: 140
+                        hoverMessage: "Tempo"
+                        units: "BPM"
 
                         fontPixelSize: 13
 
@@ -378,6 +315,7 @@ Panel {
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
                         width: 16
+                        hoverMessage: "Time signature numerator"
 
                         fontPixelSize: 13
 
@@ -423,6 +361,7 @@ Panel {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         width: value === 16 ? 16 : 8
+                        hoverMessage: "Time signature denominator"
 
                         fontPixelSize: 13
                         alignment: Text.AlignLeft
@@ -545,6 +484,8 @@ Panel {
                         anchors.right: parent.right
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
+                        hoverMessage: "Master pitch"
+                        units: "semitones"
 
                         fontFamily: Fonts.notoSansRegular.name
 
@@ -675,11 +616,12 @@ Panel {
         // Float right
 
         Button {
-            id: btnIGenuinelyDontKnow
+            id: btnMidiLearn // ?
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             width: parent.height
+            hoverMessage: "Midi learn"
 
             imageSource: "Images/Knob.svg"
             imageWidth: 16

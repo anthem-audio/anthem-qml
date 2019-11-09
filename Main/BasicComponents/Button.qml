@@ -17,13 +17,20 @@ Item {
 
     property bool   showBorder: true
     property bool   showBackground: true
-    property bool   isPressed: false
+    property bool   pressed: false
     property bool   isToggleButton: false
     property bool   isHighlighted: false
     property bool   hasMenuIndicator: false
     property bool   isDisabled: false
     property bool   allowPressEventsOnDisable: false
-    property int    margin: 5
+    property real   margin: 5
+    property string hoverMessage: ""
+
+    onHoverMessageChanged: {
+        if (mouseArea.hoverActive) {
+            Anthem.displayStatusMessage(hoverMessage);
+        }
+    }
 
     property string imageSource: ""
     property real   imageWidth: 1
@@ -33,10 +40,15 @@ Item {
     property string textFloat: "center"
     property real   textPixelSize: 11
     property bool   textAutoWidth: false
+    property bool   isMouseDown: false
 
     readonly property real textWidth: text.width
 
-    width: textAutoWidth ? text.width + margin * 2 + 3 : null
+    Component.onCompleted: {
+        if (textAutoWidth) {
+            width = text.width + margin * 2 + 3;
+        }
+    }
 
     function getState() {
         if (isDisabled) {
@@ -45,11 +57,16 @@ Item {
         else if (isHighlighted) {
             return Button.State.Highlighted;
         }
-        else if (buttonProps.isMouseDown) {
+        else if (button.isMouseDown) {
             return Button.State.Pressed;
         }
-        else if (isToggleButton && isPressed) {
-            return Button.State.Active;
+        else if (isToggleButton && pressed) {
+            if (isToggleButton && !showBackground) {
+                return Button.State.Highlighted;
+            }
+            else {
+                return Button.State.Active;
+            }
         }
         else if (buttonProps.isHoverActive) {
             return Button.State.Hovered;
@@ -64,7 +81,6 @@ Item {
     QtObject {
         id: buttonProps
         property bool isHoverActive: false
-        property bool isMouseDown: false
         property real hue: 162 / 360 // change to be dynamic based on user settings
 
         function getContentColor() {
@@ -95,7 +111,7 @@ Item {
             case Button.State.Highlighted:
                 return 1; // #37a483 (+ hue shift)
             case Button.State.Pressed:
-                return 0.7; // #37a483 (+ hue shift), 50% opacity
+                return 0.6; // #37a483 (+ hue shift), 50% opacity
             case Button.State.Active:
                 return 0.6; // 60% opacity black
             case Button.State.Disabled:
@@ -188,7 +204,7 @@ Item {
         id: btnCorner
         color: 'transparent'
         anchors.fill: parent
-        border.color: Qt.rgba(1, 1, 1, buttonProps.isHoverActive && !buttonProps.isMouseDown ? 1 : 0.7)
+        border.color: Qt.rgba(1, 1, 1, buttonProps.isHoverActive && !button.isMouseDown ? 1 : 0.7)
         anchors.margins: 1
         radius: 1
         visible: false
@@ -204,7 +220,7 @@ Item {
         anchors.right: textFloat == "right" ? parent.right : undefined
         anchors.verticalCenter: textFloat == "left" || textFloat == "right" ? parent.verticalCenter : undefined
         anchors.margins: 4
-        property int colorVal: isToggleButton && isPressed ? 0 : 1
+        property int colorVal: isToggleButton && pressed ? 0 : 1
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
     }
@@ -223,7 +239,7 @@ Item {
     ColorOverlay {
         anchors.fill: icon
         source: icon
-        property int colorVal: isToggleButton && isPressed ? 0 : 1
+        property int colorVal: isToggleButton && pressed ? 0 : 1
         visible: true;
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
@@ -255,6 +271,7 @@ Item {
     }
 
     MouseArea {
+        id: mouseArea
         anchors.fill: parent
         onClicked: {
             if (isDisabled && !allowPressEventsOnDisable)
@@ -264,22 +281,29 @@ Item {
 
         onPressed: {
             if (!isToggleButton)
-                isPressed = true
-            buttonProps.isMouseDown = true
+                button.pressed = true
+            button.isMouseDown = true
         }
 
         onReleased: {
             if (!isToggleButton)
-                isPressed = false
+                button.pressed = false
             else
-                isPressed = !isPressed
-            buttonProps.isMouseDown = false
+                button.pressed = !button.pressed
+            button.isMouseDown = false
         }
 
         property alias hoverActive: buttonProps.isHoverActive
 
         hoverEnabled: true
-        onEntered: hoverActive = true
-        onExited: hoverActive = false
+        onEntered: {
+            hoverActive = true
+            if (hoverMessage !== "")
+                Anthem.displayStatusMessage(hoverMessage);
+        }
+        onExited: {
+            hoverActive = false
+            Anthem.displayStatusMessage("");
+        }
     }
 }
