@@ -24,18 +24,19 @@ import QtQuick 2.13
         ListModel {
             id: myModel
             ListElement {
-                autoWidth:     (boolean)
-                buttonWidth:   (real)
-                buttonHeight:  (real)
-                leftMargin:    (real)
-                topMargin:     (real)
-                textContent:   (string)
-                innerMargin:   (real)
-                imageWidth:    (real)
-                imageHeight:   (real)
-                imageSource:   (string)
-                hoverMessage:  (string)
-                isToggleButton (boolean)
+                autoWidth:      (boolean)
+                buttonWidth:    (real)
+                buttonHeight:   (real)
+                leftMargin:     (real)
+                topMargin:      (real)
+                textContent:    (string)
+                innerMargin:    (real)
+                imageWidth:     (real)
+                imageHeight:    (real)
+                imageSource:    (string)
+                hoverMessage:   (string)
+                isToggleButton: (boolean)
+                onPress:        (function, () => {} or function() {})
             }
             ListElement {
                 //...
@@ -132,6 +133,7 @@ Item {
                         property var _imageSource: typeof imageSource !== 'undefined' ? imageSource : undefined
                         property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
                         property var _isToggleButton: typeof isToggleButton !== 'undefined' ? isToggleButton : undefined
+                        property var _onPress: typeof onPress !== 'undefined' ? onPress : undefined
                         property int _leftBorderWidth: !showBackground || btnContainer.x - flow.x <= 1 ? 0 : 1
                         property int _topBorderHeight: !showBackground || btnContainer.y - flow.y <= 1 ? 0 : 1
                         property var _calculatedWidth: !buttonAutoWidth ? (_buttonWidth || defaultButtonWidth) - 2 + _leftBorderWidth : undefined
@@ -199,6 +201,11 @@ Item {
                         imageSource: props._imageSource || ""
 
                         hoverMessage: props._hoverMessage || ""
+
+                        onPress: {
+                            if (props._onPress !== undefined)
+                                props._onPress();
+                        }
                     }
 
                     MouseArea {
