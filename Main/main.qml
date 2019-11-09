@@ -289,12 +289,12 @@ Window {
 
                 ListElement {
                     leftMargin: 15
-                    imagePath: "Images/File.svg"
+                    imageSource: "Images/File.svg"
                     hoverMessage: "File explorer"
                 }
 
                 ListElement {
-                    imagePath: "Images/Document.svg"
+                    imageSource: "Images/Document.svg"
                     imageWidth: 11
                     buttonWidth: 16
                     leftMargin: 15
@@ -378,20 +378,20 @@ Window {
             ListModel {
                 id: editorPanelTabsModel
                 ListElement {
-                    imagePath: "Images/Piano Roll.svg"
+                    imageSource: "Images/Piano Roll.svg"
                     hoverMessage: "Piano roll"
                     leftMargin: 20
                 }
                 ListElement {
-                    imagePath: "Images/Automation.svg"
+                    imageSource: "Images/Automation.svg"
                     hoverMessage: "Automation editor"
                 }
                 ListElement {
-                    imagePath: "Images/Plugin.svg"
+                    imageSource: "Images/Plugin.svg"
                     hoverMessage: "Plugin rack"
                 }
                 ListElement {
-                    imagePath: "Images/Mixer.svg"
+                    imageSource: "Images/Mixer.svg"
                     hoverMessage: "Mixer"
                 }
             }

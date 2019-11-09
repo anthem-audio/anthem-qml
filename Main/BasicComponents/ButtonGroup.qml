@@ -24,17 +24,18 @@ import QtQuick 2.13
         ListModel {
             id: myModel
             ListElement {
-                autoWidth:    (boolean)
-                buttonWidth:  (real)
-                buttonHeight: (real)
-                leftMargin:   (real)
-                topMargin:    (real)
-                textContent:  (string)
-                innerMargin:  (real)
-                imageWidth:   (real)
-                imageHeight:  (real)
-                imagePath:    (string)
-                hoverMessage: (string)
+                autoWidth:     (boolean)
+                buttonWidth:   (real)
+                buttonHeight:  (real)
+                leftMargin:    (real)
+                topMargin:     (real)
+                textContent:   (string)
+                innerMargin:   (real)
+                imageWidth:    (real)
+                imageHeight:   (real)
+                imageSource:   (string)
+                hoverMessage:  (string)
+                isToggleButton (boolean)
             }
             ListElement {
                 //...
@@ -128,15 +129,13 @@ Item {
                         property var _innerMargin: typeof innerMargin !== 'undefined' ? innerMargin : undefined
                         property var _imageWidth: typeof imageWidth !== 'undefined' ? imageWidth : undefined
                         property var _imageHeight: typeof imageHeight !== 'undefined' ? imageHeight : undefined
-                        property var _imagePath: typeof imagePath !== 'undefined' ? imagePath : undefined
+                        property var _imageSource: typeof imageSource !== 'undefined' ? imageSource : undefined
                         property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
+                        property var _isToggleButton: typeof isToggleButton !== 'undefined' ? isToggleButton : undefined
                         property int _leftBorderWidth: !showBackground || btnContainer.x - flow.x <= 1 ? 0 : 1
                         property int _topBorderHeight: !showBackground || btnContainer.y - flow.y <= 1 ? 0 : 1
                         property var _calculatedWidth: !buttonAutoWidth ? (_buttonWidth || defaultButtonWidth) - 2 + _leftBorderWidth : undefined
                         property var _calculatedHeight: (_buttonHeight || defaultButtonHeight) - 2 + _topBorderHeight
-                        on_CalculatedWidthChanged: {
-                            console.log(_calculatedWidth)
-                        }
                     }
 
                     width: {
@@ -190,14 +189,14 @@ Item {
 
                         textContent: props._textContent || ""
                         margin: props._innerMargin || defaultInnerMargin
-                        isToggleButton: managementType === ButtonGroup.ManagementType.Selector
+                        isToggleButton: props._isToggleButton || managementType === ButtonGroup.ManagementType.Selector
                         pressed: index == selectedIndex
                         showBackground: buttonGroup.showBackground
                         showBorder: false
 
                         imageWidth: props._imageWidth || defaultImageWidth
                         imageHeight: props._imageHeight || defaultImageHeight
-                        imageSource: props._imagePath || ""
+                        imageSource: props._imageSource || ""
 
                         hoverMessage: props._hoverMessage || ""
                     }
