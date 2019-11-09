@@ -67,6 +67,7 @@ Item {
     property bool fixedWidth: true
 
     width: fixedWidth ? undefined : contentSpacer.width
+    height: defaultButtonHeight
 
     onSelectedIndexChanged: {
         if (repeater.itemAt(0) === null) {
@@ -131,6 +132,11 @@ Item {
                         property var _hoverMessage: typeof hoverMessage !== 'undefined' ? hoverMessage : undefined
                         property int _leftBorderWidth: !showBackground || btnContainer.x - flow.x <= 1 ? 0 : 1
                         property int _topBorderHeight: !showBackground || btnContainer.y - flow.y <= 1 ? 0 : 1
+                        property var _calculatedWidth: !buttonAutoWidth ? (_buttonWidth || defaultButtonWidth) - 1 - _leftBorderWidth : undefined
+                        property var _calculatedHeight: (_buttonHeight || defaultButtonHeight) - 1 - _topBorderHeight
+                        on_CalculatedWidthChanged: {
+                            console.log(_calculatedWidth)
+                        }
                     }
 
                     width: {
@@ -140,12 +146,12 @@ Item {
                             baseWidth = btn.width;
                         }
                         else {
-                            baseWidth = props._buttonWidth || defaultButtonWidth;
+                            baseWidth = props._calculatedWidth;
                         }
 
                         return baseWidth + (props._leftMargin || defaultLeftMargin || 0) + props._leftBorderWidth
                     }
-                    height:   (props._buttonHeight || defaultButtonHeight)
+                    height:   (props._calculatedHeight)
                             + (props._topMargin || defaultTopMargin || 0)
                             + props._topBorderHeight
 
@@ -172,11 +178,11 @@ Item {
                         id: btn
                         anchors.left: leftBorder.right
                         anchors.top: topBorder.bottom
-                        width: props._autoWidth ? undefined : (props._buttonWidth || defaultButtonWidth)
+                        width: props._autoWidth ? undefined : props._calculatedWidth
 
                         textAutoWidth: props._autoWidth || buttonAutoWidth || false
 
-                        height: props._buttonHeight || defaultButtonHeight
+                        height: props._calculatedHeight
 
                         anchors.leftMargin: props._leftMargin || defaultLeftMargin || 0
 
