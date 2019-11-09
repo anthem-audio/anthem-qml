@@ -20,7 +20,7 @@ import QtQuick 2.13
     If a property is not given, the default will be used.
 
     ButtonGroup {
-        // ...
+        // General properties and button defaults here...
         ListModel {
             id: myModel
             ListElement {
@@ -91,7 +91,10 @@ Item {
     Rectangle {
         id: contentSpacer
         anchors.fill: fixedWidth ? parent : undefined
-        width: fixedWidth ? undefined : flow.width
+        anchors.top: fixedWidth ? undefined : parent.top
+        anchors.bottom: fixedWidth ? undefined : parent.bottom
+        anchors.left: fixedWidth ? undefined : parent.left
+        width: fixedWidth ? undefined : flow.width + flow.anchors.leftMargin + flow.anchors.rightMargin
         border.color: Qt.rgba(0, 0, 0, 0.4)
         border.width: showBackground ? 1 : 0
         radius: 2
@@ -99,7 +102,13 @@ Item {
         Flow {
             id: flow
             anchors.fill: fixedWidth ? parent : undefined
-            anchors.margins: showBackground ? 1 : 0
+            anchors.top: fixedWidth ? undefined : parent.top
+            anchors.left: fixedWidth ? undefined : parent.left
+            anchors.bottom: fixedWidth ? undefined : parent.bottom
+            anchors.topMargin: showBackground ? 1 : 0
+            anchors.bottomMargin: showBackground ? 1 : 0
+            anchors.leftMargin: showBackground ? 1 : 0
+            anchors.rightMargin: showBackground ? 1 : 0
             Repeater {
                 id: repeater
                 anchors.fill: parent
