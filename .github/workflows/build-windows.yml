@@ -1,7 +1,6 @@
 name: Windows Build
 
-# on: [push, pull_request]
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
