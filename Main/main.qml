@@ -175,18 +175,18 @@ Window {
         onActivated: Anthem.redo()
     }
 
-    Image {
-        id: asdf
-        source: "Images/pretty.jpg"
-        anchors.fill: parent
-    }
-    FastBlur {
-        id: blurredbg
-        visible: true
-        anchors.fill: asdf
-        source: asdf
-        radius: 128
-    }
+//    Image {
+//        id: asdf
+//        source: "Images/pretty.jpg"
+//        anchors.fill: parent
+//    }
+//    FastBlur {
+//        id: blurredbg
+//        visible: true
+//        anchors.fill: asdf
+//        source: asdf
+//        radius: 128
+//    }
 
     Item {
         id: header
