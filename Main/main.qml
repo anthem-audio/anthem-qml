@@ -33,8 +33,6 @@ Window {
     visible: true
     width: 1300
     height: 768
-    property int previousX
-    property int previousY
     property bool isMaximized: false
     property bool isClosing: false
     property int tabsRemaining: -1

@@ -22,6 +22,8 @@ import QtQuick 2.13
 
 Item {
     property var mainWindow;
+    property int previousX;
+    property int previousY;
 
     // Resize right
     MouseArea {
