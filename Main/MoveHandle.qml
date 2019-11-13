@@ -33,7 +33,6 @@ Item {
 
     MouseArea {
         anchors.fill: parent
-        anchors.rightMargin: 28 + 26 + 28 + margin // close buttons width + margin
 
         onPressed: {
             offsetX = mouse.x

@@ -205,7 +205,12 @@ Window {
 
             MoveHandle {
                 window: mainWindow
-                anchors.fill: parent
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: windowControlButtons.left
+                }
             }
 
             TabGroup {
