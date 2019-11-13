@@ -58,7 +58,7 @@ MouseArea {
 
     onReleased: {
         mouseHelper.setCursorPosition(props.startX, props.startY);
-        mouseHelper.setCursorToArrow();
+        mouseHelper.clearOverride();
 
         isDragActive = false;
         dragEnd();

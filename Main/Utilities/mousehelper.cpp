@@ -38,6 +38,6 @@ void MouseHelper::setCursorToBlank() {
     QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
 }
 
-void MouseHelper::setCursorToArrow() {
-    QGuiApplication::setOverrideCursor(QCursor(Qt::ArrowCursor));
+void MouseHelper::clearOverride() {
+    QGuiApplication::restoreOverrideCursor();
 }
