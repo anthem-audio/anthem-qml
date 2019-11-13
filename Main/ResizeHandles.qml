@@ -19,9 +19,27 @@
 */
 
 import QtQuick 2.13
+import io.github.anthem.utilities.mousehelper 1.0
 
 Item {
-    property var mainWindow;
+    property var window
+    property int startWidth
+    property int startHeight
+    property int startWindowX
+    property int startWindowY
+    property var startMousePos
+
+    MouseHelper {
+        id: mouseHelper
+    }
+
+    function doOnPress() {
+        startWidth = window.width;
+        startHeight = window.height;
+        startWindowX = window.x;
+        startWindowY = window.y;
+        startMousePos = mouseHelper.getCursorPosition();
+    }
 
     // Resize right
     MouseArea {
@@ -35,14 +53,12 @@ Item {
 
         cursorShape: Qt.SizeHorCursor
 
-        onPressed: previousX = mouseX
+        onPressed: doOnPress()
 
         onMouseXChanged: {
-            var dx = mouseX - previousX
-            mainWindow.setWidth(parent.width + dx)
-            mainWindow.set
+            let currentMousePos = mouseHelper.getCursorPosition();
+            window.width = startWidth + currentMousePos.x - startMousePos.x;
         }
-
     }
 
     // Resize top
@@ -56,12 +72,13 @@ Item {
 
         cursorShape: Qt.SizeVerCursor
 
-        onPressed: previousY = mouseY
+        onPressed: doOnPress()
 
         onMouseYChanged: {
-            var dy = mouseY - previousY
-            mainWindow.setY(mainWindow.y + dy)
-            mainWindow.setHeight(mainWindow.height - dy)
+            let currentMousePos = mouseHelper.getCursorPosition();
+            let newY = startWindowY + currentMousePos.y - startMousePos.y;
+            window.y = newY;
+            window.height = startHeight - (newY - startWindowY);
         }
     }
 
@@ -76,11 +93,11 @@ Item {
 
         cursorShape: Qt.SizeVerCursor
 
-        onPressed: previousY = mouseY
+        onPressed: doOnPress()
 
         onMouseYChanged: {
-            var dy = mouseY - previousY
-            mainWindow.setHeight(mainWindow.height + dy)
+            let currentMousePos = mouseHelper.getCursorPosition();
+            window.height = startHeight + currentMousePos.y - startMousePos.y;
         }
     }
 
@@ -95,12 +112,95 @@ Item {
 
         cursorShape: Qt.SizeHorCursor
 
-        onPressed: previousX = mouseX
+        onPressed: doOnPress()
 
-        onMouseYChanged: {
-            var dx = mouseX - previousX
-            mainWindow.setX(mainWindow.x + dx)
-            mainWindow.setWidth(mainWindow.width - dx)
+        onMouseXChanged: {
+            let currentMousePos = mouseHelper.getCursorPosition();
+            let newX = startWindowX + currentMousePos.x - startMousePos.x;
+            window.x = newX;
+            window.width = startWidth - (newX - startWindowX);
+        }
+    }
+
+    // Resize top-left
+    MouseArea {
+        anchors.top: parent.top
+        anchors.left: parent.left
+        width: 10
+        height: 10
+
+        cursorShape: Qt.SizeFDiagCursor
+
+        onPressed: doOnPress()
+
+        onPositionChanged: {
+            let currentMousePos = mouseHelper.getCursorPosition();
+
+            let newY = startWindowY + currentMousePos.y - startMousePos.y;
+            window.y = newY;
+            window.height = startHeight - (newY - startWindowY);
+
+            let newX = startWindowX + currentMousePos.x - startMousePos.x;
+            window.x = newX;
+            window.width = startWidth - (newX - startWindowX);
+        }
+    }
+
+    // Resize top-right
+    MouseArea {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        width: 10
+        height: 10
+
+        cursorShape: Qt.SizeBDiagCursor
+
+        onPressed: doOnPress()
+
+        onPositionChanged: {
+            let currentMousePos = mouseHelper.getCursorPosition();
+            window.width = startWidth + currentMousePos.x - startMousePos.x;
+            let newY = startWindowY + currentMousePos.y - startMousePos.y;
+            window.y = newY;
+            window.height = startHeight - (newY - startWindowY);
+        }
+    }
+
+    // Resize bottom-left
+    MouseArea {
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        width: 10
+        height: 10
+
+        cursorShape: Qt.SizeBDiagCursor
+
+        onPressed: doOnPress()
+
+        onPositionChanged: {
+            let currentMousePos = mouseHelper.getCursorPosition();
+            let newX = startWindowX + currentMousePos.x - startMousePos.x;
+            window.x = newX;
+            window.width = startWidth - (newX - startWindowX);
+            window.height = startHeight + currentMousePos.y - startMousePos.y;
+        }
+    }
+
+    // Resize bottom-right
+    MouseArea {
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        width: 10
+        height: 10
+
+        cursorShape: Qt.SizeFDiagCursor
+
+        onPressed: doOnPress()
+
+        onPositionChanged: {
+            let currentMousePos = mouseHelper.getCursorPosition();
+            window.width = startWidth + currentMousePos.x - startMousePos.x;
+            window.height = startHeight + currentMousePos.y - startMousePos.y;
         }
     }
 }

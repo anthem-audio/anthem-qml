@@ -10,7 +10,7 @@
 
     Anthem is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
@@ -32,7 +32,7 @@ public:
     Q_INVOKABLE void setCursorPosition(int x, int y);
     Q_INVOKABLE QPoint getCursorPosition();
     Q_INVOKABLE void setCursorToBlank();
-    Q_INVOKABLE void setCursorToArrow();
+    Q_INVOKABLE void clearOverride();
 
 signals:
 

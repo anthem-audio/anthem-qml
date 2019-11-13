@@ -33,8 +33,6 @@ Window {
     visible: true
     width: 1300
     height: 768
-    property int previousX
-    property int previousY
     property bool isMaximized: false
     property bool isClosing: false
     property int tabsRemaining: -1
@@ -162,7 +160,7 @@ Window {
 
     ResizeHandles {
         anchors.fill: parent
-        mainWindow: mainWindow
+        window: mainWindow
     }
 
     Shortcut {
@@ -207,7 +205,12 @@ Window {
 
             MoveHandle {
                 window: mainWindow
-                anchors.fill: parent
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: parent.left
+                    right: windowControlButtons.left
+                }
             }
 
             TabGroup {

@@ -19,6 +19,7 @@
 */
 
 import QtQuick 2.13
+import QtQuick.Window 2.13
 import io.github.anthem.utilities.mousehelper 1.0
 
 MouseArea {
@@ -33,8 +34,10 @@ MouseArea {
 
     QtObject {
         id: props
-        property real currentSnapX
-        property real currentSnapY
+        property real snapX: Screen.width * 0.5
+        property real snapY: Screen.height * 0.5
+        property real startX
+        property real startY
     }
 
     signal dragStart()
@@ -45,15 +48,17 @@ MouseArea {
         mouseHelper.setCursorToBlank();
 
         let mousePos = mouseHelper.getCursorPosition();
-        props.currentSnapX = mousePos.x;
-        props.currentSnapY = mousePos.y;
+        props.startX = mousePos.x;
+        props.startY = mousePos.y;
 
         isDragActive = true;
+        mouseHelper.setCursorPosition(props.snapX, props.snapY);
         dragStart();
     }
 
     onReleased: {
-        mouseHelper.setCursorToArrow();
+        mouseHelper.setCursorPosition(props.startX, props.startY);
+        mouseHelper.clearOverride();
 
         isDragActive = false;
         dragEnd();
@@ -64,13 +69,13 @@ MouseArea {
             return;
 
         let mousePos = mouseHelper.getCursorPosition();
-        let deltaX = mousePos.x - props.currentSnapX;
-        let deltaY = props.currentSnapY - mousePos.y;
+        let deltaX = mousePos.x - props.snapX;
+        let deltaY = props.snapY - mousePos.y;
 
         if (deltaX === 0 && deltaY === 0)
             return;
 
         drag(deltaX, deltaY);
-        mouseHelper.setCursorPosition(props.currentSnapX, props.currentSnapY);
+        mouseHelper.setCursorPosition(props.snapX, props.snapY);
     }
 }

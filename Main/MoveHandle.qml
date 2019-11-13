@@ -19,18 +19,24 @@
 */
 
 import QtQuick 2.13
+import io.github.anthem.utilities.mousehelper 1.0
 
 Item {
     property var window
     property int margin: 5
+    property int offsetX
+    property int offsetY
+
+    MouseHelper {
+        id: mouseHelper
+    }
 
     MouseArea {
         anchors.fill: parent
-        anchors.rightMargin: 28 + 26 + 28 + margin // close buttons width + margin
 
         onPressed: {
-            previousX = mouseX
-            previousY = mouseY
+            offsetX = mouse.x
+            offsetY = mouse.y
         }
 
         onReleased: {
@@ -40,24 +46,18 @@ Item {
             }
         }
 
-        onMouseXChanged: {
+        onPositionChanged: {
             if (window.isMaximized) {
                 window.isMaximized = false;
                 window.showNormal();
             }
 
-            var dx = mouseX - previousX
-            window.setX(window.x + dx)
-        }
+            let globalMousePosition = mouseHelper.getCursorPosition();
 
-        onMouseYChanged: {
-            if (window.isMaximized) {
-                window.isMaximized = false;
-                window.showNormal();
-            }
-
-            var dy = mouseY - previousY
-            window.setY(window.y + dy)
+            var newX = globalMousePosition.x - offsetX
+            var newY = globalMousePosition.y - offsetY
+            window.setX(newX);
+            window.setY(newY);
         }
     }
 }
