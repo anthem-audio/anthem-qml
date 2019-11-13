@@ -160,7 +160,7 @@ Window {
 
     ResizeHandles {
         anchors.fill: parent
-        mainWindow: mainWindow
+        window: mainWindow
     }
 
     Shortcut {
