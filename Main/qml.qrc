@@ -51,5 +51,7 @@
         <file>Images/Mixer.svg</file>
         <file>Images/Piano Roll.svg</file>
         <file>Images/Plugin.svg</file>
+        <file>Images/Pattern Editor.svg</file>
+        <file>Images/Pattern Picker.svg</file>
     </qresource>
 </RCC>

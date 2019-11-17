@@ -29,21 +29,20 @@ Item {
 
     Rectangle {
         id: patternEditor
-        SplitView.minimumWidth: 300
-        SplitView.preferredWidth: 500
         color: Qt.rgba(1, 0, 0, 0.02)
-        SplitView.fillWidth: true
         anchors {
             top: parent.top
             left: parent.left
             bottom: parent.bottom
         }
-        width: patternEditorWidth
+        width: showHidePatternEditorBtn.pressed ? patternEditorWidth : 0
+        visible: showHidePatternEditorBtn.pressed
     }
 
     Rectangle {
         id: leftBorder
-        width: 3
+        width: showHidePatternEditorBtn.pressed ? 3 : 0
+        visible: showHidePatternEditorBtn.pressed
         height: this.height
 
         anchors {
@@ -69,7 +68,6 @@ Item {
 
     Rectangle {
         id: patternPicker
-        width: 145
         color: Qt.rgba(0, 1, 0, 0.02)
 
         anchors {
@@ -77,11 +75,14 @@ Item {
             left: leftBorder.right
             bottom: parent.bottom
         }
+        width: showHidePatternPickerBtn.pressed ? 145 : 0
+        visible: showHidePatternPickerBtn.pressed
     }
 
     Rectangle {
         id: rightBorder
-        width: 3
+        width: showHidePatternPickerBtn.pressed ? 3 : 0
+        visible: showHidePatternPickerBtn.pressed
         height: this.height
 
         anchors {
@@ -114,6 +115,47 @@ Item {
             bottom: parent.bottom
             right: parent.right
         }
+    }
+
+    // Show/hide buttons
+    Button {
+        id: showHidePatternEditorBtn
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            bottomMargin: 3
+            leftMargin: 3
+        }
+        width: 20
+        height: 20
+        isToggleButton: true
+        pressed: true
+
+        imageSource: "Images/Pattern Editor.svg"
+        imageWidth: 11
+        imageHeight: 11
+
+        hoverMessage: pressed ? "Hide pattern editor" : "Show pattern editor"
+    }
+
+    Button {
+        id: showHidePatternPickerBtn
+        anchors {
+            bottom: parent.bottom
+            left: showHidePatternEditorBtn.right
+            bottomMargin: 3
+            leftMargin: 2
+        }
+        width: 20
+        height: 20
+        isToggleButton: true
+        pressed: true
+
+        imageSource: "Images/Pattern Picker.svg"
+        imageWidth: 12
+        imageHeight: 11
+
+        hoverMessage: pressed ? "Hide pattern picker" : "Show pattern picker"
     }
 
     property bool _isMouseOverResizeHandle: false
