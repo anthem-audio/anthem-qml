@@ -24,6 +24,7 @@ import "BasicComponents"
 
 Item {
     property int patternEditorWidth: 300
+    property int _patternEditorWidthOld: -1
     property int minPatternEditorWidth: 200
     property int minArrangerWidth: 200
 
@@ -35,7 +36,7 @@ Item {
             left: parent.left
             bottom: parent.bottom
         }
-        width: showHidePatternEditorBtn.pressed ? patternEditorWidth : 0
+        width: patternEditorWidth
         visible: showHidePatternEditorBtn.pressed
     }
 
@@ -135,6 +136,16 @@ Item {
         imageWidth: 11
         imageHeight: 11
 
+        onPressedChanged: {
+            if (pressed) {
+                patternEditorWidth = _patternEditorWidthOld;
+            }
+            else {
+                _patternEditorWidthOld = patternEditorWidth;
+                patternEditorWidth = 0;
+            }
+        }
+
         hoverMessage: pressed ? "Hide pattern editor" : "Show pattern editor"
     }
 
@@ -182,17 +193,29 @@ Item {
         }
         onPositionChanged: {
             if (_isDragActive) {
+                showHidePatternEditorBtn.pressed
                 let newPatternEditorWidth = _startWidth + mouse.x - _startX;
                 let currentMaxPatternEditorWidth = parent.width - minArrangerWidth - 145 - 6;
+                let actualNewValue;
                 if (newPatternEditorWidth < minPatternEditorWidth) {
-                    patternEditorWidth = minPatternEditorWidth;
+                    actualNewValue = minPatternEditorWidth;
                 }
                 else if (newPatternEditorWidth > currentMaxPatternEditorWidth) {
-                    patternEditorWidth = currentMaxPatternEditorWidth;
+                    actualNewValue = currentMaxPatternEditorWidth;
                 }
                 else {
-                    patternEditorWidth = newPatternEditorWidth;
+                    actualNewValue = newPatternEditorWidth;
                 }
+
+                let overshoot = newPatternEditorWidth - actualNewValue;
+
+                if (overshoot < -minPatternEditorWidth * 0.5 && showHidePatternEditorBtn.pressed) {
+                    showHidePatternEditorBtn.pressed = false;
+                }
+                else if (overshoot > -minPatternEditorWidth * 0.5 && !showHidePatternEditorBtn.pressed)
+                    showHidePatternEditorBtn.pressed = true;
+
+                patternEditorWidth = showHidePatternEditorBtn.pressed ? actualNewValue : 0;
             }
         }
         propagateComposedEvents: true
