@@ -27,6 +27,9 @@ import "Global"
 
 Panel {
     height: 44
+
+    signal closeRequested()
+
     Item {
         id: controlPanelSpacer
         anchors.fill: parent
@@ -65,29 +68,47 @@ Panel {
 
             Menu {
                 id: fileMenu
-                y: parent.height
+                menuX: 0
+                menuY: parent.height
 
-                MenuItem {
-                    text: 'New project'
-                    onTriggered: Anthem.newProject()
-                }
-                MenuItem {
-                    text: 'Open...'
-                    onTriggered: loadFileDialog.open()
-                }
-                MenuSeparator {}
-                MenuItem {
-                    text: 'Save'
-                    onTriggered: save()
-                }
-                MenuItem {
-                    text: 'Save as...'
-                    onTriggered: saveFileDialog.open()
-                }
-                MenuSeparator {}
-                MenuItem {
-                    text: 'Exit'
-                }
+                menuItems: [
+                    {
+                        text: 'New project',
+                        onTriggered: () => {
+                            Anthem.newProject();
+                        }
+                    },
+                    {
+                        text: 'Open...',
+                        onTriggered: () => {
+                            loadFileDialog.open();
+                        }
+                    },
+                    {
+                        separator: true
+                    },
+                    {
+                        text: 'Save',
+                        onTriggered: () => {
+                            save();
+                        }
+                    },
+                    {
+                        text: 'Save as...',
+                        onTriggered: () => {
+                            saveFileDialog.open();
+                        }
+                    },
+                    {
+                        separator: true
+                    },
+                    {
+                        text: 'Exit',
+                        onTriggered: () => {
+                            closeRequested();
+                        }
+                    }
+                ]
             }
         }
 

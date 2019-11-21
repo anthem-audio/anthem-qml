@@ -19,8 +19,26 @@
 */
 
 import QtQuick 2.13
-import QtQuick.Controls 2.13
 
-Menu {
+/*
+    This represents a styled menu in Anthem. This includes
+    right-click menus, the file menu, and any other popup
+    list that can be requested by the UI.
+*/
+
+Item {
     id: menu
+    property int submenuDepth: 0
+
+    property var menuItems
+    visible: false
+    property real menuX
+    property real menuY
+
+    function open() {
+        let mouseGlobal = mapToGlobal(menuX, menuY);
+        let windowGlobal = menuHelper.mapToGlobal(0, 0);
+
+        menuHelper.open(mouseGlobal.x - windowGlobal.x, mouseGlobal.y - windowGlobal.y, menuItems);
+    }
 }

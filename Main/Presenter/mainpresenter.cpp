@@ -35,10 +35,10 @@ using namespace rapidjson;
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent) {
     isPatchInProgress = false;
     isActiveProjectValid = true;
+    isInInitialState = true;
+
 
     this->id = id;
-
-    isInInitialState = true;
 
     // Initialize with blank project
     auto projectFile = new ProjectFile(this);

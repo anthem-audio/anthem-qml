@@ -30,8 +30,6 @@
         <file>Images/CPU.svg</file>
         <file>Images/Output Level.svg</file>
         <file>BasicComponents/Menu.qml</file>
-        <file>BasicComponents/MenuItem.qml</file>
-        <file>BasicComponents/MenuSeparator.qml</file>
         <file>TabGroup.qml</file>
         <file>Images/Close.svg</file>
         <file>Images/Maximize.svg</file>
@@ -53,5 +51,7 @@
         <file>Images/Plugin.svg</file>
         <file>Images/Pattern Editor.svg</file>
         <file>Images/Pattern Picker.svg</file>
+        <file>Menus.qml</file>
+        <file>MenuSingleton.qml</file>
     </qresource>
 </RCC>

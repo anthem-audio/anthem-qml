@@ -266,6 +266,7 @@ Window {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.right: parent.right
+            onCloseRequested: mainWindow.closeWithSavePrompt()
         }
 
         MainStack {
@@ -460,5 +461,10 @@ Window {
             pressed: true
             hoverMessage: pressed ? "Hide controller rack" : "Show controller rack"
         }
+    }
+
+    Menus {
+        id: menuHelper
+        anchors.fill: parent
     }
 }

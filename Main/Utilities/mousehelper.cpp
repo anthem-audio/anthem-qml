@@ -21,8 +21,7 @@
 #include "mousehelper.h"
 #include <QGuiApplication>
 
-MouseHelper::MouseHelper(QObject *parent) : QObject(parent)
-{
+MouseHelper::MouseHelper(QObject *parent) : QObject(parent) {
 
 }
 

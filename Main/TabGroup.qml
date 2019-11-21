@@ -78,7 +78,7 @@ Item {
     }
 
     function addTab(tabName) {
-        if (tabComponent === null || tabComponent === undefined)
+        if (tabComponent === null)
             tabComponent = Qt.createComponent("BasicComponents/TabHandle.qml");
 
         if (tabComponent.status === Component.Ready) {
