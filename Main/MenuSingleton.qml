@@ -20,6 +20,7 @@
 
 import QtQuick 2.13
 import QtGraphicalEffects 1.13
+import io.github.anthem.utilities.mousehelper 1.0
 
 /*
  * Utility component that draws individual menus.
@@ -40,6 +41,7 @@ import QtGraphicalEffects 1.13
 
 Rectangle {
     property var menuItems
+    property int _ignoredItemsCount: menuItems.filter(item => item.separator).length
     property int selectedIndex: -1
     property real hue: 162 / 360
     property string id
@@ -48,8 +50,14 @@ Rectangle {
     radius: 6
     height: menuContent.height
 
-    Component.onCompleted: {
-        console.log(menuContent.height)
+    MouseHelper {
+        id: mouseHelper
+    }
+
+    function moveMouseTo(index) {
+        let newSelectedElement = menuContentRepeater.itemAt(index);
+        let newMousePos = mapToGlobal(newSelectedElement.x + newSelectedElement.width * 0.7, newSelectedElement.y + newSelectedElement.height * 0.5);
+        mouseHelper.setCursorPosition(newMousePos.x, newMousePos.y);
     }
 
     Column {
@@ -112,6 +120,23 @@ Rectangle {
                         onPressed: {
                             menuItems[index].onTriggered();
                             closed();
+                        }
+                        onWheel: {
+                            if (_ignoredItemsCount === menuItems.length)
+                                return;
+
+                            let step = wheel.angleDelta.y < 0 ? -1 : 1;
+                            let stepsRemaining = Math.abs(wheel.angleDelta.y) % (menuItems.length - _ignoredItemsCount);
+                            let tempSelectedIndex = selectedIndex;
+                            for (let i = 0; i < stepsRemaining; i++) {
+                                tempSelectedIndex += step;
+                                while (menuItems[tempSelectedIndex] !== undefined && menuItems[tempSelectedIndex].separator !== undefined) {
+                                    tempSelectedIndex += step;
+                                }
+                                tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+                            }
+                            selectedIndex = tempSelectedIndex;
+                            moveMouseTo(selectedIndex);
                         }
                     }
                 }
