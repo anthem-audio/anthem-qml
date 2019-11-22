@@ -126,15 +126,12 @@ Rectangle {
                                 return;
 
                             let step = wheel.angleDelta.y < 0 ? -1 : 1;
-                            let stepsRemaining = Math.abs(wheel.angleDelta.y) % (menuItems.length - _ignoredItemsCount);
                             let tempSelectedIndex = selectedIndex;
-                            for (let i = 0; i < stepsRemaining; i++) {
+                            tempSelectedIndex += step;
+                            while (menuItems[tempSelectedIndex] !== undefined && menuItems[tempSelectedIndex].separator !== undefined) {
                                 tempSelectedIndex += step;
-                                while (menuItems[tempSelectedIndex] !== undefined && menuItems[tempSelectedIndex].separator !== undefined) {
-                                    tempSelectedIndex += step;
-                                }
-                                tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
                             }
+                            tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
                             selectedIndex = tempSelectedIndex;
                             moveMouseTo(selectedIndex);
                         }
