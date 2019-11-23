@@ -45,6 +45,9 @@ Item {
             menu.closed.connect(() => {
                 closeAfter(toString(_idCounter));
             });
+            menu.openSubmenu.connect((x, y, items) => {
+                open(x, y, items);
+            })
             _idCounter++;
             openMenuCount++;
             return toString(_idCounter - 1);

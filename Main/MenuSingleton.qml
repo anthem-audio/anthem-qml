@@ -46,7 +46,10 @@ Rectangle {
     property int selectedIndex: -1
     property real hue: 162 / 360
     property string id
+    property bool isSubmenuOpen: false
+    property bool blockIndexChange: false
     signal closed()
+    signal openSubmenu(real x, real y, var items)
     color: Qt.rgba(0, 0, 0, 0.72)
     radius: 6
     height: menuContent.height
@@ -59,6 +62,32 @@ Rectangle {
         let newSelectedElement = menuContentRepeater.itemAt(index);
         let newMousePos = mapToGlobal(newSelectedElement.x + newSelectedElement.width * 0.7, newSelectedElement.y + newSelectedElement.height * 0.5);
         mouseHelper.setCursorPosition(newMousePos.x, newMousePos.y);
+    }
+
+    function submenuClicked(x, y, index) {
+        if (isSubmenuOpen)
+            return;
+        blockIndexChange = true;
+        timer.setTimeout(() => {
+            blockIndexChange = false;
+        }, 1000)
+        isSubmenuOpen = true;
+        openSubmenu(x, y, menuItems[index].submenu);
+    }
+
+    // https://stackoverflow.com/a/50224584/8166701
+    Timer {
+        id: timer
+        function setTimeout(callback, delayTime) {
+            timer.interval = delayTime;
+            timer.repeat = false;
+            timer.triggered.connect(callback);
+            timer.triggered.connect(function release () {
+                timer.triggered.disconnect(callback);
+                timer.triggered.disconnect(release);
+            });
+            timer.start();
+        }
     }
 
     Column {
@@ -128,6 +157,8 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onExited: {
+            if (blockIndexChange)
+                return;
             selectedIndex = -1;
         }
 
@@ -146,12 +177,28 @@ Rectangle {
                         hoverEnabled: true
                         propagateComposedEvents: true
                         onEntered: {
+                            if (blockIndexChange)
+                                return;
                             selectedIndex = index;
+                            if (menuItems[index].submenu) {
+                                timer.setTimeout(() => {
+                                    if (index === selectedIndex) {
+                                        let submenuPos = mapToGlobal(x + width, y);
+                                        let windowPos = menuHelper.mapToGlobal(0, 0);
+                                        submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, index);
+                                    }
+                                }, 500);
+                            }
                         }
                         onPressed: {
                             if (menuItems[index].onTriggered)
                                 menuItems[index].onTriggered();
-                            if (!menuItems[index].submenu)
+                            if (menuItems[index].submenu) {
+                                let submenuPos = mapToGlobal(x + width, y);
+                                let windowPos = menuHelper.mapToGlobal(0, 0);
+                                submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, index);
+                            }
+                            else
                                 closed();
                         }
                         onWheel: {
