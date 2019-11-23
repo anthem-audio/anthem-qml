@@ -21,6 +21,7 @@
 import QtQuick 2.13
 import QtGraphicalEffects 1.13
 import io.github.anthem.utilities.mousehelper 1.0
+import QtQuick.Shapes 1.13
 
 /*
  * Utility component that draws individual menus.
@@ -74,13 +75,15 @@ Rectangle {
             Rectangle {
                 width: parent.width
                 height: modelData.separator ? 1 : 21
+                property color contentColor: index == selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 65);
                 color: !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : "transparent"
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: -1
                     anchors.leftMargin: 7
                     anchors.left: parent.left
                     text: modelData.text ? qsTr(modelData.text) : ""
-                    color: index == selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 65);
+                    color: contentColor
                 }
 
                 Rectangle {
@@ -88,6 +91,34 @@ Rectangle {
                     anchors.leftMargin: 7
                     anchors.rightMargin: 7
                     color: modelData.separator ? Qt.rgba(1, 1, 1, 0.15) : "transparent"
+                }
+
+                Shape {
+                    id: arrow
+                    width: parent.height * 0.3
+                    visible: modelData.submenu !== undefined
+                    anchors {
+                        right: parent.right
+                        top: parent.top
+                        bottom: parent.bottom
+                        topMargin: parent.height * 0.35
+                        bottomMargin: parent.height * 0.35
+                        rightMargin: 7
+                    }
+
+                    ShapePath {
+                        strokeColor: contentColor
+                        strokeWidth: 1
+                        fillColor: "transparent"
+                        capStyle: ShapePath.RoundCap
+                        joinStyle: ShapePath.RoundJoin
+
+                        startX: arrow.width * 0.5
+                        startY: 0
+
+                        PathLine { x: arrow.width; y: arrow.height * 0.5; }
+                        PathLine { x: arrow.width * 0.5; y: arrow.height; }
+                    }
                 }
             }
         }
@@ -118,8 +149,10 @@ Rectangle {
                             selectedIndex = index;
                         }
                         onPressed: {
-                            menuItems[index].onTriggered();
-                            closed();
+                            if (menuItems[index].onTriggered)
+                                menuItems[index].onTriggered();
+                            if (!menuItems[index].submenu)
+                                closed();
                         }
                         onWheel: {
                             if (_ignoredItemsCount === menuItems.length)
