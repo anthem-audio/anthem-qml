@@ -24,7 +24,7 @@ Item {
     id: menuContainer
     property Component menuComponent
 
-    property int _idCounter: 0
+    property var _idCounter: 0
 
     property int openMenuCount: 0
 
@@ -34,7 +34,7 @@ Item {
 
         if (menuComponent.status === Component.Ready) {
             let options = {
-                id: toString(_idCounter),
+                id: _idCounter,
                 x: x,
                 y: y,
                 width: 100,
@@ -42,15 +42,18 @@ Item {
             }
 
             let menu = menuComponent.createObject(menuContainer, options);
-            menu.closed.connect(() => {
-                closeAfter(toString(_idCounter));
+            menu.closed.connect((id) => {
+                closeAll();
             });
             menu.openSubmenu.connect((x, y, items) => {
                 open(x, y, items);
-            })
+            });
+            menu.closeSubmenus.connect((id) => {
+                closeAfter(id);
+            });
             _idCounter++;
             openMenuCount++;
-            return toString(_idCounter - 1);
+            return _idCounter - 1;
         }
         else if (menuComponent.status === Component.Error) {
             console.error("Error loading component:", menuComponent.errorString());
@@ -58,13 +61,10 @@ Item {
         else {
             console.error("menuComponent.status is not either \"ready\" or \"error\". This may mean the component hasn't loaded yet. This shouldn't be possible.");
         }
-        return '-1';
+        return -1;
     }
 
     function closeAt(id) {
-        if (typeof id !== "string")
-            id = toString(id);
-
         for (let i = 1; i < children.length; i++) {
             if (children[i].id === id) {
                 children[i].destroy();
@@ -73,22 +73,17 @@ Item {
             }
         }
 
-        return '-1';
+        return -1;
     }
 
     function closeAfter(id) {
-        if (typeof id !== "string")
-            id = toString(id);
-
         let destroyStarted = false;
 
         for (let i = 1; i < children.length; i++) {
-
             if (children[i].id === id) {
                 destroyStarted = true;
             }
-
-            if (destroyStarted) {
+            else if (destroyStarted) {
                 children[i].destroy();
                 openMenuCount--;
             }

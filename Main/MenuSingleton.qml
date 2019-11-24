@@ -23,6 +23,8 @@ import QtGraphicalEffects 1.13
 import io.github.anthem.utilities.mousehelper 1.0
 import QtQuick.Shapes 1.13
 
+import "Global"
+
 /*
  * Utility component that draws individual menus.
  *
@@ -44,11 +46,15 @@ Rectangle {
     property var menuItems
     property int _ignoredItemsCount: menuItems.filter(item => item.separator).length
     property int selectedIndex: -1
+    property int attemptedSelectedIndex: -1
     property real hue: 162 / 360
-    property string id
+    property int id
     property bool isSubmenuOpen: false
     property bool blockIndexChange: false
-    signal closed()
+    property real currentSubmenuX
+    property real currentSubmenuY
+    signal closed(int id)
+    signal closeSubmenus(int id)
     signal openSubmenu(real x, real y, var items)
     color: Qt.rgba(0, 0, 0, 0.72)
     radius: 6
@@ -70,7 +76,17 @@ Rectangle {
         blockIndexChange = true;
         timer.setTimeout(() => {
             blockIndexChange = false;
-        }, 1000)
+            if (index !== attemptedSelectedIndex) {
+                selectedIndex = attemptedSelectedIndex;
+                closeSubmenus(id);
+                isSubmenuOpen = false;
+                if (menuItems[selectedIndex].submenu) {
+                    timer.setTimeout(() => {
+                        submenuClicked(currentSubmenuX, currentSubmenuY, selectedIndex);
+                    }, 500);
+                }
+            }
+        }, 1000);
         isSubmenuOpen = true;
         openSubmenu(x, y, menuItems[index].submenu);
     }
@@ -111,6 +127,8 @@ Rectangle {
                     anchors.verticalCenterOffset: -1
                     anchors.leftMargin: 7
                     anchors.left: parent.left
+                    font.family: Fonts.notoSansRegular.name
+                    font.pixelSize: 11
                     text: modelData.text ? qsTr(modelData.text) : ""
                     color: contentColor
                 }
@@ -157,8 +175,18 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onExited: {
+            // If the user moved to a submenu, make sure the
+            // blockIndexChange reset timer doesn't close their
+            // submenu when the timer runs out
+            attemptedSelectedIndex = selectedIndex;
+
             if (blockIndexChange)
                 return;
+            if (isSubmenuOpen) {
+                closeSubmenus(id);
+                isSubmenuOpen = false;
+            }
+
             selectedIndex = -1;
         }
 
@@ -177,15 +205,26 @@ Rectangle {
                         hoverEnabled: true
                         propagateComposedEvents: true
                         onEntered: {
+                            attemptedSelectedIndex = index;
+                            if (menuItems[index].submenu) {
+                                let submenuPos = mapToGlobal(x + width, y);
+                                let windowPos = menuHelper.mapToGlobal(0, 0);
+                                currentSubmenuX = submenuPos.x - windowPos.x;
+                                currentSubmenuY = submenuPos.y - windowPos.y;
+                            }
+
                             if (blockIndexChange)
                                 return;
+                            if (isSubmenuOpen) {
+                                closeSubmenus(id);
+                                isSubmenuOpen = false;
+                            }
+
                             selectedIndex = index;
                             if (menuItems[index].submenu) {
                                 timer.setTimeout(() => {
                                     if (index === selectedIndex) {
-                                        let submenuPos = mapToGlobal(x + width, y);
-                                        let windowPos = menuHelper.mapToGlobal(0, 0);
-                                        submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, index);
+                                        submenuClicked(currentSubmenuX, currentSubmenuY, index);
                                     }
                                 }, 500);
                             }
@@ -199,7 +238,7 @@ Rectangle {
                                 submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, index);
                             }
                             else
-                                closed();
+                                closed(id);
                         }
                         onWheel: {
                             if (_ignoredItemsCount === menuItems.length)
