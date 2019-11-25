@@ -49,8 +49,8 @@ Rectangle {
     property int attemptedSelectedIndex: -1
     property real hue: 162 / 360
     property int id
-    property bool isSubmenuOpen: false
-    property bool blockIndexChange: false
+    property int openedSubmenuIndex: -1
+    property bool blockSubmenuClose: false
     property real currentSubmenuX
     property real currentSubmenuY
     signal closed(int id)
@@ -71,15 +71,19 @@ Rectangle {
     }
 
     function submenuClicked(x, y, index) {
-        if (isSubmenuOpen)
+        if (openedSubmenuIndex > -1)
             return;
-        blockIndexChange = true;
+
+        // Prevent submenus from being closed when the mouse moves off the submenu item
+        blockSubmenuClose = true;
+
+        // 1-second timer to remove the block set above
         timer.setTimeout(() => {
-            blockIndexChange = false;
+            blockSubmenuClose = false;
             if (index !== attemptedSelectedIndex) {
                 selectedIndex = attemptedSelectedIndex;
                 closeSubmenus(id);
-                isSubmenuOpen = false;
+                openedSubmenuIndex = -1;
                 if (menuItems[selectedIndex].submenu) {
                     timer.setTimeout(() => {
                         submenuClicked(currentSubmenuX, currentSubmenuY, selectedIndex);
@@ -87,7 +91,7 @@ Rectangle {
                 }
             }
         }, 1000);
-        isSubmenuOpen = true;
+        openedSubmenuIndex = index;
         openSubmenu(x, y, menuItems[index].submenu);
     }
 
@@ -175,16 +179,21 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onExited: {
-            // If the user moved to a submenu, make sure the
-            // blockIndexChange reset timer doesn't close their
-            // submenu when the timer runs out
-            attemptedSelectedIndex = selectedIndex;
+            if (openedSubmenuIndex > -1) {
+                if (blockSubmenuClose) {
+                    selectedIndex = openedSubmenuIndex;
 
-            if (blockIndexChange)
-                return;
-            if (isSubmenuOpen) {
-                closeSubmenus(id);
-                isSubmenuOpen = false;
+                    // If the user moved to a submenu, make sure the
+                    // blockSubmenuClose reset timer doesn't close their
+                    // submenu when the timer runs out
+                    attemptedSelectedIndex = selectedIndex;
+
+                    return;
+                }
+                else {
+                    closeSubmenus(id);
+                    openedSubmenuIndex = -1;
+                }
             }
 
             selectedIndex = -1;
@@ -213,11 +222,9 @@ Rectangle {
                                 currentSubmenuY = submenuPos.y - windowPos.y;
                             }
 
-                            if (blockIndexChange)
-                                return;
-                            if (isSubmenuOpen) {
+                            if (openedSubmenuIndex > -1 && !blockSubmenuClose) {
                                 closeSubmenus(id);
-                                isSubmenuOpen = false;
+                                openedSubmenuIndex = -1;
                             }
 
                             selectedIndex = index;
