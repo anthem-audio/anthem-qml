@@ -88,6 +88,9 @@ Item {
                 openMenuCount--;
             }
         }
+
+        if (openMenuCount < 0)
+            openMenuCount = 0;
     }
 
     function closeAll() {
@@ -95,6 +98,9 @@ Item {
             children[i].destroy();
             openMenuCount--;
         }
+
+        if (openMenuCount < 0)
+            openMenuCount = 0;
     }
 
     function closeLast() {
