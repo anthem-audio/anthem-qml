@@ -28,7 +28,12 @@ Item {
 
     property int openMenuCount: 0
 
-    function open(x, y, menuItems) {
+    function open(x, y, menuItems, altX, altY, openLeft = false) {
+        if (altX === undefined)
+            altX = x;
+        if (altY === undefined)
+            altY = y;
+
         if (menuComponent === null)
             menuComponent = Qt.createComponent("MenuSingleton.qml");
 
@@ -37,16 +42,20 @@ Item {
                 id: _idCounter,
                 x: x,
                 y: y,
+                alternateX: altX,
+                alternateY: altY,
+                openLeft: openLeft,
                 width: 100,
-                menuItems: menuItems
+                menuItems: menuItems,
             }
 
             let menu = menuComponent.createObject(menuContainer, options);
             menu.closed.connect((id) => {
                 closeAll();
             });
-            menu.openSubmenu.connect((x, y, items) => {
-                open(x, y, items);
+            menu.openSubmenu.connect((x, y, altX, altY, openLeft, items) => {
+                                         console.log(openLeft)
+                open(x, y, items, altX, altY, openLeft);
             });
             menu.closeSubmenus.connect((id) => {
                 closeAfter(id);

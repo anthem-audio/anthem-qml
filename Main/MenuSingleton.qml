@@ -40,6 +40,9 @@ import "Global"
  * not work, so the MouseAreas must be positioned in a
  * separate component. This is not optimal, but it
  * seems to be unavoidable.
+ *
+ * This code is bad and I am so very sorry to whoever
+ * has to read it in the future.
  */
 
 Rectangle {
@@ -53,12 +56,67 @@ Rectangle {
     property bool blockSubmenuClose: false
     property real currentSubmenuX
     property real currentSubmenuY
+    property real currentSubmenuAltX
+    property real currentSubmenuAltY
+    property real alternateX
+    property real alternateY
+    property bool openLeft
     signal closed(int id)
     signal closeSubmenus(int id)
-    signal openSubmenu(real x, real y, var items)
+    signal openSubmenu(real x, real y, real altX, real altY, bool openLeft, var items)
     color: Qt.rgba(0, 0, 0, 0.72)
     radius: 6
     height: menuContent.height
+
+    function moveOnScreen() {
+        let windowTopLeft = mapToGlobal(parent.x, parent.y);
+        let windowBottomRight = mapToGlobal(parent.x + parent.width, parent.y + parent.height);
+        let topLeft = mapToGlobal(x, y);
+        let bottomRight = mapToGlobal(x + width, y + height);
+
+        let distanceFromLeft = topLeft.x - windowTopLeft.x;
+        let distanceFromTop = topLeft.y - windowTopLeft.y;
+        let distanceFromRight = windowBottomRight.x - bottomRight.x;
+        let distanceFromBottom = windowBottomRight.y - bottomRight.y;
+
+        if (distanceFromLeft < 0)
+            x += -distanceFromLeft;
+        if (distanceFromTop < 0)
+            y += -distanceFromTop;
+        if (distanceFromRight < 0)
+            x += distanceFromRight;
+        if (distanceFromBottom < 0)
+            y += distanceFromBottom;
+    }
+
+    Component.onCompleted: {
+        let windowTopLeft = mapToGlobal(parent.x, parent.y);
+        let windowBottomRight = mapToGlobal(parent.x + parent.width, parent.y + parent.height);
+        let bottomRight = mapToGlobal(x + width, y + height);
+
+
+        if (openLeft || (windowBottomRight.x - bottomRight.x < 0)) {
+            // https://stackoverflow.com/a/25910841/8166701
+            [x, alternateX] = [alternateX, x];
+            [y, alternateY] = [alternateY, y];
+            openLeft = true;
+        }
+
+        let topLeft = mapToGlobal(x, y);
+
+        if (topLeft.x - windowTopLeft.x < 0) {
+            // https://stackoverflow.com/a/25910841/8166701
+            [x, alternateX] = [alternateX, x];
+            [y, alternateY] = [alternateY, y];
+            openLeft = false;
+        }
+
+        if (openLeft) {
+            x -= width;
+        }
+
+        moveOnScreen();
+    }
 
     MouseHelper {
         id: mouseHelper
@@ -70,7 +128,7 @@ Rectangle {
         mouseHelper.setCursorPosition(newMousePos.x, newMousePos.y);
     }
 
-    function submenuClicked(x, y, index) {
+    function submenuClicked(x, y, altX, altY, index) {
         if (openedSubmenuIndex > -1)
             return;
 
@@ -86,13 +144,13 @@ Rectangle {
                 openedSubmenuIndex = -1;
                 if (menuItems[selectedIndex].submenu) {
                     timer.setTimeout(() => {
-                        submenuClicked(currentSubmenuX, currentSubmenuY, selectedIndex);
+                        submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, selectedIndex);
                     }, 500);
                 }
             }
         }, 1000);
         openedSubmenuIndex = index;
-        openSubmenu(x, y, menuItems[index].submenu);
+        openSubmenu(x, y, altX, altY, openLeft, menuItems[index].submenu);
     }
 
     // https://stackoverflow.com/a/50224584/8166701
@@ -217,9 +275,12 @@ Rectangle {
                             attemptedSelectedIndex = index;
                             if (menuItems[index].submenu) {
                                 let submenuPos = mapToGlobal(x + width, y);
+                                let menuPos = mapToGlobal(x, y);
                                 let windowPos = menuHelper.mapToGlobal(0, 0);
                                 currentSubmenuX = submenuPos.x - windowPos.x;
                                 currentSubmenuY = submenuPos.y - windowPos.y;
+                                currentSubmenuAltX = menuPos.x - windowPos.x;
+                                currentSubmenuAltY = menuPos.y - windowPos.y;
                             }
 
                             if (openedSubmenuIndex > -1 && !blockSubmenuClose) {
@@ -231,7 +292,7 @@ Rectangle {
                             if (menuItems[index].submenu) {
                                 timer.setTimeout(() => {
                                     if (index === selectedIndex) {
-                                        submenuClicked(currentSubmenuX, currentSubmenuY, index);
+                                        submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, index);
                                     }
                                 }, 500);
                             }
@@ -241,8 +302,9 @@ Rectangle {
                                 menuItems[index].onTriggered();
                             if (menuItems[index].submenu) {
                                 let submenuPos = mapToGlobal(x + width, y);
+                                let menuPos = mapToGlobal(x, y);
                                 let windowPos = menuHelper.mapToGlobal(0, 0);
-                                submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, index);
+                                submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, menuPos.x - windowPos.x, menuPos.y - windowPos.y, index);
                             }
                             else
                                 closed(id);
