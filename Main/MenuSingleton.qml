@@ -182,8 +182,18 @@ Rectangle {
             Rectangle {
                 width: parent.width
                 height: modelData.separator ? 1 : 21
-                property color contentColor: index == selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 65);
-                color: !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : "transparent"
+                property color contentColor: {
+                    if (modelData.separator) {
+                        return "transparent";
+                    }
+                    else if (modelData.disabled) {
+                        return Qt.rgba(1, 1, 1, 0.25);
+                    }
+                    else {
+                        return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.65);
+                    }
+                }
+                color: !modelData.separator && !modelData.disabled && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : "transparent"
                 Text {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: -1
@@ -199,7 +209,14 @@ Rectangle {
                     anchors.fill: parent
                     anchors.leftMargin: 7
                     anchors.rightMargin: 7
-                    color: modelData.separator ? Qt.rgba(1, 1, 1, 0.15) : "transparent"
+                    visible: modelData.separator ? true : false
+                    color: Qt.rgba(1, 1, 1, 0.15)
+                }
+
+                Rectangle {
+                    anchors.fill: parent
+                    visible: modelData.disabled ? true : false
+                    color: Qt.rgba(1, 1, 1, 0.25)
                 }
 
                 Shape {
@@ -272,7 +289,18 @@ Rectangle {
                         hoverEnabled: true
                         propagateComposedEvents: true
                         onEntered: {
+                            selectedIndex = index;
                             attemptedSelectedIndex = index;
+
+                            if (openedSubmenuIndex > -1 && !blockSubmenuClose) {
+                                closeSubmenus(id);
+                                openedSubmenuIndex = -1;
+                            }
+
+                            if (modelData.separator || modelData.disabled) {
+                                return;
+                            }
+
                             if (menuItems[index].submenu) {
                                 let submenuPos = mapToGlobal(x + width, y);
                                 let menuPos = mapToGlobal(x, y);
@@ -283,12 +311,6 @@ Rectangle {
                                 currentSubmenuAltY = menuPos.y - windowPos.y;
                             }
 
-                            if (openedSubmenuIndex > -1 && !blockSubmenuClose) {
-                                closeSubmenus(id);
-                                openedSubmenuIndex = -1;
-                            }
-
-                            selectedIndex = index;
                             if (menuItems[index].submenu) {
                                 timer.setTimeout(() => {
                                     if (index === selectedIndex) {
@@ -298,6 +320,10 @@ Rectangle {
                             }
                         }
                         onPressed: {
+                            if (modelData.separator || modelData.disabled) {
+                                return;
+                            }
+
                             if (menuItems[index].onTriggered)
                                 menuItems[index].onTriggered();
                             if (menuItems[index].submenu) {
@@ -316,10 +342,13 @@ Rectangle {
                             let step = wheel.angleDelta.y < 0 ? -1 : 1;
                             let tempSelectedIndex = selectedIndex;
                             tempSelectedIndex += step;
-                            while (menuItems[tempSelectedIndex] !== undefined && menuItems[tempSelectedIndex].separator !== undefined) {
-                                tempSelectedIndex += step;
-                            }
+
                             tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+                            while (menuItems[tempSelectedIndex] !== undefined && (menuItems[tempSelectedIndex].separator || menuItems[tempSelectedIndex].disabled)) {
+                                tempSelectedIndex += step;
+                                tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+                            }
+
                             selectedIndex = tempSelectedIndex;
                             moveMouseTo(selectedIndex);
                         }
