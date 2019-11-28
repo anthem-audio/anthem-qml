@@ -254,6 +254,8 @@ Rectangle {
         anchors.fill: parent
         hoverEnabled: true
         onExited: {
+            Anthem.displayStatusMessage('');
+
             if (openedSubmenuIndex > -1) {
                 if (blockSubmenuClose) {
                     selectedIndex = openedSubmenuIndex;
@@ -291,6 +293,8 @@ Rectangle {
                         onEntered: {
                             selectedIndex = index;
                             attemptedSelectedIndex = index;
+
+                            Anthem.displayStatusMessage(modelData.hoverText ? modelData.hoverText : '');
 
                             if (openedSubmenuIndex > -1 && !blockSubmenuClose) {
                                 closeSubmenus(id);

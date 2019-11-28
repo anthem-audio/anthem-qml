@@ -74,12 +74,14 @@ Panel {
                 menuItems: [
                     {
                         text: 'New project',
+                        hoverText: 'Start a new project',
                         onTriggered: () => {
                             Anthem.newProject();
                         }
                     },
                     {
                         text: 'Open...',
+                        hoverText: 'Open an existing project',
                         onTriggered: () => {
                             loadFileDialog.open();
                         }
@@ -89,12 +91,14 @@ Panel {
                     },
                     {
                         text: 'Save',
+                        hoverText: 'Save this project',
                         onTriggered: () => {
                             save();
                         }
                     },
                     {
                         text: 'Save as...',
+                        hoverText: 'Save this project to a different file',
                         onTriggered: () => {
                             saveFileDialog.open();
                         }
@@ -104,6 +108,7 @@ Panel {
                     },
                     {
                         text: 'Exit',
+                        hoverText: 'Quit Anthem',
                         onTriggered: () => {
                             closeRequested();
                         }
