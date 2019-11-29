@@ -181,13 +181,13 @@ Rectangle {
 
             Rectangle {
                 width: parent.width
-                height: modelData.separator ? 1 : 21
+                height: modelData.separator ? 7 : 21
                 property color contentColor: {
                     if (modelData.separator) {
                         return "transparent";
                     }
                     else if (modelData.disabled) {
-                        return Qt.rgba(1, 1, 1, 0.25);
+                        return Qt.rgba(1, 1, 1, 0.45);
                     }
                     else {
                         return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.65);
@@ -206,9 +206,15 @@ Rectangle {
                 }
 
                 Rectangle {
-                    anchors.fill: parent
-                    anchors.leftMargin: 7
-                    anchors.rightMargin: 7
+                    height: 1
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        leftMargin: 7
+                        rightMargin: 7
+                        verticalCenter: parent.verticalCenter
+                    }
+
                     visible: modelData.separator ? true : false
                     color: Qt.rgba(1, 1, 1, 0.15)
                 }
@@ -216,7 +222,7 @@ Rectangle {
                 Rectangle {
                     anchors.fill: parent
                     visible: modelData.disabled ? true : false
-                    color: Qt.rgba(1, 1, 1, 0.25)
+                    color: Qt.rgba(1, 1, 1, 0.3)
                 }
 
                 Shape {
@@ -285,7 +291,7 @@ Rectangle {
 
                 Item {
                     width: parent.width
-                    height: modelData.separator ? 1 : 21
+                    height: modelData.separator ? 7 : 21
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true
