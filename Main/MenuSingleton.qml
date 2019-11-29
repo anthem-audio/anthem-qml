@@ -45,7 +45,7 @@ import "Global"
  * has to read it in the future.
  */
 
-Rectangle {
+Item {
     property var menuItems
     property int _ignoredItemsCount: menuItems.filter(item => item.separator).length
     property int selectedIndex: -1
@@ -61,11 +61,30 @@ Rectangle {
     property real alternateX
     property real alternateY
     property bool openLeft
+    property bool autoWidth
+    property real minWidth
+    property real maxWidth
+    property real _biggestItemWidth: -1
     signal closed(int id)
     signal closeSubmenus(int id)
-    signal openSubmenu(real x, real y, real altX, real altY, bool openLeft, var items)
-    color: Qt.rgba(0, 0, 0, 0.72)
-    radius: 6
+    signal openSubmenu(real x, real y, var items, var props)
+
+    // This really shouldn't be necessary. Belive me, I
+    // tried bindings. It must be that bindings are
+    // overwritten when creating a component with
+    // (component).createObject(), even if you assign
+    // undefined to them.
+    on_BiggestItemWidthChanged: {
+        if (_biggestItemWidth + 14 < minWidth)
+            if (width < minWidth)
+                width = minWidth;
+        else if (_biggestItemWidth + 14 > maxWidth)
+            if (width < maxWidth)
+                width = maxWidth;
+        else
+            width = _biggestItemWidth + 14;
+    }
+
     height: menuContent.height
 
     function moveOnScreen() {
@@ -150,7 +169,7 @@ Rectangle {
             }
         }, 1000);
         openedSubmenuIndex = index;
-        openSubmenu(x, y, altX, altY, openLeft, menuItems[index].submenu);
+        openSubmenu(x, y, menuItems[index].submenu, {altX: altX, altY: altY, openLeft: openLeft, menuWidth: width, autoWidth: autoWidth, minWidth: minWidth, maxWidth: maxWidth});
     }
 
     // https://stackoverflow.com/a/50224584/8166701
@@ -187,14 +206,27 @@ Rectangle {
                         return "transparent";
                     }
                     else if (modelData.disabled) {
-                        return Qt.rgba(1, 1, 1, 0.45);
+                        return Qt.rgba(1, 1, 1, 0.35);
                     }
                     else {
                         return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.65);
                     }
                 }
-                color: !modelData.separator && !modelData.disabled && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : "transparent"
+                color: {
+                    if (modelData.disabled) {
+                        return Qt.rgba(0, 0, 0, 0.55);
+                    }
+
+                    return !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : Qt.rgba(0, 0, 0, 0.72)
+                }
                 Text {
+                    onWidthChanged: {
+                        if (width > _biggestItemWidth)
+                            _biggestItemWidth = width + (modelData.submenu ? 9 : 0);
+                    }
+
+                    elide: Text.ElideMiddle
+
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: -1
                     anchors.leftMargin: 7
@@ -217,12 +249,6 @@ Rectangle {
 
                     visible: modelData.separator ? true : false
                     color: Qt.rgba(1, 1, 1, 0.15)
-                }
-
-                Rectangle {
-                    anchors.fill: parent
-                    visible: modelData.disabled ? true : false
-                    color: Qt.rgba(1, 1, 1, 0.3)
                 }
 
                 Shape {
@@ -292,6 +318,7 @@ Rectangle {
                 Item {
                     width: parent.width
                     height: modelData.separator ? 7 : 21
+
                     MouseArea {
                         anchors.fill: parent
                         hoverEnabled: true

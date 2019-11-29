@@ -28,17 +28,29 @@ import QtQuick 2.13
 
 Item {
     id: menu
-    property int submenuDepth: 0
 
     property var menuItems
     visible: false
     property real menuX
     property real menuY
+    property bool autoWidth: true
+    property real menuWidth
+    property real minWidth
+    property real maxWidth
 
     function open() {
         let mouseGlobal = mapToGlobal(menuX, menuY);
         let windowGlobal = menuHelper.mapToGlobal(0, 0);
 
-        menuHelper.open(mouseGlobal.x - windowGlobal.x, mouseGlobal.y - windowGlobal.y, menuItems);
+        menuHelper.open(
+                    mouseGlobal.x - windowGlobal.x,
+                    mouseGlobal.y - windowGlobal.y,
+                    menuItems,
+                    {
+                        autoWidth: autoWidth,
+                        menuWidth: menuWidth,
+                        minWidth: minWidth,
+                        maxWidth: maxWidth
+                    });
     }
 }

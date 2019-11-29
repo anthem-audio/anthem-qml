@@ -124,7 +124,7 @@ Panel {
             anchors.left: btnFile.right
             anchors.leftMargin: 20
             width: parent.height
-            hoverMessage: "Save project"
+            hoverMessage: "Save this project"
 
             imageSource: "Images/Save.svg"
             imageWidth: 16

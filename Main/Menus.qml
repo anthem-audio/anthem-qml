@@ -28,11 +28,24 @@ Item {
 
     property int openMenuCount: 0
 
-    function open(x, y, menuItems, altX, altY, openLeft = false) {
-        if (altX === undefined)
-            altX = x;
-        if (altY === undefined)
-            altY = y;
+    /*
+        Below is the expected structure for props.
+        All keys are optional.
+
+        {
+            altX: real,
+            altY: real,
+            openLeft: bool,
+            autoWidth: bool,
+            minWidth: real,
+            maxWidth: real
+        }
+    */
+    function open(x, y, menuItems, props) {
+        if (props.altX === undefined)
+            props.altX = x;
+        if (props.altY === undefined)
+            props.altY = y;
 
         if (menuComponent === null)
             menuComponent = Qt.createComponent("MenuSingleton.qml");
@@ -42,10 +55,13 @@ Item {
                 id: _idCounter,
                 x: x,
                 y: y,
-                alternateX: altX,
-                alternateY: altY,
-                openLeft: openLeft,
-                width: 100,
+                alternateX: props.altX,
+                alternateY: props.altY,
+                openLeft: props.openLeft,
+                width: props.menuWidth,
+                autoWidth: props.autoWidth,
+                minWidth: props.minWidth,
+                maxWidth: props.maxWidth,
                 menuItems: menuItems,
             }
 
@@ -53,9 +69,8 @@ Item {
             menu.closed.connect((id) => {
                 closeAll();
             });
-            menu.openSubmenu.connect((x, y, altX, altY, openLeft, items) => {
-                                         console.log(openLeft)
-                open(x, y, items, altX, altY, openLeft);
+            menu.openSubmenu.connect((x, y, items, props) => {
+                open(x, y, items, props);
             });
             menu.closeSubmenus.connect((id) => {
                 closeAfter(id);
