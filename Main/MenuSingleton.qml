@@ -62,8 +62,8 @@ Item {
     property real alternateY
     property bool openLeft
     property bool autoWidth
-    property real minWidth
-    property real maxWidth
+    property var minWidth
+    property var maxWidth
     property real _biggestItemWidth: -1
     signal closed(int id)
     signal closeSubmenus(int id)
@@ -75,14 +75,19 @@ Item {
     // (component).createObject(), even if you assign
     // undefined to them.
     on_BiggestItemWidthChanged: {
-        if (_biggestItemWidth + 14 < minWidth)
-            if (width < minWidth)
+        if (minWidth && _biggestItemWidth < minWidth) {
+            if (width !== minWidth) {
                 width = minWidth;
-        else if (_biggestItemWidth + 14 > maxWidth)
-            if (width < maxWidth)
+            }
+        }
+        else if (maxWidth && _biggestItemWidth > maxWidth) {
+            if (width !== maxWidth) {
                 width = maxWidth;
-        else
-            width = _biggestItemWidth + 14;
+            }
+        }
+        else {
+            width = _biggestItemWidth;
+        }
     }
 
     height: menuContent.height
@@ -220,11 +225,7 @@ Item {
                     return !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : Qt.rgba(0, 0, 0, 0.72)
                 }
                 Text {
-                    onWidthChanged: {
-                        if (width > _biggestItemWidth)
-                            _biggestItemWidth = width + (modelData.submenu ? 9 : 0);
-                    }
-
+                    width: parent.width - 14 - (menuItems[index].submenu ? 10 : 0)
                     elide: Text.ElideMiddle
 
                     anchors.verticalCenter: parent.verticalCenter
@@ -235,6 +236,27 @@ Item {
                     font.pixelSize: 11
                     text: modelData.text ? qsTr(modelData.text) : ""
                     color: contentColor
+                }
+
+                // This is used for calculating what the text
+                // width would be if there were no max width
+                Text {
+                    visible: false
+
+                    onWidthChanged: {
+                        let menuItemWidth = width + 14 + (menuItems[index].submenu ? 10 : 0);
+                        if (menuItemWidth > _biggestItemWidth) {
+                            _biggestItemWidth = menuItemWidth;
+                        }
+                    }
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: -1
+                    anchors.leftMargin: 7
+                    anchors.left: parent.left
+                    font.family: Fonts.notoSansRegular.name
+                    font.pixelSize: 11
+                    text: modelData.text ? qsTr(modelData.text) : ""
                 }
 
                 Rectangle {

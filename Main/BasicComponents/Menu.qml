@@ -34,9 +34,9 @@ Item {
     property real menuX
     property real menuY
     property bool autoWidth: true
-    property real menuWidth
-    property real minWidth
-    property real maxWidth
+    property var menuWidth
+    property var minWidth
+    property var maxWidth
 
     function open() {
         let mouseGlobal = mapToGlobal(menuX, menuY);
