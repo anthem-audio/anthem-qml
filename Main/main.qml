@@ -173,6 +173,21 @@ Window {
         onActivated: Anthem.redo()
     }
 
+    Shortcut {
+        sequence: "Ctrl+N"
+        onActivated: Anthem.newProject()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+O"
+        onActivated: loadFileDialog.open()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+S"
+        onActivated: save()
+    }
+
 //    Image {
 //        id: asdf
 //        source: "Images/pretty.jpg"

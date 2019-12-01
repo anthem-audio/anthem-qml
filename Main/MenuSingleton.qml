@@ -156,7 +156,8 @@ Item {
         if (openedSubmenuIndex > -1)
             return;
 
-        // Prevent submenus from being closed when the mouse moves off the submenu item
+        // Prevent submenus from being closed when the mouse
+        // moves off the submenu item
         blockSubmenuClose = true;
 
         // 1-second timer to remove the block set above
@@ -214,9 +215,22 @@ Item {
                         return Qt.rgba(1, 1, 1, 0.35);
                     }
                     else {
-                        return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.65);
+                        return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.9) : Qt.rgba(1, 1, 1, 0.65);
                     }
                 }
+
+                property color secondaryColor: {
+                    if (modelData.separator) {
+                        return "transparent";
+                    }
+                    else if (modelData.disabled) {
+                        return Qt.rgba(1, 1, 1, 0.25);
+                    }
+                    else {
+                        return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.45);
+                    }
+                }
+
                 color: {
                     if (modelData.disabled) {
                         return Qt.rgba(0, 0, 0, 0.55);
@@ -225,13 +239,15 @@ Item {
                     return !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : Qt.rgba(0, 0, 0, 0.72)
                 }
                 Text {
-                    width: parent.width - 14 - (menuItems[index].submenu ? 10 : 0)
+//                    width: parent.width - 21 - shortcutText.width - (menuItems[index].submenu ? 10 : 0)
                     elide: Text.ElideMiddle
 
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: -1
-                    anchors.leftMargin: 7
                     anchors.left: parent.left
+                    anchors.leftMargin: 7
+                    anchors.right: shortcutText.left
+                    anchors.rightMargin: modelData.shortcut ? 14 : 0
                     font.family: Fonts.notoSansRegular.name
                     font.pixelSize: 11
                     text: modelData.text ? qsTr(modelData.text) : ""
@@ -244,7 +260,7 @@ Item {
                     visible: false
 
                     onWidthChanged: {
-                        let menuItemWidth = width + 14 + (menuItems[index].submenu ? 10 : 0);
+                        let menuItemWidth = width + 14 + shortcutText.width + (modelData.shortcut ? 14 : 0) + (menuItems[index].submenu ? 14 : 0);
                         if (menuItemWidth > _biggestItemWidth) {
                             _biggestItemWidth = menuItemWidth;
                         }
@@ -257,6 +273,18 @@ Item {
                     font.family: Fonts.notoSansRegular.name
                     font.pixelSize: 11
                     text: modelData.text ? qsTr(modelData.text) : ""
+                }
+
+                Text {
+                    id: shortcutText
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.verticalCenterOffset: 0
+                    anchors.rightMargin: modelData.submenu ? 7 : 0
+                    anchors.right: arrow.left
+                    font.family: Fonts.notoSansRegular.name
+                    font.pixelSize: 9
+                    text: modelData.shortcut ? modelData.shortcut : ""
+                    color: secondaryColor
                 }
 
                 Rectangle {
@@ -275,7 +303,7 @@ Item {
 
                 Shape {
                     id: arrow
-                    width: parent.height * 0.3
+                    width: modelData.submenu ? parent.height * 0.3 : 0
                     visible: modelData.submenu !== undefined
                     anchors {
                         right: parent.right

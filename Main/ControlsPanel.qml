@@ -74,6 +74,7 @@ Panel {
                 menuItems: [
                     {
                         text: 'New project',
+                        shortcut: 'Ctrl+N',
                         hoverText: 'Start a new project',
                         onTriggered: () => {
                             Anthem.newProject();
@@ -81,6 +82,7 @@ Panel {
                     },
                     {
                         text: 'Open...',
+                        shortcut: 'Ctrl+O',
                         hoverText: 'Open an existing project',
                         onTriggered: () => {
                             loadFileDialog.open();
@@ -91,6 +93,7 @@ Panel {
                     },
                     {
                         text: 'Save',
+                        shortcut: 'Ctrl+S',
                         hoverText: 'Save this project',
                         onTriggered: () => {
                             save();
