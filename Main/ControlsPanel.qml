@@ -66,6 +66,11 @@ Panel {
 
             onPress: fileMenu.open()
 
+            Shortcut {
+                sequence: "alt+f"
+                onActivated: fileMenu.open()
+            }
+
             Menu {
                 id: fileMenu
                 menuX: 0
