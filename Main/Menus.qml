@@ -66,7 +66,7 @@ Item {
             }
 
             let menu = menuComponent.createObject(menuContainer, options);
-            menu.closed.connect((id) => {
+            menu.closeAll.connect(() => {
                 closeAll();
             });
             menu.openSubmenu.connect((x, y, items, props) => {
@@ -74,6 +74,10 @@ Item {
             });
             menu.closeSubmenus.connect((id) => {
                 closeAfter(id);
+            });
+            menu.closeThis.connect((id) => {
+                closeAfter(id);
+                closeAt(id);
             });
             _idCounter++;
             openMenuCount++;
@@ -89,12 +93,18 @@ Item {
     }
 
     function closeAt(id) {
+        let previousChild = undefined;
         for (let i = 1; i < children.length; i++) {
             if (children[i].id === id) {
                 children[i].destroy();
                 openMenuCount--;
+                if (previousChild !== undefined) {
+                    previousChild.openedSubmenuIndex = -1;
+                }
+
                 return id;
             }
+            previousChild = children[i]
         }
 
         return -1;
@@ -102,14 +112,21 @@ Item {
 
     function closeAfter(id) {
         let destroyStarted = false;
+        let previousChild = undefined;
 
         for (let i = 1; i < children.length; i++) {
             if (children[i].id === id) {
                 destroyStarted = true;
+                if (previousChild !== undefined) {
+                    previousChild.openedSubmenuIndex = -1;
+                }
             }
             else if (destroyStarted) {
                 children[i].destroy();
                 openMenuCount--;
+            }
+            else {
+                previousChild = children[i]
             }
         }
 
@@ -130,12 +147,6 @@ Item {
     function closeLast() {
         children[children.length - 1].destroy();
         openMenuCount--;
-    }
-
-    focus: openMenuCount > 0
-
-    Keys.onEscapePressed: {
-        closeLast();
     }
 
     MouseArea {

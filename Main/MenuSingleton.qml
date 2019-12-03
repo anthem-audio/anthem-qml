@@ -65,8 +65,10 @@ Item {
     property var minWidth
     property var maxWidth
     property real _biggestItemWidth: -1
-    signal closed(int id)
+    property var _functions: ({})
+    signal closeAll()
     signal closeSubmenus(int id)
+    signal closeThis(int id)
     signal openSubmenu(real x, real y, var items, var props)
 
     // This really shouldn't be necessary. Belive me, I
@@ -113,11 +115,44 @@ Item {
             y += distanceFromBottom;
     }
 
+    onMenuItemsChanged: {
+        // Process underline shortcut indicators
+        for (let i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].text === undefined)
+                continue;
+            let text = menuItems[i].text;
+            let underscoreIndex = text.search('_');
+            if (underscoreIndex < 1)
+                continue;
+            if (text[underscoreIndex - 1] === '\\') {
+                menuItems[i].text = text.substring(0, underscoreIndex - 1) + text.substring(underscoreIndex);
+                continue;
+            }
+            menuItems[i].shortcutChar = text[underscoreIndex - 1].toLowerCase();
+            menuItems[i].text = text.substring(0, underscoreIndex - 1) + '<u>' + text[underscoreIndex - 1] + '</u>' + text.substring(underscoreIndex + 1);
+            _functions[menuItems[i].shortcutChar] = menuItems[i].onTriggered;
+        }
+    }
+
+    focus: openedSubmenuIndex < 0
+
+    Keys.onPressed: {
+        if (_functions[event.text.toLowerCase()]) {
+            _functions[event.text.toLowerCase()]();
+            closeAll();
+        }
+    }
+
+    Keys.onEscapePressed: {
+        closeThis(id);
+    }
+
     Component.onCompleted: {
+        // Reposition menu so it's not off screen, if possible
+
         let windowTopLeft = mapToGlobal(parent.x, parent.y);
         let windowBottomRight = mapToGlobal(parent.x + parent.width, parent.y + parent.height);
         let bottomRight = mapToGlobal(x + width, y + height);
-
 
         if (openLeft || (windowBottomRight.x - bottomRight.x < 0)) {
             // https://stackoverflow.com/a/25910841/8166701
@@ -420,7 +455,7 @@ Item {
                                 submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, menuPos.x - windowPos.x, menuPos.y - windowPos.y, index);
                             }
                             else
-                                closed(id);
+                                closeAll();
                         }
                         onWheel: {
                             if (_ignoredItemsCount === menuItems.length)

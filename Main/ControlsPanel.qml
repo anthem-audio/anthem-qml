@@ -73,7 +73,7 @@ Panel {
 
                 menuItems: [
                     {
-                        text: 'New project',
+                        text: 'N_ew project',
                         shortcut: 'Ctrl+N',
                         hoverText: 'Start a new project',
                         onTriggered: () => {
@@ -81,7 +81,7 @@ Panel {
                         }
                     },
                     {
-                        text: 'Open...',
+                        text: 'O_pen...',
                         shortcut: 'Ctrl+O',
                         hoverText: 'Open an existing project',
                         onTriggered: () => {
@@ -92,7 +92,7 @@ Panel {
                         separator: true
                     },
                     {
-                        text: 'Save',
+                        text: 'S_ave',
                         shortcut: 'Ctrl+S',
                         hoverText: 'Save this project',
                         onTriggered: () => {
@@ -100,7 +100,7 @@ Panel {
                         }
                     },
                     {
-                        text: 'Save as...',
+                        text: 'Save a_s...',
                         hoverText: 'Save this project to a different file',
                         onTriggered: () => {
                             saveFileDialog.open();
@@ -110,7 +110,7 @@ Panel {
                         separator: true
                     },
                     {
-                        text: 'Exit',
+                        text: 'Ex_it',
                         hoverText: 'Quit Anthem',
                         onTriggered: () => {
                             closeRequested();
