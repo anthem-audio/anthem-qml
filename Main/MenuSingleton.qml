@@ -65,7 +65,7 @@ Item {
     property var minWidth
     property var maxWidth
     property real _biggestItemWidth: -1
-    property var _functions: ({})
+    property var _keymap
     signal closeAll()
     signal closeSubmenus(int id)
     signal closeThis(int id)
@@ -116,6 +116,10 @@ Item {
     }
 
     onMenuItemsChanged: {
+        if (_keymap === undefined) {
+            _keymap = {};
+        }
+
         // Process underline shortcut indicators
         for (let i = 0; i < menuItems.length; i++) {
             if (menuItems[i].text === undefined)
@@ -130,15 +134,15 @@ Item {
             }
             menuItems[i].shortcutChar = text[underscoreIndex - 1].toLowerCase();
             menuItems[i].text = text.substring(0, underscoreIndex - 1) + '<u>' + text[underscoreIndex - 1] + '</u>' + text.substring(underscoreIndex + 1);
-            _functions[menuItems[i].shortcutChar] = menuItems[i].onTriggered;
         }
     }
 
     focus: openedSubmenuIndex < 0
 
     Keys.onPressed: {
-        if (_functions[event.text.toLowerCase()]) {
-            _functions[event.text.toLowerCase()]();
+        let chr = event.text.toLowerCase();
+        if (_keymap[chr] !== undefined) {
+            menuItems[_keymap[chr]].onTriggered();
             closeAll();
         }
     }
@@ -175,6 +179,12 @@ Item {
         }
 
         moveOnScreen();
+
+        // Set up keymap
+        for (let i = 0; i < menuItems.length; i++) {
+            if (menuItems[i].shortcutChar)
+                _keymap[menuItems[i].shortcutChar] = i;
+        }
     }
 
     MouseHelper {
