@@ -1,3 +1,23 @@
+/*
+    Copyright (C) 2019 Joshua Wade
+
+    This file is part of Anthem.
+
+    Anthem is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    Anthem is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Anthem. If not, see
+                        <https://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.13
 import QtQuick.Shapes 1.13
 
@@ -13,7 +33,7 @@ Column {
     Repeater {
         id: repeater
         anchors.fill: parent
-        model: menuItems
+        model: columnItems
 
         Rectangle {
             width: parent.width
@@ -50,7 +70,7 @@ Column {
                 return !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : Qt.rgba(0, 0, 0, 0.72)
             }
             Text {
-//                    width: parent.width - 21 - shortcutText.width - (menuItems[index].submenu ? 10 : 0)
+//                    width: parent.width - 21 - shortcutText.width - (columnItems[index].submenu ? 10 : 0)
                 elide: Text.ElideMiddle
 
                 anchors.verticalCenter: parent.verticalCenter
@@ -71,7 +91,7 @@ Column {
                 visible: false
 
                 onWidthChanged: {
-                    let menuItemWidth = width + 14 + shortcutText.width + (modelData.shortcut ? 14 : 0) + (menuItems[index].submenu ? 14 : 0);
+                    let menuItemWidth = width + 14 + shortcutText.width + (modelData.shortcut ? 14 : 0) + (columnItems[index].submenu ? 14 : 0);
                     if (menuItemWidth > _biggestItemWidth) {
                         _biggestItemWidth = menuItemWidth;
                     }

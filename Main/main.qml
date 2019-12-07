@@ -25,6 +25,7 @@ import QtGraphicalEffects 1.13
 import QtQuick.Dialogs 1.2
 import "BasicComponents"
 import "Dialogs"
+import "Menus"
 import "Global"
 
 Window {

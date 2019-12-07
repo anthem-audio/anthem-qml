@@ -24,6 +24,7 @@ import QtQuick.Dialogs 1.2
 
 import "BasicComponents"
 import "Global"
+import "Menus"
 
 Panel {
     height: 44

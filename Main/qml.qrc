@@ -54,5 +54,6 @@
         <file>Menus/Menus.qml</file>
         <file>Menus/MenuSingleton.qml</file>
         <file>Menus/MenuColumn.qml</file>
+        <file>Menus/MenuColumnMouseAreas.qml</file>
     </qresource>
 </RCC>

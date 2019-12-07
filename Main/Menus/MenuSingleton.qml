@@ -271,90 +271,9 @@ Item {
             selectedIndex = -1;
         }
 
-        Column {
+        MenuColumnMouseAreas {
             id: menuMouseAreas
-            anchors.fill: parent
-            Repeater {
-                anchors.fill: parent
-                model: menuItems
-
-                Item {
-                    width: parent.width
-                    height: modelData.separator ? 7 : 21
-
-                    MouseArea {
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        propagateComposedEvents: true
-                        onEntered: {
-                            selectedIndex = index;
-                            attemptedSelectedIndex = index;
-
-                            Anthem.displayStatusMessage(modelData.hoverText ? modelData.hoverText : '');
-
-                            if (openedSubmenuIndex > -1 && !blockSubmenuClose) {
-                                closeSubmenus(id);
-                                openedSubmenuIndex = -1;
-                            }
-
-                            if (modelData.separator || modelData.disabled) {
-                                return;
-                            }
-
-                            if (menuItems[index].submenu) {
-                                let submenuPos = mapToGlobal(x + width, y);
-                                let menuPos = mapToGlobal(x, y);
-                                let windowPos = menuHelper.mapToGlobal(0, 0);
-                                currentSubmenuX = submenuPos.x - windowPos.x;
-                                currentSubmenuY = submenuPos.y - windowPos.y;
-                                currentSubmenuAltX = menuPos.x - windowPos.x;
-                                currentSubmenuAltY = menuPos.y - windowPos.y;
-                            }
-
-                            if (menuItems[index].submenu) {
-                                timer.setTimeout(() => {
-                                    if (index === selectedIndex) {
-                                        submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, index);
-                                    }
-                                }, 500);
-                            }
-                        }
-                        onPressed: {
-                            if (modelData.separator || modelData.disabled) {
-                                return;
-                            }
-
-                            if (menuItems[index].onTriggered)
-                                menuItems[index].onTriggered();
-                            if (menuItems[index].submenu) {
-                                let submenuPos = mapToGlobal(x + width, y);
-                                let menuPos = mapToGlobal(x, y);
-                                let windowPos = menuHelper.mapToGlobal(0, 0);
-                                submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, menuPos.x - windowPos.x, menuPos.y - windowPos.y, index);
-                            }
-                            else
-                                closeAll();
-                        }
-                        onWheel: {
-                            if (_ignoredItemsCount === menuItems.length)
-                                return;
-
-                            let step = wheel.angleDelta.y < 0 ? -1 : 1;
-                            let tempSelectedIndex = selectedIndex;
-                            tempSelectedIndex += step;
-
-                            tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
-                            while (menuItems[tempSelectedIndex] !== undefined && (menuItems[tempSelectedIndex].separator || menuItems[tempSelectedIndex].disabled)) {
-                                tempSelectedIndex += step;
-                                tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
-                            }
-
-                            selectedIndex = tempSelectedIndex;
-                            moveMouseTo(selectedIndex);
-                        }
-                    }
-                }
-            }
+            columnItems: menuItems
         }
     }
 
