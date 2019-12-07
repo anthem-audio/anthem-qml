@@ -23,7 +23,7 @@ import QtGraphicalEffects 1.13
 import io.github.anthem.utilities.mousehelper 1.0
 import QtQuick.Shapes 1.13
 
-import "Global"
+import "../Global"
 
 /*
  * Utility component that draws individual menus.
