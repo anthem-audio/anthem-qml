@@ -13,7 +13,8 @@ jobs:
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
     - name: Install Qt
-      run: '"`n" |& ${env:GITHUB_WORKSPACE}\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
+      # '"`n" |&
+      run: ${env:GITHUB_WORKSPACE}\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
       shell: powershell
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem.ps1"'
