@@ -35,13 +35,13 @@ Controller.prototype.TargetDirectoryPageCallback = function() {
 }
 
 Controller.prototype.ComponentSelectionPageCallback = function() {
-    var page = gui.pageWidgetByObjectName("ComponentSelectionPage");
+    // var page = gui.pageWidgetByObjectName("ComponentSelectionPage");
 
-    var checkBox = gui.findChild(page, "Latest releases");
-    var fetchButton = gui.findChild(page, "FetchCategoryButton");
+    // var checkBox = gui.findChild(page, "Latest releases");
+    // var fetchButton = gui.findChild(page, "FetchCategoryButton");
 
-    checkBox.click();
-    fetchButton.click();
+    // checkBox.click();
+    // fetchButton.click();
     
     var widget = gui.currentPageWidget();
 
