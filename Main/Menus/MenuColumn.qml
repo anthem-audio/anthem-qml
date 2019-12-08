@@ -25,6 +25,23 @@ import "../Global"
 
 Column {
     property var columnItems
+    property real biggestItemWidth: -1
+    width: {
+        if (minWidth && biggestItemWidth < minWidth) {
+            if (width !== minWidth) {
+                return minWidth;
+            }
+        }
+        else if (maxWidth && biggestItemWidth > maxWidth) {
+            if (width !== maxWidth) {
+                return maxWidth;
+            }
+        }
+        else {
+            return biggestItemWidth;
+        }
+        return width;
+    }
 
     function itemAt(index) {
         return repeater.itemAt(index);
@@ -108,8 +125,8 @@ Column {
 
                 onWidthChanged: {
                     let menuItemWidth = width + 14 + shortcutText.width + (modelData.shortcut ? 14 : 0) + (columnItems[index].submenu ? 14 : 0);
-                    if (menuItemWidth > _biggestItemWidth) {
-                        _biggestItemWidth = menuItemWidth;
+                    if (menuItemWidth > biggestItemWidth) {
+                        biggestItemWidth = menuItemWidth;
                     }
                 }
 

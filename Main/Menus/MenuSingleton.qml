@@ -61,39 +61,19 @@ Item {
     property bool autoWidth
     property var minWidth
     property var maxWidth
-    property real _biggestItemWidth: -1
     property var _keymap
     signal closeAll()
     signal closeSubmenus(int id)
     signal closeThis(int id)
     signal openSubmenu(real x, real y, var items, var props)
 
-    // This really shouldn't be necessary. Belive me, I
-    // tried bindings. It must be that bindings are
-    // overwritten when creating a component with
-    // (component).createObject(), even if you assign
-    // undefined to them.
-    on_BiggestItemWidthChanged: {
-        if (minWidth && _biggestItemWidth < minWidth) {
-            if (width !== minWidth) {
-                width = minWidth;
-            }
-        }
-        else if (maxWidth && _biggestItemWidth > maxWidth) {
-            if (width !== maxWidth) {
-                width = maxWidth;
-            }
-        }
-        else {
-            width = _biggestItemWidth;
-        }
-    }
-
+    width: menuContent.width
     height: menuContent.height
     onHeightChanged: {
         // This is my replacement for Component.onCompleted.
-        // This code relies on the height of a child which
-        // is still 0 when Component.onCompleted is fired.
+        // This code relies on the height of a menuContent
+        // to propagate through, something that hasn't
+        // happened when Component.onCompleted is fired.
         if (height > 0) {
             // Reposition menu so it's not off screen, if possible
 

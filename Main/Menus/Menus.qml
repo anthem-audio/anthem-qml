@@ -58,7 +58,7 @@ Item {
                 alternateX: props.altX,
                 alternateY: props.altY,
                 openLeft: props.openLeft,
-                width: props.menuWidth,
+//                width: props.menuWidth,
                 autoWidth: props.autoWidth,
                 minWidth: props.minWidth,
                 maxWidth: props.maxWidth,
