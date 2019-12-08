@@ -30,9 +30,25 @@ Column {
         return repeater.itemAt(index);
     }
 
+    property real calculatedHeight: 0
+    height: calculatedHeight
+
+    Component.onCompleted: {
+        let h = 0;
+        for (let item of columnItems) {
+            h += item.separator ? 7 : 21;
+        }
+        calculatedHeight = h;
+    }
+
     Repeater {
         id: repeater
-        anchors.fill: parent
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+        height: calculatedHeight
         model: columnItems
 
         Rectangle {

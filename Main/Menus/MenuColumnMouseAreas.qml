@@ -22,9 +22,26 @@ import QtQuick 2.13
 
 Column {
     property var columnItems
-    anchors.fill: parent
+
+    property real calculatedHeight: 0
+    height: calculatedHeight
+
+    Component.onCompleted: {
+        let h = 0;
+        for (let item of columnItems) {
+            h += item.separator ? 7 : 21;
+        }
+        calculatedHeight = h;
+    }
+
     Repeater {
-        anchors.fill: parent
+        id: repeater
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+        }
+        height: calculatedHeight
         model: columnItems
 
         Item {

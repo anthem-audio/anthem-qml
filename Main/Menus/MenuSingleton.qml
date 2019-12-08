@@ -90,6 +90,46 @@ Item {
     }
 
     height: menuContent.height
+    onHeightChanged: {
+        // This is my replacement for Component.onCompleted.
+        // This code relies on the height of a child which
+        // is still 0 when Component.onCompleted is fired.
+        if (height > 0) {
+            // Reposition menu so it's not off screen, if possible
+
+            let windowTopLeft = mapToGlobal(parent.x, parent.y);
+            let windowBottomRight = mapToGlobal(parent.x + parent.width, parent.y + parent.height);
+            let bottomRight = mapToGlobal(x + width, y + height);
+
+            if (openLeft || (windowBottomRight.x - bottomRight.x < 0)) {
+                // https://stackoverflow.com/a/25910841/8166701
+                [x, alternateX] = [alternateX, x];
+                [y, alternateY] = [alternateY, y];
+                openLeft = true;
+            }
+
+            let topLeft = mapToGlobal(x, y);
+
+            if (topLeft.x - windowTopLeft.x < 0) {
+                // https://stackoverflow.com/a/25910841/8166701
+                [x, alternateX] = [alternateX, x];
+                [y, alternateY] = [alternateY, y];
+                openLeft = false;
+            }
+
+            if (openLeft) {
+                x -= width;
+            }
+
+            moveOnScreen();
+
+            // Set up keymap
+            for (let i = 0; i < menuItems.length; i++) {
+                if (menuItems[i].shortcutChar)
+                    _keymap[menuItems[i].shortcutChar] = i;
+            }
+        }
+    }
 
     function moveOnScreen() {
         let windowTopLeft = mapToGlobal(parent.x, parent.y);
@@ -146,42 +186,6 @@ Item {
 
     Keys.onEscapePressed: {
         closeThis(id);
-    }
-
-    Component.onCompleted: {
-        // Reposition menu so it's not off screen, if possible
-
-        let windowTopLeft = mapToGlobal(parent.x, parent.y);
-        let windowBottomRight = mapToGlobal(parent.x + parent.width, parent.y + parent.height);
-        let bottomRight = mapToGlobal(x + width, y + height);
-
-        if (openLeft || (windowBottomRight.x - bottomRight.x < 0)) {
-            // https://stackoverflow.com/a/25910841/8166701
-            [x, alternateX] = [alternateX, x];
-            [y, alternateY] = [alternateY, y];
-            openLeft = true;
-        }
-
-        let topLeft = mapToGlobal(x, y);
-
-        if (topLeft.x - windowTopLeft.x < 0) {
-            // https://stackoverflow.com/a/25910841/8166701
-            [x, alternateX] = [alternateX, x];
-            [y, alternateY] = [alternateY, y];
-            openLeft = false;
-        }
-
-        if (openLeft) {
-            x -= width;
-        }
-
-        moveOnScreen();
-
-        // Set up keymap
-        for (let i = 0; i < menuItems.length; i++) {
-            if (menuItems[i].shortcutChar)
-                _keymap[menuItems[i].shortcutChar] = i;
-        }
     }
 
     MouseHelper {
@@ -274,6 +278,10 @@ Item {
         MenuColumnMouseAreas {
             id: menuMouseAreas
             columnItems: menuItems
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
         }
     }
 
