@@ -5,5 +5,5 @@ Set-Location $env:GITHUB_WORKSPACE
 $installer_url = 'http://download.qt.io/official_releases/qt/5.13/5.13.2/qt-opensource-windows-x86-5.13.2.exe'
 # Invoke-WebRequest -Uri $installer_url -OutFile "qt-install.exe"
 $Command = 'C:\Windows\System32\curl.exe $installer_url --output "qt-install.exe"'
-Invoke-Command $Command
+Invoke-Expression $Command
 # .\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose
