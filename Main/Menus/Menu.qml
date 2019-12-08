@@ -37,6 +37,7 @@ Item {
     property var menuWidth
     property var minWidth
     property var maxWidth
+    property var maxHeight
 
     function open() {
         let mouseGlobal = mapToGlobal(menuX, menuY);
@@ -50,7 +51,8 @@ Item {
                         autoWidth: autoWidth,
                         menuWidth: menuWidth,
                         minWidth: minWidth,
-                        maxWidth: maxWidth
+                        maxWidth: maxWidth,
+                        maxHeight: maxHeight
                     });
     }
 }

@@ -44,6 +44,7 @@ import io.github.anthem.utilities.mousehelper 1.0
 
 Item {
     property var menuItems
+    property var _processedMenuItems
     property int _ignoredItemsCount: menuItems.filter(item => item.separator).length
     property int selectedIndex: -1
     property int attemptedSelectedIndex: -1
@@ -61,6 +62,7 @@ Item {
     property bool autoWidth
     property var minWidth
     property var maxWidth
+    property var maxHeight
     property var _keymap
     signal closeAll()
     signal closeSubmenus(int id)
@@ -69,6 +71,25 @@ Item {
 
     width: menuContent.width
     height: menuContent.height
+
+    Component.onCompleted: {
+        // This breaks up the single list of menu items into
+        // multiple column lists.
+        let runningHeight = 0;
+        let columnLists = [[]]
+
+        for (let menuItem of menuItems) {
+            runningHeight += menuItem.separator ? 7 : 21;
+            if (runningHeight > maxHeight) {
+                columnLists.push([]);
+                runningHeight = 0;
+            }
+            columnLists[columnLists.length - 1].push(menuItem);
+        }
+
+        _processedMenuItems = columnLists;
+    }
+
     onHeightChanged: {
         // This is my replacement for Component.onCompleted.
         // This code relies on the height of a menuContent
@@ -76,7 +97,6 @@ Item {
         // happened when Component.onCompleted is fired.
         if (height > 0) {
             // Reposition menu so it's not off screen, if possible
-
             let windowTopLeft = mapToGlobal(parent.x, parent.y);
             let windowBottomRight = mapToGlobal(parent.x + parent.width, parent.y + parent.height);
             let bottomRight = mapToGlobal(x + width, y + height);
@@ -201,7 +221,9 @@ Item {
             }
         }, 1000);
         openedSubmenuIndex = index;
-        openSubmenu(x, y, menuItems[index].submenu, {altX: altX, altY: altY, openLeft: openLeft, menuWidth: width, autoWidth: autoWidth, minWidth: minWidth, maxWidth: maxWidth});
+        console.log(menuItems)
+        console.log(index)
+        openSubmenu(x, y, menuItems[index].submenu, {altX: altX, altY: altY, openLeft: openLeft, menuWidth: width, autoWidth: autoWidth, minWidth: minWidth, maxWidth: maxWidth, maxHeight: maxHeight});
     }
 
     // https://stackoverflow.com/a/50224584/8166701
@@ -219,14 +241,33 @@ Item {
         }
     }
 
-    MenuColumn {
-        id: menuContent
-        columnItems: menuItems
-        visible: false
+    Rectangle {
+        anchors.fill: parent
+        color: Qt.rgba(0, 0, 0, 0.72)
+        radius: 6
+    }
 
+    Row {
+        id: menuContent
         anchors.top: parent.top
         anchors.left: parent.left
-        anchors.right: parent.right
+
+        visible: false
+
+        Repeater {
+            id: menuContentRepeater
+            model: _processedMenuItems
+
+            MenuColumn {
+                columnItems: modelData
+                startIndex: {
+                    let result = 0;
+                    for (let i = 0; i < index; i++)
+                        result += _processedMenuItems[i].length;
+                    return result;
+                }
+            }
+        }
     }
 
     MouseArea {
@@ -255,13 +296,22 @@ Item {
             selectedIndex = -1;
         }
 
-        MenuColumnMouseAreas {
+        Row {
             id: menuMouseAreas
-            columnItems: menuItems
 
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
+            Repeater {
+                id: menuMouseAreasRepeater
+                model: _processedMenuItems
+                MenuColumnMouseAreas {
+                    columnItems: modelData
+                    startIndex: {
+                        let result = 0;
+                        for (let i = 0; i < index; i++)
+                            result += _processedMenuItems[i].length;
+                        return result;
+                    }
+                }
+            }
         }
     }
 

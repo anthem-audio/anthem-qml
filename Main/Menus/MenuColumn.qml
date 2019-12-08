@@ -18,6 +18,14 @@
                         <https://www.gnu.org/licenses/>.
 */
 
+/*
+  Hi!
+
+  Before you make changes to this file, make sure you
+  read the note in MenuColumnMouseAreas.qml. You will
+  be glad you did (and maybe a bit horrified).
+*/
+
 import QtQuick 2.13
 import QtQuick.Shapes 1.13
 
@@ -26,6 +34,7 @@ import "../Global"
 Column {
     property var columnItems
     property real biggestItemWidth: -1
+    property int startIndex: 0
     width: {
         if (minWidth && biggestItemWidth < minWidth) {
             if (width !== minWidth) {
@@ -76,10 +85,10 @@ Column {
                     return "transparent";
                 }
                 else if (modelData.disabled) {
-                    return Qt.rgba(1, 1, 1, 0.35);
+                    return Qt.rgba(1, 1, 1, 0.15);
                 }
                 else {
-                    return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.9) : Qt.rgba(1, 1, 1, 0.65);
+                    return index + startIndex === selectedIndex ? Qt.rgba(0, 0, 0, 0.9) : Qt.rgba(1, 1, 1, 0.65);
                 }
             }
 
@@ -88,10 +97,10 @@ Column {
                     return "transparent";
                 }
                 else if (modelData.disabled) {
-                    return Qt.rgba(1, 1, 1, 0.25);
+                    return Qt.rgba(1, 1, 1, 0.05);
                 }
                 else {
-                    return index === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.45);
+                    return index + startIndex === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.45);
                 }
             }
 
@@ -100,12 +109,10 @@ Column {
                     return Qt.rgba(0, 0, 0, 0.55);
                 }
 
-                return !modelData.separator && (index == selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : Qt.rgba(0, 0, 0, 0.72)
+                return !modelData.separator && (index + startIndex === selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : "transparent"
             }
             Text {
-//                    width: parent.width - 21 - shortcutText.width - (columnItems[index].submenu ? 10 : 0)
                 elide: Text.ElideMiddle
-
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: -1
                 anchors.left: parent.left

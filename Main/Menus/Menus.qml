@@ -38,7 +38,8 @@ Item {
             openLeft: bool,
             autoWidth: bool,
             minWidth: real,
-            maxWidth: real
+            maxWidth: real,
+            maxHeight: real
         }
     */
     function open(x, y, menuItems, props) {
@@ -62,6 +63,7 @@ Item {
                 autoWidth: props.autoWidth,
                 minWidth: props.minWidth,
                 maxWidth: props.maxWidth,
+                maxHeight: props.maxHeight,
                 menuItems: menuItems,
             }
 
