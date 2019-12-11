@@ -1,4 +1,4 @@
-. Invoke-CmdScript.ps1
+. actions\windows\Invoke-CmdScript.ps1
 D:\Qt\5.13.2\msvc2017_64\bin\qtenv2.bat
 Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
 $ClPath = python actions\windows\find-cl-path.py
