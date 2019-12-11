@@ -18,7 +18,8 @@ HERE = os.path.dirname(__file__)
 def run(cmd):
     popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     for line in popen.stdout:
-        yield line.decode()
+        if len(line.strip()) != 0:
+            yield line.decode()
     popen.stdout.close()
     return_code = popen.wait()
     if return_code:
