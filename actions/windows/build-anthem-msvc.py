@@ -45,7 +45,17 @@ def find(*whomst):
     except IndexError:
         raise OSError("Is this not `windows-latest`?")
 
-cl_exe_path = os.path.dirname(find('**', 'x64', 'cl.exe'))
+cl_exe_path = os.path.dirname(find(
+    'VC',
+    'Tools',
+    'MSVC',
+    '*',
+    'bin',
+    'Hostx64',
+    'x64',
+    'cl.exe',
+))
+
 os.environ['PATH'] += ';' + cl_exe_path
 
 raise SystemExit(run([
