@@ -20,7 +20,9 @@ def run(cmd):
     for line in popen.stdout:
         yield line.decode()
     popen.stdout.close()
-    return popen.wait()
+    return_code = popen.wait()
+    if return_code:
+        raise subprocess.CalledProcessError(return_code, cmd)
 
 vcvars = run([
     os.path.join(HERE, 'vcvarsall_wrapper.bat'),
@@ -58,7 +60,8 @@ cl_exe_path = os.path.dirname(find(
 
 os.environ['PATH'] += ';' + cl_exe_path
 
-raise SystemExit(run([
+for line in run([
     'pwsh.exe',
     os.path.join(HERE, 'build-anthem-msvc.ps1'),
-]))
+]):
+    print(line)
