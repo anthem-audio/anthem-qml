@@ -32,6 +32,8 @@ vcvars = run([
 for line in vcvars.splitlines():
     pattern = r'''\"(.*)\",\"(.*)\"'''
     m = re.search(pattern, line)
+    if not m:
+        continue
     try:
         k = m.group(1)
         v = m.group(2)
