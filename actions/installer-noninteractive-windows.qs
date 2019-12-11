@@ -55,7 +55,7 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
         }
 
         case "msvc": {
-            widget.selectComponent("qt.qt5.5132.win64_msvc2017");
+            widget.selectComponent("qt.qt5.5132.win64_msvc2017_64");
             break;
         }
 
