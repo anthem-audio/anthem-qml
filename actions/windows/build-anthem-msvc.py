@@ -13,23 +13,20 @@ MSVC_PATH = os.path.join(
     'Enterprise',
 )
 
-os.environ['VCVARSALL'] = os.path.join(
-    MSVC_PATH,
-    'VC',
-    'Auxiliary',
-    'Build',
-    'vcvarsall.bat',
-)
-
 HERE = os.path.dirname(__file__)
 
-run = functools.partial(subprocess.run, stdout=subprocess.PIPE)
+def run(cmd):
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    for line in popen.stdout:
+        yield line.decode()
+    popen.stdout.close()
+    return popen.wait()
 
 vcvars = run([
     os.path.join(HERE, 'vcvarsall_wrapper.bat'),
-]).stdout.decode()
+])
 
-for line in vcvars.splitlines():
+for line in vcvars:
     pattern = r'''\"(.*)\",\"(.*)\"'''
     m = re.search(pattern, line)
     if not m:
@@ -54,4 +51,4 @@ os.environ['PATH'] += ';' + cl_exe_path
 raise SystemExit(run([
     'pwsh.exe',
     os.path.join(HERE, 'build-anthem-msvc.ps1'),
-]).returncode)
+]))
