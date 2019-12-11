@@ -1,3 +1,4 @@
+import functools
 import glob
 import os
 import os.path
@@ -11,18 +12,19 @@ MSVC_PATH = os.path.join(
     'Enterprise',
 )
 
+os.environ['VCVARSALL'] = os.path.join(
+    MSVC_PATH,
+    'VC',
+    'Auxiliary',
+    'Build',
+    'vcvarsall.bat',
+)
+
 HERE = os.path.dirname(__file__)
 
-def find(*whomst):
-    things = glob.glob(os.path.join(MSVC_PATH, *whomst), recursive=True)
-    try:
-        return things[0]
-    except IndexError:
-        raise OSError("Is this not `windows-latest`?")
+run = functools.partial(subprocess.run, stdout=subprocess.PIPE)
 
-os.environ['VCVARSALL'] = find('**', 'vcvarsall.bat')
-
-vcvars = subprocess.run([
+vcvars = run([
     os.path.join(HERE, 'vcvarsall_wrapper.bat'),
 ]).stdout.decode()
 
@@ -30,7 +32,7 @@ for line in vcvars.splitlines():
     k, v = line.split('=', 1)
     os.environ[k] = v
 
-subprocess.run([
+run([
     'pwsh.exe',
     os.path.join(HERE, 'build-anthem-msvc.ps1'),
 ])
