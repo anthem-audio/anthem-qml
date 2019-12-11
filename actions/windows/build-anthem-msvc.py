@@ -2,6 +2,7 @@ import functools
 import glob
 import os
 import os.path
+import re
 import subprocess
 
 MSVC_PATH = os.path.join(
@@ -25,11 +26,15 @@ HERE = os.path.dirname(__file__)
 run = functools.partial(subprocess.run, stdout=subprocess.PIPE)
 
 vcvars = run([
-    os.path.join(HERE, 'vcvarsall_wrapper.bat'),
+    'pwsh.exe',
+    os.path.join(HERE, 'vcvarsall_wrapper.ps1'),
 ]).stdout.decode()
 
 for line in vcvars.splitlines():
-    k, v = line.split('=', 1)
+    pattern = r'''\"(.*)\",\"(.*)\"'''
+    m = re.search(pattern, line)
+    k = m.group(1)
+    v = m.group(2)
     os.environ[k] = v
 
 run([
