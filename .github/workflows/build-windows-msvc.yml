@@ -19,7 +19,7 @@ jobs:
       run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose buildtype=msvc'
       shell: cmd
     - name: Build Anthem
-      run: 'python "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-msvc.py"'
+      run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-msvc.ps1"'
       shell: powershell
     - name: Run tests
       run: D:\Anthem\Main.exe --test
