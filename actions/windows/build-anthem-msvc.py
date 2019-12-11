@@ -16,7 +16,7 @@ MSVC_PATH = os.path.join(
 HERE = os.path.dirname(__file__)
 
 def run(cmd):
-    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE)
+    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     for line in popen.stdout:
         yield line.decode()
     popen.stdout.close()
