@@ -26,8 +26,7 @@ HERE = os.path.dirname(__file__)
 run = functools.partial(subprocess.run, stdout=subprocess.PIPE)
 
 vcvars = run([
-    'pwsh.exe',
-    os.path.join(HERE, 'vcvarsall_wrapper.ps1'),
+    os.path.join(HERE, 'vcvarsall_wrapper.bat'),
 ]).stdout.decode()
 
 for line in vcvars.splitlines():
