@@ -1,4 +1,4 @@
-name: Windows Build
+name: Windows Build (MSVC)
 
 on: [push, pull_request]
 
@@ -6,17 +6,17 @@ jobs:
   build:
 
     runs-on: windows-latest
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: Download Qt
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
     - name: Install Qt
-      run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose'
+      run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose buildtype=msvc'
       shell: cmd
     - name: Build Anthem
-      run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem.ps1"'
+      run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-msvc.ps1"'
       shell: powershell
     - name: Run tests
       run: D:\Anthem\Main.exe --test
