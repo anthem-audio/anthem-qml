@@ -32,9 +32,12 @@ vcvars = run([
 for line in vcvars.splitlines():
     pattern = r'''\"(.*)\",\"(.*)\"'''
     m = re.search(pattern, line)
-    k = m.group(1)
-    v = m.group(2)
-    os.environ[k] = v
+    try:
+        k = m.group(1)
+        v = m.group(2)
+        os.environ[k] = v
+    except IndexError:
+        continue
 
 run([
     'pwsh.exe',
