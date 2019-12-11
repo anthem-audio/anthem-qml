@@ -41,6 +41,16 @@ for line in vcvars.splitlines():
     except IndexError:
         continue
 
+def find(*whomst):
+    things = glob.glob(os.path.join(MSVC_PATH, *whomst), recursive=True)
+    try:
+        return things[0]
+    except IndexError:
+        raise OSError("Is this not `windows-latest`?")
+
+cl_exe_path = os.path.dirname(find('**', 'x64', 'cl.exe'))
+os.environ['PATH'] += ';' + cl_exe_path
+
 run([
     'pwsh.exe',
     os.path.join(HERE, 'build-anthem-msvc.ps1'),
