@@ -42,12 +42,25 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
 
     // checkBox.click();
     // fetchButton.click();
-    
+
     var widget = gui.currentPageWidget();
 
     widget.deselectAll();
-    widget.selectComponent("qt.qt5.5132.win64_mingw73");
-    widget.selectComponent("qt.tools.win64_mingw730");
+
+    switch (installer.value("buildtype")) {
+        case "mingw": {
+            widget.selectComponent("qt.qt5.5132.win64_mingw73");
+            widget.selectComponent("qt.tools.win64_mingw730");
+            break;
+        }
+
+        case "msvc": {
+            widget.selectComponent("qt.qt5.5132.win64_msvc2017");
+            break;
+        }
+
+        default: break;
+    }
 
     gui.clickButton(buttons.NextButton);
 }
