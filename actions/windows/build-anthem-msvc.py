@@ -4,7 +4,7 @@ import os.path
 import subprocess
 
 MSVC_PATH = os.path.join(
-    'C:',
+    'C:\\',
     'Program Files (x86)',
     'Microsoft Visual Studio',
     '2019',
@@ -31,6 +31,6 @@ for line in vcvars.splitlines():
     os.environ[k] = v
 
 subprocess.run([
-    'powershell.exe',
+    'pwsh.exe',
     os.path.join(HERE, 'build-anthem-msvc.ps1'),
 ])

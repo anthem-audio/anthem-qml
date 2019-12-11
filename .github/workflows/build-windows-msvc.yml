@@ -20,6 +20,7 @@ jobs:
       shell: cmd
     - name: Build Anthem
       run: 'python "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-msvc.py"'
+      shell: powershell
     - name: Run tests
       run: D:\Anthem\Main.exe --test
       shell: powershell
