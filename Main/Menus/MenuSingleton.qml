@@ -27,7 +27,7 @@ import io.github.anthem.utilities.mousehelper 1.0
  *
  *
  * Note:
- * This class has duplicate Column components that
+ * This class has duplicate components that
  * separately deal with menu rendering and MouseArea
  * positioning. This is because the visible part of
  * the menu has visible: false and is instead
@@ -79,11 +79,11 @@ Item {
         let columnLists = [[]]
 
         for (let menuItem of menuItems) {
-            runningHeight += menuItem.separator ? 7 : 21;
             if (runningHeight > maxHeight) {
                 columnLists.push([]);
                 runningHeight = 0;
             }
+            runningHeight += menuItem.separator ? 7 : 21;
             columnLists[columnLists.length - 1].push(menuItem);
         }
 
@@ -221,8 +221,6 @@ Item {
             }
         }, 1000);
         openedSubmenuIndex = index;
-        console.log(menuItems)
-        console.log(index)
         openSubmenu(x, y, menuItems[index].submenu, {altX: altX, altY: altY, openLeft: openLeft, menuWidth: width, autoWidth: autoWidth, minWidth: minWidth, maxWidth: maxWidth, maxHeight: maxHeight});
     }
 
