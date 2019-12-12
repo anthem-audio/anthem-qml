@@ -13,7 +13,7 @@ jobs:
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
       shell: powershell
     - name: Install Qt
-      run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive-windows.qs --verbose buildtype=mingw'
+      run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive.qs --verbose buildtype=mingw'
       shell: cmd
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-mingw.ps1"'

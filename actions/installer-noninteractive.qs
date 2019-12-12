@@ -30,7 +30,26 @@ Controller.prototype.DynamicTelemetryPluginFormCallback = function() {
 }
 
 Controller.prototype.TargetDirectoryPageCallback = function() {
-    gui.currentPageWidget().TargetDirectoryLineEdit.setText("D:\\qt");
+    var qtPath = undefined;
+
+    switch (installer.value("buildtype")) {
+        case "linux": {
+            qtPath = "/qt";
+            break;
+        }
+
+        case "mingw": {
+            qtPath = "D:\\Qt";
+            break;
+        }
+
+        case "msvc": {
+            qtPath = "D:\\Qt";
+            break;
+        }
+    }
+
+    gui.currentPageWidget().TargetDirectoryLineEdit.setText(qtPath);
     gui.clickButton(buttons.NextButton);
 }
 
@@ -48,6 +67,11 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
     widget.deselectAll();
 
     switch (installer.value("buildtype")) {
+        case "linux": {
+            widget.selectComponent("qt.qt5.5132.gcc_64");
+            break;
+        }
+
         case "mingw": {
             widget.selectComponent("qt.qt5.5132.win64_mingw73");
             widget.selectComponent("qt.tools.win64_mingw730");
