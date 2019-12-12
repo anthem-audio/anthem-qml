@@ -20,7 +20,7 @@ jobs:
       run: |
            cd $GITHUB_WORKSPACE
            chmod +x ./qt-install.run
-           ./qt-install.run --script ./actions/installer-noninteractive-linux.qs --verbose --platform minimal
+           ./qt-install.run --script ./actions/installer-noninteractive.qs --verbose --platform minimal buildtype=linux
     - name: Build Anthem
       run: |
            cd $GITHUB_WORKSPACE
