@@ -34,7 +34,7 @@ import "../Global"
 Column {
     property var columnItems
     property real biggestItemWidth: -1
-    property int startIndex: 0
+    property int startIndex
     width: {
         if (minWidth && biggestItemWidth < minWidth) {
             if (width !== minWidth) {

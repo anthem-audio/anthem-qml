@@ -199,23 +199,6 @@ Column {
                     else
                         closeAll();
                 }
-                onWheel: {
-                    if (_ignoredItemsCount === columnItems.length)
-                        return;
-
-                    let step = wheel.angleDelta.y < 0 ? -1 : 1;
-                    let tempSelectedIndex = selectedIndex;
-                    tempSelectedIndex += step;
-
-                    tempSelectedIndex = (tempSelectedIndex + columnItems.length) % columnItems.length;
-                    while (columnItems[tempSelectedIndex] !== undefined && (columnItems[tempSelectedIndex].separator || columnItems[tempSelectedIndex].disabled)) {
-                        tempSelectedIndex += step;
-                        tempSelectedIndex = (tempSelectedIndex + columnItems.length) % columnItems.length;
-                    }
-
-                    selectedIndex = tempSelectedIndex;
-                    moveMouseTo(selectedIndex);
-                }
             }
         }
     }

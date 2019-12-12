@@ -193,8 +193,20 @@ Item {
     }
 
     function moveMouseTo(index) {
-        let newSelectedElement = menuContent.itemAt(index);
-        let newMousePos = mapToGlobal(newSelectedElement.x + newSelectedElement.width * 0.7, newSelectedElement.y + newSelectedElement.height * 0.5);
+        let columnIndex = -1;
+
+        for (let i = menuContent.children.length - 2; i >= 0; i--) {
+            let startIndex = menuContentRepeater.itemAt(i).startIndex;
+
+            if (startIndex <= index) {
+                columnIndex = i;
+                break;
+            }
+        }
+
+        let selectedColumn = menuContentRepeater.itemAt(columnIndex);
+        let newSelectedElement = selectedColumn.itemAt(index - selectedColumn.startIndex);
+        let newMousePos = mapToGlobal(selectedColumn.x + newSelectedElement.x + newSelectedElement.width * 0.7, newSelectedElement.y + newSelectedElement.height * 0.5);
         mouseHelper.setCursorPosition(newMousePos.x, newMousePos.y);
     }
 
@@ -292,6 +304,24 @@ Item {
             }
 
             selectedIndex = -1;
+        }
+
+        onWheel: {
+            if (_ignoredItemsCount === menuItems.length)
+                return;
+
+            let step = wheel.angleDelta.y < 0 ? -1 : 1;
+            let tempSelectedIndex = selectedIndex;
+            tempSelectedIndex += step;
+
+            tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+            while (menuItems[tempSelectedIndex] !== undefined && (menuItems[tempSelectedIndex].separator || menuItems[tempSelectedIndex].disabled)) {
+                tempSelectedIndex += step;
+                tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+            }
+
+            selectedIndex = tempSelectedIndex;
+            moveMouseTo(selectedIndex);
         }
 
         Row {
