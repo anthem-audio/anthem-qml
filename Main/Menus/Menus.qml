@@ -114,21 +114,15 @@ Item {
 
     function closeAfter(id) {
         let destroyStarted = false;
-        let previousChild = undefined;
 
         for (let i = 1; i < children.length; i++) {
             if (children[i].id === id) {
                 destroyStarted = true;
-                if (previousChild !== undefined) {
-                    previousChild.openedSubmenuIndex = -1;
-                }
+                children[i].openedSubmenuIndex = -1;
             }
             else if (destroyStarted) {
                 children[i].destroy();
                 openMenuCount--;
-            }
-            else {
-                previousChild = children[i]
             }
         }
 
