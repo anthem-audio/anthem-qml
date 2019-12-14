@@ -41,12 +41,12 @@
   because the parent is being rendered through an
   OpacityMask to properly round the corners. When a
   MouseArea is non-visible or has a non-visible parent, it
-  refuses to register any mouse events. This means that I
+  refuses to propagate any mouse events. This means that I
   must defy all logic and reason and structure the mouse
   areas in a seperate tree.
 
   I tried my best to do some hacky coupling between
-  parameters, but I've finally given up. It's too hacky.
+  parameters, but it didn't really work.
 
 
   THE POINT OF ALL THIS:

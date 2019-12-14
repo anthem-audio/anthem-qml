@@ -79,9 +79,12 @@ Item {
         let columnLists = [[]]
 
         for (let menuItem of menuItems) {
-            if (runningHeight > maxHeight) {
+            if (runningHeight > maxHeight || menuItem.newColumn === true) {
                 columnLists.push([]);
                 runningHeight = 0;
+                if (menuItem.newColumn === true) {
+                    continue;
+                }
             }
             runningHeight += menuItem.separator ? 7 : 21;
             columnLists[columnLists.length - 1].push(menuItem);
@@ -257,6 +260,18 @@ Item {
         radius: 6
     }
 
+    function getStartIndex(columnIndex) {
+        let result = 0;
+        for (let i = 0; i < columnIndex; i++) {
+            result += _processedMenuItems[i].length;
+            // Account for column breaks
+            if (menuItems[result].newColumn === true) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     Row {
         id: menuContent
         anchors.top: parent.top
@@ -270,12 +285,7 @@ Item {
 
             MenuColumn {
                 columnItems: modelData
-                startIndex: {
-                    let result = 0;
-                    for (let i = 0; i < index; i++)
-                        result += _processedMenuItems[i].length;
-                    return result;
-                }
+                startIndex: getStartIndex(index)
             }
         }
     }
@@ -315,7 +325,10 @@ Item {
             tempSelectedIndex += step;
 
             tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
-            while (menuItems[tempSelectedIndex] !== undefined && (menuItems[tempSelectedIndex].separator || menuItems[tempSelectedIndex].disabled)) {
+            while (menuItems[tempSelectedIndex] !== undefined
+                   && (menuItems[tempSelectedIndex].separator
+                       || menuItems[tempSelectedIndex].disabled
+                       || menuItems[tempSelectedIndex].newColumn)) {
                 tempSelectedIndex += step;
                 tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
             }
@@ -332,12 +345,7 @@ Item {
                 model: _processedMenuItems
                 MenuColumnMouseAreas {
                     columnItems: modelData
-                    startIndex: {
-                        let result = 0;
-                        for (let i = 0; i < index; i++)
-                            result += _processedMenuItems[i].length;
-                        return result;
-                    }
+                    startIndex: getStartIndex(index)
                 }
             }
         }
