@@ -85,7 +85,7 @@ Column {
                     return "transparent";
                 }
                 else if (modelData.disabled) {
-                    return Qt.rgba(1, 1, 1, 0.15);
+                    return Qt.rgba(1, 1, 1, 0.20);
                 }
                 else {
                     return index + startIndex === selectedIndex ? Qt.rgba(0, 0, 0, 0.9) : Qt.rgba(1, 1, 1, 0.65);
@@ -97,7 +97,7 @@ Column {
                     return "transparent";
                 }
                 else if (modelData.disabled) {
-                    return Qt.rgba(1, 1, 1, 0.05);
+                    return Qt.rgba(1, 1, 1, 0.10);
                 }
                 else {
                     return index + startIndex === selectedIndex ? Qt.rgba(0, 0, 0, 0.7) : Qt.rgba(1, 1, 1, 0.45);
@@ -105,11 +105,14 @@ Column {
             }
 
             color: {
-                if (modelData.disabled) {
-                    return Qt.rgba(0, 0, 0, 0.55);
+                if (!modelData.separator
+                    && !modelData.disabled
+                    && index + startIndex === selectedIndex) {
+                    return Qt.hsla(hue, 0.5, 0.43, 1);
                 }
-
-                return !modelData.separator && (index + startIndex === selectedIndex) ? Qt.hsla(hue, 0.5, 0.43, 1) : "transparent"
+                else {
+                    return "transparent";
+                }
             }
             Text {
                 elide: Text.ElideMiddle
