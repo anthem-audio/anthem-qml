@@ -329,8 +329,11 @@ Item {
                    && (menuItems[tempSelectedIndex].separator
                        || menuItems[tempSelectedIndex].disabled
                        || menuItems[tempSelectedIndex].newColumn)) {
+                let oldTempIndex = tempSelectedIndex;
                 tempSelectedIndex += step;
                 tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+                if (tempSelectedIndex === oldTempIndex)
+                    continue;
             }
 
             selectedIndex = tempSelectedIndex;
