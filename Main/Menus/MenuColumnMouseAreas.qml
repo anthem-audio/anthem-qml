@@ -184,12 +184,13 @@ Column {
                     }
                 }
                 onPressed: {
-                    if (modelData.separator || modelData.disabled) {
+                    if (columnItems[index].separator || columnItems[index].disabled) {
                         return;
                     }
 
-                    if (columnItems[index].onTriggered)
-                        columnItems[index].onTriggered();
+                    if (menuItems[index + startIndex].onTriggered) {
+                        menuItems[index + startIndex].onTriggered();
+                    }
                     if (columnItems[index].submenu) {
                         let submenuPos = mapToGlobal(x + width, y);
                         let menuPos = mapToGlobal(x, y);
