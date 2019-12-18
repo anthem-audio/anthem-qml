@@ -65,8 +65,9 @@ Item {
     property var maxHeight
     property var _keymap
     signal closeAll()
-    signal closeSubmenus(int id)
     signal closeThis(int id)
+    signal closeSubmenus(int id)
+    signal moveMouseToSubmenu(int id)
     signal openSubmenu(real x, real y, var items, var props)
 
     width: menuContent.width
@@ -319,6 +320,11 @@ Item {
         onWheel: {
             if (_ignoredItemsCount === menuItems.length)
                 return;
+
+            if (openedSubmenuIndex > -1) {
+                moveMouseToSubmenu(id);
+                return;
+            }
 
             let step = wheel.angleDelta.y < 0 ? -1 : 1;
             let tempSelectedIndex = selectedIndex;

@@ -18,6 +18,14 @@
                         <https://www.gnu.org/licenses/>.
 */
 
+/*
+  Most of these functions are o(n) time complexity
+  where n is the number of menus on screen. If there
+  are ever enough menus on screen for this to be a
+  problem, then I dare say my o(n) menu lookups
+  won't be the thing that needs fixing.
+*/
+
 import QtQuick 2.13
 
 Item {
@@ -71,15 +79,18 @@ Item {
             menu.closeAll.connect(() => {
                 closeAll();
             });
-            menu.openSubmenu.connect((x, y, items, props) => {
-                open(x, y, items, props);
-            });
-            menu.closeSubmenus.connect((id) => {
-                closeAfter(id);
-            });
             menu.closeThis.connect((id) => {
                 closeAfter(id);
                 closeAt(id);
+            });
+            menu.openSubmenu.connect((x, y, items, props) => {
+                open(x, y, items, props);
+            });
+            menu.moveMouseToSubmenu.connect((id) => {
+                moveMouseToFirstMenuItem(id);
+            });
+            menu.closeSubmenus.connect((id) => {
+                closeAfter(id);
             });
             _idCounter++;
             openMenuCount++;
@@ -143,6 +154,15 @@ Item {
     function closeLast() {
         children[children.length - 1].destroy();
         openMenuCount--;
+    }
+
+    function moveMouseToFirstMenuItem(id) {
+        for (let i = 1; i < children.length; i++) {
+            if (children[i].id === id && i + 1 < children.length) {
+                children[i + 1].moveMouseTo(0);
+                return;
+            }
+        }
     }
 
     MouseArea {
