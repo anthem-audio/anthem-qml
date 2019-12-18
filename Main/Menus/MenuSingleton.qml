@@ -45,7 +45,7 @@ import io.github.anthem.utilities.mousehelper 1.0
 Item {
     property var menuItems
     property var _processedMenuItems
-    property int _ignoredItemsCount: menuItems.filter(item => item.separator).length
+    property int _ignoredItemsCount: menuItems.filter(item => item.separator || item.disabled || item.newColumn).length
     property int selectedIndex: -1
     property int attemptedSelectedIndex: -1
     property real hue: 162 / 360
@@ -329,11 +329,8 @@ Item {
                    && (menuItems[tempSelectedIndex].separator
                        || menuItems[tempSelectedIndex].disabled
                        || menuItems[tempSelectedIndex].newColumn)) {
-                let oldTempIndex = tempSelectedIndex;
                 tempSelectedIndex += step;
                 tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
-                if (tempSelectedIndex === oldTempIndex)
-                    continue;
             }
 
             selectedIndex = tempSelectedIndex;
