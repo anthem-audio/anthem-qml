@@ -188,8 +188,47 @@ Item {
         }
     }
 
+    Keys.onReturnPressed: {
+        keyboardTrigger(selectedIndex);
+    }
+
+    Keys.onSpacePressed: {
+        keyboardTrigger(selectedIndex);
+    }
+
+    function keyboardTrigger(index) {
+        if (index < 0)
+            return;
+        if (menuItems[index].submenu !== undefined) {
+
+        }
+        else {
+            menuItems[index].onTriggered();
+            closeAll();
+        }
+    }
+
     Keys.onEscapePressed: {
         closeThis(id);
+    }
+
+    Keys.onLeftPressed: {
+        if (selectedIndex < _processedMenuItems[0].length) {
+            return;
+        }
+
+    }
+
+    Keys.onRightPressed: {
+
+    }
+
+    Keys.onUpPressed: {
+        incrementIndex(-1);
+    }
+
+    Keys.onDownPressed: {
+        incrementIndex(1);
     }
 
     MouseHelper {
@@ -291,6 +330,51 @@ Item {
         }
     }
 
+    // direction is 1 for forward or -1 for reverse
+    function incrementIndex(direction, moveMouse = false) {
+        if (_ignoredItemsCount === menuItems.length)
+            return;
+
+        let tempSelectedIndex = selectedIndex;
+
+        /*
+            Yay, documentation time.
+
+            An index of -1 represents no selected
+            index. When the user presses the down
+            arrow and there is no selected item,
+            this code increments the index by 1 and
+            voila! we're on the first menu item.
+            All good so far.
+
+            However, incrementing with a direction
+            of -1 when there is no selected index
+            causes the selected index to become -2,
+            which then wraps around to the second-
+            to-last item instead of the last item.
+
+            The if statement below fixes that.
+        */
+        if (tempSelectedIndex < 0 && direction < 0) {
+            tempSelectedIndex = 0;
+        }
+
+        tempSelectedIndex += direction;
+
+        tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+        while (menuItems[tempSelectedIndex] !== undefined
+               && (menuItems[tempSelectedIndex].separator
+                   || menuItems[tempSelectedIndex].disabled
+                   || menuItems[tempSelectedIndex].newColumn)) {
+            tempSelectedIndex += direction;
+            tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
+        }
+
+        selectedIndex = tempSelectedIndex;
+        if (moveMouse)
+            moveMouseTo(selectedIndex);
+    }
+
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -318,29 +402,13 @@ Item {
         }
 
         onWheel: {
-            if (_ignoredItemsCount === menuItems.length)
-                return;
-
             if (openedSubmenuIndex > -1) {
                 moveMouseToSubmenu(id);
                 return;
             }
 
-            let step = wheel.angleDelta.y < 0 ? -1 : 1;
-            let tempSelectedIndex = selectedIndex;
-            tempSelectedIndex += step;
-
-            tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
-            while (menuItems[tempSelectedIndex] !== undefined
-                   && (menuItems[tempSelectedIndex].separator
-                       || menuItems[tempSelectedIndex].disabled
-                       || menuItems[tempSelectedIndex].newColumn)) {
-                tempSelectedIndex += step;
-                tempSelectedIndex = (tempSelectedIndex + menuItems.length) % menuItems.length;
-            }
-
-            selectedIndex = tempSelectedIndex;
-            moveMouseTo(selectedIndex);
+            let direction = wheel.angleDelta.y < 0 ? -1 : 1;
+            incrementIndex(direction, true);
         }
 
         Row {
