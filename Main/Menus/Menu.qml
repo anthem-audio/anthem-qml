@@ -40,6 +40,9 @@ Item {
     property var maxHeight
 
     function open() {
+        if (menuHelper.openMenuCount > 0)
+            return;
+
         let mouseGlobal = mapToGlobal(menuX, menuY);
         let windowGlobal = menuHelper.mapToGlobal(0, 0);
 
