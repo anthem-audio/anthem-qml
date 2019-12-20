@@ -65,7 +65,6 @@ Item {
     property real alternateX
     property real alternateY
     property bool openLeft
-    property bool autoWidth
     property var minWidth
     property var maxWidth
     property var maxHeight
@@ -379,7 +378,7 @@ Item {
             }
         }, 1000);
         openedSubmenuIndex = index;
-        openSubmenu(x, y, menuItems[index].submenu, {altX: altX, altY: altY, openLeft: openLeft, menuWidth: width, autoWidth: autoWidth, minWidth: minWidth, maxWidth: maxWidth, maxHeight: maxHeight});
+        openSubmenu(x, y, menuItems[index].submenu, {altX: altX, altY: altY, openLeft: openLeft, menuWidth: width, minWidth: minWidth, maxWidth: maxWidth, maxHeight: maxHeight});
     }
 
     // https://stackoverflow.com/a/50224584/8166701

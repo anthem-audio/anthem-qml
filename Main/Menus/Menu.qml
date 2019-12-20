@@ -31,10 +31,9 @@ Item {
 
     property var menuItems
     visible: false
-    property real menuX
-    property real menuY
+    property real menuX: 0
+    property real menuY: 0
     property bool autoWidth: true
-    property var menuWidth
     property var minWidth
     property var maxWidth
     property var maxHeight
@@ -52,7 +51,6 @@ Item {
                     menuItems,
                     {
                         autoWidth: autoWidth,
-                        menuWidth: menuWidth,
                         minWidth: minWidth,
                         maxWidth: maxWidth,
                         maxHeight: maxHeight

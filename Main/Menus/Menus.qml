@@ -44,7 +44,6 @@ Item {
             altX: real,
             altY: real,
             openLeft: bool,
-            autoWidth: bool,
             minWidth: real,
             maxWidth: real,
             maxHeight: real
@@ -67,8 +66,6 @@ Item {
                 alternateX: props.altX,
                 alternateY: props.altY,
                 openLeft: props.openLeft,
-//                width: props.menuWidth,
-                autoWidth: props.autoWidth,
                 minWidth: props.minWidth,
                 maxWidth: props.maxWidth,
                 maxHeight: props.maxHeight,
