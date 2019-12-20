@@ -97,6 +97,10 @@ Item {
             columnLists[columnLists.length - 1].push(menuItem);
         }
 
+        if (columnLists[columnLists.length - 1].length === 0) {
+            columnLists.pop();
+        }
+
         _processedMenuItems = columnLists;
     }
 
@@ -224,14 +228,63 @@ Item {
     }
 
     Keys.onLeftPressed: {
-        if (selectedIndex < _processedMenuItems[0].length) {
+        if (selectedIndex < 0) {
+            closeThis(id);
             return;
         }
 
+        let colIndex = getColumnIndex(selectedIndex);
+        let previousColIndex = colIndex === 0 ? _processedMenuItems.length - 1 : colIndex - 1;
+        let col = menuContentRepeater.itemAt(colIndex);
+        let previousCol = menuContentRepeater.itemAt(previousColIndex);
+        let targetItem = col.itemAt(selectedIndex - col.startIndex);
+        let targetHeight = targetItem.y + targetItem.height;
+        selectedIndex = getFirstIndexPastHeight(previousCol.startIndex, targetHeight);
+        attemptedSelectedIndex = selectedIndex;
     }
 
     Keys.onRightPressed: {
+        if (selectedIndex < 0) {
+            selectedIndex = 0;
+            attemptedSelectedIndex = selectedIndex;
+            return;
+        }
 
+        if (menuItems[selectedIndex].submenu !== undefined) {
+            keyboardTrigger(selectedIndex);
+            return;
+        }
+
+        let colIndex = getColumnIndex(selectedIndex);
+        let nextColIndex = colIndex === _processedMenuItems.length - 1 ? 0 : colIndex + 1;
+        let col = menuContentRepeater.itemAt(colIndex);
+        let nextCol = menuContentRepeater.itemAt(nextColIndex);
+        let targetItem = col.itemAt(selectedIndex - col.startIndex);
+        let targetHeight = targetItem.y + targetItem.height;
+        selectedIndex = getFirstIndexPastHeight(nextCol.startIndex, targetHeight);
+        attemptedSelectedIndex = selectedIndex;
+    }
+
+    function getFirstIndexPastHeight(startIndex, height) {
+        let runningHeight = 0;
+        for (let i = startIndex; i < menuItems.length; i++) {
+            if (menuItems[i].newColumn) {
+                continue;
+            }
+            else if (menuItems[i].separator) {
+                runningHeight += 7;
+            }
+            else {
+                runningHeight += 21;
+            }
+            if (height - runningHeight < 11) {
+                if (menuItems[i].separator || menuItems[i].disabled) {
+                    continue;
+                }
+                return i;
+            }
+        }
+        return menuItems.length - 1;
     }
 
     Keys.onUpPressed: {
@@ -248,7 +301,7 @@ Item {
         id: mouseHelper
     }
 
-    function getColumnElement(itemIndex) {
+    function getColumnIndex(itemIndex) {
         let columnIndex = -1;
 
         for (let i = menuContent.children.length - 2; i >= 0; i--) {
@@ -260,7 +313,11 @@ Item {
             }
         }
 
-        return menuContentRepeater.itemAt(columnIndex);
+        return columnIndex;
+    }
+
+    function getColumnElement(itemIndex) {
+        return menuContentRepeater.itemAt(getColumnIndex(itemIndex));
     }
 
     function getItemElement(index) {
