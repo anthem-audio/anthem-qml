@@ -179,6 +179,8 @@ Window {
         onActivated: Anthem.newProject()
     }
 
+    // Ctrl+W lives in TabGroup
+
     Shortcut {
         sequence: "Ctrl+O"
         onActivated: loadFileDialog.open()
@@ -189,9 +191,17 @@ Window {
         onActivated: save()
     }
 
+    Connections {
+        target: mainWindow
+        onClosing: {
+            close.accepted = false;
+            closeWithSavePrompt()
+        }
+    }
+
 //    Image {
 //        id: asdf
-//        source: "Images/pretty.jpg"
+//        source: "file:///C:\\Users\\qbgee\\Pictures\\6p6qwzkpyh921.jpg"
 //        anchors.fill: parent
 //    }
 //    FastBlur {
