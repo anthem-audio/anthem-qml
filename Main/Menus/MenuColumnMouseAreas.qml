@@ -166,21 +166,7 @@ Column {
                     }
 
                     if (columnItems[index].submenu) {
-                        let submenuPos = mapToGlobal(x + width, y);
-                        let menuPos = mapToGlobal(x, y);
-                        let windowPos = menuHelper.mapToGlobal(0, 0);
-                        currentSubmenuX = submenuPos.x - windowPos.x;
-                        currentSubmenuY = submenuPos.y - windowPos.y;
-                        currentSubmenuAltX = menuPos.x - windowPos.x;
-                        currentSubmenuAltY = menuPos.y - windowPos.y;
-                    }
-
-                    if (columnItems[index].submenu) {
-                        timer.setTimeout(() => {
-                            if (index + startIndex === selectedIndex) {
-                                submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, index + startIndex);
-                            }
-                        }, 500);
+                        openSubmenuAt(index + startIndex, 500);
                     }
                 }
                 onPressed: {
@@ -192,10 +178,7 @@ Column {
                         menuItems[index + startIndex].onTriggered();
                     }
                     if (columnItems[index].submenu) {
-                        let submenuPos = mapToGlobal(x + width, y);
-                        let menuPos = mapToGlobal(x, y);
-                        let windowPos = menuHelper.mapToGlobal(0, 0);
-                        submenuClicked(submenuPos.x - windowPos.x, submenuPos.y - windowPos.y, menuPos.x - windowPos.x, menuPos.y - windowPos.y, index + startIndex);
+                        openSubmenuAt(index + startIndex);
                     }
                     else
                         closeAll();

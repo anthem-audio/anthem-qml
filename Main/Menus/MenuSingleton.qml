@@ -40,6 +40,12 @@ import io.github.anthem.utilities.mousehelper 1.0
  *
  * This code is bad and I am so very sorry to whoever
  * has to read it in the future.
+ *
+ * IMPORTANT:
+ * If you change selectedIndex, you must also change
+ * attemptedSelectedIndex! If you don't, when you
+ * a submenu open, it will close after 1 second due
+ * to how I'm handling mouse interaction UX.
  */
 
 Item {
@@ -188,6 +194,10 @@ Item {
         }
     }
 
+    Keys.onEnterPressed: {
+        keyboardTrigger(selectedIndex);
+    }
+
     Keys.onReturnPressed: {
         keyboardTrigger(selectedIndex);
     }
@@ -200,10 +210,11 @@ Item {
         if (index < 0)
             return;
         if (menuItems[index].submenu !== undefined) {
-
+            openSubmenuAt(index);
         }
         else {
-            menuItems[index].onTriggered();
+            if (menuItems[index].onTriggered !== undefined)
+                menuItems[index].onTriggered();
             closeAll();
         }
     }
@@ -225,32 +236,67 @@ Item {
 
     Keys.onUpPressed: {
         incrementIndex(-1);
+        attemptedSelectedIndex = selectedIndex;
     }
 
     Keys.onDownPressed: {
         incrementIndex(1);
+        attemptedSelectedIndex = selectedIndex;
     }
 
     MouseHelper {
         id: mouseHelper
     }
 
-    function moveMouseTo(index) {
+    function getColumnElement(itemIndex) {
         let columnIndex = -1;
 
         for (let i = menuContent.children.length - 2; i >= 0; i--) {
             let startIndex = menuContentRepeater.itemAt(i).startIndex;
 
-            if (startIndex <= index) {
+            if (startIndex <= itemIndex) {
                 columnIndex = i;
                 break;
             }
         }
 
-        let selectedColumn = menuContentRepeater.itemAt(columnIndex);
+        return menuContentRepeater.itemAt(columnIndex);
+    }
+
+    function getItemElement(index) {
+        let col = getColumnElement(index);
+        return col.itemAt(index - col.startIndex);
+    }
+
+    function moveMouseTo(index) {
+        let selectedColumn = getColumnElement(index);
         let newSelectedElement = selectedColumn.itemAt(index - selectedColumn.startIndex);
         let newMousePos = mapToGlobal(selectedColumn.x + newSelectedElement.x + newSelectedElement.width * 0.7, newSelectedElement.y + newSelectedElement.height * 0.5);
         mouseHelper.setCursorPosition(newMousePos.x, newMousePos.y);
+    }
+
+    function openSubmenuAt(index, delay = 0) {
+        let selectedColumn = getColumnElement(index);
+        let selectedMenuItem = selectedColumn.itemAt(index - selectedColumn.startIndex);
+        let submenuPos = mapToGlobal(selectedColumn.x + selectedMenuItem.width, selectedMenuItem.y);
+        let altSubmenuPos = mapToGlobal(selectedColumn.x, selectedMenuItem.y);
+        let windowPos = menuHelper.mapToGlobal(0, 0);
+
+        currentSubmenuX = submenuPos.x - windowPos.x;
+        currentSubmenuY = submenuPos.y - windowPos.y;
+        currentSubmenuAltX = altSubmenuPos.x - windowPos.x;
+        currentSubmenuAltY = altSubmenuPos.y - windowPos.y;
+
+        if (delay > 0) {
+            timer.setTimeout(() => {
+                if (index === selectedIndex) {
+                    submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, index);
+                }
+            }, 500);
+        }
+        else {
+            submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, index);
+        }
     }
 
     function submenuClicked(x, y, altX, altY, index) {
@@ -268,7 +314,7 @@ Item {
                 selectedIndex = attemptedSelectedIndex;
                 closeSubmenus(id);
                 openedSubmenuIndex = -1;
-                if (menuItems[selectedIndex].submenu) {
+                if (selectedIndex >= 0 && menuItems[selectedIndex].submenu) {
                     timer.setTimeout(() => {
                         submenuClicked(currentSubmenuX, currentSubmenuY, currentSubmenuAltX, currentSubmenuAltY, selectedIndex);
                     }, 500);
