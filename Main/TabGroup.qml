@@ -65,6 +65,11 @@ Item {
         title: "Unsaved changes"
     }
 
+    Shortcut {
+        sequence: "Ctrl+W"
+        onActivated: doOnTabClosePressed(selectedTabIndex)
+    }
+
     TabHandle {
         height: parent.height
         x: parent.x
