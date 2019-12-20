@@ -220,4 +220,33 @@ Item {
         }
         propagateComposedEvents: true
     }
+
+    onWidthChanged: {
+        if (_previousWidth === undefined) {
+            _previousWidth = width;
+            return;
+        }
+
+        if (width < 0) {
+            return;
+        }
+
+        let delta = _previousWidth - width;
+
+        if (patternEditorWidth > minPatternEditorWidth) {
+            let newWidth = patternEditorWidth - delta;
+            let newArrangerWidth = width - newWidth - (showHidePatternPickerBtn.pressed ? 145 : 0);
+            if (newWidth < minPatternEditorWidth) {
+                delta += minPatternEditorWidth - newWidth;
+                newWidth = minPatternEditorWidth;
+            }
+            else if (newArrangerWidth < minArrangerWidth) {
+                newWidth = width - minArrangerWidth - (showHidePatternPickerBtn.pressed ? 145 : 0);
+            }
+
+            patternEditorWidth = newWidth;
+        }
+
+        _previousWidth = width;
+    }
 }
