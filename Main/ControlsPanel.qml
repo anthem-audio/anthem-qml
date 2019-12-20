@@ -10,7 +10,7 @@
 
     Anthem is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
@@ -24,9 +24,13 @@ import QtQuick.Dialogs 1.2
 
 import "BasicComponents"
 import "Global"
+import "Menus"
 
 Panel {
     height: 44
+
+    signal closeRequested()
+
     Item {
         id: controlPanelSpacer
         anchors.fill: parent
@@ -63,31 +67,63 @@ Panel {
 
             onPress: fileMenu.open()
 
+            Shortcut {
+                sequence: "alt+f"
+                onActivated: fileMenu.open()
+            }
+
             Menu {
                 id: fileMenu
-                y: parent.height
+                menuX: 0
+                menuY: parent.height
+                maxHeight: 200
 
-                MenuItem {
-                    text: 'New project'
-                    onTriggered: Anthem.newProject()
-                }
-                MenuItem {
-                    text: 'Open...'
-                    onTriggered: loadFileDialog.open()
-                }
-                MenuSeparator {}
-                MenuItem {
-                    text: 'Save'
-                    onTriggered: save()
-                }
-                MenuItem {
-                    text: 'Save as...'
-                    onTriggered: saveFileDialog.open()
-                }
-                MenuSeparator {}
-                MenuItem {
-                    text: 'Exit'
-                }
+                menuItems: [
+                    {
+                        text: 'N_ew project',
+                        shortcut: 'Ctrl+N',
+                        hoverText: 'Start a new project',
+                        onTriggered: () => {
+                            Anthem.newProject();
+                        }
+                    },
+                    {
+                        text: 'O_pen...',
+                        shortcut: 'Ctrl+O',
+                        hoverText: 'Open an existing project',
+                        onTriggered: () => {
+                            loadFileDialog.open();
+                        }
+                    },
+                    {
+                        separator: true
+                    },
+                    {
+                        text: 'S_ave',
+                        shortcut: 'Ctrl+S',
+                        hoverText: 'Save this project',
+                        onTriggered: () => {
+                            save();
+                        }
+                    },
+                    {
+                        text: 'Save a_s...',
+                        hoverText: 'Save this project to a different file',
+                        onTriggered: () => {
+                            saveFileDialog.open();
+                        }
+                    },
+                    {
+                        separator: true
+                    },
+                    {
+                        text: 'Ex_it',
+                        hoverText: 'Quit Anthem',
+                        onTriggered: () => {
+                            closeRequested();
+                        }
+                    }
+                ]
             }
         }
 
@@ -98,7 +134,7 @@ Panel {
             anchors.left: btnFile.right
             anchors.leftMargin: 20
             width: parent.height
-            hoverMessage: "Save project"
+            hoverMessage: "Save this project"
 
             imageSource: "Images/Save.svg"
             imageWidth: 16

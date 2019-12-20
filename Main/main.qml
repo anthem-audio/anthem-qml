@@ -10,7 +10,7 @@
 
     Anthem is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
@@ -25,6 +25,7 @@ import QtGraphicalEffects 1.13
 import QtQuick.Dialogs 1.2
 import "BasicComponents"
 import "Dialogs"
+import "Menus"
 import "Global"
 
 Window {
@@ -173,9 +174,34 @@ Window {
         onActivated: Anthem.redo()
     }
 
+    Shortcut {
+        sequence: "Ctrl+N"
+        onActivated: Anthem.newProject()
+    }
+
+    // Ctrl+W lives in TabGroup
+
+    Shortcut {
+        sequence: "Ctrl+O"
+        onActivated: loadFileDialog.open()
+    }
+
+    Shortcut {
+        sequence: "Ctrl+S"
+        onActivated: save()
+    }
+
+    Connections {
+        target: mainWindow
+        onClosing: {
+            close.accepted = false;
+            closeWithSavePrompt()
+        }
+    }
+
 //    Image {
 //        id: asdf
-//        source: "Images/pretty.jpg"
+//        source: "file:///C:\\Users\\qbgee\\Pictures\\6p6qwzkpyh921.jpg"
 //        anchors.fill: parent
 //    }
 //    FastBlur {
@@ -266,6 +292,7 @@ Window {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.right: parent.right
+            onCloseRequested: mainWindow.closeWithSavePrompt()
         }
 
         MainStack {
@@ -460,5 +487,10 @@ Window {
             pressed: true
             hoverMessage: pressed ? "Hide controller rack" : "Show controller rack"
         }
+    }
+
+    Menus {
+        id: menuHelper
+        anchors.fill: parent
     }
 }

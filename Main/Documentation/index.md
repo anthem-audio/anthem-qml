@@ -15,3 +15,6 @@ These components run in separate processes and communicate with each other over 
 ## UI
 
 ### Main page: [UI](ui.md)
+
+### Basic UI components
+- [Menu](BasicComponents/Menu)

@@ -29,9 +29,6 @@
         <file>BasicComponents/SimpleMeter.qml</file>
         <file>Images/CPU.svg</file>
         <file>Images/Output Level.svg</file>
-        <file>BasicComponents/Menu.qml</file>
-        <file>BasicComponents/MenuItem.qml</file>
-        <file>BasicComponents/MenuSeparator.qml</file>
         <file>TabGroup.qml</file>
         <file>Images/Close.svg</file>
         <file>Images/Maximize.svg</file>
@@ -51,5 +48,12 @@
         <file>Images/Mixer.svg</file>
         <file>Images/Piano Roll.svg</file>
         <file>Images/Plugin.svg</file>
+        <file>Images/Pattern Editor.svg</file>
+        <file>Images/Pattern Picker.svg</file>
+        <file>Menus/Menu.qml</file>
+        <file>Menus/Menus.qml</file>
+        <file>Menus/MenuSingleton.qml</file>
+        <file>Menus/MenuColumn.qml</file>
+        <file>Menus/MenuColumnMouseAreas.qml</file>
     </qresource>
 </RCC>

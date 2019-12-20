@@ -10,7 +10,7 @@
 
     Anthem is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public
@@ -65,6 +65,11 @@ Item {
         title: "Unsaved changes"
     }
 
+    Shortcut {
+        sequence: "Ctrl+W"
+        onActivated: doOnTabClosePressed(selectedTabIndex)
+    }
+
     TabHandle {
         height: parent.height
         x: parent.x
@@ -78,7 +83,7 @@ Item {
     }
 
     function addTab(tabName) {
-        if (tabComponent === null || tabComponent === undefined)
+        if (tabComponent === null)
             tabComponent = Qt.createComponent("BasicComponents/TabHandle.qml");
 
         if (tabComponent.status === Component.Ready) {

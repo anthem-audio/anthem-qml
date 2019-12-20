@@ -20,7 +20,7 @@ jobs:
       run: |
            cd $GITHUB_WORKSPACE
            chmod +x ./qt-install.run
-           ./qt-install.run --script ./actions/installer-noninteractive-linux.qs --verbose --platform minimal
+           ./qt-install.run --script ./actions/installer-noninteractive.qs --verbose --platform minimal buildtype=linux
     - name: Build Anthem
       run: |
            cd $GITHUB_WORKSPACE
@@ -41,7 +41,7 @@ jobs:
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
            wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
            chmod +x linuxdeploy*.AppImage
-           ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ./Main/Main -i ../Anthem.png -d ../anthem.desktop --plugin qt --output appimage
+           ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ./Main/Main -i ../actions/linux/Anthem.png -d ../actions/linux/anthem.desktop --plugin qt --output appimage
            mkdir upload
            mv ./Anthem*.AppImage ./upload
     - uses: actions/upload-artifact@master

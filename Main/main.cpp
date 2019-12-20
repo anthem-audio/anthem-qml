@@ -18,6 +18,11 @@
                         <https://www.gnu.org/licenses/>.
 */
 
+#define HIDE_CONSOLE (_MSC_VER && !__INTEL_COMPILER)
+#if HIDE_CONSOLE
+#include <windows.h>
+#endif
+
 #include <QGuiApplication>
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
@@ -34,6 +39,9 @@ int main(int argc, char *argv[]) {
         ModelTests modelTests;
         return QTest::qExec(&modelTests);
     }
+#if HIDE_CONSOLE
+    FreeConsole();
+#endif
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
