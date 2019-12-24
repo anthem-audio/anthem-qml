@@ -50,6 +50,7 @@
         <file>Images/Plugin.svg</file>
         <file>Images/Pattern Editor.svg</file>
         <file>Images/Pattern Picker.svg</file>
+        <file>BasicComponents/ListSelector.qml</file>
         <file>Menus/Menu.qml</file>
         <file>Menus/Menus.qml</file>
         <file>Menus/MenuSingleton.qml</file>

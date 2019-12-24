@@ -76,7 +76,6 @@ Panel {
                 id: fileMenu
                 menuX: 0
                 menuY: parent.height
-                maxHeight: 200
 
                 menuItems: [
                     {
