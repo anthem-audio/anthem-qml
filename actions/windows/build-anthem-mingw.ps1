@@ -3,7 +3,7 @@ cd $env:GITHUB_WORKSPACE
 D:\Qt\5.14.0\mingw73_64\bin\qmake
 D:\Qt\Tools\mingw730_64\bin\mingw32-make.exe
 dir Main
-cd Main\release
+cd Main
 mkdir Anthem
 Copy-Item Main.exe -Destination Anthem
 cd Anthem
