@@ -26,7 +26,7 @@
   won't be the thing that needs fixing.
 */
 
-import QtQuick 2.13
+import QtQuick 2.14
 
 Item {
     id: menuContainer

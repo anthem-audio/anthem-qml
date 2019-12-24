@@ -57,7 +57,7 @@
   Good luck.
 */
 
-import QtQuick 2.13
+import QtQuick 2.14
 
 import "../Global"
 

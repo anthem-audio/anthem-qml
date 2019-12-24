@@ -18,8 +18,8 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.13
-import QtQuick.Window 2.13
+import QtQuick 2.14
+import QtQuick.Window 2.14
 import "../BasicComponents"
 import "../Global"
 import ".."

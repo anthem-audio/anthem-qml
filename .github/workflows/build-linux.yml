@@ -15,7 +15,7 @@ jobs:
     - name: Download Qt
       run: |
            cd $GITHUB_WORKSPACE
-           wget http://qt.mirror.constant.com/archive/qt/5.13/5.13.2/qt-opensource-linux-x64-5.13.2.run -O ./qt-install.run
+           wget http://qt.mirror.constant.com/archive/qt/5.14/5.14.0/qt-opensource-linux-x64-5.14.0.run -O ./qt-install.run
     - name: Install Qt
       run: |
            cd $GITHUB_WORKSPACE
@@ -24,7 +24,7 @@ jobs:
     - name: Build Anthem
       run: |
            cd $GITHUB_WORKSPACE
-           export PATH=$PATH:/qt/5.13.2/gcc_64/bin/
+           export PATH=$PATH:/qt/5.14.0/gcc_64/bin/
            mkdir build && cd build
            qmake .. -config release
            make -j$(nproc)
@@ -36,7 +36,7 @@ jobs:
     - name: Generate AppImage
       run: |
            cd $GITHUB_WORKSPACE/build
-           export PATH=$PATH:/qt/5.13.2/gcc_64/bin/
+           export PATH=$PATH:/qt/5.14.0/gcc_64/bin/
            export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/Main
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
            wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage

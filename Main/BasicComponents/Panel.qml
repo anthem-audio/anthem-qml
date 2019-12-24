@@ -18,7 +18,7 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.13
+import QtQuick 2.14
 
 Rectangle {
     color: Qt.rgba(0, 0, 0, 0.2)

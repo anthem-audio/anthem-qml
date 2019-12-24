@@ -26,8 +26,8 @@
   be glad you did (and maybe a bit horrified).
 */
 
-import QtQuick 2.13
-import QtQuick.Shapes 1.13
+import QtQuick 2.14
+import QtQuick.Shapes 1.14
 
 import "../Global"
 
