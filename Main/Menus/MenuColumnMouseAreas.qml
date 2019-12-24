@@ -67,19 +67,14 @@ Column {
     property int startIndex: 0
     width: {
         if (minWidth && biggestItemWidth < minWidth) {
-            if (width !== minWidth) {
-                return minWidth;
-            }
+            return minWidth;
         }
         else if (maxWidth && biggestItemWidth > maxWidth) {
-            if (width !== maxWidth) {
-                return maxWidth;
-            }
+            return maxWidth;
         }
         else {
             return biggestItemWidth;
         }
-        return width;
     }
 
     function itemAt(index) {
