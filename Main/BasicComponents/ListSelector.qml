@@ -35,19 +35,34 @@ Button {
      */
     property var listItems: []
     property bool allowNoSelection: false
-    property var selectedItem: {id: -1}
+    property var selectedItem: ({displayName: qsTr('(none)')})
+    property var selectedItemIndex: -1;
+    property string selectedItemDisplayName: selectedItem.displayName
     property real textPixelSize: 11
     property real _hue: 162 / 360
+    property real menuMaxWidth
 
     onPress: {
         let processedItems = [];
 
-        for (let item of listItems) {
+        if (allowNoSelection) {
+            processedItems.push({
+                text: qsTr('(none)'),
+                onTriggered: () => {
+                    selectedItem = {displayName: qsTr('(none)')};
+                    selectedItemIndex = -1;
+                },
+            });
+        }
+
+        for (let i = 0; i < listItems.length; i++) {
+            let item = listItems[i];
             let newItem = {};
 
             newItem.text = item.displayName;
             newItem.onTriggered = () => {
                 selectedItem = item;
+                selectedItemIndex = i;
             }
 
             processedItems.push(newItem);
@@ -63,9 +78,13 @@ Button {
         text: selectedItem.displayName ? qsTr(selectedItem.displayName) : qsTr("(none)")
         font.family: Fonts.notoSansRegular.name
         font.pixelSize: textPixelSize
-        anchors.left: parent.left
-        anchors.margins: 4
-        anchors.verticalCenter: parent.verticalCenter
+        anchors {
+            left: parent.left
+            right: parent.right
+            margins: 4
+            verticalCenter: parent.verticalCenter
+        }
+        elide: Text.ElideMiddle
         color: Qt.hsla(_hue, 0.5, 0.43, 1);
     }
 
@@ -74,5 +93,6 @@ Button {
         maxHeight: mainWindow.height
         menuY: parent.height
         minWidth: parent.width
+        maxWidth: menuMaxWidth
     }
 }
