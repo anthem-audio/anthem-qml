@@ -33,11 +33,12 @@
 #include "Core/communicator.h"
 #include "Core/engine.h"
 #include "Utilities/patch.h"
+#include "patternpresenter.h"
 
 class MainPresenter : public Communicator {
     Q_OBJECT
 private:
-    void updateAll();
+    void emitAllChangeSignals();
 
     void connectUiUpdateSignals(Project* project);
     void disconnectUiUpdateSignals(Project* project);
@@ -69,12 +70,15 @@ private:
     QVector<QVector<Patch*>> projectHistories;
     bool isPatchInProgress;
 
+    /// API for the pattern editor
+    PatternPresenter* patternEditor;
+
     IdGenerator* id;
 
 public:
-    explicit MainPresenter(QObject *parent, IdGenerator* id);
+    explicit MainPresenter(QObject* parent, IdGenerator* id);
 
-    // These are virtual functions in Communicator
+    // Implementations of virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
     void patchRemove(QString path, rapidjson::Value& oldValue);
     void patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue);

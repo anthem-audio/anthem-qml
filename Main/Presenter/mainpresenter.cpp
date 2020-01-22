@@ -48,6 +48,9 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
     // Connect change signals from the model to the UI
     connectUiUpdateSignals(projectModel);
 
+    // Initialize child presenters
+    patternEditor = new PatternPresenter(this, id, projectModel);
+
     // Start the engine
     auto engine = new Engine(dynamic_cast<QObject*>(this));
     engine->start();
@@ -319,9 +322,15 @@ void MainPresenter::redo() {
 void MainPresenter::switchActiveProject(int index) {
     if (isActiveProjectValid)
         disconnectUiUpdateSignals(projects[activeProjectIndex]);
+
     activeProjectIndex = index;
+
     connectUiUpdateSignals(projects[activeProjectIndex]);
-    updateAll();
+    emitAllChangeSignals();
+
+    // Update child presenters
+    patternEditor->setActiveProject(projects[activeProjectIndex]);
+
     isActiveProjectValid = true;
 }
 
@@ -356,7 +365,7 @@ void MainPresenter::displayStatusMessage(QString message) {
 // Control-specific functions //
 //****************************//
 
-void MainPresenter::updateAll() {
+void MainPresenter::emitAllChangeSignals() {
     emit masterPitchChanged(getMasterPitch());
     emit beatsPerMinuteChanged(getBeatsPerMinute());
     emit timeSignatureNumeratorChanged(getTimeSignatureNumerator());

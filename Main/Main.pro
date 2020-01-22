@@ -21,6 +21,7 @@ SOURCES += \
         Model/project.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
+        Presenter/patternpresenter.cpp \
         Utilities/idgenerator.cpp \
         Utilities/mousehelper.cpp \
         Utilities/patch.cpp \
@@ -86,6 +87,7 @@ HEADERS += \
     Model/project.h \
     Model/transport.h \
     Presenter/mainpresenter.h \
+    Presenter/patternpresenter.h \
     Tests/modeltests.h \
     Utilities/exceptions.h \
     Utilities/idgenerator.h \
