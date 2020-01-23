@@ -36,7 +36,7 @@ public:
     /// Apply a patch to the C++ model. Used for undo and redo.
     /// "pointer" is expected to be relative to the ModelItem this
     ///     function is called on.
-    virtual void externalUpdate(QStringRef pointer, PatchFragment& patch) = 0;
+    virtual void onPatchReceived(QStringRef pointer, PatchFragment& patch) = 0;
 
     /// Serialize model item state into the given value
     virtual void serialize(rapidjson::Value& value, rapidjson::Document& doc) = 0;

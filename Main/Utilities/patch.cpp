@@ -174,7 +174,7 @@ void Patch::apply() {
 
         // Update C++ model and UI
         QString path(patchList[i]->patch["path"].GetString());
-        model->externalUpdate(QStringRef(&path).mid(QString("/project").length()), *patchList[i]);
+        model->onPatchReceived(QStringRef(&path).mid(QString("/project").length()), *patchList[i]);
     }
 }
 
@@ -184,7 +184,7 @@ void Patch::applyUndo() {
 
         // Update C++ model and UI
         QString path(undoPatchList[i]->patch["path"].GetString());
-        model->externalUpdate(QStringRef(&path).mid(QString("/project").length()), *undoPatchList[i]);
+        model->onPatchReceived(QStringRef(&path).mid(QString("/project").length()), *undoPatchList[i]);
     }
 }
 

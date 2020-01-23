@@ -30,25 +30,25 @@ Transport::Transport(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "tr
     defaultDenominator = 4;
 }
 
-Transport::Transport(ModelItem* parent, IdGenerator* id, Value& projectNode) : ModelItem(parent, "transport")
+Transport::Transport(ModelItem* parent, IdGenerator* id, Value& transportNode) : ModelItem(parent, "transport")
 {
     this->id = id;
-    masterPitch = new Control(this, "master_pitch", projectNode["master_pitch"]);
-    beatsPerMinute = new Control(this, "beats_per_minute", projectNode["beats_per_minute"]);
-    defaultNumerator = static_cast<quint8>(projectNode["default_numerator"].GetUint());
-    defaultDenominator = static_cast<quint8>(projectNode["default_denominator"].GetUint());
+    masterPitch = new Control(this, "master_pitch", transportNode["master_pitch"]);
+    beatsPerMinute = new Control(this, "beats_per_minute", transportNode["beats_per_minute"]);
+    defaultNumerator = static_cast<quint8>(transportNode["default_numerator"].GetUint());
+    defaultDenominator = static_cast<quint8>(transportNode["default_denominator"].GetUint());
 }
 
-void Transport::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+void Transport::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     QString masterPitchStr = "/master_pitch";
     QString beatsPerMinuteStr = "/beats_per_minute";
     QString defaultNumeratorStr = "/default_numerator";
     QString defaultDenominatorStr = "/default_denominator";
     if (pointer.startsWith(masterPitchStr)) {
-        masterPitch->externalUpdate(pointer.mid(masterPitchStr.length()), patch);
+        masterPitch->onPatchReceived(pointer.mid(masterPitchStr.length()), patch);
     }
     else if (pointer.startsWith(beatsPerMinuteStr)) {
-        beatsPerMinute->externalUpdate(pointer.mid(beatsPerMinuteStr.length()), patch);
+        beatsPerMinute->onPatchReceived(pointer.mid(beatsPerMinuteStr.length()), patch);
     }
     else if (pointer.startsWith(defaultNumeratorStr)) {
         quint8 val = static_cast<quint8>(patch.patch["value"].GetUint());

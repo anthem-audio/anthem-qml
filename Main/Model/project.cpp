@@ -32,10 +32,10 @@ Project::Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projec
     transport = new Transport(this, id, projectVal["transport"]);
 }
 
-void Project::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+void Project::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     QString transportStr = "/transport";
     if (pointer.startsWith(transportStr)) {
-        transport->externalUpdate(pointer.mid(transportStr.length()), patch);
+        transport->onPatchReceived(pointer.mid(transportStr.length()), patch);
     }
 }
 

@@ -48,7 +48,7 @@ Control::Control(ModelItem *parent, QString name, Value& controlNode) : ModelIte
     overrideAutomation = controlNode["override_automation"].GetBool();
 }
 
-void Control::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+void Control::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     // The ID is assumed to never change.
     QString initialValueStr = "/initial_value";
     QString overrideAutomationStr = "/override_automation";

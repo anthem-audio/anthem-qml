@@ -38,10 +38,9 @@ public:
     Project(Communicator* parent, IdGenerator* id);
     Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projectVal);
 
-    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
+    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
 
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
-
 signals:
 
 public slots:

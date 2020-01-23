@@ -37,8 +37,8 @@ private:
 
 public:
     Transport(ModelItem* parent, IdGenerator* id);
-    Transport(ModelItem* parent, IdGenerator* id, rapidjson::Value& projectNode);
-    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
+    Transport(ModelItem* parent, IdGenerator* id, rapidjson::Value& transportNode);
+    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
     Control* masterPitch;

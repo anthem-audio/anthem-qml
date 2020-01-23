@@ -61,7 +61,7 @@ public:
             float step);
 
 
-    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
+    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
     void set(float val, bool isFinal);
     float get();
