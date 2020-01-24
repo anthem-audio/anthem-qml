@@ -25,6 +25,7 @@
 Project::Project(Communicator* parent, IdGenerator* id) : ModelItem(parent, "project") {
     this->id = id;
     transport = new Transport(this, id);
+    song = new Song(this, id);
 }
 
 Project::Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projectVal) : ModelItem(parent, "project") {
@@ -34,8 +35,12 @@ Project::Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projec
 
 void Project::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     QString transportStr = "/transport";
+    QString songStr = "/song";
     if (pointer.startsWith(transportStr)) {
         transport->onPatchReceived(pointer.mid(transportStr.length()), patch);
+    }
+    else if (pointer.startsWith(songStr)) {
+        song->onPatchReceived(pointer.mid(songStr.length()), patch);
     }
 }
 
@@ -45,4 +50,8 @@ void Project::serialize(rapidjson::Value& value, rapidjson::Document& doc) {
     rapidjson::Value transportValue;
     transport->serialize(transportValue, doc);
     value.AddMember("transport", transportValue, doc.GetAllocator());
+
+    rapidjson::Value songValue;
+    song->serialize(songValue, doc);
+    value.AddMember("song", songValue, doc.GetAllocator());
 }

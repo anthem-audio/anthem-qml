@@ -17,8 +17,11 @@ SOURCES += \
         Core/communicator.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
+        main.cpp \
         Model/control.cpp \
+        Model/pattern.cpp \
         Model/project.cpp \
+        Model/song.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
         Presenter/patternpresenter.cpp \
@@ -26,8 +29,7 @@ SOURCES += \
         Utilities/mousehelper.cpp \
         Utilities/patch.cpp \
         Utilities/patchfragment.cpp \
-        Utilities/projectfile.cpp \
-        main.cpp
+        Utilities/projectfile.cpp
 
 RESOURCES += qml.qrc
 
@@ -84,7 +86,9 @@ HEADERS += \
     Include/rapidjson/writer.h \
     Include/snowflake.h \
     Model/control.h \
+    Model/pattern.h \
     Model/project.h \
+    Model/song.h \
     Model/transport.h \
     Presenter/mainpresenter.h \
     Presenter/patternpresenter.h \

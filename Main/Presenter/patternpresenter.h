@@ -11,10 +11,14 @@ class PatternPresenter : public QObject {
 private:
     IdGenerator* id;
     Project* activeProject;
+
+    /// Pattern currently open in the pattern editor
+    Pattern* activePattern;
 public:
     explicit PatternPresenter(QObject* parent, IdGenerator* id, Project* activeProject);
 
     void setActiveProject(Project* project);
+    void setActivePattern(Pattern* pattern);
 };
 
 #endif // PATTERNPRESENTER_H

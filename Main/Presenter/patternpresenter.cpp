@@ -9,3 +9,7 @@ PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id, Project* ac
 void PatternPresenter::setActiveProject(Project* project) {
     this->activeProject = project;
 }
+
+void PatternPresenter::setActivePattern(Pattern* pattern) {
+    this->activePattern = pattern;
+}

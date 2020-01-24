@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -18,34 +18,34 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-#ifndef PROJECT_H
-#define PROJECT_H
+#ifndef PATTERN_H
+#define PATTERN_H
 
 #include <QObject>
+#include <QHash>
+#include <QString>
 
 #include "Include/rapidjson/document.h"
 
-#include "Core/communicator.h"
-#include "transport.h"
-#include "song.h"
 #include "Core/modelitem.h"
+#include "Utilities/idgenerator.h"
 
-class Project : public ModelItem {
+class Pattern : public ModelItem
+{
     Q_OBJECT
 private:
     IdGenerator* id;
+    QString displayName;
 public:
-    Transport* transport;
-    Song* song;
-    Project(Communicator* parent, IdGenerator* id);
-    Project(Communicator* parent, IdGenerator* id, rapidjson::Value& projectVal);
+    Pattern(ModelItem* parent, IdGenerator* id, QString displayName);
+    Pattern(ModelItem* parent, IdGenerator* id, rapidjson::Value& patternNode);
 
     void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
-
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 signals:
+    void displayNameChanged(QString displayName);
 
 public slots:
 };
 
-#endif // PROJECT_H
+#endif // PATTERN_H

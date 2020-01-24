@@ -20,6 +20,7 @@
 
 import QtQuick 2.14
 import "../../BasicComponents"
+import "../../Menus"
 
 Item {
     id: patternEditor
@@ -44,6 +45,26 @@ Item {
             imageSource: "Images/Hamburger.svg"
             imageWidth: 8
             imageHeight: 9
+
+            onPress: {
+                patternEditorMenu.open();
+            }
+        }
+
+        Menu {
+            id: patternEditorMenu
+            menuX: 0
+            menuY: menuButton.height
+
+            menuItems: [
+                {
+                    text: 'New pattern',
+                    hoverText: 'Create a new pattern',
+                    onTriggered: () => {
+
+                    }
+                }
+            ]
         }
 
         ListSelector {
@@ -68,12 +89,5 @@ Item {
                 {id: 3, displayName: "Pattern 4"},
             ]
         }
-    }
-
-    Text {
-        anchors.top: topRowContainer.bottom
-        anchors.left: parent.left
-        font.pixelSize: 150
-        text: myListSelector.selectedItemDisplayName
     }
 }

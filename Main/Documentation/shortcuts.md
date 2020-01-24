@@ -16,3 +16,8 @@ All shortcuts in Anthem are defined here, along with the locations of their resp
   - Undo
 - `Ctrl`+`Shift`+`Z` (`main.qml`)
   - Redo
+
+
+## Idea space
+
+- Bitwig uses number keys for tool selection, while FL uses sometimes-odd letters. I'm inclined to use numbers.
