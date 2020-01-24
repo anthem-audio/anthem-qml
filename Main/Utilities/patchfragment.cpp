@@ -1,5 +1,5 @@
 ﻿/*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -26,7 +26,14 @@
 
 using namespace rapidjson;
 
-PatchFragment::PatchFragment(QObject* parent, PatchType type, QString from, QString path, rapidjson::Value& value) : QObject(parent) {
+PatchFragment::PatchFragment(
+                QObject* parent,
+                PatchType type,
+                QString from,
+                QString path,
+                rapidjson::Value& value
+            ) : QObject(parent)
+{
     patch.SetObject();
 
     QString op;
@@ -50,13 +57,19 @@ PatchFragment::PatchFragment(QObject* parent, PatchType type, QString from, QStr
     patch.AddMember("op", opVal, patch.GetAllocator());
 
     if (!from.isNull()) {
-        patch.AddMember("from", from.toStdString(), patch.GetAllocator());
+        patch.AddMember(
+            "from", from.toStdString(), patch.GetAllocator()
+        );
     }
 
-    patch.AddMember("path", path.toStdString(), patch.GetAllocator());
+    patch.AddMember(
+        "path", path.toStdString(), patch.GetAllocator()
+    );
 
     if (!value.IsNull()) {
-        patch.AddMember("value", value, patch.GetAllocator());
+        patch.AddMember(
+            "value", value, patch.GetAllocator()
+        );
     }
 }
 
@@ -67,30 +80,52 @@ PatchFragment::PatchType PatchFragment::getType() {
 void PatchFragment::apply(Document &doc) {
     switch (type) {
         case PatchType::ADD:
-            Pointer(patch["path"].GetString())
-                    .Set(doc, Value(patch["value"], doc.GetAllocator()));
+            Pointer(
+                patch["path"].GetString()
+            ).Set(
+                doc, Value(
+                    patch["value"], doc.GetAllocator()
+                )
+            );
             break;
         case PatchType::REMOVE:
-            Pointer(patch["path"].GetString())
-                    .Erase(doc);
+            Pointer(
+                patch["path"].GetString()
+            ).Erase(doc);
             break;
         case PatchType::REPLACE:
-            Pointer(patch["path"].GetString())
-                    .Set(doc, Value(patch["value"], doc.GetAllocator()));
+            Pointer(
+                patch["path"].GetString()
+            ).Set(
+                doc, Value(
+                    patch["value"], doc.GetAllocator()
+                )
+            );
             break;
         case PatchType::COPY:
-            Pointer(patch["path"].GetString())
-                    .Set(doc, Value(
-                             Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType), doc.GetAllocator()
-                         ));
+            Pointer(
+                patch["path"].GetString()
+            ).Set(
+                doc, Value(
+                    Pointer(
+                        patch["from"].GetString()
+                    ).GetWithDefault(doc, kNullType),
+                    doc.GetAllocator()
+                )
+            );
             break;
         case PatchType::MOVE:
-            Pointer(patch["path"].GetString())
-                    .Set(doc, Value(
-                        Pointer(patch["from"].GetString()).GetWithDefault(doc, kNullType), doc.GetAllocator()
-                    ));
-            Pointer(patch["from"].GetString())
-                    .Erase(doc);
+            Pointer(
+                patch["path"].GetString()
+            ).Set(
+                doc, Value(
+                    Pointer(
+                        patch["from"].GetString()
+                    ).GetWithDefault(doc, kNullType),
+                    doc.GetAllocator()
+                )
+            );
+            Pointer(patch["from"].GetString()).Erase(doc);
             break;
     }
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -27,7 +27,16 @@ using namespace rapidjson;
 
 #include <QDebug>
 
-Control::Control(ModelItem* parent, QString name, IdGenerator& idGenerator, float initialValue, float minimum, float maximum, float step) : ModelItem(parent, name) {
+Control::Control(
+            ModelItem* parent,
+            QString name,
+            IdGenerator& idGenerator,
+            float initialValue,
+            float minimum,
+            float maximum,
+            float step
+        ) : ModelItem(parent, name)
+{
     id = idGenerator.get();
     this->initialValue = initialValue;
     ui_currentValue = initialValue;
@@ -37,7 +46,11 @@ Control::Control(ModelItem* parent, QString name, IdGenerator& idGenerator, floa
     overrideAutomation = false;
 }
 
-Control::Control(ModelItem *parent, QString name, Value& controlNode) : ModelItem(parent, name)
+Control::Control(
+    ModelItem *parent,
+    QString name,
+    Value& controlNode
+) : ModelItem(parent, name)
 {
     id = controlNode["id"].GetUint64();
     initialValue = controlNode["initial_value"].GetFloat();
@@ -45,10 +58,13 @@ Control::Control(ModelItem *parent, QString name, Value& controlNode) : ModelIte
     minimum = controlNode["minimum"].GetFloat();
     maximum = controlNode["maximum"].GetFloat();
     step = controlNode["step"].GetFloat();
-    overrideAutomation = controlNode["override_automation"].GetBool();
+    overrideAutomation =
+        controlNode["override_automation"].GetBool();
 }
 
-void Control::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
+void Control::onPatchReceived(
+    QStringRef pointer, PatchFragment& patch
+) {
     // The ID is assumed to never change.
     QString initialValueStr = "/initial_value";
     QString overrideAutomationStr = "/override_automation";
@@ -85,16 +101,26 @@ void Control::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     }
 }
 
-void Control::serialize(rapidjson::Value& value, rapidjson::Document& doc) {
+void Control::serialize(
+    rapidjson::Value& value, rapidjson::Document& doc
+) {
     value.SetObject();
 
     value.AddMember("id", id, doc.GetAllocator());
-    value.AddMember("initial_value", initialValue, doc.GetAllocator());
+    value.AddMember(
+        "initial_value", initialValue, doc.GetAllocator()
+    );
     value.AddMember("minimum", minimum, doc.GetAllocator());
     value.AddMember("maximum", maximum, doc.GetAllocator());
     value.AddMember("step", step, doc.GetAllocator());
-    value.AddMember("override_automation", overrideAutomation, doc.GetAllocator());
-    value.AddMember("connection", kNullType, doc.GetAllocator());
+    value.AddMember(
+        "override_automation",
+        overrideAutomation,
+        doc.GetAllocator()
+    );
+    value.AddMember(
+        "connection", kNullType, doc.GetAllocator()
+    );
 }
 
 void Control::setOverrideState(bool isOverridden) {
@@ -104,7 +130,9 @@ void Control::setOverrideState(bool isOverridden) {
     overrideAutomation = isOverridden;
     Value overrideVal(overrideAutomation);
     Value oldOverrideVal(!overrideAutomation);
-    patchReplace("override_automation", oldOverrideVal, overrideVal);
+    patchReplace(
+        "override_automation", oldOverrideVal, overrideVal
+    );
 }
 
 // TODO: Set override state depending on whether project is playing or not

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020 Joshua Wade
+    Copyright (C) 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -22,29 +22,50 @@
 
 using namespace rapidjson;
 
-Song::Song(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "song") {
+Song::Song(
+    ModelItem* parent, IdGenerator* id
+) : ModelItem(parent, "song") {
     this->id = id;
     this->patterns = QHash<uint64_t, Pattern*>();
 }
 
-Song::Song(ModelItem* parent, IdGenerator* id, Value& songValue) : ModelItem(parent, "song") {
+Song::Song(
+    ModelItem* parent, IdGenerator* id, Value& songValue
+) : ModelItem(parent, "song") {
     this->id = id;
     this->patterns = QHash<uint64_t, Pattern*>();
 }
 
-void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
+void Song::onPatchReceived(
+    QStringRef pointer, PatchFragment& patch
+) {
     QString patternsStr = "/patterns";
 
     if (pointer.startsWith(patternsStr)) {
-        // If it starts with "patterns", it's assumed to be in this form:
+        // If it starts with "patterns", it's assumed to
+        // be in this form:
         //     /patterns/(u64 ID)/...
 
         // Pointer starting with /(u64 ID)/...
-        QStringRef pointerWithoutPatterns = pointer.mid(patternsStr.length());
+        QStringRef pointerWithoutPatterns =
+            pointer.mid(patternsStr.length());
+
         // Index of second slash in the above pointer
-        int patternPtrStart = pointerWithoutPatterns.indexOf("/", 1);
-        uint64_t key = static_cast<uint64_t>(pointerWithoutPatterns.mid(1, patternPtrStart).toULongLong());
-        patterns[key]->onPatchReceived(pointerWithoutPatterns.mid(patternPtrStart), patch);
+        int patternPtrStart =
+            pointerWithoutPatterns.indexOf("/", 1);
+
+        uint64_t key =
+            static_cast<uint64_t>(
+                pointerWithoutPatterns.mid(
+                    1, patternPtrStart
+                ).toULongLong());
+
+        patterns[key]->onPatchReceived(
+            pointerWithoutPatterns.mid(
+                patternPtrStart
+            ),
+            patch
+        );
     }
 }
 
@@ -58,11 +79,19 @@ void Song::serialize(Value& value, Document& doc) {
         this->patterns[key]->serialize(v, doc);
 
         // https://stackoverflow.com/a/33473321/8166701
-        auto indexStr = QString::number(key).toStdString();
-        Value index(indexStr.c_str(), static_cast<SizeType>(indexStr.size()), doc.GetAllocator());
+        auto indexStr =
+            QString::number(key).toStdString();
+
+        Value index(
+            indexStr.c_str(),
+            static_cast<SizeType>(indexStr.size()),
+            doc.GetAllocator()
+        );
 
         patterns.AddMember(index, v, doc.GetAllocator());
     }
 
-    value.AddMember("patterns", patterns, doc.GetAllocator());
+    value.AddMember(
+        "patterns", patterns, doc.GetAllocator()
+    );
 }

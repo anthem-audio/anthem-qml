@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020 Joshua Wade
+    Copyright (C) 2020 Joshua Wade
 
     This file is part of Anthem.
 

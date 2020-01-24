@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020 Joshua Wade
+    Copyright (C) 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -37,11 +37,26 @@ private:
     IdGenerator* id;
     QString displayName;
 public:
-    Pattern(ModelItem* parent, IdGenerator* id, QString displayName);
-    Pattern(ModelItem* parent, IdGenerator* id, rapidjson::Value& patternNode);
+    Pattern(
+        ModelItem* parent,
+        IdGenerator* id,
+        QString displayName
+    );
 
-    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
-    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+    Pattern(
+        ModelItem* parent,
+        IdGenerator* id,
+        rapidjson::Value& patternNode
+    );
+
+    void onPatchReceived(
+        QStringRef pointer, PatchFragment& patch
+    ) override;
+
+    void serialize(
+        rapidjson::Value& value,
+        rapidjson::Document& doc
+    ) override;
 signals:
     void displayNameChanged(QString displayName);
 

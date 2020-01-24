@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -20,29 +20,38 @@
 
 #include "modelitem.h"
 
-ModelItem::ModelItem(Communicator* parent, QString jsonKey) : Communicator(static_cast<QObject*>(parent))
-{
+ModelItem::ModelItem(
+    Communicator* parent, QString jsonKey
+) : Communicator(static_cast<QObject*>(parent)) {
     this->parent = parent;
     this->key = jsonKey;
 }
 
 ModelItem::~ModelItem() {}
 
-void ModelItem::patchAdd(QString path, rapidjson::Value& value) {
+void ModelItem::patchAdd(
+    QString path, rapidjson::Value& value
+) {
     parent->patchAdd(
         key + "/" + path,
         value
     );
 }
 
-void ModelItem::patchRemove(QString path, rapidjson::Value& oldValue) {
+void ModelItem::patchRemove(
+    QString path, rapidjson::Value& oldValue
+) {
     parent->patchRemove(
         key + "/" + path,
         oldValue
     );
 }
 
-void ModelItem::patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) {
+void ModelItem::patchReplace(
+    QString path,
+    rapidjson::Value& oldValue,
+    rapidjson::Value& newValue
+) {
     parent->patchReplace(
         key + "/" + path,
         oldValue,

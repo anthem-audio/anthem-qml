@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019, 2020 Joshua Wade
+    Copyright (C) 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -38,10 +38,19 @@ private:
     QHash<uint64_t, Pattern*> patterns;
 public:
     Song(ModelItem* parent, IdGenerator* id);
-    Song(ModelItem* parent, IdGenerator* id, rapidjson::Value& songNode);
+    Song(
+        ModelItem* parent,
+        IdGenerator* id,
+        rapidjson::Value& songNode
+    );
 
-    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
-    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+    void onPatchReceived(
+        QStringRef pointer, PatchFragment& patch
+    ) override;
+
+    void serialize(
+        rapidjson::Value& value, rapidjson::Document& doc
+    ) override;
 };
 
 #endif // SONG_H

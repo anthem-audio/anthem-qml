@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -33,7 +33,9 @@ ProjectFile::ProjectFile(QObject* parent) : QObject(parent) {
     document.SetObject();
 }
 
-ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
+ProjectFile::ProjectFile(
+    QObject* parent, QString path
+) : QObject(parent) {
     // Below are JSON schemas (https://json-schema.org/) for validating project files. Use another editor to modify them.
     auto schema_0_0_1 = R"(
         {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","properties":{"software_version":{"type":"string","pattern":"0.0.1"},"project":{"$ref":"#/definitions/Project"}},"required":["software_version","project"],"title":"The Root Schema","definitions":{"Project":{"type":"object","properties":{"song":{"type":"object","properties":{"patterns":{"type":"array"},"arrangements":{"type":"array"}}},"transport":{"$ref":"#/definitions/Transport"},"mixer":{"type":"object"},"generators":{"type":"array"}},"required":["transport"]},"Transport":{"type":"object","properties":{"master_pitch":{"$ref":"#/definitions/Control"},"beats_per_minute":{"$ref":"#/definitions/Control"},"default_numerator":{"type":"number","minimum":1,"maximum":16},"default_denominator":{"type":"number","enum":[1,2,4,8,16]}},"required":["master_pitch","beats_per_minute","default_numerator","default_denominator"]},"Control":{"type":"object","properties":{"id":{"type":"number"},"initial_value":{"type":"number"},"minimum":{"type":"number"},"maximum":{"type":"number"},"step":{"type":"number"},"connection":{"type":"null"},"override_automation":{"type":"boolean"}},"required":["id","initial_value","minimum","maximum","step","connection","override_automation"]}}}
@@ -48,10 +50,14 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
 
     bool isWindows = QSysInfo::kernelType() == "winnt";
 
-    FILE* fp = std::fopen(path.toUtf8(), isWindows ? "rb" : "r");
+    FILE* fp = std::fopen(
+        path.toUtf8(), isWindows ? "rb" : "r"
+    );
 
     char readBuffer[65536];
-    FileReadStream stream(fp, readBuffer, sizeof(readBuffer));
+    FileReadStream stream(
+        fp, readBuffer, sizeof(readBuffer)
+    );
 
     document.ParseStream(stream);
 
@@ -60,16 +66,20 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
 
     if (document.HasParseError()) {
         fclose(fp);
-        throw InvalidProjectException("This project is corrupted and could not be opened.");
+        throw InvalidProjectException(
+            "This project is corrupted and could not be opened."
+        );
     }
 
     const char* schemaForValidation;
 
 
-    // Check if software version in project matches current software version
+    // Check if software version in project matches current
+    // software version
 
     if (document.HasMember("software_version")) {
-        QString version = document["software_version"].GetString();
+        QString version =
+            document["software_version"].GetString();
         // Current version
         if (version == "0.0.1") {
             schemaForValidation = schema_0_0_1;
@@ -77,13 +87,18 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
         // Newer or unrecognized version
         else {
             fclose(fp);
-            auto error = "This project was made with a newer version of Anthem (" + version.toStdString() + ") and could not be opened.";
+            auto error =
+                "This project was made with a newer version "
+                "of Anthem (" + version.toStdString() + ") "
+                "and could not be opened.";
             throw InvalidProjectException(error.c_str());
         }
     }
     else {
         fclose(fp);
-        throw InvalidProjectException("This project is corrupted and could not be opened.");
+        throw InvalidProjectException(
+            "This project is corrupted and could not be opened."
+        );
     }
 
 
@@ -93,7 +108,10 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
     sd.Parse(schemaForValidation);
     if (sd.HasParseError()) {
         fclose(fp);
-        throw InvalidProjectException("Schema is invalid. This is a bug; please report it on Github.");
+        throw InvalidProjectException(
+            "Schema is invalid. This is a bug; please report "
+            "it on Github."
+        );
     }
     SchemaDocument schema(sd);
 
@@ -103,8 +121,12 @@ ProjectFile::ProjectFile(QObject* parent, QString path) : QObject(parent) {
         // Input JSON is invalid according to the schema
         // Output diagnostic information
         StringBuffer sb;
-        validator.GetInvalidSchemaPointer().StringifyUriFragment(sb);
-        QString err = "This project is corrupted and could not be loaded.";
+        validator
+            .GetInvalidSchemaPointer()
+            .StringifyUriFragment(sb);
+        QString err =
+            "This project is corrupted and could "
+            "not be loaded.";
         // For debugging:
         /*
         err += "\n";
@@ -130,16 +152,25 @@ void ProjectFile::save(Project& project) {
     Document doc;
     doc.SetObject();
     Value versionVal("0.0.1");
-    doc.AddMember("software_version", versionVal, doc.GetAllocator());
+    doc.AddMember(
+        "software_version", versionVal, doc.GetAllocator()
+    );
 
     Value projectVal(kObjectType);
     project.serialize(projectVal, doc);
-    doc.AddMember("project", projectVal, doc.GetAllocator());
+    doc.AddMember(
+        "project", projectVal, doc.GetAllocator()
+    );
 
     bool isWindows = QSysInfo::kernelType() == "winnt";
-    FILE* fp = std::fopen((path).toUtf8(), isWindows ? "wb" : "w");
+    FILE* fp =
+        std::fopen(
+            (path).toUtf8(), isWindows ? "wb" : "w"
+        );
     char writeBuffer[65536];
-    FileWriteStream stream(fp, writeBuffer, sizeof(writeBuffer));
+    FileWriteStream stream(
+        fp, writeBuffer, sizeof(writeBuffer)
+    );
     Writer<FileWriteStream> writer(stream);
     doc.Accept(writer);
     fclose(fp);

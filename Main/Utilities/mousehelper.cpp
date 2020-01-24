@@ -34,7 +34,9 @@ QPoint MouseHelper::getCursorPosition() {
 }
 
 void MouseHelper::setCursorToBlank() {
-    QGuiApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+    QGuiApplication::setOverrideCursor(
+        QCursor(Qt::BlankCursor)
+    );
 }
 
 void MouseHelper::clearOverride() {
