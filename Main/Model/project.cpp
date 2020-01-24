@@ -39,6 +39,8 @@ Project::Project(
     this->id = id;
     transport =
         new Transport(this, id, projectVal["transport"]);
+    song =
+        new Song(this, id, projectVal["song"]);
 }
 
 void Project::onPatchReceived(
