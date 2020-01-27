@@ -58,5 +58,11 @@
         <file>Menus/MenuSingleton.qml</file>
         <file>Menus/MenuColumn.qml</file>
         <file>Menus/MenuColumnMouseAreas.qml</file>
+        <file>BasicComponents/GenericTooltip/TooltipManager.qml</file>
+        <file>BasicComponents/GenericTooltip/TooltipWrapper.qml</file>
+        <file>BasicComponents/RenameTooltip.qml</file>
+        <file>Images/Check.svg</file>
+        <file>BasicComponents/ColorPickerTooltip.qml</file>
+        <file>BasicComponents/ColorPicker.qml</file>
     </qresource>
 </RCC>

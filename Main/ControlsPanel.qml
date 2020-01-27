@@ -121,6 +121,254 @@ Panel {
                         onTriggered: () => {
                             closeRequested();
                         }
+                    },
+                    {
+                        separator: true
+                    },
+                    {
+                        text: 'Submenu test',
+                        submenu: [
+                            {
+                                text: 'P_iano roll'
+                            },
+                            {
+                                text: 'Graph editor'
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'R_ename, color and icon..'
+                            },
+                            {
+                                text: 'Change color...'
+                            },
+                            {
+                                text: 'Change icon...'
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'L_oad sample...'
+                            },
+                            {
+                                text: 'Cut_ itself'
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'I_nsert'
+                            },
+                            {
+                                text: 'Replace'
+                            },
+                            {
+                                text: 'C_lone'
+                            },
+                            {
+                                text: 'D_elete...'
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'Assign to new instrument track...'
+                            },
+                            {
+                                newColumn: true
+                            },
+                            {
+                                text: 'Cut_'
+                            },
+                            {
+                                text: 'Co_py'
+                            },
+                            {
+                                text: 'P_aste',
+                                disabled: true
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'Fill each 2_ steps'
+                            },
+                            {
+                                text: 'Fill each 4_ steps'
+                            },
+                            {
+                                text: 'Fill each 8_ steps'
+                            },
+                            {
+                                text: 'Advanced fill...'
+                            },
+                            {
+                                text: 'Advanced fill...'
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'Rotate left',
+                                shortcut: 'Shift+Ctrl+Left'
+                            },
+                            {
+                                text: 'Rotate right',
+                                shortcut: 'Shift+Ctrl+Right'
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'MIDI channel through'
+                            },
+                            {
+                                text: 'Receive n_otes from',
+                                submenu: [
+                                    {text: 'Typing keyboard'},
+                                    {
+                                        text: 'Touch keyboard',
+                                        submenu: [
+                                            {text: 'abc'},
+                                            {text: 'abc'},
+                                            {text: 'abc'},
+                                            {text: 'abc'},
+                                            {newColumn: true},
+                                            {
+                                                text: 'abcdefghijklmnopqrstuvwxyz',
+                                                submenu: [
+                                                    {text: 'abc'},
+                                                    {text: 'abc'},
+                                                    {text: 'abc'},
+                                                    {text: 'abc'},
+                                                    {newColumn: true},
+                                                    {text: 'abc'},
+                                                    {text: 'abc'},
+                                                    {text: 'abc'},
+                                                    {
+                                                        text: 'abcdefghijklmnopqrstuvwxyz',
+                                                        submenu: [
+                                                            {text: 'abc'},
+                                                            {text: 'abc'},
+                                                            {text: 'abc'},
+                                                            {text: 'abc'},
+                                                            {newColumn: true},
+                                                            {text: 'abc'},
+                                                            {text: 'abc'},
+                                                            {text: 'abc'},
+                                                            {
+                                                                text: 'abcdefghijklmnopqrstuvwxyz',
+                                                                submenu: [
+                                                                    {text: 'abc'},
+                                                                    {text: 'abc'},
+                                                                    {text: 'abc'},
+                                                                    {text: 'abc'},
+                                                                    {newColumn: true},
+                                                                    {text: 'abc'},
+                                                                    {text: 'abc'},
+                                                                    {text: 'abc'},
+                                                                    {
+                                                                        text: 'abcdefghijklmnopqrstuvwxyz',
+                                                                        submenu: [
+                                                                            {text: 'abc'},
+                                                                            {text: 'abc'},
+                                                                            {text: 'abc'},
+                                                                            {text: 'abc'},
+                                                                            {newColumn: true},
+                                                                            {text: 'abc'},
+                                                                            {text: 'abc'},
+                                                                            {text: 'abc'},
+                                                                            {
+                                                                                text: 'abcdefghijklmnopqrstuvwxyz',
+                                                                                submenu: [
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
+                                                                                    {newColumn: true},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {newColumn: true},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {text: 'abcdefg'},
+                                                                                    {newColumn: true},
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+
+                                ]
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: 'Create DirectWave instrument...'
+                            },
+                            {
+                                text: 'Burn MIDI to',
+                                submenu: [
+                                    {text: 'C_urrent pattern'},
+                                    {text: 'N_ew pattern'}
+                                ]
+                            },
+                        ]
                     }
                 ]
             }

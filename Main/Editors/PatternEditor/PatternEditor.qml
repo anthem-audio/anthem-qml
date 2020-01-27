@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -61,7 +61,7 @@ Item {
                     text: 'New pattern',
                     hoverText: 'Create a new pattern',
                     onTriggered: () => {
-
+                        addPatternTooltip.open();
                     }
                 }
             ]
@@ -88,6 +88,11 @@ Item {
                 {id: 2, displayName: "Pattern 3"},
                 {id: 3, displayName: "Pattern 4"},
             ]
+        }
+
+        RenameTooltip {
+            id: addPatternTooltip
+            y: parent.height
         }
     }
 }

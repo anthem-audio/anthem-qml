@@ -24,6 +24,7 @@ import QtQuick.Shapes 1.14
 import QtGraphicalEffects 1.14
 import QtQuick.Dialogs 1.2
 import "BasicComponents"
+import "BasicComponents/GenericTooltip"
 import "Dialogs"
 import "Menus"
 import "Global"
@@ -487,6 +488,11 @@ Window {
             pressed: true
             hoverMessage: pressed ? "Hide controller rack" : "Show controller rack"
         }
+    }
+
+    TooltipManager {
+        anchors.fill: parent
+        id: tooltipManager
     }
 
     Menus {
