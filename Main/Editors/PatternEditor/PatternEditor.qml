@@ -92,7 +92,7 @@ Item {
 
         RenameTooltip {
             id: addPatternTooltip
-            y: parent.height
+            y: parent.height + 3
         }
     }
 }

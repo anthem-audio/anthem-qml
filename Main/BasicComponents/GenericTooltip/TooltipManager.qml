@@ -82,6 +82,18 @@ Item {
         openItemCount--;
     }
 
+    function get(id) {
+        let component;
+
+        for (let i = 1; i < children.length; i++) {
+            if (children[i].id === id) {
+                return children[i];
+            }
+        }
+
+        return component;
+    }
+
     MouseArea {
         anchors.fill: openItemCount > 0 ? parent : undefined
         width: openItemCount < 1 ? 0 : undefined

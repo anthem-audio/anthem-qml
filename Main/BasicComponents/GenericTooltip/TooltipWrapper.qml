@@ -25,6 +25,8 @@ Item {
     property int id
     property bool isOpen: false
 
+    signal opened(int id)
+
     Connections {
         target: tooltipManager
         onTooltipClosed: {
@@ -42,6 +44,7 @@ Item {
             pos.x - windowPos.x,
             pos.y - windowPos.y
         );
+        opened(id);
     }
 
     function close() {

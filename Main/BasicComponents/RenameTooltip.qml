@@ -124,7 +124,12 @@ TooltipWrapper {
                 }
                 width: 6
                 radius: 2
-                color: "lightblue"
+                color:
+                        colorPicker.hoverColor !== ''
+                        ? colorPicker.hoverColor
+                        : "lightblue";
+
+
                 opacity:
                     colorPickerMouseArea.hovered &&
                         !colorPickerMouseArea.pressed

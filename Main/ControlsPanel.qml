@@ -121,7 +121,7 @@ Panel {
                         onTriggered: () => {
                             closeRequested();
                         }
-                    },
+                    },/*
                     {
                         separator: true
                     },
@@ -369,7 +369,7 @@ Panel {
                                 ]
                             },
                         ]
-                    }
+                    }*/
                 ]
             }
         }

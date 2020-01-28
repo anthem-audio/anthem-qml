@@ -23,6 +23,21 @@ import QtQuick 2.14
 import "GenericTooltip"
 
 TooltipWrapper {
+    property int instanceID
+    property var pickerInstance
+    property string hoverColor
+
+    function setHoverColor(color) {
+        hoverColor = color;
+    }
+
+    onOpened: {
+        instanceID = id;
+        pickerInstance = tooltipManager.get(id);
+        pickerInstance.children[1] // ColorPicker
+            .colorHovered.connect(setHoverColor);
+    }
+
     content: Item {
         property int id
 
@@ -36,6 +51,7 @@ TooltipWrapper {
         }
 
         ColorPicker {
+            id: picker
             anchors.fill: parent
             anchors.topMargin: 6
             anchors.leftMargin: 6

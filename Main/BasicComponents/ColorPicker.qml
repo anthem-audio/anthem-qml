@@ -28,30 +28,51 @@ Item {
     property int cellsPerRow: parseInt(picker.width / (cellSize + cellMargin));
     property int rowCount: parseInt(picker.height / (cellSize + cellMargin));
 
-    Column {
-        anchors.fill: picker
-        Repeater {
-            model: rowCount
+    property string hoveredColor
+    signal colorHovered(string color)
+    signal colorSelected(string color)
 
-            Row {
-                property int rowIndex: index
-                height: cellSize + cellMargin
-                Repeater {
-                    model: cellsPerRow
-                    Item {
-                        property int columnIndex: index
-                        width: cellSize + cellMargin
-                        height: cellSize + cellMargin
-                        Rectangle {
-                            width: cellSize
-                            height: cellSize
-                            color:
-                                Qt.hsla(
-                                    columnIndex / cellsPerRow,
-                                    0.35,
-                                    (1 - rowIndex / rowCount) * 0.7 + 0.05,
-                                    1
-                                )
+    MouseArea {
+        anchors.fill: parent
+        hoverEnabled: true
+        onExited: {
+            colorHovered('');
+        }
+
+        Column {
+            anchors.fill: parent
+            Repeater {
+                model: rowCount
+
+                Row {
+                    property int rowIndex: index
+                    height: cellSize + cellMargin
+                    Repeater {
+                        model: cellsPerRow
+                        Item {
+                            property int columnIndex: index
+                            width: cellSize + cellMargin
+                            height: cellSize + cellMargin
+                            Rectangle {
+                                width: cellSize
+                                height: cellSize
+                                color:
+                                    Qt.hsla(
+                                        columnIndex / cellsPerRow,
+                                        0.43,
+                                        (1 - rowIndex / rowCount) * 0.7 + 0.05,
+                                        1
+                                    )
+                                MouseArea {
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onEntered: {
+                                        hoveredColor = parent.color;
+                                        colorHovered(hoveredColor);
+                                    }
+                                    propagateComposedEvents: true
+                                }
+                            }
                         }
                     }
                 }
