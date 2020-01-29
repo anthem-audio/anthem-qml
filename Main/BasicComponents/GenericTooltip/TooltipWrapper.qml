@@ -26,6 +26,7 @@ Item {
     property bool isOpen: false
 
     signal opened(int id)
+    signal closed();
 
     Connections {
         target: tooltipManager
@@ -34,6 +35,12 @@ Item {
                 isOpen = false;
             }
         }
+    }
+
+    focus: true
+
+    Keys.onEscapePressed: {
+        close();
     }
 
     function open() {
@@ -48,6 +55,7 @@ Item {
     }
 
     function close() {
+        closed();
         tooltipManager.close(id);
     }
 }

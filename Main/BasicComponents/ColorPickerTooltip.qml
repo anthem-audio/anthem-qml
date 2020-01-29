@@ -27,15 +27,25 @@ TooltipWrapper {
     property var pickerInstance
     property string hoverColor
 
+    signal colorSelected(string color);
+
     function setHoverColor(color) {
         hoverColor = color;
     }
 
+    function selectColor(color) {
+        colorSelected(color);
+    }
+
     onOpened: {
         instanceID = id;
+
         pickerInstance = tooltipManager.get(id);
+
         pickerInstance.children[1] // ColorPicker
             .colorHovered.connect(setHoverColor);
+        pickerInstance.children[1]
+            .colorSelected.connect(selectColor);
     }
 
     content: Item {

@@ -68,7 +68,10 @@ Item {
                                     hoverEnabled: true
                                     onEntered: {
                                         hoveredColor = parent.color;
-                                        colorHovered(hoveredColor);
+                                        colorHovered(parent.color);
+                                    }
+                                    onClicked: {
+                                        colorSelected(parent.color);
                                     }
                                     propagateComposedEvents: true
                                 }

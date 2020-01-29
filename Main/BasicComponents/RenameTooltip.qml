@@ -26,7 +26,48 @@ import "../Global"
 
 TooltipWrapper {
     id: wrapper
-    content: Item {
+    property int instanceID;
+    property string selectedColor: ''
+    property string defaultSelectedColor: Qt.hsla(162/360, 0.5, 0.43, 1)
+    property string defaultName: '';
+
+    signal accepted(string name, string color)
+    signal rejected()
+
+    onAccepted: {
+        console.log(name, color);
+        close();
+    }
+
+    Keys.onEscapePressed: {
+        rejected();
+    }
+
+    onOpened: {
+        instanceID = id;
+
+        selectedColor = defaultSelectedColor;
+
+        let renameInstance = tooltipManager.get(id);
+
+        let input = renameInstance
+            .children[0] // Rectangle
+            .children[0] // contentSpacer
+            .children[0] // topSpacer
+            .children[0] // input
+
+        if (defaultName !== '') {
+            input.text = defaultName;
+        }
+
+//        input.forceActiveFocus();
+        input.focus = true;
+        input.selectAll();
+    }
+
+    content: MouseArea {
+        hoverEnabled: true;
+
         property int id
 
         width: 130
@@ -56,6 +97,7 @@ TooltipWrapper {
                     }
 
                     TextInput {
+                        id: input
                         anchors.fill: parent
                         anchors.margins: 6
                         font {
@@ -63,8 +105,15 @@ TooltipWrapper {
                             family: Fonts.notoSansRegular.name
                         }
                         color: Qt.hsla(0, 0, 1, 0.8)
-                        selectionColor: Qt.hsla(162/360, 0.5, 0.43, 0.5)
+                        selectionColor: Qt.hsla(162/360, 0.5, 0.43, 1)
                         clip: true
+                        onAccepted: {
+                            wrapper.accepted(text, selectedColor);
+                        }
+                        Keys.onEscapePressed: {
+                            rejected();
+                            close();
+                        }
                     }
                 }
 
@@ -92,6 +141,9 @@ TooltipWrapper {
                         imageSource: "Images/Check.svg"
                         imageWidth: 8
                         imageHeight: 8
+                        onPress: {
+                            accepted(input.text, selectedColor);
+                        }
                     }
 
                     Button {
@@ -108,6 +160,7 @@ TooltipWrapper {
                         imageWidth: 8
                         imageHeight: 8
                         onPress: {
+                            rejected();
                             wrapper.close();
                         }
                     }
@@ -127,7 +180,7 @@ TooltipWrapper {
                 color:
                         colorPicker.hoverColor !== ''
                         ? colorPicker.hoverColor
-                        : "lightblue";
+                        : selectedColor;
 
 
                 opacity:
@@ -153,14 +206,25 @@ TooltipWrapper {
                 onPressed: pressed = true;
                 onReleased: {
                     pressed = false;
-
                     colorPicker.open();
+                    input.focus = false;
+                    colorPicker.focus = true;
                 }
             }
 
             ColorPickerTooltip {
                 id: colorPicker
                 x: parent.width
+
+                onColorSelected: {
+                    btnColorPicker.color = color;
+                    selectedColor = color;
+                    colorPicker.close();
+                }
+
+                onClosed: {
+                    input.focus = true;
+                }
             }
         }
 
