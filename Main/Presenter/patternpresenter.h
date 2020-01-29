@@ -22,6 +22,8 @@
 #define PATTERNPRESENTER_H
 
 #include <QObject>
+#include <QString>
+#include <QColor>
 
 #include "Utilities/idgenerator.h"
 #include "Model/project.h"
@@ -42,7 +44,10 @@ public:
     );
 
     void setActiveProject(Project* project);
+
     void setActivePattern(Pattern* pattern);
+    void createPattern(QString name, QColor color);
+//    void deletePattern(quint64 id);
 };
 
 #endif // PATTERNPRESENTER_H

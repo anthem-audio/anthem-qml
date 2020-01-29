@@ -95,3 +95,46 @@ void Song::serialize(Value& value, Document& doc) {
         "patterns", patterns, doc.GetAllocator()
     );
 }
+
+void Song::addPattern(QString name, QColor color) {
+    uint64_t patternID = id->get();
+
+    Value val(kObjectType);
+
+    auto nameStr = name.toStdString();
+    auto colorStr = color.name().toStdString();
+
+
+    Value nameVal(
+        nameStr.c_str(),
+        static_cast<SizeType>(nameStr.size()),
+        getPatchAllocator()
+    );
+    Value colorVal(
+        colorStr.c_str(),
+        static_cast<SizeType>(colorStr.size()),
+        getPatchAllocator()
+    );
+
+
+    val.AddMember(
+        "name",
+        nameVal,
+        getPatchAllocator()
+    );
+
+    val.AddMember(
+        "color",
+        colorVal,
+        getPatchAllocator()
+    );
+
+
+    patchAdd(
+        "patterns" + QString::number(patternID), val
+    );
+
+
+    // TODO: add color
+    patterns[patternID] = new Pattern(this, id, name);
+}

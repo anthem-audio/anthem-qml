@@ -404,6 +404,15 @@ void MainPresenter::liveUpdate(
     ]->sendLiveControlUpdate(controlId, value);
 }
 
+Document::AllocatorType& MainPresenter::getPatchAllocator() {
+    initializeNewPatchIfNeeded();
+    return *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ]->getPatchAllocator();
+}
+
 void MainPresenter::undo() {
     if (historyPointers[activeProjectIndex] <= -1)
         return;

@@ -96,6 +96,8 @@ public:
 
     void liveUpdate(uint64_t controlId, float value);
 
+    rapidjson::Document::AllocatorType& getPatchAllocator();
+
     /// Project that is currently loaded
     int activeProjectIndex;
 

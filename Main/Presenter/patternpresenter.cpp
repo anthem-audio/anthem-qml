@@ -35,3 +35,9 @@ void PatternPresenter::setActiveProject(Project* project) {
 void PatternPresenter::setActivePattern(Pattern* pattern) {
     this->activePattern = pattern;
 }
+
+void PatternPresenter::createPattern(
+    QString name, QColor color
+) {
+
+}

@@ -80,3 +80,9 @@ void ModelItem::sendPatch() {
 void ModelItem::liveUpdate(uint64_t controlId, float value) {
     parent->liveUpdate(controlId, value);
 }
+
+rapidjson::Document::AllocatorType&
+    ModelItem::getPatchAllocator()
+{
+    return parent->getPatchAllocator();
+}

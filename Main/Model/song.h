@@ -23,6 +23,8 @@
 
 #include <QObject>
 #include <QHash>
+#include <QString>
+#include <QColor>
 
 #include "Include/rapidjson/document.h"
 
@@ -51,6 +53,9 @@ public:
     void serialize(
         rapidjson::Value& value, rapidjson::Document& doc
     ) override;
+
+    void addPattern(QString name, QColor color);
+//    void deletePattern(uint64_t id);
 };
 
 #endif // SONG_H

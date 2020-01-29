@@ -58,6 +58,7 @@ public:
     void patchMove(QString from, QString path);
     void sendPatch();
     void liveUpdate(uint64_t controlId, float value);
+    rapidjson::Document::AllocatorType& getPatchAllocator();
 
     Communicator* parent;
 
