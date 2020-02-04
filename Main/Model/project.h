@@ -34,28 +34,19 @@ class Project : public ModelItem {
     Q_OBJECT
 private:
     IdGenerator* id;
-public:
     Transport* transport;
     Song* song;
+public:
+    Project(Communicator* parent, IdGenerator* id);
+    Project(Communicator* parent, IdGenerator* id,
+            rapidjson::Value& projectVal);
 
-    Project(
-        Communicator* parent, IdGenerator* id
-    );
-    Project(
-        Communicator* parent,
-        IdGenerator* id,
-        rapidjson::Value& projectVal
-    );
+    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
 
-    void onPatchReceived(
-        QStringRef pointer,
-        PatchFragment& patch
-    ) override;
+    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
-    void serialize(
-        rapidjson::Value& value,
-        rapidjson::Document& doc
-    ) override;
+    Transport* getTransport();
+    Song* getSong();
 signals:
 
 public slots:

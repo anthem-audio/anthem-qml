@@ -94,6 +94,9 @@ Item {
             id: addPatternTooltip
             y: parent.height + 3
             defaultName: 'Pattern 1';
+            onAccepted: {
+                PatternPresenter.createPattern(name, color);
+            }
         }
     }
 }

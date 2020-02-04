@@ -21,9 +21,9 @@
 #include "patternpresenter.h"
 #include <QDebug>
 
-PatternPresenter::PatternPresenter(
-    QObject* parent, IdGenerator* id, Project* activeProject
-) : QObject(parent) {
+PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id,
+                                   Project* activeProject)
+                                    : QObject(parent) {
     this->id = id;
     this->activeProject = activeProject;
 }
@@ -36,8 +36,7 @@ void PatternPresenter::setActivePattern(Pattern* pattern) {
     this->activePattern = pattern;
 }
 
-void PatternPresenter::createPattern(
-    QString name, QColor color
-) {
-
+void PatternPresenter::createPattern(QString name, QColor color) {
+    qDebug() << "PatternPresenter: createPattern()";
+    activeProject->getSong()->addPattern(name, color);
 }

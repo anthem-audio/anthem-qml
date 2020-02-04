@@ -73,7 +73,7 @@ private:
     bool isPatchInProgress;
 
     /// API for the pattern editor
-    PatternPresenter* patternEditor;
+    PatternPresenter* patternPresenter;
 
     IdGenerator* id;
 
@@ -146,6 +146,8 @@ signals:
     void timeSignatureDenominatorChanged(quint8 denominator);
 
 public slots:
+    PatternPresenter* getPatternPresenter();
+
     void newProject();
     void loadProject(QString path);
     void saveActiveProject();

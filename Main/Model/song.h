@@ -40,19 +40,11 @@ private:
     QHash<uint64_t, Pattern*> patterns;
 public:
     Song(ModelItem* parent, IdGenerator* id);
-    Song(
-        ModelItem* parent,
-        IdGenerator* id,
-        rapidjson::Value& songNode
-    );
+    Song(ModelItem* parent, IdGenerator* id, rapidjson::Value& songNode);
 
-    void onPatchReceived(
-        QStringRef pointer, PatchFragment& patch
-    ) override;
+    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
 
-    void serialize(
-        rapidjson::Value& value, rapidjson::Document& doc
-    ) override;
+    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
     void addPattern(QString name, QColor color);
 //    void deletePattern(uint64_t id);

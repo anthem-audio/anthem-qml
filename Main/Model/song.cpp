@@ -22,23 +22,18 @@
 
 using namespace rapidjson;
 
-Song::Song(
-    ModelItem* parent, IdGenerator* id
-) : ModelItem(parent, "song") {
+Song::Song(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "song") {
     this->id = id;
     this->patterns = QHash<uint64_t, Pattern*>();
 }
 
-Song::Song(
-    ModelItem* parent, IdGenerator* id, Value& songValue
-) : ModelItem(parent, "song") {
+Song::Song(ModelItem* parent, IdGenerator* id, Value& songValue)
+            : ModelItem(parent, "song") {
     this->id = id;
     this->patterns = QHash<uint64_t, Pattern*>();
 }
 
-void Song::onPatchReceived(
-    QStringRef pointer, PatchFragment& patch
-) {
+void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     QString patternsStr = "/patterns";
 
     if (pointer.startsWith(patternsStr)) {
@@ -47,12 +42,10 @@ void Song::onPatchReceived(
         //     /patterns/(u64 ID)/...
 
         // Pointer starting with /(u64 ID)/...
-        QStringRef pointerWithoutPatterns =
-            pointer.mid(patternsStr.length());
+        QStringRef pointerWithoutPatterns = pointer.mid(patternsStr.length());
 
         // Index of second slash in the above pointer
-        int patternPtrStart =
-            pointerWithoutPatterns.indexOf("/", 1);
+        int patternPtrStart = pointerWithoutPatterns.indexOf("/", 1);
 
         uint64_t key =
             static_cast<uint64_t>(
@@ -79,21 +72,15 @@ void Song::serialize(Value& value, Document& doc) {
         this->patterns[key]->serialize(v, doc);
 
         // https://stackoverflow.com/a/33473321/8166701
-        auto indexStr =
-            QString::number(key).toStdString();
+        auto indexStr = QString::number(key).toStdString();
 
-        Value index(
-            indexStr.c_str(),
-            static_cast<SizeType>(indexStr.size()),
-            doc.GetAllocator()
-        );
+        Value index(indexStr.c_str(), static_cast<SizeType>(indexStr.size()),
+                    doc.GetAllocator());
 
         patterns.AddMember(index, v, doc.GetAllocator());
     }
 
-    value.AddMember(
-        "patterns", patterns, doc.GetAllocator()
-    );
+    value.AddMember("patterns", patterns, doc.GetAllocator());
 }
 
 void Song::addPattern(QString name, QColor color) {
@@ -105,34 +92,17 @@ void Song::addPattern(QString name, QColor color) {
     auto colorStr = color.name().toStdString();
 
 
-    Value nameVal(
-        nameStr.c_str(),
-        static_cast<SizeType>(nameStr.size()),
-        getPatchAllocator()
-    );
-    Value colorVal(
-        colorStr.c_str(),
-        static_cast<SizeType>(colorStr.size()),
-        getPatchAllocator()
-    );
+    Value nameVal(nameStr.c_str(), static_cast<SizeType>(nameStr.size()),
+                  getPatchAllocator());
+    Value colorVal(colorStr.c_str(), static_cast<SizeType>(colorStr.size()),
+                   getPatchAllocator());
 
 
-    val.AddMember(
-        "name",
-        nameVal,
-        getPatchAllocator()
-    );
-
-    val.AddMember(
-        "color",
-        colorVal,
-        getPatchAllocator()
-    );
+    val.AddMember("name", nameVal, getPatchAllocator());
+    val.AddMember("color", colorVal, getPatchAllocator());
 
 
-    patchAdd(
-        "patterns" + QString::number(patternID), val
-    );
+    patchAdd("patterns" + QString::number(patternID), val);
 
 
     // TODO: add color

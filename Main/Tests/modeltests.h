@@ -106,17 +106,17 @@ private slots:
 
     void emptyProject() {
         qDebug() << "Initial project state";
-        QCOMPARE(project->transport->masterPitch->get(), 0.0f);
+        QCOMPARE(project->getTransport()->masterPitch->get(), 0.0f);
 
 
 
         qDebug() << "Direct item set";
 
         // Set the value to -5, but send a live update instead of a patch.
-        project->transport->masterPitch->set(-5.0f, false);
+        project->getTransport()->masterPitch->set(-5.0f, false);
 
         // The control should report the newly set value.
-        QCOMPARE(project->transport->masterPitch->get(), -5.0f);
+        QCOMPARE(project->getTransport()->masterPitch->get(), -5.0f);
 
         // The signal for updating the UI should not have fired because the change does
         // not represent a change to the model. Arguably it shouldn't fire at all, but
@@ -130,10 +130,10 @@ private slots:
 
 
         // Set the value to 10, and send a patch (final value in a channge operation).
-        project->transport->masterPitch->set(10.0f, true);
+        project->getTransport()->masterPitch->set(10.0f, true);
 
         // The control should report the newly set value.
-        QCOMPARE(project->transport->masterPitch->get(), 10.0f);
+        QCOMPARE(project->getTransport()->masterPitch->get(), 10.0f);
 
         // This is a final (patch-emitting) change, so the UI should have been notified
         // (see above)

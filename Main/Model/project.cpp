@@ -22,20 +22,16 @@
 
 #include "Utilities/exceptions.h"
 
-Project::Project(
-    Communicator* parent, IdGenerator* id
-) : ModelItem(parent, "project") {
+Project::Project(Communicator* parent, IdGenerator* id)
+                    : ModelItem(parent, "project") {
     this->id = id;
     transport = new Transport(this, id);
     song = new Song(this, id);
 }
 
-Project::Project(
-            Communicator* parent,
-            IdGenerator* id,
-            rapidjson::Value& projectVal
-        ) : ModelItem(parent, "project")
-{
+Project::Project(Communicator* parent, IdGenerator* id,
+                 rapidjson::Value& projectVal)
+                    : ModelItem(parent, "project") {
     this->id = id;
     transport =
         new Transport(this, id, projectVal["transport"]);
@@ -43,9 +39,7 @@ Project::Project(
         new Song(this, id, projectVal["song"]);
 }
 
-void Project::onPatchReceived(
-    QStringRef pointer, PatchFragment& patch
-) {
+void Project::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     QString transportStr = "/transport";
     QString songStr = "/song";
     if (pointer.startsWith(transportStr)) {
@@ -60,9 +54,7 @@ void Project::onPatchReceived(
     }
 }
 
-void Project::serialize(
-    rapidjson::Value& value, rapidjson::Document& doc
-) {
+void Project::serialize(rapidjson::Value& value, rapidjson::Document& doc) {
     value.SetObject();
 
     rapidjson::Value transportValue;
@@ -76,4 +68,12 @@ void Project::serialize(
     rapidjson::Value songValue;
     song->serialize(songValue, doc);
     value.AddMember("song", songValue, doc.GetAllocator());
+}
+
+Transport* Project::getTransport() {
+    return this->transport;
+}
+
+Song* Project::getSong() {
+    return this->song;
 }

@@ -45,9 +45,11 @@ public:
 
     void setActiveProject(Project* project);
 
+//    void deletePattern(quint64 id);
+signals:
+public slots:
     void setActivePattern(Pattern* pattern);
     void createPattern(QString name, QColor color);
-//    void deletePattern(quint64 id);
 };
 
 #endif // PATTERNPRESENTER_H

@@ -35,7 +35,6 @@ TooltipWrapper {
     signal rejected()
 
     onAccepted: {
-        console.log(name, color);
         close();
     }
 

@@ -32,9 +32,8 @@
 
 using namespace rapidjson;
 
-MainPresenter::MainPresenter(
-    QObject *parent, IdGenerator* id
-) : Communicator(parent) {
+MainPresenter::MainPresenter(QObject *parent, IdGenerator* id)
+                                : Communicator(parent) {
     isPatchInProgress = false;
     isActiveProjectValid = true;
     isInInitialState = true;
@@ -50,8 +49,7 @@ MainPresenter::MainPresenter(
     connectUiUpdateSignals(projectModel);
 
     // Initialize child presenters
-    patternEditor =
-        new PatternPresenter(this, id, projectModel);
+    patternPresenter = new PatternPresenter(this, id, projectModel);
 
     // Start the engine
     auto engine = new Engine(dynamic_cast<QObject*>(this));
@@ -60,9 +58,12 @@ MainPresenter::MainPresenter(
     addProject(projectModel, projectFile, engine);
 }
 
-void MainPresenter::addProject(
-    Project* project, ProjectFile* projectFile, Engine* engine
-) {
+PatternPresenter* MainPresenter::getPatternPresenter() {
+    return this->patternPresenter;
+}
+
+void MainPresenter::addProject(Project* project, ProjectFile* projectFile,
+                               Engine* engine) {
     projects.append(project);
     projectFiles.append(projectFile);
     engines.append(engine);
@@ -102,11 +103,7 @@ void MainPresenter::removeProjectAt(int index) {
     engines.removeAt(index);
     historyPointers.removeAt(index);
 
-    for (
-        int i = 0;
-        i < projectHistories[index].length();
-        i++
-    ) {
+    for (int i = 0; i < projectHistories[index].length(); i++) {
         projectHistories[index][i]->~Patch();
     }
 
@@ -274,10 +271,8 @@ void MainPresenter::initializeNewPatchIfNeeded() {
 
     historyPointers[activeProjectIndex]++;
 
-    if (
-        historyPointers[activeProjectIndex] !=
-            projectHistories[activeProjectIndex].length()
-    ) {
+    if (historyPointers[activeProjectIndex] !=
+            projectHistories[activeProjectIndex].length()) {
         for (
             int i = projectHistories[
                         activeProjectIndex
@@ -469,7 +464,7 @@ void MainPresenter::switchActiveProject(int index) {
     emitAllChangeSignals();
 
     // Update child presenters
-    patternEditor->setActiveProject(
+    patternPresenter->setActiveProject(
         projects[activeProjectIndex]
     );
 
@@ -502,7 +497,6 @@ void MainPresenter::displayStatusMessage(QString message) {
 
 
 
-
 //****************************//
 // Control-specific functions //
 //****************************//
@@ -515,26 +509,26 @@ void MainPresenter::emitAllChangeSignals() {
 }
 
 void MainPresenter::connectUiUpdateSignals(Project* project) {
-    QObject::connect(project->transport->masterPitch,    SIGNAL(displayValueChanged(float)),
-                     this,                               SLOT(ui_updateMasterPitch(float)));
-    QObject::connect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
-                     this,                               SLOT(ui_updateBeatsPerMinute(float)));
-    QObject::connect(project->transport,                 SIGNAL(numeratorDisplayValueChanged(quint8)),
-                     this,                               SLOT(ui_updateTimeSignatureNumerator(quint8)));
-    QObject::connect(project->transport,                 SIGNAL(denominatorDisplayValueChanged(quint8)),
-                     this,                               SLOT(ui_updateTimeSignatureDenominator(quint8)));
+    QObject::connect(project->getTransport()->masterPitch,    SIGNAL(displayValueChanged(float)),
+                     this,                                    SLOT(ui_updateMasterPitch(float)));
+    QObject::connect(project->getTransport()->beatsPerMinute, SIGNAL(displayValueChanged(float)),
+                     this,                                    SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::connect(project->getTransport(),                 SIGNAL(numeratorDisplayValueChanged(quint8)),
+                     this,                                    SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::connect(project->getTransport(),                 SIGNAL(denominatorDisplayValueChanged(quint8)),
+                     this,                                    SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 // This should mirror the function above
 void MainPresenter::disconnectUiUpdateSignals(Project* project) {
-    QObject::disconnect(project->transport->masterPitch,    SIGNAL(displayValueChanged(float)),
-                        this,                               SLOT(ui_updateMasterPitch(float)));
-    QObject::disconnect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
-                        this,                               SLOT(ui_updateBeatsPerMinute(float)));
-    QObject::disconnect(project->transport,                 SIGNAL(numeratorDisplayValueChanged(quint8)),
-                        this,                               SLOT(ui_updateTimeSignatureNumerator(quint8)));
-    QObject::disconnect(project->transport,                 SIGNAL(denominatorDisplayValueChanged(quint8)),
-                        this,                               SLOT(ui_updateTimeSignatureDenominator(quint8)));
+    QObject::disconnect(project->getTransport()->masterPitch,    SIGNAL(displayValueChanged(float)),
+                        this,                                    SLOT(ui_updateMasterPitch(float)));
+    QObject::disconnect(project->getTransport()->beatsPerMinute, SIGNAL(displayValueChanged(float)),
+                        this,                                    SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::disconnect(project->getTransport(),                 SIGNAL(numeratorDisplayValueChanged(quint8)),
+                        this,                                    SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::disconnect(project->getTransport(),                 SIGNAL(denominatorDisplayValueChanged(quint8)),
+                        this,                                    SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 
@@ -544,7 +538,7 @@ int MainPresenter::getMasterPitch() {
         std::round(
             projects[
                 activeProjectIndex
-            ]->transport->masterPitch->get()
+            ]->getTransport()->masterPitch->get()
         )
     );
 }
@@ -552,7 +546,7 @@ int MainPresenter::getMasterPitch() {
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
     projects[
         activeProjectIndex
-    ]->transport->masterPitch->set(
+    ]->getTransport()->masterPitch->set(
         static_cast<float>(pitch), isFinal
     );
 }
@@ -567,15 +561,13 @@ void MainPresenter::ui_updateMasterPitch(float pitch) {
 float MainPresenter::getBeatsPerMinute() {
     return projects[
         activeProjectIndex
-    ]->transport->beatsPerMinute->get();
+    ]->getTransport()->beatsPerMinute->get();
 }
 
-void MainPresenter::setBeatsPerMinute(
-    float bpm, bool isFinal
-) {
+void MainPresenter::setBeatsPerMinute(float bpm, bool isFinal) {
     projects[
         activeProjectIndex
-    ]->transport->beatsPerMinute->set(bpm, isFinal);
+    ]->getTransport()->beatsPerMinute->set(bpm, isFinal);
 }
 
 void MainPresenter::ui_updateBeatsPerMinute(float bpm) {
@@ -586,20 +578,16 @@ void MainPresenter::ui_updateBeatsPerMinute(float bpm) {
 quint8 MainPresenter::getTimeSignatureNumerator() {
     return projects[
         activeProjectIndex
-    ]->transport->getNumerator();
+    ]->getTransport()->getNumerator();
 }
 
-void MainPresenter::setTimeSignatureNumerator(
-    quint8 numerator
-) {
+void MainPresenter::setTimeSignatureNumerator(quint8 numerator) {
     projects[
         activeProjectIndex
-    ]->transport->setNumerator(numerator);
+    ]->getTransport()->setNumerator(numerator);
 }
 
-void MainPresenter::ui_updateTimeSignatureNumerator(
-    quint8 numerator
-) {
+void MainPresenter::ui_updateTimeSignatureNumerator(quint8 numerator) {
     emit timeSignatureNumeratorChanged(numerator);
 }
 
@@ -607,19 +595,15 @@ void MainPresenter::ui_updateTimeSignatureNumerator(
 quint8 MainPresenter::getTimeSignatureDenominator() {
     return projects[
         activeProjectIndex
-    ]->transport->getDenominator();
+    ]->getTransport()->getDenominator();
 }
 
-void MainPresenter::setTimeSignatureDenominator(
-    quint8 denominator
-) {
+void MainPresenter::setTimeSignatureDenominator(quint8 denominator) {
     projects[
         activeProjectIndex
-    ]->transport->setDenominator(denominator);
+    ]->getTransport()->setDenominator(denominator);
 }
 
-void MainPresenter::ui_updateTimeSignatureDenominator(
-    quint8 denominator
-) {
+void MainPresenter::ui_updateTimeSignatureDenominator(quint8 denominator) {
     emit timeSignatureDenominatorChanged(denominator);
 }
