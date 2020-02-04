@@ -94,9 +94,9 @@ int MainPresenter::getHistoryPointerAt(int index) {
 }
 
 void MainPresenter::removeProjectAt(int index) {
-    projects[index]->~Project();
-    projectFiles[index]->~ProjectFile();
-    engines[index]->~Engine();
+    delete projects[index];
+    delete projectFiles[index];
+    delete engines[index];
 
     projects.removeAt(index);
     projectFiles.removeAt(index);
@@ -104,7 +104,7 @@ void MainPresenter::removeProjectAt(int index) {
     historyPointers.removeAt(index);
 
     for (int i = 0; i < projectHistories[index].length(); i++) {
-        projectHistories[index][i]->~Patch();
+        delete projectHistories[index][i];
     }
 
     projectHistories.removeAt(index);
@@ -182,7 +182,7 @@ void MainPresenter::loadProject(QString path) {
         emit informationDialogRequest(
             "Error", "Something is very wrong."
         );
-        projectFile->~ProjectFile();
+        delete projectFile;
         return;
     }
 
@@ -200,7 +200,7 @@ void MainPresenter::loadProject(QString path) {
         emit informationDialogRequest(
             "Error", errorText.append(ex.what())
         );
-        projectFile->~ProjectFile();
+        delete projectFile;
         return;
     }
 
@@ -227,19 +227,13 @@ void MainPresenter::loadProject(QString path) {
 }
 
 void MainPresenter::saveActiveProject() {
-    projectFiles[
-        activeProjectIndex
-    ]->save(
-        *projects[activeProjectIndex]
-    );
+    projectFiles[activeProjectIndex]
+            ->save(*projects[activeProjectIndex]);
 }
 
 void MainPresenter::saveActiveProjectAs(QString path) {
-    projectFiles[
-        activeProjectIndex
-    ]->saveAs(
-        *projects[activeProjectIndex], path
-    );
+    projectFiles[activeProjectIndex]
+            ->saveAs(*projects[activeProjectIndex], path);
 
     QFileInfo fileInfo(path);
     QString fileName = fileInfo.fileName();
@@ -280,7 +274,7 @@ void MainPresenter::initializeNewPatchIfNeeded() {
             i >= historyPointers[activeProjectIndex];
             i--
         ) {
-            projectHistories[activeProjectIndex][i]->~Patch();
+            delete projectHistories[activeProjectIndex][i];
             projectHistories[activeProjectIndex].pop_back();
         }
     }
@@ -290,9 +284,7 @@ void MainPresenter::initializeNewPatchIfNeeded() {
     );
 }
 
-void MainPresenter::patchAdd(
-    QString path, rapidjson::Value& value
-) {
+void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
 
     Patch& patch =
@@ -306,9 +298,7 @@ void MainPresenter::patchAdd(
     patch.patchAdd("/" + path, copiedValue);
 }
 
-void MainPresenter::patchRemove(
-    QString path, rapidjson::Value& oldValue
-) {
+void MainPresenter::patchRemove(QString path, rapidjson::Value& oldValue) {
     initializeNewPatchIfNeeded();
 
     Patch& patch =
@@ -325,10 +315,9 @@ void MainPresenter::patchRemove(
 }
 
 void MainPresenter::patchReplace(
-    QString path,
-    rapidjson::Value& oldValue,
-    rapidjson::Value& newValue
-) {
+        QString path,
+        rapidjson::Value& oldValue,
+        rapidjson::Value& newValue) {
     initializeNewPatchIfNeeded();
 
     Patch& patch

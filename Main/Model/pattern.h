@@ -37,26 +37,11 @@ private:
     IdGenerator* id;
     QString displayName;
 public:
-    Pattern(
-        ModelItem* parent,
-        IdGenerator* id,
-        QString displayName
-    );
+    Pattern(ModelItem* parent, IdGenerator* id, QString displayName);
+    Pattern(ModelItem* parent, IdGenerator* id, rapidjson::Value& patternNode);
 
-    Pattern(
-        ModelItem* parent,
-        IdGenerator* id,
-        rapidjson::Value& patternNode
-    );
-
-    void onPatchReceived(
-        QStringRef pointer, PatchFragment& patch
-    ) override;
-
-    void serialize(
-        rapidjson::Value& value,
-        rapidjson::Document& doc
-    ) override;
+    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
+    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 signals:
     void displayNameChanged(QString displayName);
 

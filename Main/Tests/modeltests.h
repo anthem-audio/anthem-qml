@@ -265,7 +265,7 @@ private slots:
         qDebug() << "Remove the current testing project and open a new one";
         presenter->removeProjectAt(0);
         presenter->newProject();
-        eventCounter->~PresenterEventCounter();
+        delete eventCounter;
         eventCounter = new PresenterEventCounter(this);
 
         QObject::connect(presenter,    SIGNAL(masterPitchChanged(int)),

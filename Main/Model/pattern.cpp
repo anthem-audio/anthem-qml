@@ -25,8 +25,7 @@ using namespace rapidjson;
 Pattern::Pattern(
         ModelItem* parent,
         IdGenerator* id,
-        QString displayName
-) : ModelItem(parent, "pattern") {
+        QString displayName) : ModelItem(parent, "pattern") {
     this->id = id;
     this->displayName = displayName;
 }
@@ -34,46 +33,33 @@ Pattern::Pattern(
 Pattern::Pattern(
         ModelItem* parent,
         IdGenerator* id,
-        Value& patternNode
-) : ModelItem(parent, "pattern") {
+        Value& patternNode) : ModelItem(parent, "pattern") {
     this->id = id;
-    this->displayName =
-        patternNode["display_name"].GetString();
+    this->displayName = patternNode["display_name"].GetString();
 }
 
-void Pattern::onPatchReceived(
-        QStringRef pointer,
-        PatchFragment& patch
-) {
+void Pattern::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     QString displayNameStr = "/display_name";
 
     if (pointer.startsWith(displayNameStr)) {
-        this->displayName =
-            patch.patch["value"].GetString();
-
+        this->displayName = patch.patch["value"].GetString();
         emit displayNameChanged(displayName);
     }
 }
 
-void Pattern::serialize(
-        Value& value, Document& doc
-) {
+void Pattern::serialize(Value& value, Document& doc) {
     value.SetObject();
 
     auto displayNameStr =
         this->displayName.toStdString();
 
     Value displayNameValue(
-        displayNameStr.c_str(),
-        static_cast<SizeType>(
-            displayNameStr.size()
-        ),
-        doc.GetAllocator()
-    );
+            displayNameStr.c_str(),
+            static_cast<SizeType>(displayNameStr.size()),
+            doc.GetAllocator());
 
     value.AddMember(
-        "display_name",
-        displayNameValue,
-        doc.GetAllocator()
-    );
+            "display_name",
+            displayNameValue,
+            doc.GetAllocator());
 }
