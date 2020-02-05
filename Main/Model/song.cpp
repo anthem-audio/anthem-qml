@@ -66,7 +66,7 @@ void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
         // handled here.
         else {
             if (patch.getType() == PatchFragment::ADD) {
-                patterns[key] = new Pattern(this, id, patch.patch);
+                patterns[key] = new Pattern(this, id, patch.patch["value"]);
             }
             else if (patch.getType() == PatchFragment::REMOVE) {
                 delete patterns[key];
@@ -121,7 +121,7 @@ void Song::addPattern(QString name, QColor color) {
                    getPatchAllocator());
 
 
-    val.AddMember("name", nameVal, getPatchAllocator());
+    val.AddMember("display_name", nameVal, getPatchAllocator());
     val.AddMember("color", colorVal, getPatchAllocator());
 
     patchAdd("patterns/" + QString::number(patternID), val);
