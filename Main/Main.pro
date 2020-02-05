@@ -46,6 +46,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Core/communicator.h \
+    Core/debug.h \
     Core/engine.h \
     Core/modelitem.h \
     Include/rapidjson/allocators.h \
