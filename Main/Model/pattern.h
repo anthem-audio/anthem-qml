@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QHash>
 #include <QString>
+#include <QColor>
 
 #include "Include/rapidjson/document.h"
 
@@ -36,14 +37,17 @@ class Pattern : public ModelItem
 private:
     IdGenerator* id;
     QString displayName;
+    QColor color;
 public:
-    Pattern(ModelItem* parent, IdGenerator* id, QString displayName);
+    Pattern(ModelItem* parent, IdGenerator* id, QString displayName,
+            QColor color);
     Pattern(ModelItem* parent, IdGenerator* id, rapidjson::Value& patternNode);
 
     void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 signals:
     void displayNameChanged(QString displayName);
+    void colorChanged(QColor color);
 
 public slots:
 };

@@ -60,3 +60,14 @@ void ModelItem::liveUpdate(uint64_t controlId, float value) {
 rapidjson::Document::AllocatorType& ModelItem::getPatchAllocator() {
     return parent->getPatchAllocator();
 }
+
+void ModelItem::setStr(
+        rapidjson::Value& target, QString str,
+        rapidjson::Document::AllocatorType& allocator) {
+
+    auto stdStr = str.toStdString();
+    target.SetString(
+            stdStr.c_str(),
+            static_cast<rapidjson::SizeType>(stdStr.size()),
+            allocator);
+}

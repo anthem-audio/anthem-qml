@@ -111,14 +111,12 @@ void Song::addPattern(QString name, QColor color) {
 
     Value val(kObjectType);
 
-    auto nameStr = name.toStdString();
-    auto colorStr = color.name().toStdString();
 
+    Value nameVal;
+    setStr(nameVal, name, getPatchAllocator());
 
-    Value nameVal(nameStr.c_str(), static_cast<SizeType>(nameStr.size()),
-                  getPatchAllocator());
-    Value colorVal(colorStr.c_str(), static_cast<SizeType>(colorStr.size()),
-                   getPatchAllocator());
+    Value colorVal;
+    setStr(colorVal, color.name(), getPatchAllocator());
 
 
     val.AddMember("display_name", nameVal, getPatchAllocator());
@@ -127,6 +125,5 @@ void Song::addPattern(QString name, QColor color) {
     patchAdd("patterns/" + QString::number(patternID), val);
 
 
-    // TODO: add color
-    patterns[patternID] = new Pattern(this, id, name);
+    patterns[patternID] = new Pattern(this, id, name, color);
 }

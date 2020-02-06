@@ -60,6 +60,10 @@ public:
     void liveUpdate(uint64_t controlId, float value);
     rapidjson::Document::AllocatorType& getPatchAllocator();
 
+    /// Utility function to generate a rapidjson value from a string
+    void setStr(rapidjson::Value& target, QString str,
+                rapidjson::Document::AllocatorType& allocator);
+
     Communicator* parent;
 
     virtual ~ModelItem();
