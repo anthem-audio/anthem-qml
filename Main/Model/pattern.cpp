@@ -66,3 +66,11 @@ void Pattern::serialize(Value& value, Document& doc) {
     setStr(colorValue, this->color.name(), alloc);
     value.AddMember("color", colorValue, doc.GetAllocator());
 }
+
+QString Pattern::getDisplayName() {
+    return displayName;
+}
+
+QColor Pattern::getColor() {
+    return color;
+}

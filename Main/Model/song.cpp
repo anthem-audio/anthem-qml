@@ -24,13 +24,13 @@ using namespace rapidjson;
 
 Song::Song(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "song") {
     this->id = id;
-    this->patterns = QHash<uint64_t, Pattern*>();
+    this->patterns = QHash<QString, Pattern*>();
 }
 
 Song::Song(ModelItem* parent, IdGenerator* id, Value& songValue)
             : ModelItem(parent, "song") {
     this->id = id;
-    this->patterns = QHash<uint64_t, Pattern*>();
+    this->patterns = QHash<QString, Pattern*>();
 }
 
 void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
@@ -51,9 +51,7 @@ void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
                                     ? pointerWithoutPatterns.length()
                                     : secondSlashIndex;
 
-        uint64_t key = static_cast<uint64_t>(pointerWithoutPatterns
-                                                .mid(1, patternPtrStart)
-                                                .toULongLong());
+        QString key = pointerWithoutPatterns.mid(1, patternPtrStart).toString();
 
         // If there was a second slash, that means this patch is describing an
         // operation inside one of the patterns, so we'll pass it on.
@@ -67,8 +65,10 @@ void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
         else {
             if (patch.getType() == PatchFragment::ADD) {
                 patterns[key] = new Pattern(this, id, patch.patch["value"]);
+                emit patternAdd(key);
             }
             else if (patch.getType() == PatchFragment::REMOVE) {
+                emit patternRemove(key);
                 delete patterns[key];
                 patterns.remove(key);
             }
@@ -90,12 +90,12 @@ void Song::serialize(Value& value, Document& doc) {
 
     Value patterns(kObjectType);
     auto keys = this->patterns.keys();
-    for (uint64_t key : keys) {
+    for (QString key : keys) {
         Value v(kObjectType);
         this->patterns[key]->serialize(v, doc);
 
         // https://stackoverflow.com/a/33473321/8166701
-        auto indexStr = QString::number(key).toStdString();
+        auto indexStr = key.toStdString();
 
         Value index(indexStr.c_str(), static_cast<SizeType>(indexStr.size()),
                     doc.GetAllocator());
@@ -107,7 +107,7 @@ void Song::serialize(Value& value, Document& doc) {
 }
 
 void Song::addPattern(QString name, QColor color) {
-    uint64_t patternID = id->get();
+    QString patternID = QString::number(id->get());
 
     Value val(kObjectType);
 
@@ -122,10 +122,16 @@ void Song::addPattern(QString name, QColor color) {
     val.AddMember("display_name", nameVal, getPatchAllocator());
     val.AddMember("color", colorVal, getPatchAllocator());
 
-    patchAdd("patterns/" + QString::number(patternID), val);
+    patchAdd("patterns/" + patternID, val);
 
 
     patterns[patternID] = new Pattern(this, id, name, color);
 
     sendPatch();
+
+    emit patternAdd(patternID);
+}
+
+Pattern* Song::getPattern(QString key) {
+    return this->patterns[key];
 }

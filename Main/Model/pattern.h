@@ -45,6 +45,9 @@ public:
 
     void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+
+    QString getDisplayName();
+    QColor getColor();
 signals:
     void displayNameChanged(QString displayName);
     void colorChanged(QColor color);

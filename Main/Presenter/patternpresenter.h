@@ -36,6 +36,11 @@ private:
 
     /// Pattern currently open in the pattern editor
     Pattern* activePattern;
+
+    void connectUiUpdateSignals(Project* project);
+    void disconnectUiUpdateSignals(Project* project);
+
+    Pattern* getPattern(QString id);
 public:
     explicit PatternPresenter(
         QObject* parent,
@@ -47,9 +52,17 @@ public:
 
 //    void deletePattern(quint64 id);
 signals:
+    void patternAdd(QString id);
+    void patternRemove(QString id);
 public slots:
     void setActivePattern(Pattern* pattern);
     void createPattern(QString name, QColor color);
+
+    QString getPatternName(QString id);
+    QColor getPatternColor(QString id);
+
+    void ui_addPattern(QString id);
+    void ui_removePattern(QString id);
 };
 
 #endif // PATTERNPRESENTER_H

@@ -26,6 +26,29 @@ Item {
     id: patternEditor
     anchors.margins: 3
 
+    property var patterns: ({})
+
+    Connections {
+        target: PatternPresenter
+        onPatternAdd: {
+            patterns[id] = {
+                displayName: PatternPresenter.getPatternName(id),
+                color: Qt.rgba(1, 1, 0, 1)
+            };
+            updatePatternList();
+        }
+        onPatternRemove: {
+            delete patterns[id];
+            updatePatternList();
+        }
+    }
+
+    function updatePatternList() {
+        patternSelector.listItems = Object.keys(patterns).map(id => {
+            return { id, displayName: patterns[id].displayName };
+        });
+    }
+
     Item {
         id: topRowContainer
         anchors {
@@ -68,7 +91,7 @@ Item {
         }
 
         ListSelector {
-            id: myListSelector
+            id: patternSelector
 
             anchors {
                 left: menuButton.right
@@ -82,12 +105,7 @@ Item {
             allowNoSelection: true
             hoverMessage: qsTr("Select a pattern to edit...")
 
-            listItems: [
-                {id: 0, displayName: "Pattern 1"},
-                {id: 1, displayName: "Pattern 2"},
-                {id: 2, displayName: "Pattern 3"},
-                {id: 3, displayName: "Pattern 4"},
-            ]
+            listItems: []
         }
 
         RenameTooltip {

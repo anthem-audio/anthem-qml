@@ -26,10 +26,27 @@ PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id,
                                     : QObject(parent) {
     this->id = id;
     this->activeProject = activeProject;
+    connectUiUpdateSignals(activeProject);
+}
+
+void PatternPresenter::connectUiUpdateSignals(Project* project) {
+    QObject::connect(project->getSong(),    SIGNAL(patternAdd(QString)),
+                     this,                  SLOT(ui_addPattern(QString)));
+    QObject::connect(project->getSong(),    SIGNAL(patternRemove(QString)),
+                     this,                  SLOT(ui_removePattern(QString)));
+}
+
+void PatternPresenter::disconnectUiUpdateSignals(Project* project) {
+    QObject::disconnect(project->getSong(), SIGNAL(patternAdd(QString)),
+                     this,                  SLOT(ui_addPattern(QString)));
+    QObject::disconnect(project->getSong(), SIGNAL(patternRemove(QString)),
+                     this,                  SLOT(ui_removePattern(QString)));
 }
 
 void PatternPresenter::setActiveProject(Project* project) {
+    disconnectUiUpdateSignals(this->activeProject);
     this->activeProject = project;
+    connectUiUpdateSignals(this->activeProject);
 }
 
 void PatternPresenter::setActivePattern(Pattern* pattern) {
@@ -37,6 +54,27 @@ void PatternPresenter::setActivePattern(Pattern* pattern) {
 }
 
 void PatternPresenter::createPattern(QString name, QColor color) {
-    qDebug() << "PatternPresenter: createPattern()";
     activeProject->getSong()->addPattern(name, color);
+}
+
+
+Pattern* PatternPresenter::getPattern(QString id) {
+    return this->activeProject->getSong()->getPattern(id);
+}
+
+QString PatternPresenter::getPatternName(QString id) {
+    return this->getPattern(id)->getDisplayName();
+}
+
+QColor PatternPresenter::getPatternColor(QString id) {
+    return this->getPattern(id)->getColor();
+}
+
+
+void PatternPresenter::ui_addPattern(QString id) {
+    emit patternAdd(id);
+}
+
+void PatternPresenter::ui_removePattern(QString id) {
+    emit patternRemove(id);
 }

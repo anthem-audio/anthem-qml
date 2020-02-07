@@ -498,14 +498,14 @@ void MainPresenter::emitAllChangeSignals() {
 }
 
 void MainPresenter::connectUiUpdateSignals(Project* project) {
-    QObject::connect(project->getTransport()->masterPitch,    SIGNAL(displayValueChanged(float)),
-                     this,                                    SLOT(ui_updateMasterPitch(float)));
-    QObject::connect(project->getTransport()->beatsPerMinute, SIGNAL(displayValueChanged(float)),
-                     this,                                    SLOT(ui_updateBeatsPerMinute(float)));
-    QObject::connect(project->getTransport(),                 SIGNAL(numeratorDisplayValueChanged(quint8)),
-                     this,                                    SLOT(ui_updateTimeSignatureNumerator(quint8)));
-    QObject::connect(project->getTransport(),                 SIGNAL(denominatorDisplayValueChanged(quint8)),
-                     this,                                    SLOT(ui_updateTimeSignatureDenominator(quint8)));
+    QObject::connect(project->getTransport()->masterPitch,       SIGNAL(displayValueChanged(float)),
+                     this,                                       SLOT(ui_updateMasterPitch(float)));
+    QObject::connect(project->getTransport()->beatsPerMinute,    SIGNAL(displayValueChanged(float)),
+                     this,                                       SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::connect(project->getTransport(),                    SIGNAL(numeratorDisplayValueChanged(quint8)),
+                     this,                                       SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::connect(project->getTransport(),                    SIGNAL(denominatorDisplayValueChanged(quint8)),
+                     this,                                       SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 // This should mirror the function above

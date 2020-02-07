@@ -37,7 +37,7 @@ class Song : public ModelItem {
     Q_OBJECT
 private:
     IdGenerator* id;
-    QHash<uint64_t, Pattern*> patterns;
+    QHash<QString, Pattern*> patterns;
 public:
     Song(ModelItem* parent, IdGenerator* id);
     Song(ModelItem* parent, IdGenerator* id, rapidjson::Value& songNode);
@@ -47,7 +47,14 @@ public:
     void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
 
     void addPattern(QString name, QColor color);
-//    void deletePattern(uint64_t id);
+//    void deletePattern(QString id);
+
+    Pattern* getPattern(QString key);
+signals:
+    void patternAdd(QString id);
+    void patternRemove(QString id);
+
+public slots:
 };
 
 #endif // SONG_H
