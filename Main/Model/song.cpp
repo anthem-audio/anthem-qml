@@ -126,4 +126,6 @@ void Song::addPattern(QString name, QColor color) {
 
 
     patterns[patternID] = new Pattern(this, id, name, color);
+
+    sendPatch();
 }
