@@ -42,6 +42,14 @@ Button {
     property real _hue: 162 / 360
     property real menuMaxWidth
 
+    function selectItem(index) {
+        selectedItemIndex = index;
+        selectedItem =
+            selectedItemIndex >= 0
+                ? listItems[index]
+                : { displayName: qsTr('(none)') };
+    }
+
     onPress: {
         let processedItems = [];
 

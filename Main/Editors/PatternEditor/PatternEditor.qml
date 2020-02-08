@@ -44,9 +44,27 @@ Item {
     }
 
     function updatePatternList() {
-        patternSelector.listItems = Object.keys(patterns).map(id => {
+        const lastSelectedId = patternSelector.selectedItem.id;
+
+        // If this starts as false then it can't become true
+        let wasLastSelectedIdRemoved = patternSelector.selectedItem.id !== undefined;
+
+        // Repopulate list items
+        patternSelector.listItems = Object.keys(patterns).map((id, index) => {
+            wasLastSelectedIdRemoved =
+                wasLastSelectedIdRemoved && !(id === lastSelectedId);
             return { id, displayName: patterns[id].displayName };
         });
+
+        // If the previously selected list item was removed, select a new item.
+        if (wasLastSelectedIdRemoved) {
+            patternSelector.selectItem(
+                patternSelector.selectedItemIndex <
+                    patternSelector.listItems.length
+                    ? patternSelector.selectedItemIndex
+                    : patternSelector.listItems.length - 1
+            );
+        }
     }
 
     Item {
