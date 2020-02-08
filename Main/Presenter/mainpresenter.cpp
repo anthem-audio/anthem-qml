@@ -173,19 +173,6 @@ void MainPresenter::loadProject(QString path) {
     QString fileName = fileInfo.fileName();
     fileName.chop(fileInfo.completeSuffix().length() + 1);
 
-    if (isInInitialState) {
-        removeProjectAt(0);
-    }
-
-    if (projectFile->document.IsNull()) {
-        // This should never trip and will be removed in a future PR.
-        emit informationDialogRequest(
-            "Error", "Something is very wrong."
-        );
-        delete projectFile;
-        return;
-    }
-
     Project* project;
 
     try {
@@ -214,6 +201,10 @@ void MainPresenter::loadProject(QString path) {
 
     addProject(project, projectFile, engine);
     switchActiveProject(projects.length() - 1);
+
+    if (isInInitialState) {
+        removeProjectAt(0);
+    }
 
     if (isInInitialState) {
         emit tabRename(0, fileName);
