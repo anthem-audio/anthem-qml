@@ -49,6 +49,7 @@ public:
     void addPattern(QString name, QColor color);
 //    void deletePattern(QString id);
 
+    const QHash<QString, Pattern*>& getPatterns();
     Pattern* getPattern(QString key);
 signals:
     void patternAdd(QString id);

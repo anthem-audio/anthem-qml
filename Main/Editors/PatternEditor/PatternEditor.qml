@@ -41,6 +41,10 @@ Item {
             delete patterns[id];
             updatePatternList();
         }
+        onFlushPatterns: {
+            patterns = newPatterns;
+            updatePatternList();
+        }
     }
 
     function updatePatternList() {

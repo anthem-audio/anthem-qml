@@ -43,10 +43,29 @@ void PatternPresenter::disconnectUiUpdateSignals(Project* project) {
                      this,                  SLOT(ui_removePattern(QString)));
 }
 
+void PatternPresenter::emitAllChangeSignals() {
+    auto patterns = activeProject->getSong()->getPatterns();
+    QVariantMap uiPatternMap;
+
+    for (auto key : patterns.keys()) {
+        Pattern* pattern = patterns[key];
+        QVariantMap patternInfo;
+
+        patternInfo.insert("displayName", pattern->getDisplayName());
+        patternInfo.insert("color", pattern->getColor());
+
+        uiPatternMap.insert(key, patternInfo);
+    }
+
+    emit flushPatterns(uiPatternMap);
+}
+
 void PatternPresenter::setActiveProject(Project* project) {
     disconnectUiUpdateSignals(this->activeProject);
     this->activeProject = project;
+    this->activePattern = nullptr; // TODO: preserve active pattern
     connectUiUpdateSignals(this->activeProject);
+    emitAllChangeSignals();
 }
 
 void PatternPresenter::setActivePattern(Pattern* pattern) {

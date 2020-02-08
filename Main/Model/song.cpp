@@ -30,7 +30,11 @@ Song::Song(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "song") {
 Song::Song(ModelItem* parent, IdGenerator* id, Value& songValue)
             : ModelItem(parent, "song") {
     this->id = id;
-    this->patterns = QHash<QString, Pattern*>();
+    Value& patternMap = songValue["patterns"];
+    for (auto& pair : patternMap.GetObject()) {
+        QString patternId(pair.name.GetString());
+        this->patterns[patternId] = new Pattern(this, id, pair.value);
+    }
 }
 
 void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
@@ -130,6 +134,10 @@ void Song::addPattern(QString name, QColor color) {
     sendPatch();
 
     emit patternAdd(patternID);
+}
+
+const QHash<QString, Pattern*>& Song::getPatterns() {
+    return this->patterns;
 }
 
 Pattern* Song::getPattern(QString key) {

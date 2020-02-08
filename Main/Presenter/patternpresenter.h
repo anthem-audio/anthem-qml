@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QString>
 #include <QColor>
+#include <QVariant>
 
 #include "Utilities/idgenerator.h"
 #include "Model/project.h"
@@ -40,6 +41,8 @@ private:
     void connectUiUpdateSignals(Project* project);
     void disconnectUiUpdateSignals(Project* project);
 
+    void emitAllChangeSignals();
+
     Pattern* getPattern(QString id);
 public:
     explicit PatternPresenter(
@@ -54,6 +57,7 @@ public:
 signals:
     void patternAdd(QString id);
     void patternRemove(QString id);
+    void flushPatterns(QVariantMap newPatterns);
 public slots:
     void setActivePattern(Pattern* pattern);
     void createPattern(QString name, QColor color);
