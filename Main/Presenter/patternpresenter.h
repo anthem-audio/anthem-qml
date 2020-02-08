@@ -58,6 +58,9 @@ signals:
     void patternAdd(QString id);
     void patternRemove(QString id);
     void flushPatterns(QVariantMap newPatterns);
+private slots:
+    void activeProjectDestroyed();
+    void activePatternDestroyed();
 public slots:
     void setActivePattern(Pattern* pattern);
     void createPattern(QString name, QColor color);
