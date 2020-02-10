@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -66,6 +66,10 @@ int main(int argc, char *argv[]) {
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     qmlEngine.load(url);
+
+    // Update UI with initial state
+    mainPresenter.emitAllChangeSignals();
+    mainPresenter.getPatternPresenter()->emitAllChangeSignals();
 
     return app.exec();
 }

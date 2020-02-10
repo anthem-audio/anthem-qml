@@ -25,9 +25,8 @@ PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id,
                                    Project* activeProject)
                                     : QObject(parent) {
     this->id = id;
-    this->activeProject = nullptr;
-    this->activePattern = nullptr;
-    setActiveProject(activeProject);
+    this->activeProject = activeProject;
+    this->activePattern = nullptr; // TODO: preserve active pattern
 }
 
 void PatternPresenter::connectUiUpdateSignals(Project* project) {

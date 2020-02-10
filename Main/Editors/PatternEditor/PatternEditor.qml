@@ -141,7 +141,7 @@ Item {
         RenameTooltip {
             id: addPatternTooltip
             y: parent.height + 3
-            defaultName: 'Pattern 1';
+            defaultName: 'New pattern';
             onAccepted: {
                 PatternPresenter.createPattern(name, color);
             }

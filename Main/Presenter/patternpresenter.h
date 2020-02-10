@@ -41,8 +41,6 @@ private:
     void connectUiUpdateSignals(Project* project);
     void disconnectUiUpdateSignals(Project* project);
 
-    void emitAllChangeSignals();
-
     Pattern* getPattern(QString id);
 public:
     explicit PatternPresenter(
@@ -50,6 +48,8 @@ public:
         IdGenerator* id,
         Project* activeProject
     );
+
+    void emitAllChangeSignals();
 
     void setActiveProject(Project* project);
 

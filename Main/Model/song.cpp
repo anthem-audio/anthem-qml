@@ -25,6 +25,7 @@ using namespace rapidjson;
 Song::Song(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "song") {
     this->id = id;
     this->patterns = QHash<QString, Pattern*>();
+    patterns[QString::number(id->get())] = new Pattern(this, id, "New pattern", QColor::fromHsl(162, 50, 43));
 }
 
 Song::Song(ModelItem* parent, IdGenerator* id, Value& songValue)

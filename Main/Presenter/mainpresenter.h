@@ -38,8 +38,6 @@
 class MainPresenter : public Communicator {
     Q_OBJECT
 private:
-    void emitAllChangeSignals();
-
     void connectUiUpdateSignals(Project* project);
     void disconnectUiUpdateSignals(Project* project);
 
@@ -79,6 +77,8 @@ private:
 
 public:
     explicit MainPresenter(QObject* parent, IdGenerator* id);
+
+    void emitAllChangeSignals();
 
     // Implementations of virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
