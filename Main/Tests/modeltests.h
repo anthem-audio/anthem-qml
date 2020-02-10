@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -436,6 +436,7 @@ private slots:
         QCOMPARE(presenter->getHistoryPointerAt(1), -1);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
         QCOMPARE(presenter->isProjectSaved(1), true);
+        QCOMPARE(presenter->getProjectAt(presenter->activeProjectIndex)->getSong()->getPatterns().keys().length(), 1);
 
         presenter->setMasterPitch(-12, true);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), true);
@@ -449,6 +450,51 @@ private slots:
         QCOMPARE(presenter->isProjectSaved(1), true);
         QCOMPARE(presenter->projectHasUnsavedChanges(2), false);
         QCOMPARE(presenter->isProjectSaved(2), true);
+        presenter->closeProject(2);
+        presenter->closeProject(1);
+        presenter->switchActiveProject(0);
+
+        qDebug() << "There should be one pattern by default";
+        PatternPresenter& patternPresenter = *presenter->getPatternPresenter();
+        Song& song = *presenter->getProjectAt(presenter->activeProjectIndex)->getSong();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("New pattern"));
+
+        qDebug() << "Pattern delete should work";
+        patternPresenter.removePattern(song.getPatterns().keys()[0]);
+        QCOMPARE(song.getPatterns().keys().length(), 0);
+
+        qDebug() << "Undo/redo for pattern delete should work";
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("New pattern"));
+        presenter->redo();
+        QCOMPARE(song.getPatterns().keys().length(), 0);
+
+        qDebug() << "Pattern create should work";
+        patternPresenter.createPattern("test 1", QColor("#FFFFFF"));
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("Test 1"));
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getColor(), QColor("#FFFFFF"));
+        patternPresenter.createPattern("test 2", QColor("#FFFFFF"));
+        QCOMPARE(song.getPatterns().keys().length(), 2);
+        patternPresenter.createPattern("test 3", QColor("#FFFFFF"));
+        QCOMPARE(song.getPatterns().keys().length(), 3);
+
+        qDebug() << "Undo/redo for pattern create should work";
+        presenter->undo();
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("Test 1"));
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getColor(), QColor("#FFFFFF"));
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 0);
+        presenter->redo();
+        presenter->redo();
+        presenter->redo();
+        QCOMPARE(song.getPatterns().keys().length(), 3);
     }
 
     void cleanupTestCase() {

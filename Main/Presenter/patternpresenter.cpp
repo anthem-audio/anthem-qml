@@ -67,13 +67,19 @@ void PatternPresenter::setActiveProject(Project* project) {
         disconnectUiUpdateSignals(this->activeProject);
     }
 
-    QObject::connect(project, SIGNAL(destroyed()),
-                     this,    SLOT(activeProjectDestroyed()));
+    if (project != nullptr) {
+        QObject::connect(project, SIGNAL(destroyed()),
+                         this,    SLOT(activeProjectDestroyed()));
+    }
 
     this->activeProject = project;
     this->activePattern = nullptr; // TODO: preserve active pattern
-    connectUiUpdateSignals(this->activeProject);
-    emitAllChangeSignals();
+
+
+    if (project != nullptr) {
+        connectUiUpdateSignals(this->activeProject);
+        emitAllChangeSignals();
+    }
 }
 
 void PatternPresenter::activeProjectDestroyed() {

@@ -83,9 +83,7 @@ Engine* MainPresenter::getEngineAt(int index) {
     return engines[index];
 }
 
-QVector<Patch*> MainPresenter::getProjectHistoryAt(
-    int index
-) {
+QVector<Patch*> MainPresenter::getProjectHistoryAt(int index) {
     return projectHistories[index];
 }
 
@@ -94,6 +92,11 @@ int MainPresenter::getHistoryPointerAt(int index) {
 }
 
 void MainPresenter::removeProjectAt(int index) {
+    // Notify child presenters of the change before removing things
+    if (activeProjectIndex == index) {
+        patternPresenter->setActiveProject(nullptr);
+    }
+
     delete projects[index];
     delete projectFiles[index];
     delete engines[index];
