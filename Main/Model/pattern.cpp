@@ -52,19 +52,17 @@ void Pattern::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     }
 }
 
-void Pattern::serialize(Value& value, Document& doc) {
-    Document::AllocatorType& alloc = doc.GetAllocator();
-
+void Pattern::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
     Value displayNameValue;
-    setStr(displayNameValue, this->displayName, alloc);
-    value.AddMember("display_name", displayNameValue, alloc);
+    setStr(displayNameValue, this->displayName, allocator);
+    value.AddMember("display_name", displayNameValue, allocator);
 
 
     Value colorValue;
-    setStr(colorValue, this->color.name(), alloc);
-    value.AddMember("color", colorValue, doc.GetAllocator());
+    setStr(colorValue, this->color.name(), allocator);
+    value.AddMember("color", colorValue, allocator);
 }
 
 QString Pattern::getDisplayName() {

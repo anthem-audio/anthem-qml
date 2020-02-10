@@ -43,7 +43,10 @@ public:
 
     void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
 
-    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+    void serialize(
+            rapidjson::Value& value,
+            rapidjson::Document::AllocatorType& allocator
+        ) override;
 
     Transport* getTransport();
     Song* getSong();

@@ -44,7 +44,10 @@ public:
     Pattern(ModelItem* parent, IdGenerator* id, rapidjson::Value& patternNode);
 
     void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
-    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+    void serialize(
+            rapidjson::Value& value,
+            rapidjson::Document::AllocatorType& allocator
+        ) override;
 
     QString getDisplayName();
     QColor getColor();

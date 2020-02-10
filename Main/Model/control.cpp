@@ -25,7 +25,7 @@ using namespace rapidjson;
 #include "Include/rapidjson/stringbuffer.h"
 #include "Include/rapidjson/writer.h"
 
-#include <QDebug>
+using namespace rapidjson;
 
 Control::Control(
             ModelItem* parent,
@@ -77,7 +77,6 @@ void Control::onPatchReceived(
         StringBuffer buffer;
         Writer<StringBuffer> writer(buffer);
         patch.patch.Accept(writer);
-        qDebug() << buffer.GetString();
 
         float val = patch.patch["value"].GetFloat();
         initialValue = val;
@@ -101,26 +100,16 @@ void Control::onPatchReceived(
     }
 }
 
-void Control::serialize(
-    rapidjson::Value& value, rapidjson::Document& doc
-) {
+void Control::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
-    value.AddMember("id", id, doc.GetAllocator());
-    value.AddMember(
-        "initial_value", initialValue, doc.GetAllocator()
-    );
-    value.AddMember("minimum", minimum, doc.GetAllocator());
-    value.AddMember("maximum", maximum, doc.GetAllocator());
-    value.AddMember("step", step, doc.GetAllocator());
-    value.AddMember(
-        "override_automation",
-        overrideAutomation,
-        doc.GetAllocator()
-    );
-    value.AddMember(
-        "connection", kNullType, doc.GetAllocator()
-    );
+    value.AddMember("id", id, allocator);
+    value.AddMember("initial_value", initialValue, allocator);
+    value.AddMember("minimum", minimum, allocator);
+    value.AddMember("maximum", maximum, allocator);
+    value.AddMember("step", step, allocator);
+    value.AddMember("override_automation", overrideAutomation, allocator);
+    value.AddMember("connection", kNullType, allocator);
 }
 
 void Control::setOverrideState(bool isOverridden) {

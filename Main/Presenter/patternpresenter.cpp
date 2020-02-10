@@ -93,6 +93,10 @@ void PatternPresenter::createPattern(QString name, QColor color) {
     activeProject->getSong()->addPattern(name, color);
 }
 
+void PatternPresenter::removePattern(QString id) {
+    activeProject->getSong()->removePattern(id);
+}
+
 
 Pattern* PatternPresenter::getPattern(QString id) {
     return this->activeProject->getSong()->getPattern(id);

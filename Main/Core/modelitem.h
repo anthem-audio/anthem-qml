@@ -44,7 +44,7 @@ public:
     /// Serialize model item state into the given value
     virtual void serialize(
                 rapidjson::Value& value,
-                rapidjson::Document& doc
+                rapidjson::Document::AllocatorType& allocator
             ) = 0;
 
     ModelItem(Communicator* parent, QString jsonKey);

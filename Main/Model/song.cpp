@@ -89,31 +89,32 @@ void Song::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     }
 }
 
-void Song::serialize(Value& value, Document& doc) {
+void Song::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
     Value patterns(kObjectType);
     auto keys = this->patterns.keys();
     for (QString key : keys) {
         Value v(kObjectType);
-        this->patterns[key]->serialize(v, doc);
+        this->patterns[key]->serialize(v, allocator);
 
         // https://stackoverflow.com/a/33473321/8166701
         auto indexStr = key.toStdString();
 
         Value index(indexStr.c_str(), static_cast<SizeType>(indexStr.size()),
-                    doc.GetAllocator());
+                    allocator);
 
-        patterns.AddMember(index, v, doc.GetAllocator());
+        patterns.AddMember(index, v, allocator);
     }
 
-    value.AddMember("patterns", patterns, doc.GetAllocator());
+    value.AddMember("patterns", patterns, allocator);
 }
 
 void Song::addPattern(QString name, QColor color) {
     QString patternID = QString::number(id->get());
 
-    Value val(kObjectType);
+
+    Value patchVal(kObjectType);
 
 
     Value nameVal;
@@ -123,10 +124,10 @@ void Song::addPattern(QString name, QColor color) {
     setStr(colorVal, color.name(), getPatchAllocator());
 
 
-    val.AddMember("display_name", nameVal, getPatchAllocator());
-    val.AddMember("color", colorVal, getPatchAllocator());
+    patchVal.AddMember("display_name", nameVal, getPatchAllocator());
+    patchVal.AddMember("color", colorVal, getPatchAllocator());
 
-    patchAdd("patterns/" + patternID, val);
+    patchAdd("patterns/" + patternID, patchVal);
 
 
     patterns[patternID] = new Pattern(this, id, name, color);
@@ -134,6 +135,17 @@ void Song::addPattern(QString name, QColor color) {
     sendPatch();
 
     emit patternAdd(patternID);
+}
+
+void Song::removePattern(QString id) {
+    Value currentPatternValue;
+    patterns[id]->serialize(currentPatternValue, getPatchAllocator());
+    patchRemove("patterns/" + id, currentPatternValue);
+
+    delete patterns[id];
+    patterns.remove(id);
+
+    emit patternRemove(id);
 }
 
 const QHash<QString, Pattern*>& Song::getPatterns() {

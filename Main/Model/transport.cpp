@@ -29,14 +29,10 @@ Transport::Transport(
     this->id = id;
 
     masterPitch =
-        new Control(
-            this, "master_pitch", *id, 0, -12, 12, 1
-        );
-
+        new Control(this, "master_pitch", *id, 0, -12, 12, 1);
     beatsPerMinute =
-        new Control(
-            this, "beats_per_minute", *id, 140, 10, 999, 0.01f
-        );
+        new Control(this, "beats_per_minute", *id, 140, 10, 999, 0.01f);
+
     defaultNumerator = 4;
     defaultDenominator = 4;
 }
@@ -50,28 +46,17 @@ Transport::Transport(
     this->id = id;
 
     masterPitch =
-        new Control(
-            this,
-            "master_pitch",
-            transportNode["master_pitch"]
-        );
+        new Control(this, "master_pitch", transportNode["master_pitch"]);
 
     beatsPerMinute =
-        new Control(
-            this,
-            "beats_per_minute",
-            transportNode["beats_per_minute"]
-        );
+        new Control(this, "beats_per_minute",
+                    transportNode["beats_per_minute"]);
 
     defaultNumerator =
-        static_cast<quint8>(
-            transportNode["default_numerator"].GetUint()
-        );
+        static_cast<quint8>(transportNode["default_numerator"].GetUint());
 
     defaultDenominator =
-        static_cast<quint8>(
-            transportNode["default_denominator"].GetUint()
-        );
+        static_cast<quint8>(transportNode["default_denominator"].GetUint());
 }
 
 void Transport::onPatchReceived(
@@ -92,55 +77,34 @@ void Transport::onPatchReceived(
         );
     }
     else if (pointer.startsWith(defaultNumeratorStr)) {
-        quint8 val =
-            static_cast<quint8>(
-                patch.patch["value"].GetUint()
-            );
+        quint8 val = static_cast<quint8>(patch.patch["value"].GetUint());
         defaultNumerator = val;
         emit numeratorDisplayValueChanged(defaultNumerator);
     }
     else if (pointer.startsWith(defaultDenominatorStr)) {
         quint8 val =
-            static_cast<quint8>(
-                patch.patch["value"].GetUint()
-            );
+            static_cast<quint8>(patch.patch["value"].GetUint());
         defaultDenominator = val;
-        emit denominatorDisplayValueChanged(
-            defaultDenominator
-        );
+        emit denominatorDisplayValueChanged(defaultDenominator);
     }
 }
 
-void Transport::serialize(Value& value, Document& doc) {
+void Transport::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
     Value masterPitchValue;
-    masterPitch->serialize(masterPitchValue, doc);
-    value.AddMember(
-        "master_pitch", masterPitchValue, doc.GetAllocator()
-    );
+    masterPitch->serialize(masterPitchValue, allocator);
+    value.AddMember("master_pitch", masterPitchValue, allocator);
 
     Value beatsPerMinuteValue;
-    beatsPerMinute->serialize(beatsPerMinuteValue, doc);
-    value.AddMember(
-        "beats_per_minute",
-        beatsPerMinuteValue,
-        doc.GetAllocator()
-    );
+    beatsPerMinute->serialize(beatsPerMinuteValue, allocator);
+    value.AddMember("beats_per_minute", beatsPerMinuteValue, allocator);
 
     Value numeratorValue(defaultNumerator);
-    value.AddMember(
-        "default_numerator",
-        numeratorValue,
-        doc.GetAllocator()
-    );
+    value.AddMember("default_numerator", numeratorValue, allocator);
 
     Value denominatorValue(defaultDenominator);
-    value.AddMember(
-        "default_denominator",
-        denominatorValue,
-        doc.GetAllocator()
-    );
+    value.AddMember("default_denominator", denominatorValue, allocator);
 }
 
 void Transport::setNumerator(quint8 numerator) {

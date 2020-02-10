@@ -22,6 +22,8 @@
 
 #include "Utilities/exceptions.h"
 
+using namespace rapidjson;
+
 Project::Project(Communicator* parent, IdGenerator* id)
                     : ModelItem(parent, "project") {
     this->id = id;
@@ -30,7 +32,7 @@ Project::Project(Communicator* parent, IdGenerator* id)
 }
 
 Project::Project(Communicator* parent, IdGenerator* id,
-                 rapidjson::Value& projectVal)
+                 Value& projectVal)
                     : ModelItem(parent, "project") {
     this->id = id;
     transport =
@@ -54,20 +56,16 @@ void Project::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
     }
 }
 
-void Project::serialize(rapidjson::Value& value, rapidjson::Document& doc) {
+void Project::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
-    rapidjson::Value transportValue;
-    transport->serialize(transportValue, doc);
-    value.AddMember(
-        "transport",
-        transportValue,
-        doc.GetAllocator()
-    );
+    Value transportValue;
+    transport->serialize(transportValue, allocator);
+    value.AddMember("transport", transportValue, allocator);
 
-    rapidjson::Value songValue;
-    song->serialize(songValue, doc);
-    value.AddMember("song", songValue, doc.GetAllocator());
+    Value songValue;
+    song->serialize(songValue, allocator);
+    value.AddMember("song", songValue, allocator);
 }
 
 Transport* Project::getTransport() {

@@ -44,10 +44,13 @@ public:
 
     void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
 
-    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+    void serialize(
+            rapidjson::Value& value,
+            rapidjson::Document::AllocatorType& allocator
+        ) override;
 
     void addPattern(QString name, QColor color);
-//    void deletePattern(QString id);
+    void removePattern(QString id);
 
     const QHash<QString, Pattern*>& getPatterns();
     Pattern* getPattern(QString key);

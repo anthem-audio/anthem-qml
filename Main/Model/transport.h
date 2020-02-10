@@ -48,8 +48,9 @@ public:
     ) override;
 
     void serialize(
-        rapidjson::Value& value, rapidjson::Document& doc
-    ) override;
+            rapidjson::Value& value,
+            rapidjson::Document::AllocatorType& allocator
+        ) override;
 
     Control* masterPitch;
     Control* beatsPerMinute;

@@ -64,6 +64,7 @@ private slots:
 public slots:
     void setActivePattern(Pattern* pattern);
     void createPattern(QString name, QColor color);
+    void removePattern(QString id);
 
     QString getPatternName(QString id);
     QColor getPatternColor(QString id);

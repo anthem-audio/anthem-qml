@@ -103,11 +103,19 @@ Item {
 
             menuItems: [
                 {
-                    text: 'New pattern',
-                    hoverText: 'Create a new pattern',
+                    text: 'New pattern...',
                     onTriggered: () => {
                         addPatternTooltip.open();
                     }
+                },
+                {
+                    text: 'Delete pattern',
+                    onTriggered: () => {
+                        PatternPresenter.removePattern(
+                            patternSelector.selectedItem.id
+                        );
+                    },
+                    disabled: patternSelector.selectedItem.id === undefined
                 }
             ]
         }

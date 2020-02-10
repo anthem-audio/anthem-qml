@@ -157,7 +157,7 @@ void ProjectFile::save(Project& project) {
     );
 
     Value projectVal(kObjectType);
-    project.serialize(projectVal, doc);
+    project.serialize(projectVal, doc.GetAllocator());
     doc.AddMember(
         "project", projectVal, doc.GetAllocator()
     );
