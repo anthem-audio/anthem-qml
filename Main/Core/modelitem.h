@@ -59,6 +59,7 @@ public:
     void sendPatch();
     void liveUpdate(uint64_t controlId, float value);
     rapidjson::Document::AllocatorType& getPatchAllocator();
+    rapidjson::Document::AllocatorType& getUndoPatchAllocator();
 
     /// Utility function to generate a rapidjson value from a string
     void setStr(rapidjson::Value& target, QString str,

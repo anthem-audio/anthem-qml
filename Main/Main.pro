@@ -15,6 +15,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Core/communicator.cpp \
+        Core/debug.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
         main.cpp \

@@ -18,14 +18,19 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#include "debug.h"
 
-#include "Include/rapidjson/document.h"
+#include <QDebug>
 
-class AnthemDebug {
-public:
-    static void qDebugJsonValue(rapidjson::Value& val);
-};
+#include "Include/rapidjson/stringbuffer.h"
+#include "Include/rapidjson/prettywriter.h"
 
-#endif // DEBUG_H
+using namespace rapidjson;
+
+void AnthemDebug::qDebugJsonValue(Value& val) {
+   StringBuffer buffer;
+   PrettyWriter<StringBuffer> writer(buffer);
+   val.Accept(writer);
+   const char* json = buffer.GetString();
+   qDebug() << json;
+}

@@ -140,11 +140,13 @@ void Song::addPattern(QString name, QColor color) {
 
 void Song::removePattern(QString id) {
     Value currentPatternValue;
-    patterns[id]->serialize(currentPatternValue, getPatchAllocator());
+    patterns[id]->serialize(currentPatternValue, getUndoPatchAllocator());
     patchRemove("patterns/" + id, currentPatternValue);
 
     delete patterns[id];
     patterns.remove(id);
+
+    sendPatch();
 
     emit patternRemove(id);
 }

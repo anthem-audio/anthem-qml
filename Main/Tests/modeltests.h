@@ -452,7 +452,13 @@ private slots:
         QCOMPARE(presenter->isProjectSaved(2), true);
         presenter->closeProject(2);
         presenter->closeProject(1);
+        presenter->closeProject(0);
+        presenter->newProject();
         presenter->switchActiveProject(0);
+
+        QCOMPARE(presenter->activeProjectIndex, 0);
+
+
 
         qDebug() << "There should be one pattern by default";
         PatternPresenter& patternPresenter = *presenter->getPatternPresenter();
@@ -474,13 +480,13 @@ private slots:
         QCOMPARE(song.getPatterns().keys().length(), 0);
 
         qDebug() << "Pattern create should work";
-        patternPresenter.createPattern("test 1", QColor("#FFFFFF"));
+        patternPresenter.createPattern("Test 1", QColor("#FFFFFF"));
         QCOMPARE(song.getPatterns().keys().length(), 1);
         QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("Test 1"));
         QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getColor(), QColor("#FFFFFF"));
-        patternPresenter.createPattern("test 2", QColor("#FFFFFF"));
+        patternPresenter.createPattern("Test 2", QColor("#FFFFFF"));
         QCOMPARE(song.getPatterns().keys().length(), 2);
-        patternPresenter.createPattern("test 3", QColor("#FFFFFF"));
+        patternPresenter.createPattern("Test 3", QColor("#FFFFFF"));
         QCOMPARE(song.getPatterns().keys().length(), 3);
 
         qDebug() << "Undo/redo for pattern create should work";

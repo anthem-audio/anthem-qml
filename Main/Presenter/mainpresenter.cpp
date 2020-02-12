@@ -391,6 +391,15 @@ Document::AllocatorType& MainPresenter::getPatchAllocator() {
         ]->getPatchAllocator();
 }
 
+Document::AllocatorType& MainPresenter::getUndoPatchAllocator() {
+    initializeNewPatchIfNeeded();
+    return *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ]->getUndoPatchAllocator();
+}
+
 void MainPresenter::undo() {
     if (historyPointers[activeProjectIndex] <= -1)
         return;

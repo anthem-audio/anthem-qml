@@ -61,6 +61,10 @@ rapidjson::Document::AllocatorType& ModelItem::getPatchAllocator() {
     return parent->getPatchAllocator();
 }
 
+rapidjson::Document::AllocatorType& ModelItem::getUndoPatchAllocator() {
+    return parent->getUndoPatchAllocator();
+}
+
 void ModelItem::setStr(
         rapidjson::Value& target, QString str,
         rapidjson::Document::AllocatorType& allocator) {
