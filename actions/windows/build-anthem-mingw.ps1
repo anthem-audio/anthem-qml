@@ -4,8 +4,8 @@ Invoke-Expression $env:Qt5_Dir\bin\qmake
 choco uninstall mingw
 choco install mingw --version=7.3.0 -y
 Invoke-Expression C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\mingw32-make.exe
-dir Main
-cd Main\release
+# dir Main
+cd Main
 mkdir Anthem
 Copy-Item Main.exe -Destination Anthem
 cd Anthem
