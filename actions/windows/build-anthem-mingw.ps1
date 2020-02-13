@@ -1,6 +1,7 @@
 # Invoke-Expression $env:Qt5_Dir\bin\qtenv2.bat
 cd $env:GITHUB_WORKSPACE
 Invoke-Expression $env:Qt5_Dir\bin\qmake
+choco uninstall mingw
 choco install mingw --version=7.3.0 -y
 Invoke-Expression $env:Qt5_Dir\..\..\Tools\mingw730_64\bin\mingw32-make.exe
 cd Main\release
