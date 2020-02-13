@@ -9,25 +9,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    # - name: Download Qt
-    #   run: '. "${env:GITHUB_WORKSPACE}\actions\windows\get-qt.ps1"'
-    #   shell: powershell
     # - name: Install Qt
-    #   run: '%GITHUB_WORKSPACE%\qt-install.exe --script .\actions\installer-noninteractive.qs --verbose buildtype=mingw'
-    #   shell: cmd
-    - name: Install Qt
-      uses: jurplel/install-qt-action@v2
-      with:
-        version: 5.14.1
-        arch: win64_mingw73
-    - name: Build Anthem
-      run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-mingw.ps1"'
-      shell: powershell
-    - name: Run tests
-      run: D:\Anthem\Main.exe --test
-      shell: powershell
-      continue-on-error: true
-    - uses: actions/upload-artifact@master
-      with:
-        name: Anthem - Windows build
-        path: 'D:\Anthem'
+    #   uses: jurplel/install-qt-action@v2
+    #   with:
+    #     version: 5.14.1
+    #     arch: win64_mingw73
+    # - name: Build Anthem
+    #   run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-mingw.ps1"'
+    #   shell: powershell
+    # - name: Run tests
+    #   run: D:\Anthem\Main.exe --test
+    #   shell: powershell
+    #   continue-on-error: true
+    # - uses: actions/upload-artifact@master
+    #   with:
+    #     name: Anthem - Windows build
+    #     path: 'D:\Anthem'
