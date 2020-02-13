@@ -1,6 +1,7 @@
 # Invoke-Expression $env:Qt5_Dir\bin\qtenv2.bat
 cd $env:GITHUB_WORKSPACE
 Invoke-Expression $env:Qt5_Dir\bin\qmake
+dir $env:Qt5_Dir\..\..
 Invoke-Expression $env:Qt5_Dir\..\..\Tools\mingw730_64\bin\mingw32-make.exe
 cd Main\release
 mkdir Anthem
