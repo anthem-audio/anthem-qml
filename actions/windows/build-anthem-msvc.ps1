@@ -9,7 +9,7 @@ Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise
 #     D:\Qt\Tools\QtCreator\bin\jom.exe 2>&1
 # }
 cd Main
-dir "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise"
+tree "C:\Program Files (x86)\Microsoft Visual Studio"
 NMAKE
 mkdir Anthem
 Copy-Item Main.exe -Destination Anthem
