@@ -1,4 +1,4 @@
-tree $env:Qt5_Dir/bin
+tree "$env:Qt5_Dir/bin"
 
 Invoke-Expression $env:Qt5_Dir/bin/qtenv2.bat
 cd $env:GITHUB_WORKSPACE
