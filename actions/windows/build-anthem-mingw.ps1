@@ -1,3 +1,5 @@
+tree d:/a/Anthem/Qt/5.14.1/mingw73_64\bin
+
 Invoke-Expression $env:Qt5_Dir\bin\qtenv2.bat
 cd $env:GITHUB_WORKSPACE
 Invoke-Expression $env:Qt5_Dir\bin\qmake
