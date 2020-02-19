@@ -1,5 +1,6 @@
 . $env:GITHUB_WORKSPACE\actions\windows\Invoke-CmdScript.ps1
-. $env:Qt5_Dir\bin\qtenv2.bat
+# . $env:Qt5_Dir\bin\qtenv2.bat
+# $env:Path = "$env:Qt5_Dir\bin;" + $env:Path
 cd $env:GITHUB_WORKSPACE
 Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
 . $env:Qt5_Dir\bin\qmake.exe -spec win32-msvc
