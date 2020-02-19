@@ -6,7 +6,6 @@ cd Main
 & {
     # https://stackoverflow.com/a/12538601
     $ErrorActionPreference = 'Continue'
-    # D:\Qt\Tools\QtCreator\bin\jom.exe 2>&1
     nmake
 }
 mkdir Anthem
