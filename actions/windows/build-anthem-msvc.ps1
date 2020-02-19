@@ -15,8 +15,8 @@ cd Main
 }
 # tree "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\bin"
 mkdir Anthem
-dir
-Copy-Item Main.exe -Destination Anthem
+dir debug
+Copy-Item debug\Main.exe -Destination Anthem
 cd Anthem
 . $env:Qt5_Dir\bin\windeployqt.exe Main.exe --qmldir $env:GITHUB_WORKSPACE\Main
 cd ..
