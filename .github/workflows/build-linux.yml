@@ -15,7 +15,7 @@ jobs:
            sudo apt-get install libxkbcommon-x11-0 -y
            sudo apt install libgl1-mesa-dev -y
     - name: Install Qt
-      uses: ouuan/install-qt-action@v2.3.1
+      uses: ouuan/install-qt-action@v2
       with:
         version: 5.14.1
     - name: Build Anthem
