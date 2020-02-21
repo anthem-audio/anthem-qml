@@ -2,6 +2,8 @@ name: Linux Build
 
 on: [push, pull_request]
 
+# At one point, "Build Anthem" and "Generate AppImage" both added the Qt directory to the path, but install-qt-action does that now.
+
 jobs:
   build:
     runs-on: ubuntu-16.04
@@ -19,7 +21,6 @@ jobs:
     - name: Build Anthem
       run: |
            cd $GITHUB_WORKSPACE
-          # export PATH=$PATH:/qt/5.14.1/gcc_64/bin/
            mkdir build && cd build
            qmake .. -config release
            make -j$(nproc)
@@ -31,7 +32,6 @@ jobs:
     - name: Generate AppImage
       run: |
            cd $GITHUB_WORKSPACE/build
-          # export PATH=$PATH:/qt/5.14.1/gcc_64/bin/
            export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/Main
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
            wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
