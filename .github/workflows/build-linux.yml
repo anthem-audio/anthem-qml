@@ -6,45 +6,37 @@ jobs:
   build:
     runs-on: ubuntu-16.04
 
-    # steps:
-    # - uses: actions/checkout@v1
-    # - name: Download Dependencies
-    #   run: |
-    #        sudo apt-get install libxkbcommon-x11-0 -y
-    #        sudo apt install libgl1-mesa-dev -y
-    # - name: Download Qt
-    #   run: |
-    #        cd $GITHUB_WORKSPACE
-    #        wget http://qt.mirror.constant.com/archive/qt/5.14/5.14.0/qt-opensource-linux-x64-5.14.0.run -O ./qt-install.run
-    # - name: Install Qt
-    #   run: |
-    #        cd $GITHUB_WORKSPACE
-    #        chmod +x ./qt-install.run
-    #        ./qt-install.run --script ./actions/installer-noninteractive.qs --verbose --platform minimal buildtype=linux
-    # - name: Build Anthem
-    #   run: |
-    #        cd $GITHUB_WORKSPACE
-    #        export PATH=$PATH:/qt/5.14.0/gcc_64/bin/
-    #        mkdir build && cd build
-    #        qmake .. -config release
-    #        make -j$(nproc)
-    #        make install
-    # - name: Test Anthem
-    #   run: |
-    #        cd $GITHUB_WORKSPACE/build/Main
-    #        ./Main --test
-    # - name: Generate AppImage
-    #   run: |
-    #        cd $GITHUB_WORKSPACE/build
-    #        export PATH=$PATH:/qt/5.14.0/gcc_64/bin/
-    #        export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/Main
-    #        wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-    #        wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
-    #        chmod +x linuxdeploy*.AppImage
-    #        ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ./Main/Main -i ../actions/linux/Anthem.png -d ../actions/linux/anthem.desktop --plugin qt --output appimage
-    #        mkdir upload
-    #        mv ./Anthem*.AppImage ./upload
-    # - uses: actions/upload-artifact@master
-    #   with:
-    #     name: Anthem - Linux build
-    #     path: 'build/upload'
+    steps:
+    - uses: actions/checkout@v1
+    - name: Download Dependencies
+    - name: Install Qt
+      uses: ouuan/install-qt-action@v2.3.1
+      with:
+        version: 5.14.1
+    - name: Build Anthem
+      run: |
+           cd $GITHUB_WORKSPACE
+           export PATH=$PATH:/qt/5.14.1/gcc_64/bin/
+           mkdir build && cd build
+           qmake .. -config release
+           make -j$(nproc)
+           make install
+    - name: Test Anthem
+      run: |
+           cd $GITHUB_WORKSPACE/build/Main
+           ./Main --test
+    - name: Generate AppImage
+      run: |
+           cd $GITHUB_WORKSPACE/build
+           export PATH=$PATH:/qt/5.14.1/gcc_64/bin/
+           export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/Main
+           wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
+           wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
+           chmod +x linuxdeploy*.AppImage
+           ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ./Main/Main -i ../actions/linux/Anthem.png -d ../actions/linux/anthem.desktop --plugin qt --output appimage
+           mkdir upload
+           mv ./Anthem*.AppImage ./upload
+    - uses: actions/upload-artifact@master
+      with:
+        name: Anthem - Linux build
+        path: 'build/upload'
