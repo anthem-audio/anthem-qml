@@ -19,7 +19,6 @@
 */
 
 #include "patternpresenter.h"
-#include <QDebug>
 
 PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id,
                                    Project* activeProject)
@@ -27,6 +26,7 @@ PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id,
     this->id = id;
     this->activeProject = activeProject;
     this->activePattern = nullptr; // TODO: preserve active pattern
+    this->connectUiUpdateSignals(activeProject);
 }
 
 void PatternPresenter::connectUiUpdateSignals(Project* project) {
