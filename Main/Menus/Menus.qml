@@ -26,14 +26,12 @@
   won't be the thing that needs fixing.
 */
 
-import QtQuick 2.13
+import QtQuick 2.14
 
 Item {
     id: menuContainer
     property Component menuComponent
-
     property var _idCounter: 0
-
     property int openMenuCount: 0
 
     /*
@@ -141,11 +139,9 @@ Item {
     function closeAll() {
         for (let i = 1; i < children.length; i++) {
             children[i].destroy();
-            openMenuCount--;
         }
 
-        if (openMenuCount < 0)
-            openMenuCount = 0;
+        openMenuCount = 0;
     }
 
     function closeLast() {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -21,7 +21,8 @@
 #ifndef DOCUMENTWRAPPER_H
 #define DOCUMENTWRAPPER_H
 
-// Class for storing the JSON model of the project, plus metadata
+// Class for storing the JSON model of the project,
+// plus metadata
 
 #include <QString>
 #include <QObject>

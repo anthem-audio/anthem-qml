@@ -68,18 +68,18 @@ Controller.prototype.ComponentSelectionPageCallback = function() {
 
     switch (installer.value("buildtype")) {
         case "linux": {
-            widget.selectComponent("qt.qt5.5132.gcc_64");
+            widget.selectComponent("qt.qt5.5140.gcc_64");
             break;
         }
 
         case "mingw": {
-            widget.selectComponent("qt.qt5.5132.win64_mingw73");
+            widget.selectComponent("qt.qt5.5140.win64_mingw73");
             widget.selectComponent("qt.tools.win64_mingw730");
             break;
         }
 
         case "msvc": {
-            widget.selectComponent("qt.qt5.5132.win64_msvc2017_64");
+            widget.selectComponent("qt.qt5.5140.win64_msvc2017_64");
             break;
         }
 

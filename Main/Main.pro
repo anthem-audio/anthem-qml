@@ -15,18 +15,22 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Core/communicator.cpp \
+        Core/debug.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
+        main.cpp \
         Model/control.cpp \
+        Model/pattern.cpp \
         Model/project.cpp \
+        Model/song.cpp \
         Model/transport.cpp \
         Presenter/mainpresenter.cpp \
+        Presenter/patternpresenter.cpp \
         Utilities/idgenerator.cpp \
         Utilities/mousehelper.cpp \
         Utilities/patch.cpp \
         Utilities/patchfragment.cpp \
-        Utilities/projectfile.cpp \
-        main.cpp
+        Utilities/projectfile.cpp
 
 RESOURCES += qml.qrc
 
@@ -43,6 +47,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Core/communicator.h \
+    Core/debug.h \
     Core/engine.h \
     Core/modelitem.h \
     Include/rapidjson/allocators.h \
@@ -83,9 +88,12 @@ HEADERS += \
     Include/rapidjson/writer.h \
     Include/snowflake.h \
     Model/control.h \
+    Model/pattern.h \
     Model/project.h \
+    Model/song.h \
     Model/transport.h \
     Presenter/mainpresenter.h \
+    Presenter/patternpresenter.h \
     Tests/modeltests.h \
     Utilities/exceptions.h \
     Utilities/idgenerator.h \

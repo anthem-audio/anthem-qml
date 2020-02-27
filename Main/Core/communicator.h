@@ -36,6 +36,8 @@ public:
     virtual void patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) = 0;
     virtual void patchCopy(QString from, QString path) = 0;
     virtual void patchMove(QString from, QString path) = 0;
+    virtual rapidjson::Document::AllocatorType& getPatchAllocator() = 0;
+    virtual rapidjson::Document::AllocatorType& getUndoPatchAllocator() = 0;
 };
 
 #endif // COMMUNICATOR_H

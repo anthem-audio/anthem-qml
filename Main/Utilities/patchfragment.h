@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -42,7 +42,13 @@ private:
 public:
     rapidjson::Document patch;
 
-    PatchFragment(QObject* parent, PatchType type, QString from, QString path, rapidjson::Value& value);
+    PatchFragment(
+        QObject* parent,
+        PatchType type,
+        QString from,
+        QString path,
+        rapidjson::Value& value
+    );
     PatchType getType();
     void apply(rapidjson::Document& doc);
 };

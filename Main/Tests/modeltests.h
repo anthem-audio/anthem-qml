@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -106,17 +106,17 @@ private slots:
 
     void emptyProject() {
         qDebug() << "Initial project state";
-        QCOMPARE(project->transport->masterPitch->get(), 0.0f);
+        QCOMPARE(project->getTransport()->masterPitch->get(), 0.0f);
 
 
 
         qDebug() << "Direct item set";
 
         // Set the value to -5, but send a live update instead of a patch.
-        project->transport->masterPitch->set(-5.0f, false);
+        project->getTransport()->masterPitch->set(-5.0f, false);
 
         // The control should report the newly set value.
-        QCOMPARE(project->transport->masterPitch->get(), -5.0f);
+        QCOMPARE(project->getTransport()->masterPitch->get(), -5.0f);
 
         // The signal for updating the UI should not have fired because the change does
         // not represent a change to the model. Arguably it shouldn't fire at all, but
@@ -130,10 +130,10 @@ private slots:
 
 
         // Set the value to 10, and send a patch (final value in a channge operation).
-        project->transport->masterPitch->set(10.0f, true);
+        project->getTransport()->masterPitch->set(10.0f, true);
 
         // The control should report the newly set value.
-        QCOMPARE(project->transport->masterPitch->get(), 10.0f);
+        QCOMPARE(project->getTransport()->masterPitch->get(), 10.0f);
 
         // This is a final (patch-emitting) change, so the UI should have been notified
         // (see above)
@@ -265,7 +265,7 @@ private slots:
         qDebug() << "Remove the current testing project and open a new one";
         presenter->removeProjectAt(0);
         presenter->newProject();
-        eventCounter->~PresenterEventCounter();
+        delete eventCounter;
         eventCounter = new PresenterEventCounter(this);
 
         QObject::connect(presenter,    SIGNAL(masterPitchChanged(int)),
@@ -436,6 +436,7 @@ private slots:
         QCOMPARE(presenter->getHistoryPointerAt(1), -1);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
         QCOMPARE(presenter->isProjectSaved(1), true);
+        QCOMPARE(presenter->getProjectAt(presenter->activeProjectIndex)->getSong()->getPatterns().keys().length(), 1);
 
         presenter->setMasterPitch(-12, true);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), true);
@@ -449,6 +450,57 @@ private slots:
         QCOMPARE(presenter->isProjectSaved(1), true);
         QCOMPARE(presenter->projectHasUnsavedChanges(2), false);
         QCOMPARE(presenter->isProjectSaved(2), true);
+        presenter->closeProject(2);
+        presenter->closeProject(1);
+        presenter->closeProject(0);
+        presenter->newProject();
+        presenter->switchActiveProject(0);
+
+        QCOMPARE(presenter->activeProjectIndex, 0);
+
+
+
+        qDebug() << "There should be one pattern by default";
+        PatternPresenter& patternPresenter = *presenter->getPatternPresenter();
+        Song& song = *presenter->getProjectAt(presenter->activeProjectIndex)->getSong();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("New pattern"));
+
+        qDebug() << "Pattern delete should work";
+        patternPresenter.removePattern(song.getPatterns().keys()[0]);
+        QCOMPARE(song.getPatterns().keys().length(), 0);
+
+        qDebug() << "Undo/redo for pattern delete should work";
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("New pattern"));
+        presenter->redo();
+        QCOMPARE(song.getPatterns().keys().length(), 0);
+
+        qDebug() << "Pattern create should work";
+        patternPresenter.createPattern("Test 1", QColor("#FFFFFF"));
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("Test 1"));
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getColor(), QColor("#FFFFFF"));
+        patternPresenter.createPattern("Test 2", QColor("#FFFFFF"));
+        QCOMPARE(song.getPatterns().keys().length(), 2);
+        patternPresenter.createPattern("Test 3", QColor("#FFFFFF"));
+        QCOMPARE(song.getPatterns().keys().length(), 3);
+
+        qDebug() << "Undo/redo for pattern create should work";
+        presenter->undo();
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 1);
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getDisplayName(), QString("Test 1"));
+        QCOMPARE(song.getPatterns()[song.getPatterns().keys()[0]]->getColor(), QColor("#FFFFFF"));
+        presenter->undo();
+        QCOMPARE(song.getPatterns().keys().length(), 0);
+        presenter->redo();
+        presenter->redo();
+        presenter->redo();
+        QCOMPARE(song.getPatterns().keys().length(), 3);
     }
 
     void cleanupTestCase() {

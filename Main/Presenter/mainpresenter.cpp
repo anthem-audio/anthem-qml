@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -32,11 +32,11 @@
 
 using namespace rapidjson;
 
-MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(parent) {
+MainPresenter::MainPresenter(QObject *parent, IdGenerator* id)
+                                : Communicator(parent) {
     isPatchInProgress = false;
     isActiveProjectValid = true;
     isInInitialState = true;
-
 
     this->id = id;
 
@@ -48,6 +48,9 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
     // Connect change signals from the model to the UI
     connectUiUpdateSignals(projectModel);
 
+    // Initialize child presenters
+    patternPresenter = new PatternPresenter(this, id, projectModel);
+
     // Start the engine
     auto engine = new Engine(dynamic_cast<QObject*>(this));
     engine->start();
@@ -55,7 +58,12 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id) : Communicator(pa
     addProject(projectModel, projectFile, engine);
 }
 
-void MainPresenter::addProject(Project* project, ProjectFile* projectFile, Engine* engine) {
+PatternPresenter* MainPresenter::getPatternPresenter() {
+    return this->patternPresenter;
+}
+
+void MainPresenter::addProject(Project* project, ProjectFile* projectFile,
+                               Engine* engine) {
     projects.append(project);
     projectFiles.append(projectFile);
     engines.append(engine);
@@ -84,9 +92,14 @@ int MainPresenter::getHistoryPointerAt(int index) {
 }
 
 void MainPresenter::removeProjectAt(int index) {
-    projects[index]->~Project();
-    projectFiles[index]->~ProjectFile();
-    engines[index]->~Engine();
+    // Notify child presenters of the change before removing things
+    if (activeProjectIndex == index) {
+        patternPresenter->setActiveProject(nullptr);
+    }
+
+    delete projects[index];
+    delete projectFiles[index];
+    delete engines[index];
 
     projects.removeAt(index);
     projectFiles.removeAt(index);
@@ -94,18 +107,20 @@ void MainPresenter::removeProjectAt(int index) {
     historyPointers.removeAt(index);
 
     for (int i = 0; i < projectHistories[index].length(); i++) {
-        projectHistories[index][i]->~Patch();
+        delete projectHistories[index][i];
     }
 
     projectHistories.removeAt(index);
 
-    // If the active project is closed, the index will be set to -1.
+    // If the active project is closed, the index will
+    // be set to -1.
     if (index == activeProjectIndex) {
         isActiveProjectValid = false;
         activeProjectIndex = -1;
     }
-    // This prevents the active project index from becoming desynced in
-    // cases where the active projct is positioned after the tab that was
+    // This prevents the active project index from
+    // becoming desynced in cases where the active
+    // projct is positioned after the tab that was
     // closed.
     else if (index < activeProjectIndex) {
         activeProjectIndex--;
@@ -129,13 +144,20 @@ void MainPresenter::loadProject(QString path) {
 
     // Check if the path exists and is a file
     if (!fileInfo.exists() || !fileInfo.isFile()) {
-        emit informationDialogRequest("Error", "That project does not exist.");
+        emit informationDialogRequest(
+            "Error", "That project does not exist."
+        );
         return;
     }
 
     // Ensure the file ends with ".anthem"
     if (fileInfo.suffix() != "anthem") {
-        emit informationDialogRequest("Error", "That is not a *.anthem file. If you think the file you chose is valid, please rename it so it has a \".anthem\" extension.");
+        emit informationDialogRequest(
+            "Error",
+            "That is not a *.anthem file. "
+            "If you think the file you chose is valid, "
+            "please rename it so it has a \".anthem\" extension."
+        );
         return;
     }
 
@@ -145,45 +167,47 @@ void MainPresenter::loadProject(QString path) {
         projectFile = new ProjectFile(this, path);
     }
     catch (const InvalidProjectException& ex) {
-        emit informationDialogRequest("Error", QString(ex.what()));
+        emit informationDialogRequest(
+            "Error", QString(ex.what())
+        );
         return;
     }
 
     QString fileName = fileInfo.fileName();
     fileName.chop(fileInfo.completeSuffix().length() + 1);
 
-    if (isInInitialState) {
-        removeProjectAt(0);
-    }
-
-    if (projectFile->document.IsNull()) {
-        // This should never trip and will be removed in a future PR.
-        emit informationDialogRequest("Error", "Something is very wrong.");
-        projectFile->~ProjectFile();
-        return;
-    }
-
     Project* project;
 
     try {
         // Initialize model with JSON
-        project = new Project(this, id, projectFile->document["project"]);
+        project = new Project(
+            this, id, projectFile->document["project"]
+        );
     }
     catch (const InvalidProjectException& ex) {
-        QString errorText = "The project file failed to load. ";
-        emit informationDialogRequest("Error", errorText.append(ex.what()));
-        projectFile->~ProjectFile();
+        QString errorText =
+            "The project file failed to load. ";
+        emit informationDialogRequest(
+            "Error", errorText.append(ex.what())
+        );
+        delete projectFile;
         return;
     }
 
     // Create and start new engine
-    // TODO: Once engines can be stared and stopped by the user, don't start immediately. (?)
-    // TODO: Engine may have errors when starting. Report these to the user.
+    // TODO: Once engines can be stared and stopped by
+    //   the user, don't start immediately. (?)
+    // TODO: Engine may have errors when starting.
+    //   Report these to the user.
     Engine* engine = new Engine(this);
     engine->start();
 
     addProject(project, projectFile, engine);
     switchActiveProject(projects.length() - 1);
+
+    if (isInInitialState) {
+        removeProjectAt(0);
+    }
 
     if (isInInitialState) {
         emit tabRename(0, fileName);
@@ -197,11 +221,14 @@ void MainPresenter::loadProject(QString path) {
 }
 
 void MainPresenter::saveActiveProject() {
-    projectFiles[activeProjectIndex]->save(*projects[activeProjectIndex]);
+    projectFiles[activeProjectIndex]
+            ->save(*projects[activeProjectIndex]);
 }
 
 void MainPresenter::saveActiveProjectAs(QString path) {
-    projectFiles[activeProjectIndex]->saveAs(*projects[activeProjectIndex], path);
+    projectFiles[activeProjectIndex]
+            ->saveAs(*projects[activeProjectIndex], path);
+
     QFileInfo fileInfo(path);
     QString fileName = fileInfo.fileName();
     fileName.chop(fileInfo.completeSuffix().length() + 1);
@@ -232,9 +259,16 @@ void MainPresenter::initializeNewPatchIfNeeded() {
 
     historyPointers[activeProjectIndex]++;
 
-    if (historyPointers[activeProjectIndex] != projectHistories[activeProjectIndex].length()) {
-        for (int i = projectHistories[activeProjectIndex].length() - 1; i >= historyPointers[activeProjectIndex]; i--) {
-            projectHistories[activeProjectIndex][i]->~Patch();
+    if (historyPointers[activeProjectIndex] !=
+            projectHistories[activeProjectIndex].length()) {
+        for (
+            int i = projectHistories[
+                        activeProjectIndex
+                    ].length() - 1;
+            i >= historyPointers[activeProjectIndex];
+            i--
+        ) {
+            delete projectHistories[activeProjectIndex][i];
             projectHistories[activeProjectIndex].pop_back();
         }
     }
@@ -246,35 +280,77 @@ void MainPresenter::initializeNewPatchIfNeeded() {
 
 void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
+
+    Patch& patch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
+
     Value copiedValue(value, *patch.getPatchAllocator());
     patch.patchAdd("/" + path, copiedValue);
 }
 
 void MainPresenter::patchRemove(QString path, rapidjson::Value& oldValue) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
-    Value copiedValue(oldValue, *patch.getUndoPatchAllocator());
+
+    Patch& patch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
+
+    Value copiedValue(
+        oldValue, *patch.getUndoPatchAllocator()
+    );
     patch.patchRemove("/" + path, copiedValue);
 }
 
-void MainPresenter::patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) {
+void MainPresenter::patchReplace(
+        QString path,
+        rapidjson::Value& oldValue,
+        rapidjson::Value& newValue) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
-    Value copiedOldValue(oldValue, *patch.getUndoPatchAllocator());
-    Value copiedNewValue(newValue, *patch.getPatchAllocator());
-    patch.patchReplace("/" + path, copiedOldValue, copiedNewValue);
+
+    Patch& patch
+        = *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
+
+    Value copiedOldValue(
+        oldValue, *patch.getUndoPatchAllocator()
+    );
+    Value copiedNewValue(
+        newValue, *patch.getPatchAllocator()
+    );
+    patch.patchReplace(
+        "/" + path, copiedOldValue, copiedNewValue
+    );
 }
 
 void MainPresenter::patchCopy(QString from, QString path) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
+    Patch& patch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
     patch.patchCopy("/" + from, "/" + path);
 }
 
 void MainPresenter::patchMove(QString from, QString path) {
     initializeNewPatchIfNeeded();
-    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
+    Patch& patch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
     patch.patchMove("/" + from, "/" + path);
 }
 
@@ -282,46 +358,108 @@ void MainPresenter::sendPatch() {
     if (!isPatchInProgress) {
         throw "sendPatch() was called, but there was nothing to send.";
     }
-    Patch& patch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
+    Patch& patch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
     patch.apply();
-    engines[activeProjectIndex]->sendPatchList(patch.getPatch());
+
+    engines[
+        activeProjectIndex
+    ]->sendPatchList(patch.getPatch());
+
     isPatchInProgress = false;
     projectFiles[activeProjectIndex]->markDirty();
 }
 
-void MainPresenter::liveUpdate(uint64_t controlId, float value) {
-    engines[activeProjectIndex]->sendLiveControlUpdate(controlId, value);
+void MainPresenter::liveUpdate(
+    uint64_t controlId, float value
+) {
+    engines[
+        activeProjectIndex
+    ]->sendLiveControlUpdate(controlId, value);
+}
+
+Document::AllocatorType& MainPresenter::getPatchAllocator() {
+    initializeNewPatchIfNeeded();
+    return *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ]->getPatchAllocator();
+}
+
+Document::AllocatorType& MainPresenter::getUndoPatchAllocator() {
+    initializeNewPatchIfNeeded();
+    return *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ]->getUndoPatchAllocator();
 }
 
 void MainPresenter::undo() {
     if (historyPointers[activeProjectIndex] <= -1)
         return;
 
-    Patch& undoPatch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
+    Patch& undoPatch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
+
     undoPatch.applyUndo();
     Value& undoPatchVal = undoPatch.getUndoPatch();
-    engines[activeProjectIndex]->sendPatchList(undoPatchVal);
+    engines[
+        activeProjectIndex
+    ]->sendPatchList(undoPatchVal);
 
     historyPointers[activeProjectIndex]--;
 }
 
 void MainPresenter::redo() {
-    if (historyPointers[activeProjectIndex] >= projectHistories[activeProjectIndex].length() - 1)
+    if (
+        historyPointers[activeProjectIndex] >=
+            projectHistories[activeProjectIndex].length() - 1
+    ) {
         return;
+    }
 
     historyPointers[activeProjectIndex]++;
 
-    Patch& redoPatch = *projectHistories[activeProjectIndex][historyPointers[activeProjectIndex]];
+    Patch& redoPatch =
+        *projectHistories[
+            activeProjectIndex
+        ][
+            historyPointers[activeProjectIndex]
+        ];
+
     redoPatch.apply();
-    engines[activeProjectIndex]->sendPatchList(redoPatch.getPatch());
+    engines[
+        activeProjectIndex
+    ]->sendPatchList(redoPatch.getPatch());
 }
 
 void MainPresenter::switchActiveProject(int index) {
-    if (isActiveProjectValid)
-        disconnectUiUpdateSignals(projects[activeProjectIndex]);
+    if (isActiveProjectValid) {
+        disconnectUiUpdateSignals(
+            projects[activeProjectIndex]
+        );
+    }
+
     activeProjectIndex = index;
+
     connectUiUpdateSignals(projects[activeProjectIndex]);
-    updateAll();
+    emitAllChangeSignals();
+
+    // Update child presenters
+    patternPresenter->setActiveProject(
+        projects[activeProjectIndex]
+    );
+
     isActiveProjectValid = true;
 }
 
@@ -351,12 +489,11 @@ void MainPresenter::displayStatusMessage(QString message) {
 
 
 
-
 //****************************//
 // Control-specific functions //
 //****************************//
 
-void MainPresenter::updateAll() {
+void MainPresenter::emitAllChangeSignals() {
     emit masterPitchChanged(getMasterPitch());
     emit beatsPerMinuteChanged(getBeatsPerMinute());
     emit timeSignatureNumeratorChanged(getTimeSignatureNumerator());
@@ -364,49 +501,65 @@ void MainPresenter::updateAll() {
 }
 
 void MainPresenter::connectUiUpdateSignals(Project* project) {
-    QObject::connect(project->transport->masterPitch,    SIGNAL(displayValueChanged(float)),
-                     this,                               SLOT(ui_updateMasterPitch(float)));
-    QObject::connect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
-                     this,                               SLOT(ui_updateBeatsPerMinute(float)));
-    QObject::connect(project->transport,                 SIGNAL(numeratorDisplayValueChanged(quint8)),
-                     this,                               SLOT(ui_updateTimeSignatureNumerator(quint8)));
-    QObject::connect(project->transport,                 SIGNAL(denominatorDisplayValueChanged(quint8)),
-                     this,                               SLOT(ui_updateTimeSignatureDenominator(quint8)));
+    QObject::connect(project->getTransport()->masterPitch,       SIGNAL(displayValueChanged(float)),
+                     this,                                       SLOT(ui_updateMasterPitch(float)));
+    QObject::connect(project->getTransport()->beatsPerMinute,    SIGNAL(displayValueChanged(float)),
+                     this,                                       SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::connect(project->getTransport(),                    SIGNAL(numeratorDisplayValueChanged(quint8)),
+                     this,                                       SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::connect(project->getTransport(),                    SIGNAL(denominatorDisplayValueChanged(quint8)),
+                     this,                                       SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 // This should mirror the function above
 void MainPresenter::disconnectUiUpdateSignals(Project* project) {
-    QObject::disconnect(project->transport->masterPitch,    SIGNAL(displayValueChanged(float)),
-                        this,                               SLOT(ui_updateMasterPitch(float)));
-    QObject::disconnect(project->transport->beatsPerMinute, SIGNAL(displayValueChanged(float)),
-                        this,                               SLOT(ui_updateBeatsPerMinute(float)));
-    QObject::disconnect(project->transport,                 SIGNAL(numeratorDisplayValueChanged(quint8)),
-                        this,                               SLOT(ui_updateTimeSignatureNumerator(quint8)));
-    QObject::disconnect(project->transport,                 SIGNAL(denominatorDisplayValueChanged(quint8)),
-                        this,                               SLOT(ui_updateTimeSignatureDenominator(quint8)));
+    QObject::disconnect(project->getTransport()->masterPitch,    SIGNAL(displayValueChanged(float)),
+                        this,                                    SLOT(ui_updateMasterPitch(float)));
+    QObject::disconnect(project->getTransport()->beatsPerMinute, SIGNAL(displayValueChanged(float)),
+                        this,                                    SLOT(ui_updateBeatsPerMinute(float)));
+    QObject::disconnect(project->getTransport(),                 SIGNAL(numeratorDisplayValueChanged(quint8)),
+                        this,                                    SLOT(ui_updateTimeSignatureNumerator(quint8)));
+    QObject::disconnect(project->getTransport(),                 SIGNAL(denominatorDisplayValueChanged(quint8)),
+                        this,                                    SLOT(ui_updateTimeSignatureDenominator(quint8)));
 }
 
 
 
 int MainPresenter::getMasterPitch() {
-    return static_cast<int>(std::round(projects[activeProjectIndex]->transport->masterPitch->get()));
+    return static_cast<int>(
+        std::round(
+            projects[
+                activeProjectIndex
+            ]->getTransport()->masterPitch->get()
+        )
+    );
 }
 
 void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
-    projects[activeProjectIndex]->transport->masterPitch->set(static_cast<float>(pitch), isFinal);
+    projects[
+        activeProjectIndex
+    ]->getTransport()->masterPitch->set(
+        static_cast<float>(pitch), isFinal
+    );
 }
 
 void MainPresenter::ui_updateMasterPitch(float pitch) {
-    emit masterPitchChanged(static_cast<int>(std::round(pitch)));
+    emit masterPitchChanged(
+        static_cast<int>(std::round(pitch))
+    );
 }
 
 
 float MainPresenter::getBeatsPerMinute() {
-    return projects[activeProjectIndex]->transport->beatsPerMinute->get();
+    return projects[
+        activeProjectIndex
+    ]->getTransport()->beatsPerMinute->get();
 }
 
 void MainPresenter::setBeatsPerMinute(float bpm, bool isFinal) {
-    projects[activeProjectIndex]->transport->beatsPerMinute->set(bpm, isFinal);
+    projects[
+        activeProjectIndex
+    ]->getTransport()->beatsPerMinute->set(bpm, isFinal);
 }
 
 void MainPresenter::ui_updateBeatsPerMinute(float bpm) {
@@ -415,11 +568,15 @@ void MainPresenter::ui_updateBeatsPerMinute(float bpm) {
 
 
 quint8 MainPresenter::getTimeSignatureNumerator() {
-    return projects[activeProjectIndex]->transport->getNumerator();
+    return projects[
+        activeProjectIndex
+    ]->getTransport()->getNumerator();
 }
 
 void MainPresenter::setTimeSignatureNumerator(quint8 numerator) {
-    projects[activeProjectIndex]->transport->setNumerator(numerator);
+    projects[
+        activeProjectIndex
+    ]->getTransport()->setNumerator(numerator);
 }
 
 void MainPresenter::ui_updateTimeSignatureNumerator(quint8 numerator) {
@@ -428,11 +585,15 @@ void MainPresenter::ui_updateTimeSignatureNumerator(quint8 numerator) {
 
 
 quint8 MainPresenter::getTimeSignatureDenominator() {
-    return projects[activeProjectIndex]->transport->getDenominator();
+    return projects[
+        activeProjectIndex
+    ]->getTransport()->getDenominator();
 }
 
 void MainPresenter::setTimeSignatureDenominator(quint8 denominator) {
-    projects[activeProjectIndex]->transport->setDenominator(denominator);
+    projects[
+        activeProjectIndex
+    ]->getTransport()->setDenominator(denominator);
 }
 
 void MainPresenter::ui_updateTimeSignatureDenominator(quint8 denominator) {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -33,22 +33,23 @@
 #include "Core/communicator.h"
 #include "Core/engine.h"
 #include "Utilities/patch.h"
+#include "patternpresenter.h"
 
 class MainPresenter : public Communicator {
     Q_OBJECT
 private:
-    void updateAll();
-
     void connectUiUpdateSignals(Project* project);
     void disconnectUiUpdateSignals(Project* project);
 
-    /// If there isn't an active (non-sent) patch in the list, add one
+    /// If there isn't an active (non-sent) patch in
+    /// the list, add one.
     void initializeNewPatchIfNeeded();
 
-    /// Used to track whether the user has 1) opened a project or
-    /// 2) modified the blank project since the software was
-    /// launched. This determines whether "File -> Open project"
-    /// should replace the current tab or use a new one.
+    /// Used to track whether the user has 1) opened a
+    /// project or 2) modified the blank project since
+    /// the software was launched. This determines
+    /// whether "File -> Open project" should replace
+    /// the current tab or use a new one.
     bool isInInitialState;
 
     bool isActiveProjectValid;
@@ -69,26 +70,44 @@ private:
     QVector<QVector<Patch*>> projectHistories;
     bool isPatchInProgress;
 
+    /// API for the pattern editor
+    PatternPresenter* patternPresenter;
+
     IdGenerator* id;
 
 public:
-    explicit MainPresenter(QObject *parent, IdGenerator* id);
+    explicit MainPresenter(QObject* parent, IdGenerator* id);
 
-    // These are virtual functions in Communicator
+    void emitAllChangeSignals();
+
+    // Implementations of virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
-    void patchRemove(QString path, rapidjson::Value& oldValue);
-    void patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue);
+    void patchRemove(
+        QString path, rapidjson::Value& oldValue
+    );
+    void patchReplace(
+        QString path,
+        rapidjson::Value& oldValue,
+        rapidjson::Value& newValue
+    );
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();
 
     void liveUpdate(uint64_t controlId, float value);
 
+    rapidjson::Document::AllocatorType& getPatchAllocator();
+    rapidjson::Document::AllocatorType& getUndoPatchAllocator();
+
     /// Project that is currently loaded
     int activeProjectIndex;
 
     // Used to access and manipulate project data
-    void addProject(Project* project, ProjectFile* projectFile, Engine* engine);
+    void addProject(
+        Project* project,
+        ProjectFile* projectFile,
+        Engine* engine
+    );
     void removeProjectAt(int index);
     Project* getProjectAt(int index);
     ProjectFile* getProjectFileAt(int index);
@@ -105,8 +124,11 @@ signals:
     /// Signal to tell the UI to open a save dialog
     void saveDialogRequest();
 
-    /// Signal to tell the UI to display an information dialog to the user
-    void informationDialogRequest(QString title, QString notification);
+    /// Signal to tell the UI to display an information
+    /// dialog to the user
+    void informationDialogRequest(
+        QString title, QString notification
+    );
 
     /// Emitted when a save has been completed.
     void saveCompleted();
@@ -125,24 +147,30 @@ signals:
     void timeSignatureDenominatorChanged(quint8 denominator);
 
 public slots:
+    PatternPresenter* getPatternPresenter();
+
     void newProject();
     void loadProject(QString path);
     void saveActiveProject();
     void saveActiveProjectAs(QString path);
 
-    /// Checks if the given project has ever been saved, or was opened from a file
+    /// Checks if the given project has ever been saved,
+    /// or was opened from a file
     bool isProjectSaved(int projectIndex);
 
     /// Checks if the given project has unsaved changes
     bool projectHasUnsavedChanges(int projectIndex);
 
-    /// Raises a signal to tell the UI to open a save dialog.
+    /// Raises a signal to tell the UI to open a save
+    /// dialog.
     void openSaveDialog();
 
-    /// Raises a signal notifying listeners that a save operation has completed successfully
+    /// Raises a signal notifying listeners that a save
+    /// operation has completed successfully.
     void notifySaveCancelled();
 
-    /// Raises a signal notifying listeners that a save operation was cancelled by the user.
+    /// Raises a signal notifying listeners that a save
+    /// operation was cancelled by the user.
     void notifySaveCompleted();
 
     int getNumOpenProjects();
@@ -150,12 +178,14 @@ public slots:
     void undo();
     void redo();
 
-    // These functions do not update the tab state in the UI
+    // These functions do not update the tab state
+    // in the UI
     void switchActiveProject(int index);
     /// Does not update the active project
     void closeProject(int index);
 
-    /// Tells the UI to display the given string as a status message
+    /// Tells the UI to display the given string as a
+    /// status message.
     void displayStatusMessage(QString message);
 
 
@@ -169,10 +199,11 @@ public slots:
     quint8 getTimeSignatureDenominator();
     void setTimeSignatureDenominator(quint8 denominator);
 
-    // Functions with the ui_ prefix are used as receiver slots
-    // for model change signals. Each ui_ function should:
-    //     a) always be connected to the relevant model's update
-    //        signals, and
+    // Functions with the ui_ prefix are used as
+    // receiver slots for model change signals. Each
+    // ui_ function should:
+    //     a) always be connected to the relevant
+    //        model's update signals, and
     //     b) emit the relevant update signal.
     void ui_updateMasterPitch(float pitch);
     void ui_updateBeatsPerMinute(float bpm);

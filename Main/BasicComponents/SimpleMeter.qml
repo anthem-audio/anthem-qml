@@ -18,7 +18,7 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.0
+import QtQuick 2.14
 
 Rectangle {
     property real value: 0

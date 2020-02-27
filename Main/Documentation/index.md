@@ -16,5 +16,7 @@ These components run in separate processes and communicate with each other over 
 
 ### Main page: [UI](ui.md)
 
+### [Shortcut map](shortcuts.md)
+
 ### Basic UI components
 - [Menu](BasicComponents/Menu)

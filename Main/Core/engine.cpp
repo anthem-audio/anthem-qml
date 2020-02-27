@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -30,8 +30,12 @@ Engine::Engine(QObject* parent) : QObject(parent) {
                      this,   &Engine::onEngineStart);
     QObject::connect(engine, &QProcess::readyRead,
                      this,   &Engine::onEngineMessageChunk);
-    engine->setReadChannel(QProcess::ProcessChannel::StandardOutput);
-    engine->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
+    engine->setReadChannel(
+        QProcess::ProcessChannel::StandardOutput
+    );
+    engine->setProcessChannelMode(
+        QProcess::ProcessChannelMode::MergedChannels
+    );
 }
 
 Engine::~Engine() {
@@ -67,10 +71,14 @@ void Engine::write(Document &json) {
     engine->write("\n");
 }
 
-void Engine::addRPCHeaders(Document &json, std::string method) {
+void Engine::addRPCHeaders(
+    Document &json, std::string method
+) {
     Value jsonrpcVal(Type::kStringType);
     jsonrpcVal.SetString("2.0");
-    json.AddMember("jsonrpc", jsonrpcVal, json.GetAllocator());
+    json.AddMember(
+        "jsonrpc", jsonrpcVal, json.GetAllocator()
+    );
 
     Value methodVal(Type::kStringType);
     methodVal.SetString(method, json.GetAllocator());
@@ -87,7 +95,9 @@ void Engine::addRPCHeaders(Document &json, std::string method) {
  *   }
  * }
  */
-void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
+void Engine::sendLiveControlUpdate(
+    uint64_t controlId, float value
+) {
     Document json;
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
@@ -120,7 +130,12 @@ void Engine::sendLiveControlUpdate(uint64_t controlId, float value) {
  *   }
  * }
  */
-void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2) {
+void Engine::sendMidiNoteEvent(
+    uint64_t generatorId,
+    uint8_t status,
+    uint8_t data1,
+    uint8_t data2
+) {
     Document json;
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
@@ -156,7 +171,12 @@ void Engine::sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t dat
     write(json);
 }
 
-void Engine::sendPatch(QString operation, QString from, QString path, Value& value) {
+void Engine::sendPatch(
+    QString operation,
+    QString from,
+    QString path,
+    Value& value
+) {
     Document json;
     json.SetObject();
     Document::AllocatorType& allocator = json.GetAllocator();
@@ -166,7 +186,9 @@ void Engine::sendPatch(QString operation, QString from, QString path, Value& val
     Value payload(Type::kObjectType);
 
     Value operationVal(Type::kStringType);
-    operationVal.SetString(operation.toStdString(), allocator);
+    operationVal.SetString(
+        operation.toStdString(), allocator
+    );
     payload.AddMember("op", operationVal, allocator);
 
     if (!from.isNull() && !from.isEmpty()) {

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -46,21 +46,30 @@ int main(int argc, char *argv[]) {
 
     QGuiApplication app(argc, argv);
 
-    qmlRegisterType<MouseHelper>("io.github.anthem.utilities.mousehelper", 1, 0, "MouseHelper");
+    qmlRegisterType<MouseHelper>("io.github.anthem.utilities.mousehelper",
+                                 1, 0, "MouseHelper");
 
-    QQmlApplicationEngine engine;
+    QQmlApplicationEngine qmlEngine;
 
     IdGenerator idGen = IdGenerator();
     MainPresenter mainPresenter(nullptr, &idGen);
-    engine.rootContext()->setContextProperty("Anthem", &mainPresenter);
+
+    // Set global references to Anthem APIs in QML
+    qmlEngine.rootContext()->setContextProperty("Anthem", &mainPresenter);
+    qmlEngine.rootContext()->setContextProperty("PatternPresenter",
+                                                mainPresenter.getPatternPresenter());
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+    QObject::connect(&qmlEngine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
-    engine.load(url);
+    qmlEngine.load(url);
+
+    // Update UI with initial state
+    mainPresenter.emitAllChangeSignals();
+    mainPresenter.getPatternPresenter()->emitAllChangeSignals();
 
     return app.exec();
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -22,33 +22,59 @@
 
 using namespace rapidjson;
 
-Transport::Transport(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "transport") {
+Transport::Transport(
+            ModelItem* parent, IdGenerator* id
+        ) : ModelItem(parent, "transport")
+{
     this->id = id;
-    masterPitch = new Control(this, "master_pitch", *id, 0, -12, 12, 1);
-    beatsPerMinute = new Control(this, "beats_per_minute", *id, 140, 10, 999, 0.01f);
+
+    masterPitch =
+        new Control(this, "master_pitch", *id, 0, -12, 12, 1);
+    beatsPerMinute =
+        new Control(this, "beats_per_minute", *id, 140, 10, 999, 0.01f);
+
     defaultNumerator = 4;
     defaultDenominator = 4;
 }
 
-Transport::Transport(ModelItem* parent, IdGenerator* id, Value& projectNode) : ModelItem(parent, "transport")
+Transport::Transport(
+            ModelItem* parent,
+            IdGenerator* id,
+            Value& transportNode
+        ) : ModelItem(parent, "transport")
 {
     this->id = id;
-    masterPitch = new Control(this, "master_pitch", projectNode["master_pitch"]);
-    beatsPerMinute = new Control(this, "beats_per_minute", projectNode["beats_per_minute"]);
-    defaultNumerator = static_cast<quint8>(projectNode["default_numerator"].GetUint());
-    defaultDenominator = static_cast<quint8>(projectNode["default_denominator"].GetUint());
+
+    masterPitch =
+        new Control(this, "master_pitch", transportNode["master_pitch"]);
+
+    beatsPerMinute =
+        new Control(this, "beats_per_minute",
+                    transportNode["beats_per_minute"]);
+
+    defaultNumerator =
+        static_cast<quint8>(transportNode["default_numerator"].GetUint());
+
+    defaultDenominator =
+        static_cast<quint8>(transportNode["default_denominator"].GetUint());
 }
 
-void Transport::externalUpdate(QStringRef pointer, PatchFragment& patch) {
+void Transport::onPatchReceived(
+    QStringRef pointer, PatchFragment& patch
+) {
     QString masterPitchStr = "/master_pitch";
     QString beatsPerMinuteStr = "/beats_per_minute";
     QString defaultNumeratorStr = "/default_numerator";
     QString defaultDenominatorStr = "/default_denominator";
     if (pointer.startsWith(masterPitchStr)) {
-        masterPitch->externalUpdate(pointer.mid(masterPitchStr.length()), patch);
+        masterPitch->onPatchReceived(
+            pointer.mid(masterPitchStr.length()), patch
+        );
     }
     else if (pointer.startsWith(beatsPerMinuteStr)) {
-        beatsPerMinute->externalUpdate(pointer.mid(beatsPerMinuteStr.length()), patch);
+        beatsPerMinute->onPatchReceived(
+            pointer.mid(beatsPerMinuteStr.length()), patch
+        );
     }
     else if (pointer.startsWith(defaultNumeratorStr)) {
         quint8 val = static_cast<quint8>(patch.patch["value"].GetUint());
@@ -56,28 +82,29 @@ void Transport::externalUpdate(QStringRef pointer, PatchFragment& patch) {
         emit numeratorDisplayValueChanged(defaultNumerator);
     }
     else if (pointer.startsWith(defaultDenominatorStr)) {
-        quint8 val = static_cast<quint8>(patch.patch["value"].GetUint());
+        quint8 val =
+            static_cast<quint8>(patch.patch["value"].GetUint());
         defaultDenominator = val;
         emit denominatorDisplayValueChanged(defaultDenominator);
     }
 }
 
-void Transport::serialize(Value& value, Document& doc) {
+void Transport::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
     Value masterPitchValue;
-    masterPitch->serialize(masterPitchValue, doc);
-    value.AddMember("master_pitch", masterPitchValue, doc.GetAllocator());
+    masterPitch->serialize(masterPitchValue, allocator);
+    value.AddMember("master_pitch", masterPitchValue, allocator);
 
     Value beatsPerMinuteValue;
-    beatsPerMinute->serialize(beatsPerMinuteValue, doc);
-    value.AddMember("beats_per_minute", beatsPerMinuteValue, doc.GetAllocator());
+    beatsPerMinute->serialize(beatsPerMinuteValue, allocator);
+    value.AddMember("beats_per_minute", beatsPerMinuteValue, allocator);
 
     Value numeratorValue(defaultNumerator);
-    value.AddMember("default_numerator", numeratorValue, doc.GetAllocator());
+    value.AddMember("default_numerator", numeratorValue, allocator);
 
     Value denominatorValue(defaultDenominator);
-    value.AddMember("default_denominator", denominatorValue, doc.GetAllocator());
+    value.AddMember("default_denominator", denominatorValue, allocator);
 }
 
 void Transport::setNumerator(quint8 numerator) {

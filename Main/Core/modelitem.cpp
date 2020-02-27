@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -20,8 +20,8 @@
 
 #include "modelitem.h"
 
-ModelItem::ModelItem(Communicator* parent, QString jsonKey) : Communicator(static_cast<QObject*>(parent))
-{
+ModelItem::ModelItem(Communicator* parent, QString jsonKey)
+                        : Communicator(static_cast<QObject*>(parent)) {
     this->parent = parent;
     this->key = jsonKey;
 }
@@ -29,39 +29,24 @@ ModelItem::ModelItem(Communicator* parent, QString jsonKey) : Communicator(stati
 ModelItem::~ModelItem() {}
 
 void ModelItem::patchAdd(QString path, rapidjson::Value& value) {
-    parent->patchAdd(
-        key + "/" + path,
-        value
-    );
+    parent->patchAdd(key + "/" + path, value);
 }
 
 void ModelItem::patchRemove(QString path, rapidjson::Value& oldValue) {
-    parent->patchRemove(
-        key + "/" + path,
-        oldValue
-    );
+    parent->patchRemove(key + "/" + path, oldValue);
 }
 
-void ModelItem::patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) {
-    parent->patchReplace(
-        key + "/" + path,
-        oldValue,
-        newValue
-    );
+void ModelItem::patchReplace(QString path, rapidjson::Value& oldValue,
+                             rapidjson::Value& newValue) {
+    parent->patchReplace(key + "/" + path, oldValue, newValue);
 }
 
 void ModelItem::patchCopy(QString from, QString path) {
-    parent->patchCopy(
-        key + "/" + from,
-        key + "/" + path
-    );
+    parent->patchCopy(key + "/" + from, key + "/" + path);
 }
 
 void ModelItem::patchMove(QString from, QString path) {
-    parent->patchMove(
-        key + "/" + from,
-        key + "/" + path
-    );
+    parent->patchMove(key + "/" + from, key + "/" + path);
 }
 
 void ModelItem::sendPatch() {
@@ -70,4 +55,23 @@ void ModelItem::sendPatch() {
 
 void ModelItem::liveUpdate(uint64_t controlId, float value) {
     parent->liveUpdate(controlId, value);
+}
+
+rapidjson::Document::AllocatorType& ModelItem::getPatchAllocator() {
+    return parent->getPatchAllocator();
+}
+
+rapidjson::Document::AllocatorType& ModelItem::getUndoPatchAllocator() {
+    return parent->getUndoPatchAllocator();
+}
+
+void ModelItem::setStr(
+        rapidjson::Value& target, QString str,
+        rapidjson::Document::AllocatorType& allocator) {
+
+    auto stdStr = str.toStdString();
+    target.SetString(
+            stdStr.c_str(),
+            static_cast<rapidjson::SizeType>(stdStr.size()),
+            allocator);
 }

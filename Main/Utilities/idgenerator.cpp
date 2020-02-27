@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -50,7 +50,8 @@ IdGenerator::IdGenerator() {
     intDatacenterId %= SnowFlake::max_datacenter_num_;
     intSystemId %= SnowFlake::max_machine_num_;
 
-    this->snowflake = new SnowFlake(intDatacenterId, intSystemId);
+    this->snowflake =
+        new SnowFlake(intDatacenterId, intSystemId);
 }
 
 IdGenerator::~IdGenerator() {

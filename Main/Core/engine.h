@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -35,7 +35,10 @@ class Engine : public QObject {
     Q_OBJECT
 private:
     QProcess* engine;
-    void addRPCHeaders(rapidjson::Document& json, std::string headers);
+    void addRPCHeaders(
+        rapidjson::Document& json,
+        std::string headers
+    );
     void write(rapidjson::Document& json);
 
 public:
@@ -46,11 +49,23 @@ public:
     void start();
     void stop();
 
-    void sendLiveControlUpdate(uint64_t controlId, float value);
-    void sendMidiNoteEvent(uint64_t generatorId, uint8_t status, uint8_t data1, uint8_t data2);
+    void sendLiveControlUpdate(
+        uint64_t controlId, float value
+    );
+    void sendMidiNoteEvent(
+        uint64_t generatorId,
+        uint8_t status,
+        uint8_t data1,
+        uint8_t data2
+    );
     // TODO: Add play, pause, stop, seek, etc.
 
-    void sendPatch(QString operation, QString from, QString path, rapidjson::Value &value);
+    void sendPatch(
+        QString operation,
+        QString from,
+        QString path,
+        rapidjson::Value &value
+    );
     void sendPatchList(rapidjson::Value& patchList);
 
 signals:

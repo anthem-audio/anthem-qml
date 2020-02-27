@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -45,10 +45,22 @@ private:
     void setOverrideState(bool isOverridden);
 public:
     /// Create new control with the given values
-    Control(ModelItem* parent, QString name, IdGenerator& idGenerator, float initialValue, float minimum, float maximum, float step);
+    Control(
+        ModelItem* parent,
+        QString name,
+        IdGenerator& idGenerator,
+        float initialValue,
+        float minimum,
+        float maximum,
+        float step
+    );
 
     /// Derive information from existing JSON node
-    Control(ModelItem* parent, QString name, rapidjson::Value& controlNode);
+    Control(
+        ModelItem* parent,
+        QString name,
+        rapidjson::Value& controlNode
+    );
 
     /// Generate new JSON node and add as field under parentNode
     /// parentNode[controlName] = {...newly generated control...}
@@ -61,8 +73,16 @@ public:
             float step);
 
 
-    void externalUpdate(QStringRef pointer, PatchFragment& patch) override;
-    void serialize(rapidjson::Value& value, rapidjson::Document& doc) override;
+    void onPatchReceived(
+        QStringRef pointer,
+        PatchFragment& patch
+    ) override;
+
+    void serialize(
+            rapidjson::Value& value,
+            rapidjson::Document::AllocatorType& allocator
+        ) override;
+
     void set(float val, bool isFinal);
     float get();
 

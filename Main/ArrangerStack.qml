@@ -18,9 +18,10 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.13
-import QtQuick.Controls 2.13
+import QtQuick 2.14
+import QtQuick.Controls 2.14
 import "BasicComponents"
+import "Editors/PatternEditor"
 
 Item {
     property int patternEditorWidth: 300
@@ -28,9 +29,10 @@ Item {
     property int minPatternEditorWidth: 200
     property int minArrangerWidth: 200
 
-    Rectangle {
-        id: patternEditor
-        color: Qt.rgba(1, 0, 0, 0.02)
+    property real _previousWidth;
+
+    Item {
+        id: patternEditorContainer
         anchors {
             top: parent.top
             left: parent.left
@@ -38,6 +40,11 @@ Item {
         }
         width: patternEditorWidth
         visible: showHidePatternEditorBtn.pressed
+
+        PatternEditor {
+            id: patternEditor
+            anchors.fill: parent
+        }
     }
 
     Rectangle {
@@ -48,7 +55,7 @@ Item {
 
         anchors {
             top: parent.top
-            left: patternEditor.right
+            left: patternEditorContainer.right
             bottom: parent.bottom
         }
 
