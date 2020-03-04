@@ -10,10 +10,11 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install Qt
-      uses: jurplel/install-qt-action@v2.4.1
+      uses: jurplel/install-qt-action@v2
       with:
         version: 5.14.1
         arch: win64_msvc2017_64
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-msvc.ps1"'
       shell: powershell
