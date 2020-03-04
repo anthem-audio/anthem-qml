@@ -14,6 +14,7 @@ jobs:
       with:
         version: 5.14.1
         arch: win64_mingw73
+        mirror: 'http://mirrors.ocf.berkeley.edu/qt/'
     - name: Build Anthem
       run: '. "${env:GITHUB_WORKSPACE}\actions\windows\build-anthem-mingw.ps1"'
       shell: powershell
