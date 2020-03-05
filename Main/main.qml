@@ -40,6 +40,10 @@ Window {
     property int tabsRemaining: -1
     readonly property int margin: 5
 
+    GlobalStore {
+        id: globalStore
+    }
+
     color: "#454545"
 
     SaveDiscardCancelDialog {
@@ -466,7 +470,7 @@ Window {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.leftMargin: 20
-            text: ""
+            text: globalStore.statusMessage
             font.family: Fonts.notoSansRegular.name
             font.pixelSize: 11
             color: Qt.rgba(1, 1, 1, 0.6)

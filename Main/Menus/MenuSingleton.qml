@@ -481,7 +481,7 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onExited: {
-            Anthem.displayStatusMessage('');
+            globalStore.statusMessage = '';
 
             if (openedSubmenuIndex > -1) {
                 if (blockSubmenuClose) {
