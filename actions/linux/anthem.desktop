@@ -2,6 +2,7 @@
 Type=Application
 Name=Anthem
 Comment=Prototype DAW
+Comment[fr]=Prototype de STAN
 Exec=Main
 Icon=Anthem
 Categories=AudioVideo;Audio;
