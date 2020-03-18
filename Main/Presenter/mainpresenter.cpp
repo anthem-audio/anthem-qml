@@ -471,18 +471,6 @@ void MainPresenter::closeProject(int index) {
     removeProjectAt(index);
 }
 
-void MainPresenter::openSaveDialog() {
-    emit saveDialogRequest();
-}
-
-void MainPresenter::notifySaveCancelled() {
-    emit saveCancelled();
-}
-
-void MainPresenter::notifySaveCompleted() {
-    emit saveCompleted();
-}
-
 void MainPresenter::displayStatusMessage(QString message) {
     emit statusMessageRequest(message);
 }

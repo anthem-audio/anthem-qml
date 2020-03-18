@@ -64,7 +64,7 @@ Item {
 
         onTextChanged: {
             if (_dragActive || _hoverActive)
-                Anthem.displayStatusMessage(`${hoverMessage}: ${text} ${units}`);
+                globalStore.statusMessage = `${hoverMessage}: ${text} ${units}`;
         }
 
         font.family: fontFamily

@@ -19,7 +19,7 @@
 */
 
 /*
-        This component is used to store UI state that should be accessible from
+    This component is used to store UI state that should be accessible from
     anywhere in the software. Data stored here cannot be persisted between
     sessions (for now).
 */

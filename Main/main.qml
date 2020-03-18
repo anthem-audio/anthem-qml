@@ -40,25 +40,18 @@ Window {
     property int tabsRemaining: -1
     readonly property int margin: 5
 
+    /*
+        This stores data used all over the UI. It can be accessed from almost
+        anywhere by calling globalStore.(something) Because Qml (tm) (:
+    */
     GlobalStore {
         id: globalStore
     }
 
     color: "#454545"
 
-    SaveDiscardCancelDialog {
-        id: saveConfirmDialog
-        title: "Unsaved changes"
-        onCancelPressed: {
-            isClosing = false;
-            tabsRemaining = -1;
-        }
-        onDiscardPressed: {
-            closeWithSavePrompt();
-        }
-        onSavePressed: {
-            save();
-        }
+    SaveHandler {
+        id: saveHandler
     }
 
     InformationDialog {
@@ -74,93 +67,6 @@ Window {
             infoDialog.title = title;
             infoDialog.message = notification;
             infoDialog.show();
-        }
-        onStatusMessageRequest: {
-            statusText.text = message;
-        }
-    }
-
-    function closeWithSavePrompt() {
-        let checkForUnsaved = () => {
-            if (!isClosing) {
-                isClosing = true;
-                tabsRemaining = tabGroup.children.length;
-            }
-            if (Anthem.getNumOpenProjects() <= 0) {
-                Qt.quit();
-            }
-            else if (Anthem.projectHasUnsavedChanges(0)) {
-                Anthem.switchActiveProject(0);
-                tabGroup.selectTab(0);
-
-                let projectName = tabGroup.children[0].title;
-                saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
-                saveConfirmDialog.show();
-
-                return;
-            }
-            else {
-                closeWithSavePrompt();
-                return;
-            }
-        }
-
-        if (isClosing) {
-            if (tabGroup.tabCount <= 1) {
-                Qt.quit();
-            }
-
-            Anthem.closeProject(0);
-            tabGroup.getTabAtIndex(0).Component.destruction.connect(checkForUnsaved);
-            tabGroup.removeTab(0);
-            tabsRemaining = tabsRemaining - 1;
-        }
-        else {
-            checkForUnsaved();
-        }
-    }
-
-    function save() {
-        if (Anthem.isProjectSaved(Anthem.activeProjectIndex)) {
-            Anthem.saveActiveProject();
-            if (isClosing) {
-                closeWithSavePrompt();
-            }
-        }
-        else {
-            saveFileDialog.open();
-        }
-    }
-
-
-    FileDialog {
-        id: loadFileDialog
-        title: "Select a project"
-        selectExisting: true
-        folder: shortcuts.home
-        nameFilters: ["Anthem project files (*.anthem)"]
-        onAccepted: {
-            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
-        }
-    }
-
-    FileDialog {
-        id: saveFileDialog
-        title: "Save as"
-        selectExisting: false
-        folder: shortcuts.home
-        nameFilters: ["Anthem project files (*.anthem)"]
-        onAccepted: {
-            Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
-            Anthem.notifySaveCompleted();
-            if (isClosing) {
-                closeWithSavePrompt();
-            }
-        }
-        onRejected: {
-            Anthem.notifySaveCancelled();
-            isClosing = false;
-            tabsRemaining = -1;
         }
     }
 
@@ -193,14 +99,14 @@ Window {
 
     Shortcut {
         sequence: "Ctrl+S"
-        onActivated: save()
+        onActivated: saveHandler.save()
     }
 
     Connections {
         target: mainWindow
         onClosing: {
             close.accepted = false;
-            closeWithSavePrompt()
+            saveHandler.closeWithSavePrompt()
         }
     }
 
@@ -274,7 +180,7 @@ Window {
                 }
 
                 onClosePressed: {
-                    mainWindow.closeWithSavePrompt();
+                    saveHandler.closeWithSavePrompt();
                 }
             }
         }
@@ -297,7 +203,6 @@ Window {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.right: parent.right
-            onCloseRequested: mainWindow.closeWithSavePrompt()
         }
 
         MainStack {
