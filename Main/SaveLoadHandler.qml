@@ -85,6 +85,10 @@ Item {
         saveFileDialog.open();
     }
 
+    function openLoadDialog() {
+        loadFileDialog.open();
+    }
+
     FileDialog {
         id: saveFileDialog
         title: "Save as"
@@ -112,7 +116,12 @@ Item {
         folder: shortcuts.home
         nameFilters: ["Anthem project files (*.anthem)"]
         onAccepted: {
-            Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
+            const error = Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
+            if (error !== '') {
+                infoDialog.title = 'Error';
+                infoDialog.message = error;
+                infoDialog.show();
+            }
         }
     }
 

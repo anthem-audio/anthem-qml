@@ -50,8 +50,8 @@ Window {
 
     color: "#454545"
 
-    SaveHandler {
-        id: saveHandler
+    SaveLoadHandler {
+        id: saveLoadHandler
     }
 
     InformationDialog {
@@ -99,14 +99,14 @@ Window {
 
     Shortcut {
         sequence: "Ctrl+S"
-        onActivated: saveHandler.save()
+        onActivated: saveLoadHandler.save()
     }
 
     Connections {
         target: mainWindow
         onClosing: {
             close.accepted = false;
-            saveHandler.closeWithSavePrompt()
+            saveLoadHandler.closeWithSavePrompt()
         }
     }
 
@@ -180,7 +180,7 @@ Window {
                 }
 
                 onClosePressed: {
-                    saveHandler.closeWithSavePrompt();
+                    saveLoadHandler.closeWithSavePrompt();
                 }
             }
         }

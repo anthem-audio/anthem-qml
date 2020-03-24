@@ -121,12 +121,6 @@ signals:
     void tabSelect(int index);
     void tabRemove(int index);
 
-    /// Signal to tell the UI to display an information
-    /// dialog to the user
-    void informationDialogRequest(
-        QString title, QString notification
-    );
-
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
 
@@ -141,7 +135,7 @@ public slots:
     PatternPresenter* getPatternPresenter();
 
     void newProject();
-    void loadProject(QString path);
+    QString loadProject(QString path);
     void saveActiveProject();
     void saveActiveProjectAs(QString path);
 

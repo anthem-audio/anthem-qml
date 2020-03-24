@@ -139,26 +139,19 @@ void MainPresenter::newProject() {
     isInInitialState = false;
 }
 
-void MainPresenter::loadProject(QString path) {
+QString MainPresenter::loadProject(QString path) {
     QFileInfo fileInfo(path);
 
     // Check if the path exists and is a file
     if (!fileInfo.exists() || !fileInfo.isFile()) {
-        emit informationDialogRequest(
-            "Error", "That project does not exist."
-        );
-        return;
+        return "That project does not exist.";
     }
 
     // Ensure the file ends with ".anthem"
     if (fileInfo.suffix() != "anthem") {
-        emit informationDialogRequest(
-            "Error",
-            "That is not a *.anthem file. "
-            "If you think the file you chose is valid, "
-            "please rename it so it has a \".anthem\" extension."
-        );
-        return;
+        return "That is not a *.anthem file. "
+               "If you think the file you chose is valid, "
+               "please rename it so it has a \".anthem\" extension.";
     }
 
     ProjectFile* projectFile;
@@ -167,10 +160,7 @@ void MainPresenter::loadProject(QString path) {
         projectFile = new ProjectFile(this, path);
     }
     catch (const InvalidProjectException& ex) {
-        emit informationDialogRequest(
-            "Error", QString(ex.what())
-        );
-        return;
+        return QString(ex.what());
     }
 
     QString fileName = fileInfo.fileName();
@@ -187,11 +177,8 @@ void MainPresenter::loadProject(QString path) {
     catch (const InvalidProjectException& ex) {
         QString errorText =
             "The project file failed to load. ";
-        emit informationDialogRequest(
-            "Error", errorText.append(ex.what())
-        );
         delete projectFile;
-        return;
+        return errorText.append(ex.what());
     }
 
     // Create and start new engine
@@ -218,6 +205,8 @@ void MainPresenter::loadProject(QString path) {
     }
 
     isInInitialState = false;
+
+    return "";
 }
 
 void MainPresenter::saveActiveProject() {

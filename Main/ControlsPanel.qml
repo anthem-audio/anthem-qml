@@ -89,7 +89,7 @@ Panel {
                         shortcut: 'Ctrl+O',
                         hoverText: 'Open an existing project',
                         onTriggered: () => {
-                            loadFileDialog.open();
+                            saveLoadHandler.openLoadDialog();
                         }
                     },
                     {
@@ -100,14 +100,14 @@ Panel {
                         shortcut: 'Ctrl+S',
                         hoverText: 'Save this project',
                         onTriggered: () => {
-                            saveHandler.save();
+                            saveLoadHandler.save();
                         }
                     },
                     {
                         text: 'Save a_s...',
                         hoverText: 'Save this project to a different file',
                         onTriggered: () => {
-                            saveHandler.openSaveDialog();
+                            saveLoadHandler.openSaveDialog();
                         }
                     },
                     {
@@ -117,7 +117,7 @@ Panel {
                         text: 'Ex_it',
                         hoverText: 'Quit Anthem',
                         onTriggered: () => {
-                            saveHandler.closeWithSavePrompt();
+                            saveLoadHandler.closeWithSavePrompt();
                         }
                     },/*
                     {
@@ -385,7 +385,7 @@ Panel {
             imageWidth: 16
             imageHeight: 16
 
-            onPress: saveHandler.save()
+            onPress: saveLoadHandler.save()
         }
 
         Button {
