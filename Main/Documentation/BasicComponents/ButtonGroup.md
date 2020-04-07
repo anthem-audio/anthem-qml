@@ -9,7 +9,20 @@ The list selector provides a simple way to create multiple buttons in a group ba
 ### `managementType`
 
 Default: `ButtonGroup.ManagementType.None`
-
+- [ButtonGroup](#buttongroup)
+  - [Properties](#properties)
+    - [`managementType`](#managementtype)
+    - [`selectedIndex`](#selectedindex)
+    - [`allowDeselection`](#allowdeselection)
+    - [`showBackground`](#showbackground)
+    - [`defaultButtonWidth` and `defaultButtonHeight`](#defaultbuttonwidth-and-defaultbuttonheight)
+    - [`defaultImageWidth` and `defaultImageHeight`](#defaultimagewidth-and-defaultimageheight)
+    - [`defaultLeftMargin` and `defaultTopMargin`](#defaultleftmargin-and-defaulttopmargin)
+    - [`defaultInnerMargin`](#defaultinnermargin)
+    - [`buttonAutoWidth`](#buttonautowidth)
+    - [`groupHasFixedWidth`](#grouphasfixedwidth)
+    - [`buttons`](#buttons)
+  - [Example](#example)
 If set to `ButtonGroup.ManagementType.Selector`, this group will act as a tab-style selector, where only one button can be selected at a time. The selected button's index will be reported in `selectedIndex`, and can also be changed by programatically changing `selectedIndex`.
 
 ----
