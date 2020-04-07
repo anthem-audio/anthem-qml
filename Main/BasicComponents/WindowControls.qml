@@ -38,13 +38,13 @@ ButtonGroup {
 
     fixedWidth: false
 
-    model: ListModel {
+    buttons: ListModel {
         // https://stackoverflow.com/a/33161093/8166701
         property bool completed: false
         Component.onCompleted: {
-            model.setProperty(0, "isDisabled", disableMinimize);
-            model.setProperty(1, "isDisabled", disableMaximize);
-            model.setProperty(2, "isDisabled", disableClose);
+            buttons.setProperty(0, "isDisabled", disableMinimize);
+            buttons.setProperty(1, "isDisabled", disableMaximize);
+            buttons.setProperty(2, "isDisabled", disableClose);
             completed = true;
         }
 
@@ -75,12 +75,12 @@ ButtonGroup {
     }
 
     onDisableMinimizeChanged: {
-        model.setProperty(0, "isDisabled", disableMinimize);
+        buttons.setProperty(0, "isDisabled", disableMinimize);
     }
     onDisableMaximizeChanged: {
-        model.setProperty(1, "isDisabled", disableMaximize);
+        buttons.setProperty(1, "isDisabled", disableMaximize);
     }
     onDisableCloseChanged: {
-        model.setProperty(2, "isDisabled", disableClose);
+        buttons.setProperty(2, "isDisabled", disableClose);
     }
 }

@@ -58,18 +58,6 @@ Window {
         id: infoDialog
     }
 
-    Connections {
-        target: Anthem
-        onSaveDialogRequest: {
-            saveFileDialog.open();
-        }
-        onInformationDialogRequest: {
-            infoDialog.title = title;
-            infoDialog.message = notification;
-            infoDialog.show();
-        }
-    }
-
     ResizeHandles {
         anchors.fill: parent
         window: mainWindow
@@ -262,7 +250,7 @@ Window {
                 }
             }
 
-            model: explorerTabsModel
+            buttons: explorerTabsModel
         }
 
         Rectangle {
@@ -306,7 +294,7 @@ Window {
                 }
             }
 
-            model: layoutTabsModel
+            buttons: layoutTabsModel
         }
 
         Rectangle {
@@ -356,7 +344,7 @@ Window {
                 }
             }
 
-            model: editorPanelTabsModel
+            buttons: editorPanelTabsModel
         }
 
         Rectangle {

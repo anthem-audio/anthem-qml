@@ -481,7 +481,7 @@ Panel {
                 defaultButtonWidth: 32
                 defaultButtonHeight: 32
 
-                model: ListModel {
+                buttons: ListModel {
                     ListElement {
                         isToggleButton: true
                         imageSource: "Images/Play.svg"

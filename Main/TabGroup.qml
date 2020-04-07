@@ -195,12 +195,12 @@ Item {
         target: saveConfirmDialog
         onSavePressed: {
             if (Anthem.isProjectSaved(tabGroupProps.currentSavingTabIndex)) {
-                Anthem.saveActiveProject();
+                saveLoadHandler.saveActiveProject();
                 doOnCloseConfirmation();
             }
             else {
                 tabGroupProps.isSaveInProgress = true;
-                Anthem.openSaveDialog();
+                saveLoadHandler.openSaveDialog();
             }
         }
         onDiscardPressed: {
@@ -221,17 +221,6 @@ Item {
         }
         onTabRemove: {
             removeTab(index);
-        }
-        onSaveCompleted: {
-            if (tabGroupProps.isSaveInProgress) {
-                doOnCloseConfirmation();
-            }
-            tabGroupProps.isSaveInProgress = false;
-            tabGroupProps.currentSavingTabIndex = -1;
-        }
-        onSaveCancelled: {
-            tabGroupProps.isSaveInProgress = false;
-            tabGroupProps.currentSavingTabIndex = -1;
         }
     }
 }
