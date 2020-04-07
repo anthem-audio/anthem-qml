@@ -88,6 +88,7 @@ Item {
     property real defaultInnerMargin
 
     property bool buttonAutoWidth: false
+
     property bool fixedWidth: true
 
     property int  _oldSelectedIndex: selectedIndex
