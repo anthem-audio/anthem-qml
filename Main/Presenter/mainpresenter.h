@@ -121,21 +121,6 @@ signals:
     void tabSelect(int index);
     void tabRemove(int index);
 
-    /// Signal to tell the UI to open a save dialog
-    void saveDialogRequest();
-
-    /// Signal to tell the UI to display an information
-    /// dialog to the user
-    void informationDialogRequest(
-        QString title, QString notification
-    );
-
-    /// Emitted when a save has been completed.
-    void saveCompleted();
-
-    /// Emitted when a save has been cancelled.
-    void saveCancelled();
-
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
 
@@ -150,7 +135,7 @@ public slots:
     PatternPresenter* getPatternPresenter();
 
     void newProject();
-    void loadProject(QString path);
+    QString loadProject(QString path);
     void saveActiveProject();
     void saveActiveProjectAs(QString path);
 
@@ -160,18 +145,6 @@ public slots:
 
     /// Checks if the given project has unsaved changes
     bool projectHasUnsavedChanges(int projectIndex);
-
-    /// Raises a signal to tell the UI to open a save
-    /// dialog.
-    void openSaveDialog();
-
-    /// Raises a signal notifying listeners that a save
-    /// operation has completed successfully.
-    void notifySaveCancelled();
-
-    /// Raises a signal notifying listeners that a save
-    /// operation was cancelled by the user.
-    void notifySaveCompleted();
 
     int getNumOpenProjects();
 

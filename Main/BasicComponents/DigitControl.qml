@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -20,7 +20,7 @@
 
 import QtQuick 2.14
 
-import "../Global"
+import '../Global'
 
 Item {
     id: control
@@ -36,8 +36,8 @@ Item {
     property var    fontFamily: Fonts.sourceCodeProSemiBold.name
     property int    fontPixelSize: 11
     property var    acceptedValues: []
-    property string hoverMessage: ""
-    property string units: ""
+    property string hoverMessage: ''
+    property string units: ''
 
     property int    _scaledHighBound: Math.round(highBound * _valueScale);
     property int    _scaledLowBound: Math.round(lowBound * _valueScale);
@@ -64,7 +64,7 @@ Item {
 
         onTextChanged: {
             if (_dragActive || _hoverActive)
-                Anthem.displayStatusMessage(`${hoverMessage}: ${text} ${units}`);
+                globalStore.statusMessage = `${hoverMessage}: ${text} ${units}`;
         }
 
         font.family: fontFamily
@@ -72,7 +72,7 @@ Item {
         horizontalAlignment: alignment
         verticalAlignment: Text.AlignVCenter
         anchors.fill: parent
-        color: "#1ac18f"
+        color: '#1ac18f'
     }
 
     ControlMouseArea {
@@ -125,19 +125,19 @@ Item {
             remainder = 0;
             control.valueChangeCompleted(control.value);
             _dragActive = false;
-            Anthem.displayStatusMessage(hoverMessage);
+            globalStore.statusMessage = hoverMessage;
         }
 
         hoverEnabled: true
         onEntered: {
             _hoverActive = true;
-            if (!_dragActive && hoverMessage !== "")
-                Anthem.displayStatusMessage(hoverMessage);
+            if (!_dragActive && hoverMessage !== '')
+                globalStore.statusMessage = hoverMessage;
         }
         onExited: {
             _hoverActive = false;
             if (!_dragActive)
-                Anthem.displayStatusMessage("");
+                globalStore.statusMessage = '';
         }
     }
 }

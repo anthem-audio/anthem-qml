@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -28,8 +28,6 @@ import "Menus"
 
 Panel {
     height: 44
-
-    signal closeRequested()
 
     Item {
         id: controlPanelSpacer
@@ -91,7 +89,7 @@ Panel {
                         shortcut: 'Ctrl+O',
                         hoverText: 'Open an existing project',
                         onTriggered: () => {
-                            loadFileDialog.open();
+                            saveLoadHandler.openLoadDialog();
                         }
                     },
                     {
@@ -102,14 +100,14 @@ Panel {
                         shortcut: 'Ctrl+S',
                         hoverText: 'Save this project',
                         onTriggered: () => {
-                            save();
+                            saveLoadHandler.save();
                         }
                     },
                     {
                         text: 'Save a_s...',
                         hoverText: 'Save this project to a different file',
                         onTriggered: () => {
-                            saveFileDialog.open();
+                            saveLoadHandler.openSaveDialog();
                         }
                     },
                     {
@@ -119,7 +117,7 @@ Panel {
                         text: 'Ex_it',
                         hoverText: 'Quit Anthem',
                         onTriggered: () => {
-                            closeRequested();
+                            saveLoadHandler.closeWithSavePrompt();
                         }
                     },/*
                     {
@@ -387,7 +385,7 @@ Panel {
             imageWidth: 16
             imageHeight: 16
 
-            onPress: save()
+            onPress: saveLoadHandler.save()
         }
 
         Button {
@@ -483,7 +481,7 @@ Panel {
                 defaultButtonWidth: 32
                 defaultButtonHeight: 32
 
-                model: ListModel {
+                buttons: ListModel {
                     ListElement {
                         isToggleButton: true
                         imageSource: "Images/Play.svg"

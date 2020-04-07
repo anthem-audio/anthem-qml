@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -20,7 +20,7 @@
 
 import QtQuick 2.14
 import QtGraphicalEffects 1.14
-import "../Global"
+import '../Global'
 
 Item {
     id: button
@@ -44,20 +44,20 @@ Item {
     property bool   isDisabled: false
     property bool   allowPressEventsOnDisable: false
     property real   margin: 5
-    property string hoverMessage: ""
+    property string hoverMessage: ''
 
     onHoverMessageChanged: {
         if (mouseArea.hoverActive) {
-            Anthem.displayStatusMessage(hoverMessage);
+            globalStore.statusMessage = hoverMessage;
         }
     }
 
-    property string imageSource: ""
+    property string imageSource: ''
     property real   imageWidth: 1
     property real   imageHeight: 1
 
-    property string textContent: ""
-    property string textFloat: "center"
+    property string textContent: ''
+    property string textFloat: 'center'
     property real   textPixelSize: 11
     property bool   textAutoWidth: false
     property bool   isMouseDown: false
@@ -148,7 +148,7 @@ Item {
         id: border
         visible: showBorder
         anchors.fill: parent
-        color: "transparent"
+        color: 'transparent'
         radius: 2
 
         border.width: 1
@@ -235,10 +235,10 @@ Item {
         text: qsTr(textContent)
         font.family: Fonts.notoSansRegular.name
         font.pixelSize: textPixelSize
-        anchors.centerIn: textFloat == "center" ? parent : undefined
-        anchors.left: textFloat == "left" ? parent.left : undefined
-        anchors.right: textFloat == "right" ? parent.right : undefined
-        anchors.verticalCenter: textFloat == "left" || textFloat == "right" ? parent.verticalCenter : undefined
+        anchors.centerIn: textFloat == 'center' ? parent : undefined
+        anchors.left: textFloat == 'left' ? parent.left : undefined
+        anchors.right: textFloat == 'right' ? parent.right : undefined
+        anchors.verticalCenter: textFloat == 'left' || textFloat == 'right' ? parent.verticalCenter : undefined
         anchors.margins: 4
         property int colorVal: isToggleButton && pressed ? 0 : 1
         color: buttonProps.contentColor
@@ -248,7 +248,7 @@ Item {
     Image {
         id: icon
         // If the source is defined, use it. Otherwise, use a transparent 1-pixel PNG.
-        source: imageSource != "" ? "../" + imageSource : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII="
+        source: imageSource != '' ? '../' + imageSource : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
         width: imageWidth
         height: imageHeight
         anchors.centerIn: parent
@@ -318,12 +318,12 @@ Item {
         hoverEnabled: true
         onEntered: {
             hoverActive = true
-            if (hoverMessage !== "")
-                Anthem.displayStatusMessage(hoverMessage);
+            if (hoverMessage !== '')
+                globalStore.statusMessage = hoverMessage;
         }
         onExited: {
             hoverActive = false
-            Anthem.displayStatusMessage("");
+            globalStore.statusMessage = '';
         }
     }
 }

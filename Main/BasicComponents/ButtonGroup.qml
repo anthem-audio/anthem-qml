@@ -71,22 +71,27 @@ import QtQuick 2.14
 
 Item {
     id: buttonGroup
-    property var  model: []
-    property bool isSelector: false
+    property var  buttons: []
+
+    property int  managementType: ButtonGroup.ManagementType.None
+    property int  selectedIndex: -1
+    property bool allowDeselection: false
+
     property bool showBackground: true
+
     property real defaultButtonWidth
     property real defaultButtonHeight
     property real defaultImageWidth: defaultButtonWidth
     property real defaultImageHeight: defaultButtonHeight
     property real defaultLeftMargin
     property real defaultTopMargin
-    property bool buttonAutoWidth: false
     property real defaultInnerMargin
-    property int  managementType: ButtonGroup.ManagementType.None
-    property int  selectedIndex: -1
-    property int  _oldSelectedIndex: selectedIndex
-    property bool allowDeselection: false
+
+    property bool buttonAutoWidth: false
+
     property bool fixedWidth: true
+
+    property int  _oldSelectedIndex: selectedIndex
 
     width: fixedWidth ? undefined : contentSpacer.width
     height: defaultButtonHeight
@@ -135,7 +140,7 @@ Item {
             Repeater {
                 id: repeater
                 anchors.fill: parent
-                model: buttonGroup.model
+                model: buttonGroup.buttons
                 Item {
                     id: btnContainer
 

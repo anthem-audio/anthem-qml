@@ -64,5 +64,7 @@
         <file>Images/Check.svg</file>
         <file>BasicComponents/ColorPickerTooltip.qml</file>
         <file>BasicComponents/ColorPicker.qml</file>
+        <file>GlobalStore.qml</file>
+        <file>SaveLoadHandler.qml</file>
     </qresource>
 </RCC>
