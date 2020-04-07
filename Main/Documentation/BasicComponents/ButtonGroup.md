@@ -23,6 +23,7 @@ Default: `ButtonGroup.ManagementType.None`
     - [`groupHasFixedWidth`](#grouphasfixedwidth)
     - [`buttons`](#buttons)
   - [Example](#example)
+
 If set to `ButtonGroup.ManagementType.Selector`, this group will act as a tab-style selector, where only one button can be selected at a time. The selected button's index will be reported in `selectedIndex`, and can also be changed by programatically changing `selectedIndex`.
 
 ----
