@@ -111,10 +111,16 @@ void Song::serialize(Value& value, Document::AllocatorType& allocator) {
     value.AddMember("patterns", patterns, allocator);
 }
 
-void Song::addPattern(QString name, QColor color) {
+// Adds a pattern and returns its ID
+QString Song::addPattern(QString name, QColor color) {
     QString patternID = QString::number(id->get());
 
+    this->addPattern(patternID, name, color);
 
+    return patternID;
+}
+
+void Song::addPattern(QString id, QString name, QColor color) {
     Value patchVal(kObjectType);
 
 
@@ -128,14 +134,14 @@ void Song::addPattern(QString name, QColor color) {
     patchVal.AddMember("display_name", nameVal, getPatchAllocator());
     patchVal.AddMember("color", colorVal, getPatchAllocator());
 
-    patchAdd("patterns/" + patternID, patchVal);
+    patchAdd("patterns/" + id, patchVal);
 
 
-    patterns[patternID] = new Pattern(this, id, name, color);
+    patterns[id] = new Pattern(this, this->id, name, color);
 
     sendPatch();
 
-    emit patternAdd(patternID);
+    emit patternAdd(id);
 }
 
 void Song::removePattern(QString id) {

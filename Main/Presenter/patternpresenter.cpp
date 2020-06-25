@@ -94,8 +94,12 @@ void PatternPresenter::setActivePattern(Pattern* pattern) {
     this->activePattern = pattern;
 }
 
-void PatternPresenter::createPattern(QString name, QColor color) {
-    activeProject->getSong()->addPattern(name, color);
+QString PatternPresenter::createPattern(QString name, QColor color) {
+    return activeProject->getSong()->addPattern(name, color);
+}
+
+void PatternPresenter::createPattern(QString id, QString name, QColor color) {
+    activeProject->getSong()->addPattern(id, name, color);
 }
 
 void PatternPresenter::removePattern(QString id) {

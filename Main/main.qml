@@ -28,6 +28,7 @@ import "BasicComponents/GenericTooltip"
 import "Dialogs"
 import "Menus"
 import "Global"
+import "Commands"
 
 Window {
     id: mainWindow
@@ -48,6 +49,41 @@ Window {
         id: globalStore
     }
 
+    Commands {
+        id: commands
+    }
+
+    // All commands must have exec() and undo(). This is not enforced at runtime.
+    function exec(command) {
+        // If the history pointer isn't at the end, remove the tail
+        if (commands.historyPointer + 1 !== commands.history.length) {
+            commands.history.splice(commands.historyPointer + 1);
+        }
+
+        commands.history.push(command);
+        commands.historyPointer++;
+        command.exec(command.execData);
+    }
+
+    function undo() {
+        const command = commands.history[commands.historyPointer];
+        if (!command) return;
+        commands.historyPointer--;
+        command.undo(command.undoData);
+
+        // This might do bad things for translation
+        globalStore.statusMessage = `${qsTr('Undo')} ${command.description}`;
+    }
+
+    function redo() {
+        const command = commands.history[commands.historyPointer + 1];
+        if (!command) return;
+        commands.historyPointer++;
+        command.exec(command.execData);
+
+        globalStore.statusMessage = `${qsTr('Redo')} ${command.description}`;
+    }
+
     color: "#454545"
 
     SaveLoadHandler {
@@ -65,12 +101,12 @@ Window {
 
     Shortcut {
         sequence: "Ctrl+Z"
-        onActivated: Anthem.undo()
+        onActivated: undo()
     }
 
     Shortcut {
         sequence: "Ctrl+Shift+Z"
-        onActivated: Anthem.redo()
+        onActivated: redo()
     }
 
     Shortcut {

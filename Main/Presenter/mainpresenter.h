@@ -132,6 +132,7 @@ signals:
     void timeSignatureDenominatorChanged(quint8 denominator);
 
 public slots:
+    QString createID();
     PatternPresenter* getPatternPresenter();
 
     void newProject();

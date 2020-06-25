@@ -402,7 +402,7 @@ Panel {
             imageHeight: 15
 
             onPress: {
-                Anthem.undo();
+                undo();
             }
         }
 
@@ -420,7 +420,7 @@ Panel {
             imageHeight: 15
 
             onPress: {
-                Anthem.redo();
+                redo();
             }
         }
 
@@ -557,6 +557,7 @@ Panel {
                         value: 140
                         hoverMessage: "Tempo"
                         units: "BPM"
+                        property int lastLoggedValue: 140
 
                         fontPixelSize: 13
 
@@ -565,7 +566,21 @@ Panel {
                         }
 
                         onValueChangeCompleted: {
-                            Anthem.setBeatsPerMinute(value, true);
+                            const old = lastLoggedValue;
+
+                            const command = {
+                                exec: () => {
+                                    lastLoggedValue = value;
+                                    Anthem.setBeatsPerMinute(value, true)
+                                },
+                                undo: () => {
+                                    lastLoggedValue = old;
+                                    Anthem.setBeatsPerMinute(old, true)
+                                },
+                                description: qsTr('set BPM')
+                            }
+
+                            exec(command);
                         }
 
                         Connections {
@@ -631,7 +646,15 @@ Panel {
 //                        }
 
                         onValueChangeCompleted: {
-                            Anthem.setTimeSignatureNumerator(value);
+                            const old = Anthem.getTimeSignatureNumerator();
+
+                            const command = {
+                                exec: () => Anthem.setTimeSignatureNumerator(value),
+                                undo: () => Anthem.setTimeSignatureNumerator(old),
+                                description: qsTr('set time signature numerator')
+                            }
+
+                            exec(command);
                         }
 
                         Connections {
@@ -676,7 +699,15 @@ Panel {
 //                        }
 
                         onValueChangeCompleted: {
-                            Anthem.setTimeSignatureDenominator(value);
+                            const old = Anthem.getTimeSignatureDenominator();
+
+                            const command = {
+                                exec: () => Anthem.setTimeSignatureDenominator(value),
+                                undo: () => Anthem.setTimeSignatureDenominator(old),
+                                description: qsTr('set time signature denominator')
+                            }
+
+                            exec(command);
                         }
 
                         Connections {

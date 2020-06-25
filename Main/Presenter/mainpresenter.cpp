@@ -62,6 +62,10 @@ PatternPresenter* MainPresenter::getPatternPresenter() {
     return this->patternPresenter;
 }
 
+QString MainPresenter::createID() {
+    return QString::number(this->id->get());
+}
+
 void MainPresenter::addProject(Project* project, ProjectFile* projectFile,
                                Engine* engine) {
     projects.append(project);

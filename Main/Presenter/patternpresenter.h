@@ -63,7 +63,8 @@ private slots:
     void activePatternDestroyed();
 public slots:
     void setActivePattern(Pattern* pattern);
-    void createPattern(QString name, QColor color);
+    QString createPattern(QString name, QColor color);
+    void createPattern(QString id, QString name, QColor color);
     void removePattern(QString id);
 
     QString getPatternName(QString id);

@@ -49,7 +49,8 @@ public:
             rapidjson::Document::AllocatorType& allocator
         ) override;
 
-    void addPattern(QString name, QColor color);
+    QString addPattern(QString name, QColor color);
+    void addPattern(QString id, QString name, QColor color);
     void removePattern(QString id);
 
     const QHash<QString, Pattern*>& getPatterns();

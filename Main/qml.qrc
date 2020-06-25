@@ -66,5 +66,6 @@
         <file>BasicComponents/ColorPicker.qml</file>
         <file>GlobalStore.qml</file>
         <file>SaveLoadHandler.qml</file>
+        <file>Commands/Commands.qml</file>
     </qresource>
 </RCC>
