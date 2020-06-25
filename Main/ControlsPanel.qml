@@ -48,7 +48,7 @@ Panel {
             imageWidth: 14
             imageHeight: 12
 
-            hoverMessage: btnLogo.pressed ? "Stop engine for this tab" : "Start engine for this tab"
+            hoverMessage: btnLogo.pressed ? qsTr("Stop engine for this tab") : qsTr("Start engine for this tab")
         }
 
         Button {
@@ -59,7 +59,7 @@ Panel {
             anchors.leftMargin: 2
             width: parent.height
 
-            textContent: "File"
+            textContent: qsTr("File")
 
             hasMenuIndicator: true
 
@@ -77,17 +77,17 @@ Panel {
 
                 menuItems: [
                     {
-                        text: 'N_ew project',
+                        text: qsTr('N_ew project'),
                         shortcut: 'Ctrl+N',
-                        hoverText: 'Start a new project',
+                        hoverText: qsTr('Start a new project'),
                         onTriggered: () => {
                             Anthem.newProject();
                         }
                     },
                     {
-                        text: 'O_pen...',
+                        text: qsTr('O_pen...'),
                         shortcut: 'Ctrl+O',
-                        hoverText: 'Open an existing project',
+                        hoverText: qsTr('Open an existing project'),
                         onTriggered: () => {
                             saveLoadHandler.openLoadDialog();
                         }
@@ -96,16 +96,16 @@ Panel {
                         separator: true
                     },
                     {
-                        text: 'S_ave',
+                        text: qsTr('S_ave'),
                         shortcut: 'Ctrl+S',
-                        hoverText: 'Save this project',
+                        hoverText: qsTr('Save this project'),
                         onTriggered: () => {
                             saveLoadHandler.save();
                         }
                     },
                     {
-                        text: 'Save a_s...',
-                        hoverText: 'Save this project to a different file',
+                        text: qsTr('Save a_s...'),
+                        hoverText: qsTr('Save this project to a different file'),
                         onTriggered: () => {
                             saveLoadHandler.openSaveDialog();
                         }
@@ -114,8 +114,11 @@ Panel {
                         separator: true
                     },
                     {
-                        text: 'Ex_it',
-                        hoverText: 'Quit Anthem',
+                        text: tempoControl.value.toString()
+                    },
+                    {
+                        text: qsTr('Ex_it'),
+                        hoverText: qsTr('Quit Anthem'),
                         onTriggered: () => {
                             saveLoadHandler.closeWithSavePrompt();
                         }
@@ -379,7 +382,7 @@ Panel {
             anchors.left: btnFile.right
             anchors.leftMargin: 20
             width: parent.height
-            hoverMessage: "Save this project"
+            hoverMessage: qsTr("Save this project")
 
             imageSource: "Images/Save.svg"
             imageWidth: 16
@@ -395,7 +398,7 @@ Panel {
             anchors.left: btnSave.right
             anchors.leftMargin: 2
             width: parent.height
-            hoverMessage: "Undo"
+            hoverMessage: qsTr("Undo")
 
             imageSource: "Images/Undo.svg"
             imageWidth: 15
@@ -413,7 +416,7 @@ Panel {
             anchors.left: btnUndo.right
             anchors.leftMargin: 2
             width: parent.height
-            hoverMessage: "Redo"
+            hoverMessage: qsTr("Redo")
 
             imageSource: "Images/Redo.svg"
             imageWidth: 15
@@ -450,7 +453,7 @@ Panel {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 width: parent.height
-                hoverMessage: "Toggle metronome"
+                hoverMessage: qsTr("Toggle metronome")
 
                 isToggleButton: true
 
@@ -489,19 +492,19 @@ Panel {
 
                     ListElement {
                         isToggleButton: true
-                        hoverMessage: "Record"
+                        hoverMessage: qsTr("Record")
                         imageSource: "Images/Record.svg"
                     }
 
                     ListElement {
-                        hoverMessage: "Record immediately"
+                        hoverMessage: qsTr("Record immediately")
                         imageSource: "Images/Play and Record.svg"
                         imageWidth: 16
                         imageHeight: 16
                     }
 
                     ListElement {
-                        hoverMessage: "Stop"
+                        hoverMessage: qsTr("Stop")
                         imageSource: "Images/Stop.svg"
                     }
                 }
@@ -514,7 +517,7 @@ Panel {
                 anchors.left: playbackControlsGroup.right
                 anchors.leftMargin: 3
                 width: parent.height
-                hoverMessage: "Toggle loop points"
+                hoverMessage: qsTr("Toggle loop points")
 
                 isToggleButton: true
 
@@ -555,9 +558,9 @@ Panel {
                         smallestIncrement: 0.01
                         decimalPlaces: 2
                         value: 140
-                        hoverMessage: "Tempo"
-                        units: "BPM"
                         property int lastLoggedValue: 140
+                        hoverMessage: qsTr("Tempo")
+                        units: qsTr("BPM")
 
                         fontPixelSize: 13
 
@@ -631,7 +634,7 @@ Panel {
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
                         width: 16
-                        hoverMessage: "Time signature numerator"
+                        hoverMessage: qsTr("Time signature numerator")
 
                         fontPixelSize: 13
 
@@ -667,7 +670,7 @@ Panel {
 
                     Text {
                         id: timeSignatureSlash
-                        text: qsTr("/")
+                        text: "/"
                         font.family: Fonts.sourceCodeProSemiBold.name
                         font.weight: Font.Bold
                         font.pixelSize: 13
@@ -685,7 +688,7 @@ Panel {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         width: value === 16 ? 16 : 8
-                        hoverMessage: "Time signature denominator"
+                        hoverMessage: qsTr("Time signature denominator")
 
                         fontPixelSize: 13
                         alignment: Text.AlignLeft
@@ -742,7 +745,7 @@ Panel {
                     anchors.rightMargin: 7
 
                     Text {
-                        text: qsTr("1.1.1.00")
+                        text: "1.1.1.00"
                         font.family: Fonts.sourceCodeProSemiBold.name
                         font.weight: Font.Bold
                         font.pointSize: 10
@@ -763,7 +766,7 @@ Panel {
                     anchors.rightMargin: 7
 
                     Text {
-                        text: qsTr("0:00.00")
+                        text: "0:00.00"
                         font.family: Fonts.sourceCodeProSemiBold.name
                         font.weight: Font.Bold
                         font.pointSize: 10
@@ -816,8 +819,8 @@ Panel {
                         anchors.right: parent.right
                         anchors.rightMargin: 4
                         anchors.bottom: parent.bottom
-                        hoverMessage: "Master pitch"
-                        units: "semitones"
+                        hoverMessage: qsTr("Master pitch")
+                        units: qsTr("semitones")
 
                         fontFamily: Fonts.notoSansRegular.name
 
@@ -953,7 +956,7 @@ Panel {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             width: parent.height
-            hoverMessage: "Midi learn"
+            hoverMessage: qsTr("Midi learn")
 
             imageSource: "Images/Knob.svg"
             imageWidth: 16

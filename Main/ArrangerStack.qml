@@ -153,7 +153,7 @@ Item {
             }
         }
 
-        hoverMessage: pressed ? "Hide pattern editor" : "Show pattern editor"
+        hoverMessage: pressed ? qsTr("Hide pattern editor") : qsTr("Show pattern editor")
     }
 
     Button {
@@ -173,7 +173,7 @@ Item {
         imageWidth: 12
         imageHeight: 11
 
-        hoverMessage: pressed ? "Hide pattern picker" : "Show pattern picker"
+        hoverMessage: pressed ? qsTr("Hide pattern picker") : qsTr("Show pattern picker")
     }
 
     property bool _isMouseOverResizeHandle: false

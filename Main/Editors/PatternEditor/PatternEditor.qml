@@ -103,13 +103,13 @@ Item {
 
             menuItems: [
                 {
-                    text: 'New pattern...',
+                    text: qsTr('New pattern...'),
                     onTriggered: () => {
                         addPatternTooltip.open();
                     }
                 },
                 {
-                    text: 'Delete pattern',
+                    text: qsTr('Delete pattern'),
                     onTriggered: () => {
                         const id = patternSelector.selectedItem.id;
 
@@ -158,7 +158,7 @@ Item {
         RenameTooltip {
             id: addPatternTooltip
             y: parent.height + 3
-            defaultName: 'New pattern';
+            defaultName: qsTr('New pattern');
             onAccepted: {
                 const id = Anthem.createID();
 

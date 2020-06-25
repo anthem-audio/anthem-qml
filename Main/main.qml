@@ -274,7 +274,7 @@ Window {
                 ListElement {
                     leftMargin: 15
                     imageSource: "Images/File.svg"
-                    hoverMessage: "File explorer"
+                    hoverMessage: qsTr("File explorer")
                 }
 
                 ListElement {
@@ -282,7 +282,7 @@ Window {
                     imageWidth: 11
                     buttonWidth: 16
                     leftMargin: 15
-                    hoverMessage: "Project explorer"
+                    hoverMessage: qsTr("Project explorer")
                 }
             }
 
@@ -318,15 +318,15 @@ Window {
                 id: layoutTabsModel
                 ListElement {
                     textContent: "ARRANGE"
-                    hoverMessage: "Arrangement layout"
+                    hoverMessage: qsTr("Arrangement layout")
                 }
                 ListElement {
                     textContent: "MIX"
-                    hoverMessage: "Mixing layout"
+                    hoverMessage: qsTr("Mixing layout")
                 }
                 ListElement {
                     textContent: "EDIT"
-                    hoverMessage: "Editor layout"
+                    hoverMessage: qsTr("Editor layout")
                 }
             }
 
@@ -363,20 +363,20 @@ Window {
                 id: editorPanelTabsModel
                 ListElement {
                     imageSource: "Images/Piano Roll.svg"
-                    hoverMessage: "Piano roll"
+                    hoverMessage: qsTr("Piano roll")
                     leftMargin: 20
                 }
                 ListElement {
                     imageSource: "Images/Automation.svg"
-                    hoverMessage: "Automation editor"
+                    hoverMessage: qsTr("Automation editor")
                 }
                 ListElement {
                     imageSource: "Images/Plugin.svg"
-                    hoverMessage: "Plugin rack"
+                    hoverMessage: qsTr("Plugin rack")
                 }
                 ListElement {
                     imageSource: "Images/Mixer.svg"
-                    hoverMessage: "Mixer"
+                    hoverMessage: qsTr("Mixer")
                 }
             }
 
@@ -419,7 +419,7 @@ Window {
             showBackground: false
             isToggleButton: true
             pressed: true
-            hoverMessage: pressed ? "Hide controller rack" : "Show controller rack"
+            hoverMessage: pressed ? qsTr("Hide controller rack") : qsTr("Show controller rack")
         }
     }
 

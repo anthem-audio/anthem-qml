@@ -26,7 +26,7 @@ DialogBase {
     id: dialog
     readonly property int dialogButtonContainerHeight: 40
     property string message: ""
-    property string okButtonText: "OK"
+    property string okButtonText: qsTr("OK")
 
     readonly property real buttonWidth: 60
 

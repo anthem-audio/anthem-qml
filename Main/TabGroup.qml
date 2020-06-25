@@ -183,7 +183,7 @@ Item {
             console.log(`Checked index ${index}. Project did have unsaved changes.`);
             tabGroupProps.currentSavingTabIndex = index;
             let projectName = tabGroup.children[index].title;
-            saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
+            saveConfirmDialog.message = `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
             saveConfirmDialog.show();
         }
         else {
