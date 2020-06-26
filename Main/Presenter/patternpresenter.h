@@ -38,9 +38,6 @@ private:
     /// Pattern currently open in the pattern editor
     Pattern* activePattern;
 
-    void connectUiUpdateSignals(Project* project);
-    void disconnectUiUpdateSignals(Project* project);
-
     Pattern* getPattern(QString id);
 public:
     explicit PatternPresenter(
@@ -49,15 +46,8 @@ public:
         Project* activeProject
     );
 
-    void emitAllChangeSignals();
-
     void setActiveProject(Project* project);
 
-//    void deletePattern(quint64 id);
-signals:
-    void patternAdd(QString id);
-    void patternRemove(QString id);
-    void flushPatterns(QVariantMap newPatterns);
 private slots:
     void activeProjectDestroyed();
     void activePatternDestroyed();
@@ -69,9 +59,6 @@ public slots:
 
     QString getPatternName(QString id);
     QColor getPatternColor(QString id);
-
-    void ui_addPattern(QString id);
-    void ui_removePattern(QString id);
 };
 
 #endif // PATTERNPRESENTER_H

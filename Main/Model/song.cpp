@@ -88,8 +88,6 @@ void Song::addPattern(QString id, QString name, QColor color) {
     patterns[id] = new Pattern(this, this->id, name, color);
 
     sendPatch();
-
-    emit patternAdd(id);
 }
 
 void Song::removePattern(QString id) {
@@ -99,8 +97,6 @@ void Song::removePattern(QString id) {
     patterns.remove(id);
 
     sendPatch();
-
-    emit patternRemove(id);
 }
 
 const QHash<QString, Pattern*>& Song::getPatterns() {

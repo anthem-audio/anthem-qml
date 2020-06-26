@@ -50,9 +50,8 @@ public:
 
     QString getDisplayName();
     QColor getColor();
+
 signals:
-    void displayNameChanged(QString displayName);
-    void colorChanged(QColor color);
 
 public slots:
 };

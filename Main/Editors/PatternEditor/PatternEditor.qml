@@ -28,25 +28,6 @@ Item {
 
     property var patterns: ({})
 
-    Connections {
-//        target: commands.pattern
-//        onPatternAdd: {
-//            patterns[id] = {
-//                displayName: PatternPresenter.getPatternName(id),
-//                color: Qt.rgba(1, 1, 0, 1)
-//            };
-//            updatePatternList();
-//        }
-//        onPatternRemove: {
-//            delete patterns[id];
-//            updatePatternList();
-//        }
-//        onFlushPatterns: {
-//            patterns = newPatterns;
-//            updatePatternList();
-//        }
-    }
-
     function updatePatternList() {
         const lastSelectedId = patternSelector.selectedItem.id;
 

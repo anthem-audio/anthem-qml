@@ -57,8 +57,6 @@ public:
     quint8 getDenominator();
 
 signals:
-    void numeratorDisplayValueChanged(quint8 numerator);
-    void denominatorDisplayValueChanged(quint8 denominator);
 
 public slots:
 };

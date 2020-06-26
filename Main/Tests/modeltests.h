@@ -32,30 +32,12 @@
 Q_DECLARE_METATYPE(PatchFragment::PatchType);
 Q_DECLARE_METATYPE(rapidjson::Value*);
 
-class PresenterEventCounter : public QObject {
-Q_OBJECT
-
-public:
-    int masterPitchEventCount;
-    int mostRecentMasterPitch;
-    PresenterEventCounter(QObject* parent) : QObject(parent) {
-        masterPitchEventCount = 0;
-        mostRecentMasterPitch = 0;
-    }
-public slots:
-    void masterPitchChanged(int pitch) {
-        mostRecentMasterPitch = pitch;
-        masterPitchEventCount++;
-    }
-};
-
 class ModelTests : public QObject {
 Q_OBJECT
 
 private:
     IdGenerator* id;
     MainPresenter* presenter;
-    PresenterEventCounter* eventCounter;
     Project* project;
 
     rapidjson::Document doc;
@@ -75,11 +57,6 @@ private slots:
     void initTestCase() {
         id = new IdGenerator();
         presenter = new MainPresenter(this, id);
-
-        eventCounter = new PresenterEventCounter(this);
-
-        QObject::connect(presenter,    SIGNAL(masterPitchChanged(int)),
-                         eventCounter, SLOT(masterPitchChanged(int)));
 
         project = presenter->getProjectAt(0);
 
@@ -118,15 +95,6 @@ private slots:
         // The control should report the newly set value.
         QCOMPARE(project->getTransport()->masterPitch->get(), -5.0f);
 
-        // The signal for updating the UI should not have fired because the change does
-        // not represent a change to the model. Arguably it shouldn't fire at all, but
-        // I've made the decision to update the UI on any final model change so I don't
-        // need to distinguish between updates coming from the UI and upadtes coming
-        // from undo and redo. This reasoning may not hold with models that are managing
-        // a higher degree of complexity (as in, the extra update may be unwanted), but
-        // for a single value it doesn't seem too bad. We'll see if I change my mind :)
-        QCOMPARE(eventCounter->masterPitchEventCount, 0);
-
 
 
         // Set the value to 10, and send a patch (final value in a channge operation).
@@ -134,22 +102,12 @@ private slots:
 
         // The control should report the newly set value.
         QCOMPARE(project->getTransport()->masterPitch->get(), 10.0f);
-
-        // This is a final (patch-emitting) change, so the UI should have been notified
-        // (see above)
-        QCOMPARE(eventCounter->masterPitchEventCount, 1);
-        QCOMPARE(eventCounter->mostRecentMasterPitch, 10);
     }
 
     void presenterTests() {
         qDebug() << "Remove the current testing project and open a new one";
         presenter->removeProjectAt(0);
         presenter->newProject();
-        delete eventCounter;
-        eventCounter = new PresenterEventCounter(this);
-
-        QObject::connect(presenter,    SIGNAL(masterPitchChanged(int)),
-                         eventCounter, SLOT(masterPitchChanged(int)));
 
 
         qDebug() << "The new project should not be marked as having unsaved changes";
@@ -158,15 +116,8 @@ private slots:
         qDebug() << "Performing an action should add an undo step";
         presenter->setMasterPitch(3, true);
         QCOMPARE(presenter->getMasterPitch(), 3);
-        QCOMPARE(eventCounter->masterPitchEventCount, 1);
         QCOMPARE(presenter->projectHasUnsavedChanges(0), true);
         QCOMPARE(presenter->isProjectSaved(0), false);
-
-        qDebug() << "The undo history should not update after an intermediate (live update) change";
-        presenter->setMasterPitch(-1, false);
-
-        qDebug() << "... but getMasterPitch should still reflect the proper value";
-        QCOMPARE(presenter->getMasterPitch(), -1);
 
 
         qDebug() << "Creating a new project should work as expected";

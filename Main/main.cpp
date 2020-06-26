@@ -67,9 +67,5 @@ int main(int argc, char *argv[]) {
     }, Qt::QueuedConnection);
     qmlEngine.load(url);
 
-    // Update UI with initial state
-    mainPresenter.emitAllChangeSignals();
-    mainPresenter.getPatternPresenter()->emitAllChangeSignals();
-
     return app.exec();
 }

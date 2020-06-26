@@ -588,13 +588,6 @@ Panel {
                             exec(command);
                         }
 
-                        Connections {
-                            target: Anthem
-                            onBeatsPerMinuteChanged: {
-                                tempoControl.value = bpm;
-                            }
-                        }
-
                         // This MouseArea changes the step on tempoControl
                         // depending on which digit is clicked.
                         MouseArea {
@@ -667,13 +660,6 @@ Panel {
 
                             exec(command);
                         }
-
-                        Connections {
-                            target: Anthem
-                            onTimeSignatureNumeratorChanged: {
-                                timeSignatureNumeratorControl.value = numerator;
-                            }
-                        }
                     }
 
                     Text {
@@ -726,13 +712,6 @@ Panel {
                             }
 
                             exec(command);
-                        }
-
-                        Connections {
-                            target: Anthem
-                            onTimeSignatureDenominatorChanged: {
-                                timeSignatureDenominatorControl.value = denominator;
-                            }
                         }
                     }
                 }
@@ -866,13 +845,6 @@ Panel {
                             }
 
                             exec(command);
-                        }
-
-                        Connections {
-                            target: Anthem
-                            onMasterPitchChanged: {
-                                masterPitchControl.value = pitch;
-                            }
                         }
                     }
                 }

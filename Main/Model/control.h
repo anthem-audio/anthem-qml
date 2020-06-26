@@ -81,7 +81,6 @@ public:
     float get();
 
 signals:
-    void displayValueChanged(float value);
 
 public slots:
 };

@@ -53,9 +53,8 @@ public:
 
     const QHash<QString, Pattern*>& getPatterns();
     Pattern* getPattern(QString key);
+
 signals:
-    void patternAdd(QString id);
-    void patternRemove(QString id);
 
 public slots:
 };

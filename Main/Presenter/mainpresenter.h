@@ -38,9 +38,6 @@
 class MainPresenter : public Communicator {
     Q_OBJECT
 private:
-    void connectUiUpdateSignals(Project* project);
-    void disconnectUiUpdateSignals(Project* project);
-
     /// If there isn't an active (non-sent) patch in
     /// the list, add one.
     void initializeNewPatchIfNeeded();
@@ -73,8 +70,6 @@ private:
 
 public:
     explicit MainPresenter(QObject* parent, IdGenerator* id);
-
-    void emitAllChangeSignals();
 
     // Implementations of virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
@@ -110,13 +105,6 @@ signals:
 
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
-
-
-    // Update signals for UI elements
-    void masterPitchChanged(int pitch);
-    void beatsPerMinuteChanged(float bpm);
-    void timeSignatureNumeratorChanged(quint8 numerator);
-    void timeSignatureDenominatorChanged(quint8 denominator);
 
 public slots:
     QString createID();
@@ -156,17 +144,6 @@ public slots:
     void setTimeSignatureNumerator(quint8 numerator);
     quint8 getTimeSignatureDenominator();
     void setTimeSignatureDenominator(quint8 denominator);
-
-    // Functions with the ui_ prefix are used as
-    // receiver slots for model change signals. Each
-    // ui_ function should:
-    //     a) always be connected to the relevant
-    //        model's update signals, and
-    //     b) emit the relevant update signal.
-    void ui_updateMasterPitch(float pitch);
-    void ui_updateBeatsPerMinute(float bpm);
-    void ui_updateTimeSignatureNumerator(quint8 numerator);
-    void ui_updateTimeSignatureDenominator(quint8 denominator);
 };
 
 #endif // MAINPRESENTER_H
