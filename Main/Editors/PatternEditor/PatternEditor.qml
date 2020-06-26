@@ -29,7 +29,7 @@ Item {
     property var patterns: ({})
 
     Connections {
-        target: commands.pattern
+//        target: commands.pattern
 //        onPatternAdd: {
 //            patterns[id] = {
 //                displayName: PatternPresenter.getPatternName(id),

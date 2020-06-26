@@ -59,36 +59,6 @@ Transport::Transport(
         static_cast<quint8>(transportNode["default_denominator"].GetUint());
 }
 
-void Transport::onPatchReceived(
-    QStringRef pointer, PatchFragment& patch
-) {
-    QString masterPitchStr = "/master_pitch";
-    QString beatsPerMinuteStr = "/beats_per_minute";
-    QString defaultNumeratorStr = "/default_numerator";
-    QString defaultDenominatorStr = "/default_denominator";
-    if (pointer.startsWith(masterPitchStr)) {
-        masterPitch->onPatchReceived(
-            pointer.mid(masterPitchStr.length()), patch
-        );
-    }
-    else if (pointer.startsWith(beatsPerMinuteStr)) {
-        beatsPerMinute->onPatchReceived(
-            pointer.mid(beatsPerMinuteStr.length()), patch
-        );
-    }
-    else if (pointer.startsWith(defaultNumeratorStr)) {
-        quint8 val = static_cast<quint8>(patch.patch["value"].GetUint());
-        defaultNumerator = val;
-        emit numeratorDisplayValueChanged(defaultNumerator);
-    }
-    else if (pointer.startsWith(defaultDenominatorStr)) {
-        quint8 val =
-            static_cast<quint8>(patch.patch["value"].GetUint());
-        defaultDenominator = val;
-        emit denominatorDisplayValueChanged(defaultDenominator);
-    }
-}
-
 void Transport::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
@@ -108,11 +78,9 @@ void Transport::serialize(Value& value, Document::AllocatorType& allocator) {
 }
 
 void Transport::setNumerator(quint8 numerator) {
-    auto oldNumerator = defaultNumerator;
     defaultNumerator = numerator;
     Value v(numerator);
-    Value vOld(oldNumerator);
-    patchReplace("default_numerator", vOld, v);
+    patchReplace("default_numerator", v);
     sendPatch();
 }
 
@@ -121,11 +89,9 @@ quint8 Transport::getNumerator() {
 }
 
 void Transport::setDenominator(quint8 denominator) {
-    auto oldDenominator = defaultDenominator;
     defaultDenominator = denominator;
     Value v(denominator);
-    Value vOld(oldDenominator);
-    patchReplace("default_denominator", vOld, v);
+    patchReplace("default_denominator", v);
     sendPatch();
 }
 

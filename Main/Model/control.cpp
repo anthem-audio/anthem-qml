@@ -62,44 +62,6 @@ Control::Control(
         controlNode["override_automation"].GetBool();
 }
 
-void Control::onPatchReceived(
-    QStringRef pointer, PatchFragment& patch
-) {
-    // The ID is assumed to never change.
-    QString initialValueStr = "/initial_value";
-    QString overrideAutomationStr = "/override_automation";
-    QString minimumStr = "/minimum";
-    QString maximumStr = "/maximum";
-    QString stepStr = "/step";
-    // TODO: control symbol, connection
-
-    if (pointer.startsWith(initialValueStr)) {
-        StringBuffer buffer;
-        Writer<StringBuffer> writer(buffer);
-        patch.patch.Accept(writer);
-
-        float val = patch.patch["value"].GetFloat();
-        initialValue = val;
-        ui_currentValue = val;
-        emit displayValueChanged(ui_currentValue);
-    }
-    else if (pointer.startsWith(overrideAutomationStr)) {
-        overrideAutomation = patch.patch["value"].GetBool();
-    }
-    else if (pointer.startsWith(minimumStr)) {
-        minimum = patch.patch["value"].GetFloat();
-        // TODO: emit update
-    }
-    else if (pointer.startsWith(maximumStr)) {
-        maximum = patch.patch["value"].GetFloat();
-        // TODO: emit update
-    }
-    else if (pointer.startsWith(stepStr)) {
-        step = patch.patch["value"].GetFloat();
-        // TODO: emit update
-    }
-}
-
 void Control::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 
@@ -118,9 +80,8 @@ void Control::setOverrideState(bool isOverridden) {
 
     overrideAutomation = isOverridden;
     Value overrideVal(overrideAutomation);
-    Value oldOverrideVal(!overrideAutomation);
     patchReplace(
-        "override_automation", oldOverrideVal, overrideVal
+        "override_automation", overrideVal
     );
 }
 
@@ -134,12 +95,10 @@ void Control::set(float val, bool isFinal) {
 //    }
 
     if (isFinal) {
-        auto oldVal = initialValue;
         initialValue = val;
         ui_currentValue = val;
         Value v(val);
-        Value vOld(oldVal);
-        patchReplace("initial_value", vOld, v);
+        patchReplace("initial_value", v);
         changeMade = true;
     }
     else {

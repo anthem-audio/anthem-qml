@@ -32,13 +32,12 @@ void ModelItem::patchAdd(QString path, rapidjson::Value& value) {
     parent->patchAdd(key + "/" + path, value);
 }
 
-void ModelItem::patchRemove(QString path, rapidjson::Value& oldValue) {
-    parent->patchRemove(key + "/" + path, oldValue);
+void ModelItem::patchRemove(QString path) {
+    parent->patchRemove(key + "/" + path);
 }
 
-void ModelItem::patchReplace(QString path, rapidjson::Value& oldValue,
-                             rapidjson::Value& newValue) {
-    parent->patchReplace(key + "/" + path, oldValue, newValue);
+void ModelItem::patchReplace(QString path, rapidjson::Value& newValue) {
+    parent->patchReplace(key + "/" + path, newValue);
 }
 
 void ModelItem::patchCopy(QString from, QString path) {
@@ -59,10 +58,6 @@ void ModelItem::liveUpdate(uint64_t controlId, float value) {
 
 rapidjson::Document::AllocatorType& ModelItem::getPatchAllocator() {
     return parent->getPatchAllocator();
-}
-
-rapidjson::Document::AllocatorType& ModelItem::getUndoPatchAllocator() {
-    return parent->getUndoPatchAllocator();
 }
 
 void ModelItem::setStr(

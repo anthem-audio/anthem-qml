@@ -42,8 +42,6 @@ public:
     Song(ModelItem* parent, IdGenerator* id);
     Song(ModelItem* parent, IdGenerator* id, rapidjson::Value& songNode);
 
-    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
-
     void serialize(
             rapidjson::Value& value,
             rapidjson::Document::AllocatorType& allocator

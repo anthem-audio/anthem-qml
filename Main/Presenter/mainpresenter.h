@@ -63,12 +63,8 @@ private:
     /// Handles engine lifecycle and communication.
     QVector<Engine*> engines;
 
-    /// Current place in the history
-    QVector<int> historyPointers;
-
-    /// List of project histories
-    QVector<QVector<Patch*>> projectHistories;
-    bool isPatchInProgress;
+    /// Patch that is currently being built. Deleted when sent.
+    Patch* patchInProgress;
 
     /// API for the pattern editor
     PatternPresenter* patternPresenter;
@@ -82,14 +78,8 @@ public:
 
     // Implementations of virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
-    void patchRemove(
-        QString path, rapidjson::Value& oldValue
-    );
-    void patchReplace(
-        QString path,
-        rapidjson::Value& oldValue,
-        rapidjson::Value& newValue
-    );
+    void patchRemove(QString path);
+    void patchReplace(QString path, rapidjson::Value& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();
@@ -97,7 +87,6 @@ public:
     void liveUpdate(uint64_t controlId, float value);
 
     rapidjson::Document::AllocatorType& getPatchAllocator();
-    rapidjson::Document::AllocatorType& getUndoPatchAllocator();
 
     /// Project that is currently loaded
     int activeProjectIndex;
@@ -112,8 +101,6 @@ public:
     Project* getProjectAt(int index);
     ProjectFile* getProjectFileAt(int index);
     Engine* getEngineAt(int index);
-    QVector<Patch*> getProjectHistoryAt(int index);
-    int getHistoryPointerAt(int index);
 
 signals:
     void tabAdd(QString name);
@@ -148,9 +135,6 @@ public slots:
     bool projectHasUnsavedChanges(int projectIndex);
 
     int getNumOpenProjects();
-
-    void undo();
-    void redo();
 
     // These functions do not update the tab state
     // in the UI

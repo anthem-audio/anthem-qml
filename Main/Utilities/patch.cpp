@@ -23,14 +23,9 @@
 
 using namespace rapidjson;
 
-Patch::Patch(
-            QObject* parent, Project* model
-        ) : QObject(parent)
+Patch::Patch(QObject* parent) : QObject(parent)
 {
-    this->model = model;
-
     patch.SetArray();
-    undoPatch.SetArray();
 }
 
 void Patch::patchAdd(
@@ -45,18 +40,10 @@ void Patch::patchAdd(
                 path,
                 value);
 
-    PatchFragment* reverseFragment = new PatchFragment(
-                this,
-                PatchFragment::PatchType::REMOVE,
-                QString(),
-                path,
-                nullVal);
-
     addFragmentToForward(forwardFragment);
-    addFragmentToReverse(reverseFragment);
 }
 
-void Patch::patchRemove(QString path, Value& oldValue) {
+void Patch::patchRemove(QString path) {
     Value nullVal(kNullType);
 
     PatchFragment* forwardFragment = new PatchFragment(
@@ -66,20 +53,11 @@ void Patch::patchRemove(QString path, Value& oldValue) {
                 path,
                 nullVal);
 
-    PatchFragment* reverseFragment = new PatchFragment(
-                this,
-                PatchFragment::PatchType::ADD,
-                QString(),
-                path,
-                oldValue);
-
     addFragmentToForward(forwardFragment);
-    addFragmentToReverse(reverseFragment);
 }
 
 void Patch::patchReplace(
     QString path,
-    rapidjson::Value& oldValue,
     rapidjson::Value& newValue
 ) {
     PatchFragment* forwardFragment = new PatchFragment(
@@ -89,15 +67,7 @@ void Patch::patchReplace(
                 path,
                 newValue);
 
-    PatchFragment* reverseFragment = new PatchFragment(
-                this,
-                PatchFragment::PatchType::REPLACE,
-                QString(),
-                path,
-                oldValue);
-
     addFragmentToForward(forwardFragment);
-    addFragmentToReverse(reverseFragment);
 }
 
 void Patch::patchCopy(QString from, QString path) {
@@ -110,15 +80,7 @@ void Patch::patchCopy(QString from, QString path) {
                 path,
                 nullVal);
 
-    PatchFragment* reverseFragment = new PatchFragment(
-                this,
-                PatchFragment::PatchType::REMOVE,
-                QString(),
-                path,
-                nullVal);
-
     addFragmentToForward(forwardFragment);
-    addFragmentToReverse(reverseFragment);
 }
 
 void Patch::patchMove(QString from, QString path) {
@@ -131,15 +93,7 @@ void Patch::patchMove(QString from, QString path) {
                 path,
                 nullVal);
 
-    PatchFragment* reverseFragment = new PatchFragment(
-                this,
-                PatchFragment::PatchType::MOVE,
-                path,
-                from,
-                nullVal);
-
     addFragmentToForward(forwardFragment);
-    addFragmentToReverse(reverseFragment);
 }
 
 Value& Patch::getPatch() {
@@ -159,65 +113,10 @@ Value& Patch::getPatch() {
     return patch;
 }
 
-Value& Patch::getUndoPatch() {
-    if (undoPatch.IsArray())
-        undoPatch.Clear();
-    else
-        undoPatch.SetArray();
-
-    for (int i = undoPatchList.length() - 1; i >= 0; i--) {
-        undoPatch.PushBack(
-            Value(
-                undoPatchList[i]->patch, patch.GetAllocator()
-            ), patch.GetAllocator()
-        );
-    }
-
-    return undoPatch;
-}
-
 void Patch::addFragmentToForward(PatchFragment* fragment) {
     patchList.append(fragment);
 }
 
-void Patch::addFragmentToReverse(PatchFragment* fragment) {
-    undoPatchList.append(fragment);
-}
-
-void Patch::apply() {
-    for (int i = 0; i < patchList.length(); i++) {
-        // Update C++ model and UI
-        QString path(
-            patchList[i]->patch["path"].GetString()
-        );
-        model->onPatchReceived(
-            QStringRef(
-                &path
-            ).mid(
-                QString("/project").length()
-            ), *patchList[i]
-        );
-    }
-}
-
-void Patch::applyUndo() {
-    for (int i = undoPatchList.length() - 1; i >= 0; i--) {
-        // Update C++ model and UI
-        QString path(
-            undoPatchList[i]->patch["path"].GetString()
-        );
-        model->onPatchReceived(
-            QStringRef(&path).mid(
-                QString("/project").length()
-            ), *undoPatchList[i]
-        );
-    }
-}
-
 Document::AllocatorType* Patch::getPatchAllocator() {
     return &patch.GetAllocator();
-}
-
-Document::AllocatorType* Patch::getUndoPatchAllocator() {
-    return &undoPatch.GetAllocator();
 }

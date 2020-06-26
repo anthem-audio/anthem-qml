@@ -558,27 +558,29 @@ Panel {
                         smallestIncrement: 0.01
                         decimalPlaces: 2
                         value: 140
-                        property int lastLoggedValue: 140
+                        property int lastSentValue: 140
                         hoverMessage: qsTr("Tempo")
                         units: qsTr("BPM")
 
                         fontPixelSize: 13
 
                         onValueChanged: {
-                            Anthem.setBeatsPerMinute(value, false);
+//                            Anthem.setBeatsPerMinute(value, false);
                         }
 
                         onValueChangeCompleted: {
-                            const old = lastLoggedValue;
+                            const old = lastSentValue;
 
                             const command = {
                                 exec: () => {
-                                    lastLoggedValue = value;
-                                    Anthem.setBeatsPerMinute(value, true)
+                                    lastSentValue = value;
+                                    tempoControl.value = value;
+                                    Anthem.setBeatsPerMinute(value, true);
                                 },
                                 undo: () => {
-                                    lastLoggedValue = old;
-                                    Anthem.setBeatsPerMinute(old, true)
+                                    lastSentValue = old;
+                                    tempoControl.value = old;
+                                    Anthem.setBeatsPerMinute(old, true);
                                 },
                                 description: qsTr('set BPM')
                             }
@@ -652,8 +654,14 @@ Panel {
                             const old = Anthem.getTimeSignatureNumerator();
 
                             const command = {
-                                exec: () => Anthem.setTimeSignatureNumerator(value),
-                                undo: () => Anthem.setTimeSignatureNumerator(old),
+                                exec: () => {
+                                    timeSignatureNumeratorControl.value = value;
+                                    Anthem.setTimeSignatureNumerator(value)
+                                },
+                                undo: () => {
+                                    timeSignatureNumeratorControl.value = old;
+                                    Anthem.setTimeSignatureNumerator(old);
+                                },
                                 description: qsTr('set time signature numerator')
                             }
 
@@ -705,8 +713,15 @@ Panel {
                             const old = Anthem.getTimeSignatureDenominator();
 
                             const command = {
-                                exec: () => Anthem.setTimeSignatureDenominator(value),
-                                undo: () => Anthem.setTimeSignatureDenominator(old),
+                                exec: () => {
+                                    timeSignatureDenominatorControl.value = value;
+                                    Anthem.setTimeSignatureDenominator(value);
+                                },
+                                undo: () => {
+                                    value = old;
+                                    timeSignatureDenominatorControl.value = old;
+                                    Anthem.setTimeSignatureDenominator(old);
+                                },
                                 description: qsTr('set time signature denominator')
                             }
 
@@ -822,6 +837,8 @@ Panel {
                         hoverMessage: qsTr("Master pitch")
                         units: qsTr("semitones")
 
+                        property int lastSentValue: 0
+
                         fontFamily: Fonts.notoSansRegular.name
 
                         highBound: 12
@@ -832,7 +849,23 @@ Panel {
                         }
 
                         onValueChangeCompleted: {
-                            Anthem.setMasterPitch(value, true);
+                            const old = lastSentValue;
+
+                            const command = {
+                                exec: () => {
+                                    masterPitchControl.value = value;
+                                    Anthem.setMasterPitch(value, true);
+                                    lastSentValue = value;
+                                },
+                                undo: () => {
+                                    masterPitchControl.value = old;
+                                    Anthem.setMasterPitch(old, true);
+                                    lastSentValue = old;
+                                },
+                                description: qsTr('set master pitch')
+                            }
+
+                            exec(command);
                         }
 
                         Connections {
