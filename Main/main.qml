@@ -41,6 +41,13 @@ Window {
     property int tabsRemaining: -1
     readonly property int margin: 5
 
+    Connections {
+        target: Anthem
+        function onFlush() {
+            flush();
+        }
+    }
+
     /*
         This stores data used all over the UI. It can be accessed from almost
         anywhere by calling globalStore.(something) Because Qml (tm) (:
@@ -55,20 +62,25 @@ Window {
 
     // All commands must have exec() and undo(). This is not enforced at runtime.
     function exec(command) {
+        const tabIndex = globalStore.selectedTabIndex;
+
         // If the history pointer isn't at the end, remove the tail
-        if (commands.historyPointer + 1 !== commands.history.length) {
-            commands.history.splice(commands.historyPointer + 1);
+        if (commands.historyPointers[tabIndex] + 1 !== commands.histories[tabIndex].length) {
+            commands.histories[tabIndex].splice(commands.historyPointers[tabIndex] + 1);
         }
 
-        commands.history.push(command);
-        commands.historyPointer++;
+        commands.histories[tabIndex].push(command);
+        commands.historyPointers[tabIndex]++;
         command.exec(command.execData);
     }
 
     function undo() {
-        const command = commands.history[commands.historyPointer];
+        const tabIndex = globalStore.selectedTabIndex;
+
+        const command = commands.histories[tabIndex][commands.historyPointers[tabIndex]];
         if (!command) return;
-        commands.historyPointer--;
+
+        commands.historyPointers[tabIndex]--;
         command.undo(command.undoData);
 
         // This might do bad things for translation
@@ -76,12 +88,20 @@ Window {
     }
 
     function redo() {
-        const command = commands.history[commands.historyPointer + 1];
+        const tabIndex = globalStore.selectedTabIndex;
+
+        const command = commands.histories[tabIndex][commands.historyPointers[tabIndex] + 1];
         if (!command) return;
-        commands.historyPointer++;
+        commands.historyPointers[tabIndex]++;
         command.exec(command.execData);
 
         globalStore.statusMessage = `${qsTr('Redo')} ${command.description}`;
+    }
+
+    signal flush();
+
+    onFlush: {
+        console.log('f l u s h')
     }
 
     color: "#454545"
@@ -128,7 +148,7 @@ Window {
 
     Connections {
         target: mainWindow
-        onClosing: {
+        function onClosing() {
             close.accepted = false;
             saveLoadHandler.closeWithSavePrompt()
         }

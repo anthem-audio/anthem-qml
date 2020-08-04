@@ -21,6 +21,6 @@
 import QtQuick 2.15
 
 QtObject {
-    property var history: []
-    property int historyPointer: -1 // points to the last performed command
+    property var histories: [[]]
+    property var historyPointers: [-1] // points to the last performed command
 }

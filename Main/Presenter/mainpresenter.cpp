@@ -109,6 +109,8 @@ void MainPresenter::removeProjectAt(int index) {
     else if (index < activeProjectIndex) {
         activeProjectIndex--;
     }
+
+    emit this->tabRemove(index);
 }
 
 void MainPresenter::newProject() {
@@ -306,6 +308,8 @@ void MainPresenter::switchActiveProject(int index) {
     );
 
     isActiveProjectValid = true;
+
+    emit flush();
 }
 
 int MainPresenter::getNumOpenProjects() {

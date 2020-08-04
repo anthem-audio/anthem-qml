@@ -29,6 +29,20 @@ import "Menus"
 Panel {
     height: 44
 
+    function updateAll() {
+        timeSignatureNumeratorControl.value = Anthem.getTimeSignatureNumerator();
+        timeSignatureDenominatorControl.value = Anthem.getTimeSignatureDenominator();
+        tempoControl.value = Anthem.getBeatsPerMinute();
+        masterPitchControl.value = Anthem.getMasterPitch();
+    }
+
+    Connections {
+        target: mainWindow
+        function onFlush() {
+            updateAll();
+        }
+    }
+
     Item {
         id: controlPanelSpacer
         anchors.fill: parent

@@ -26,6 +26,13 @@ Item {
     id: patternEditor
     anchors.margins: 3
 
+    Connections {
+        target: mainWindow
+        function onFlush() {
+            // oops
+        }
+    }
+
     property var patterns: ({})
 
     function updatePatternList() {

@@ -103,6 +103,8 @@ signals:
     void tabSelect(int index);
     void tabRemove(int index);
 
+    void flush();
+
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
 
@@ -124,8 +126,6 @@ public slots:
 
     int getNumOpenProjects();
 
-    // These functions do not update the tab state
-    // in the UI
     void switchActiveProject(int index);
     /// Does not update the active project
     void closeProject(int index);

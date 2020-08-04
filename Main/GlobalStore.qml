@@ -28,4 +28,7 @@ import QtQuick 2.14
 
 QtObject {
     property string statusMessage: ''
+
+    property int selectedTabIndex: 0
+    property int tabCount: 1
 }

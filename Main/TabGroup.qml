@@ -46,8 +46,6 @@ Item {
     id: tabGroup
 
     property Component tabComponent
-    property int selectedTabIndex: 0
-    property int tabCount: 1
     property int tabWidth: 124
 
     QtObject {
@@ -56,7 +54,7 @@ Item {
         property int  currentSavingTabIndex: -1
     }
 
-    width: tabCount * (tabWidth + 3)
+    width: globalStore.tabCount * (tabWidth + 3)
 
     signal lastTabClosed()
 
@@ -67,7 +65,7 @@ Item {
 
     Shortcut {
         sequence: "Ctrl+W"
-        onActivated: doOnTabClosePressed(selectedTabIndex)
+        onActivated: doOnTabClosePressed(globalStore.selectedTabIndex)
     }
 
     TabHandle {
@@ -89,18 +87,18 @@ Item {
         if (tabComponent.status === Component.Ready) {
             let options = {
                 height: tabGroup.height,
-                x: tabCount * (tabWidth + 3),
+                x: globalStore.tabCount * (tabWidth + 3),
                 y: tabGroup.y,
                 width: 124,
                 title: tabName,
-                index: tabCount,
+                index: globalStore.tabCount,
                 isSelected: false,
             }
 
             let tab = tabComponent.createObject(tabGroup, options);
             tab.selected.connect(doOnTabPressed);
             tab.btnClosePressed.connect(doOnTabClosePressed);
-            tabCount++;
+            globalStore.tabCount++;
         }
         else if (tabComponent.status === Component.Error) {
             console.error("Error loading component:", tabComponent.errorString());
@@ -111,53 +109,53 @@ Item {
     }
 
     function renameTab(index, name) {
-        let offset = children.length - tabCount;
+        let offset = children.length - globalStore.tabCount;
         tabGroup.children[index + offset].title = name;
     }
 
     function selectTab(index) {
-        let offset = children.length - tabCount;
-        tabGroup.children[selectedTabIndex + offset].isSelected = false;
+        let offset = children.length - globalStore.tabCount;
+        tabGroup.children[globalStore.selectedTabIndex + offset].isSelected = false;
         tabGroup.children[index + offset].isSelected = true;
-        selectedTabIndex = index;
+        globalStore.selectedTabIndex = index;
     }
 
     function doOnTabPressed(index) {
-        let offset = children.length - tabCount;
-        selectTab(index + offset);
+        let offset = children.length - globalStore.tabCount;
         Anthem.switchActiveProject(index + offset);
+        selectTab(index + offset);
     }
 
     function removeTab(index) {
-        let offset = children.length - tabCount;
+        let offset = children.length - globalStore.tabCount;
 
-        for (let i = index + offset; i < tabCount + offset; i++) {
+        for (let i = index + offset; i < globalStore.tabCount + offset; i++) {
             tabGroup.children[i].index--;
             tabGroup.children[i].x -= (tabWidth + 3);
         }
 
         let isLastTab = false;
 
-        if (selectedTabIndex === tabCount - 1) {
+        if (globalStore.selectedTabIndex === globalStore.tabCount - 1) {
             isLastTab = true;
         }
 
-        if (selectedTabIndex === index) {
+        if (globalStore.selectedTabIndex === index) {
             if (isLastTab)
-                selectTab(selectedTabIndex - 1);
+                selectTab(globalStore.selectedTabIndex - 1);
             else
-                selectTab(selectedTabIndex + 1);
+                selectTab(globalStore.selectedTabIndex + 1);
         }
 
-        if (index < selectedTabIndex)
-            selectedTabIndex--;
+        if (index < globalStore.selectedTabIndex)
+            globalStore.selectedTabIndex--;
 
         tabGroup.children[index + offset].destroy();
-        tabCount--;
+        globalStore.tabCount--;
     }
 
     function getTabAtIndex(index) {
-        let offset = children.length - tabCount;
+        let offset = children.length - globalStore.tabCount;
         return children[index + offset]
     }
 
@@ -166,21 +164,20 @@ Item {
             index = tabGroupProps.currentSavingTabIndex;
         }
 
-        if (tabCount <= 1) {
+        if (globalStore.tabCount <= 1) {
             tabGroup.children[0].destroy();
             Anthem.closeProject(0);
             lastTabClosed();
         }
         else {
-            removeTab(index);
+//            removeTab(index);
             Anthem.closeProject(index);
-            Anthem.switchActiveProject(selectedTabIndex);
+            Anthem.switchActiveProject(globalStore.selectedTabIndex);
         }
     }
 
     function doOnTabClosePressed(index) {
         if (Anthem.projectHasUnsavedChanges(index)) {
-            console.log(`Checked index ${index}. Project did have unsaved changes.`);
             tabGroupProps.currentSavingTabIndex = index;
             let projectName = tabGroup.children[index].title;
             saveConfirmDialog.message = `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
@@ -193,7 +190,7 @@ Item {
 
     Connections {
         target: saveConfirmDialog
-        onSavePressed: {
+        function onSavePressed() {
             if (Anthem.isProjectSaved(tabGroupProps.currentSavingTabIndex)) {
                 saveLoadHandler.saveActiveProject();
                 doOnCloseConfirmation();
@@ -203,24 +200,31 @@ Item {
                 saveLoadHandler.openSaveDialog();
             }
         }
-        onDiscardPressed: {
+        function onDiscardPressed() {
             doOnCloseConfirmation();
         }
     }
 
+    // This code also handles discarding or adding to the list of undo/redo
+    // stacks. The code for handling this should not be here but oh well
     Connections {
         target: Anthem
-        onTabAdd: {
+        function onTabAdd() {
+            console.log('add');
             addTab(name);
+            commands.histories.push([]);
+            commands.historyPointers.push(-1);
         }
-        onTabRename: {
+        function onTabRename() {
             renameTab(index, name);
         }
-        onTabSelect: {
+        function onTabSelect() {
             selectTab(index);
         }
-        onTabRemove: {
+        function onTabRemove() {
             removeTab(index);
+            commands.histories.splice(index, 1);
+            commands.historyPointers.splice(index, 1);
         }
     }
 }
