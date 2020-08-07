@@ -38,9 +38,6 @@
 class MainPresenter : public Communicator {
     Q_OBJECT
 private:
-    void connectUiUpdateSignals(Project* project);
-    void disconnectUiUpdateSignals(Project* project);
-
     /// If there isn't an active (non-sent) patch in
     /// the list, add one.
     void initializeNewPatchIfNeeded();
@@ -63,12 +60,8 @@ private:
     /// Handles engine lifecycle and communication.
     QVector<Engine*> engines;
 
-    /// Current place in the history
-    QVector<int> historyPointers;
-
-    /// List of project histories
-    QVector<QVector<Patch*>> projectHistories;
-    bool isPatchInProgress;
+    /// Patch that is currently being built. Deleted when sent.
+    Patch* patchInProgress;
 
     /// API for the pattern editor
     PatternPresenter* patternPresenter;
@@ -78,18 +71,10 @@ private:
 public:
     explicit MainPresenter(QObject* parent, IdGenerator* id);
 
-    void emitAllChangeSignals();
-
     // Implementations of virtual functions in Communicator
     void patchAdd(QString path, rapidjson::Value& value);
-    void patchRemove(
-        QString path, rapidjson::Value& oldValue
-    );
-    void patchReplace(
-        QString path,
-        rapidjson::Value& oldValue,
-        rapidjson::Value& newValue
-    );
+    void patchRemove(QString path);
+    void patchReplace(QString path, rapidjson::Value& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();
@@ -97,7 +82,6 @@ public:
     void liveUpdate(uint64_t controlId, float value);
 
     rapidjson::Document::AllocatorType& getPatchAllocator();
-    rapidjson::Document::AllocatorType& getUndoPatchAllocator();
 
     /// Project that is currently loaded
     int activeProjectIndex;
@@ -112,8 +96,6 @@ public:
     Project* getProjectAt(int index);
     ProjectFile* getProjectFileAt(int index);
     Engine* getEngineAt(int index);
-    QVector<Patch*> getProjectHistoryAt(int index);
-    int getHistoryPointerAt(int index);
 
 signals:
     void tabAdd(QString name);
@@ -121,17 +103,13 @@ signals:
     void tabSelect(int index);
     void tabRemove(int index);
 
+    void flush();
+
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
 
-
-    // Update signals for UI elements
-    void masterPitchChanged(int pitch);
-    void beatsPerMinuteChanged(float bpm);
-    void timeSignatureNumeratorChanged(quint8 numerator);
-    void timeSignatureDenominatorChanged(quint8 denominator);
-
 public slots:
+    QString createID();
     PatternPresenter* getPatternPresenter();
 
     void newProject();
@@ -148,11 +126,6 @@ public slots:
 
     int getNumOpenProjects();
 
-    void undo();
-    void redo();
-
-    // These functions do not update the tab state
-    // in the UI
     void switchActiveProject(int index);
     /// Does not update the active project
     void closeProject(int index);
@@ -171,17 +144,6 @@ public slots:
     void setTimeSignatureNumerator(quint8 numerator);
     quint8 getTimeSignatureDenominator();
     void setTimeSignatureDenominator(quint8 denominator);
-
-    // Functions with the ui_ prefix are used as
-    // receiver slots for model change signals. Each
-    // ui_ function should:
-    //     a) always be connected to the relevant
-    //        model's update signals, and
-    //     b) emit the relevant update signal.
-    void ui_updateMasterPitch(float pitch);
-    void ui_updateBeatsPerMinute(float bpm);
-    void ui_updateTimeSignatureNumerator(quint8 numerator);
-    void ui_updateTimeSignatureDenominator(quint8 denominator);
 };
 
 #endif // MAINPRESENTER_H

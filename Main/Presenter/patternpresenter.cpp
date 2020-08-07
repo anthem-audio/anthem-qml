@@ -26,45 +26,12 @@ PatternPresenter::PatternPresenter(QObject* parent, IdGenerator* id,
     this->id = id;
     this->activeProject = activeProject;
     this->activePattern = nullptr; // TODO: preserve active pattern
-    this->connectUiUpdateSignals(activeProject);
-}
-
-void PatternPresenter::connectUiUpdateSignals(Project* project) {
-    QObject::connect(project->getSong(),    SIGNAL(patternAdd(QString)),
-                     this,                  SLOT(ui_addPattern(QString)));
-    QObject::connect(project->getSong(),    SIGNAL(patternRemove(QString)),
-                     this,                  SLOT(ui_removePattern(QString)));
-}
-
-void PatternPresenter::disconnectUiUpdateSignals(Project* project) {
-    QObject::disconnect(project->getSong(), SIGNAL(patternAdd(QString)),
-                     this,                  SLOT(ui_addPattern(QString)));
-    QObject::disconnect(project->getSong(), SIGNAL(patternRemove(QString)),
-                     this,                  SLOT(ui_removePattern(QString)));
-}
-
-void PatternPresenter::emitAllChangeSignals() {
-    auto patterns = activeProject->getSong()->getPatterns();
-    QVariantMap uiPatternMap;
-
-    for (auto key : patterns.keys()) {
-        Pattern* pattern = patterns[key];
-        QVariantMap patternInfo;
-
-        patternInfo.insert("displayName", pattern->getDisplayName());
-        patternInfo.insert("color", pattern->getColor());
-
-        uiPatternMap.insert(key, patternInfo);
-    }
-
-    emit flushPatterns(uiPatternMap);
 }
 
 void PatternPresenter::setActiveProject(Project* project) {
     if (this->activeProject != nullptr) {
         QObject::disconnect(project, SIGNAL(destroyed()),
                             this,    SLOT(activeProjectDestroyed()));
-        disconnectUiUpdateSignals(this->activeProject);
     }
 
     if (project != nullptr) {
@@ -74,12 +41,6 @@ void PatternPresenter::setActiveProject(Project* project) {
 
     this->activeProject = project;
     this->activePattern = nullptr; // TODO: preserve active pattern
-
-
-    if (project != nullptr) {
-        connectUiUpdateSignals(this->activeProject);
-        emitAllChangeSignals();
-    }
 }
 
 void PatternPresenter::activeProjectDestroyed() {
@@ -94,8 +55,12 @@ void PatternPresenter::setActivePattern(Pattern* pattern) {
     this->activePattern = pattern;
 }
 
-void PatternPresenter::createPattern(QString name, QColor color) {
-    activeProject->getSong()->addPattern(name, color);
+QString PatternPresenter::createPattern(QString name, QColor color) {
+    return activeProject->getSong()->addPattern(name, color);
+}
+
+void PatternPresenter::createPattern(QString id, QString name, QColor color) {
+    activeProject->getSong()->addPattern(id, name, color);
 }
 
 void PatternPresenter::removePattern(QString id) {
@@ -113,13 +78,4 @@ QString PatternPresenter::getPatternName(QString id) {
 
 QColor PatternPresenter::getPatternColor(QString id) {
     return this->getPattern(id)->getColor();
-}
-
-
-void PatternPresenter::ui_addPattern(QString id) {
-    emit patternAdd(id);
-}
-
-void PatternPresenter::ui_removePattern(QString id) {
-    emit patternRemove(id);
 }

@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -40,8 +40,6 @@ public:
     Project(Communicator* parent, IdGenerator* id);
     Project(Communicator* parent, IdGenerator* id,
             rapidjson::Value& projectVal);
-
-    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
 
     void serialize(
             rapidjson::Value& value,

@@ -41,21 +41,6 @@ Project::Project(Communicator* parent, IdGenerator* id,
         new Song(this, id, projectVal["song"]);
 }
 
-void Project::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
-    QString transportStr = "/transport";
-    QString songStr = "/song";
-    if (pointer.startsWith(transportStr)) {
-        transport->onPatchReceived(
-            pointer.mid(transportStr.length()), patch
-        );
-    }
-    else if (pointer.startsWith(songStr)) {
-        song->onPatchReceived(
-            pointer.mid(songStr.length()), patch
-        );
-    }
-}
-
 void Project::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 

@@ -51,7 +51,7 @@ ButtonGroup {
         ListElement {
             imageSource: "Images/Minimize.svg"
             isDisabled: false
-            hoverMessage: "Minimize"
+            hoverMessage: qsTr("Minimize")
             onPress: () => {
                windowButtonsContainer.minimizePressed();
             }
@@ -59,7 +59,7 @@ ButtonGroup {
         ListElement {
             imageSource: "Images/Maximize.svg"
             isDisabled: false
-            hoverMessage: "Maximize"
+            hoverMessage: qsTr("Maximize")
             onPress: () => {
                windowButtonsContainer.maximizePressed();
             }
@@ -67,7 +67,7 @@ ButtonGroup {
         ListElement {
             imageSource: "Images/Close.svg"
             isDisabled: false
-            hoverMessage: "Close"
+            hoverMessage: qsTr("Close")
             onPress: () => {
                windowButtonsContainer.closePressed();
             }

@@ -26,8 +26,8 @@ DialogBase {
     id: dialog
     readonly property int dialogButtonContainerHeight: 40
     property string message: ""
-    property string okButtonText: "OK"
-    property string cancelButtonText: "Cancel"
+    property string okButtonText: qsTr("OK")
+    property string cancelButtonText: qsTr("Cancel")
 
     readonly property real buttonWidth: Math.max(btnCancel.textWidth, btnOK.textWidth) + margin * 2 + 3
 

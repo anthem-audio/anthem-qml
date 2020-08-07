@@ -43,10 +43,6 @@ public:
         rapidjson::Value& transportNode
     );
 
-    void onPatchReceived(
-        QStringRef pointer, PatchFragment& patch
-    ) override;
-
     void serialize(
             rapidjson::Value& value,
             rapidjson::Document::AllocatorType& allocator
@@ -61,8 +57,6 @@ public:
     quint8 getDenominator();
 
 signals:
-    void numeratorDisplayValueChanged(quint8 numerator);
-    void denominatorDisplayValueChanged(quint8 denominator);
 
 public slots:
 };

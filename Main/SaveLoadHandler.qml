@@ -35,6 +35,7 @@ Item {
                 isClosing = true;
                 tabsRemaining = tabGroup.children.length;
             }
+
             if (Anthem.getNumOpenProjects() <= 0) {
                 Qt.quit();
             }
@@ -43,7 +44,8 @@ Item {
                 tabGroup.selectTab(0);
 
                 let projectName = tabGroup.children[0].title;
-                saveConfirmDialog.message = `${projectName} has unsaved changes. Would you like to save before closing?`;
+                saveConfirmDialog.message =
+                    `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
                 saveConfirmDialog.show();
 
                 return;
@@ -59,9 +61,14 @@ Item {
                 Qt.quit();
             }
 
+            const tab = tabGroup.getTabAtIndex(0);
+
+            // Check for the next unsaved tab when this tab is removed
+            tab.Component.destruction.connect(checkForUnsaved);
+
+            // This will remove a tab, so we attach the handler before it
             Anthem.closeProject(0);
-            tabGroup.getTabAtIndex(0).Component.destruction.connect(checkForUnsaved);
-            tabGroup.removeTab(0);
+
             tabsRemaining = tabsRemaining - 1;
         }
         else {
@@ -91,10 +98,10 @@ Item {
 
     FileDialog {
         id: saveFileDialog
-        title: "Save as"
+        title: qsTr("Save as")
         selectExisting: false
         folder: shortcuts.home
-        nameFilters: ["Anthem project files (*.anthem)"]
+        nameFilters: [`${qsTr('Anthem project files')} (*.anthem)`]
         onAccepted: {
             Anthem.saveActiveProjectAs(saveFileDialog.fileUrl.toString().substring(8));
             saveCompleted();
@@ -111,15 +118,15 @@ Item {
 
     FileDialog {
         id: loadFileDialog
-        title: "Select a project"
+        title: qsTr("Select a project")
         selectExisting: true
         folder: shortcuts.home
-        nameFilters: ["Anthem project files (*.anthem)"]
+        nameFilters: [`${qsTr('Anthem project files')} (*.anthem)`]
         onAccepted: {
             const error = Anthem.loadProject(loadFileDialog.fileUrl.toString().substring(8));
             if (error !== '') {
-                infoDialog.title = 'Error';
-                infoDialog.message = error;
+                infoDialog.title = qsTr('Error');
+                infoDialog.message = qsTr(error);
                 infoDialog.show();
             }
         }
@@ -127,7 +134,7 @@ Item {
 
     SaveDiscardCancelDialog {
         id: saveConfirmDialog
-        title: "Unsaved changes"
+        title: qsTr("Unsaved changes")
         onCancelPressed: {
             isClosing = false;
             tabsRemaining = -1;

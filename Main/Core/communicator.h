@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -32,12 +32,11 @@ public:
     virtual void sendPatch() = 0;
     virtual void liveUpdate(uint64_t controlId, float value) = 0;
     virtual void patchAdd(QString path, rapidjson::Value& value) = 0;
-    virtual void patchRemove(QString path, rapidjson::Value& oldValue) = 0;
-    virtual void patchReplace(QString path, rapidjson::Value& oldValue, rapidjson::Value& newValue) = 0;
+    virtual void patchRemove(QString path) = 0;
+    virtual void patchReplace(QString path, rapidjson::Value& newValue) = 0;
     virtual void patchCopy(QString from, QString path) = 0;
     virtual void patchMove(QString from, QString path) = 0;
     virtual rapidjson::Document::AllocatorType& getPatchAllocator() = 0;
-    virtual rapidjson::Document::AllocatorType& getUndoPatchAllocator() = 0;
 };
 
 #endif // COMMUNICATOR_H

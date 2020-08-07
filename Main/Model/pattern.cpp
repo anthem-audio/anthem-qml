@@ -38,20 +38,6 @@ Pattern::Pattern(
     this->color = QColor(patternNode["color"].GetString());
 }
 
-void Pattern::onPatchReceived(QStringRef pointer, PatchFragment& patch) {
-    QString displayNameStr = "/display_name";
-    QString colorStr = "/color";
-
-    if (pointer.startsWith(displayNameStr)) {
-        this->displayName = patch.patch["value"].GetString();
-        emit displayNameChanged(displayName);
-    }
-    else if (pointer.startsWith(colorStr)) {
-        this->color = QColor(patch.patch["value"].GetString());
-        emit colorChanged(color);
-    }
-}
-
 void Pattern::serialize(Value& value, Document::AllocatorType& allocator) {
     value.SetObject();
 

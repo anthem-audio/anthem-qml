@@ -72,12 +72,6 @@ public:
             float initialValue,
             float step);
 
-
-    void onPatchReceived(
-        QStringRef pointer,
-        PatchFragment& patch
-    ) override;
-
     void serialize(
             rapidjson::Value& value,
             rapidjson::Document::AllocatorType& allocator
@@ -87,7 +81,6 @@ public:
     float get();
 
 signals:
-    void displayValueChanged(float value);
 
 public slots:
 };

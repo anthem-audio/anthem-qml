@@ -42,21 +42,19 @@ public:
     Song(ModelItem* parent, IdGenerator* id);
     Song(ModelItem* parent, IdGenerator* id, rapidjson::Value& songNode);
 
-    void onPatchReceived(QStringRef pointer, PatchFragment& patch) override;
-
     void serialize(
             rapidjson::Value& value,
             rapidjson::Document::AllocatorType& allocator
         ) override;
 
-    void addPattern(QString name, QColor color);
+    QString addPattern(QString name, QColor color);
+    void addPattern(QString id, QString name, QColor color);
     void removePattern(QString id);
 
     const QHash<QString, Pattern*>& getPatterns();
     Pattern* getPattern(QString key);
+
 signals:
-    void patternAdd(QString id);
-    void patternRemove(QString id);
 
 public slots:
 };

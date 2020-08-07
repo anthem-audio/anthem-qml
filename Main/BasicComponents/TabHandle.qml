@@ -22,7 +22,7 @@ import QtQuick 2.14
 
 Button {
     id: tabHandle
-    property string title: "New project"
+    property string title: qsTr("New project")
     property bool isSelected
     property int index
 

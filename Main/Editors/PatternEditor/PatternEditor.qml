@@ -26,26 +26,14 @@ Item {
     id: patternEditor
     anchors.margins: 3
 
-    property var patterns: ({})
-
     Connections {
-        target: PatternPresenter
-        onPatternAdd: {
-            patterns[id] = {
-                displayName: PatternPresenter.getPatternName(id),
-                color: Qt.rgba(1, 1, 0, 1)
-            };
-            updatePatternList();
-        }
-        onPatternRemove: {
-            delete patterns[id];
-            updatePatternList();
-        }
-        onFlushPatterns: {
-            patterns = newPatterns;
-            updatePatternList();
+        target: mainWindow
+        function onFlush() {
+            // oops
         }
     }
+
+    property var patterns: ({})
 
     function updatePatternList() {
         const lastSelectedId = patternSelector.selectedItem.id;
@@ -103,17 +91,34 @@ Item {
 
             menuItems: [
                 {
-                    text: 'New pattern...',
+                    text: qsTr('New pattern...'),
                     onTriggered: () => {
                         addPatternTooltip.open();
                     }
                 },
                 {
-                    text: 'Delete pattern',
+                    text: qsTr('Delete pattern'),
                     onTriggered: () => {
-                        PatternPresenter.removePattern(
-                            patternSelector.selectedItem.id
-                        );
+                        const id = patternSelector.selectedItem.id;
+
+                        const command = {
+                            exec: () => {
+                                PatternPresenter.removePattern(id);
+                                delete patterns[id];
+                                updatePatternList();
+                            },
+                            undo: (pattern) => {
+                                PatternPresenter.createPattern(
+                                    id, pattern.displayName, pattern.color
+                                );
+                                patterns[id] = pattern;
+                                updatePatternList();
+                            },
+                            undoData: patterns[id],
+                            description: qsTr('delete pattern')
+                        }
+
+                        exec(command);
                     },
                     disabled: patternSelector.selectedItem.id === undefined
                 }
@@ -141,9 +146,28 @@ Item {
         RenameTooltip {
             id: addPatternTooltip
             y: parent.height + 3
-            defaultName: 'New pattern';
+            defaultName: qsTr('New pattern');
             onAccepted: {
-                PatternPresenter.createPattern(name, color);
+                const id = Anthem.createID();
+
+                const command = {
+                    exec: () => {
+                        PatternPresenter.createPattern(id, name, color);
+                        patterns[id] = {
+                            displayName: name,
+                            color: color
+                        }
+                        updatePatternList();
+                    },
+                    undo: () => {
+                        PatternPresenter.removePattern(id);
+                        delete patterns[id];
+                        updatePatternList();
+                    },
+                    description: qsTr('create pattern')
+                }
+
+                exec(command);
             }
         }
     }

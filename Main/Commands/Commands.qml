@@ -18,17 +18,9 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-/*
-    This component is used to store UI state that should be accessible from
-    anywhere in the software. Data stored here cannot be persisted between
-    sessions (for now).
-*/
-
-import QtQuick 2.14
+import QtQuick 2.15
 
 QtObject {
-    property string statusMessage: ''
-
-    property int selectedTabIndex: 0
-    property int tabCount: 1
+    property var histories: [[]]
+    property var historyPointers: [-1] // points to the last performed command
 }
