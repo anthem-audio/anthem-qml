@@ -35,6 +35,7 @@ Item {
                 isClosing = true;
                 tabsRemaining = tabGroup.children.length;
             }
+
             if (Anthem.getNumOpenProjects() <= 0) {
                 Qt.quit();
             }
@@ -43,7 +44,8 @@ Item {
                 tabGroup.selectTab(0);
 
                 let projectName = tabGroup.children[0].title;
-                saveConfirmDialog.message = `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
+                saveConfirmDialog.message =
+                    `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
                 saveConfirmDialog.show();
 
                 return;
@@ -59,9 +61,14 @@ Item {
                 Qt.quit();
             }
 
+            const tab = tabGroup.getTabAtIndex(0);
+
+            // Check for the next unsaved tab when this tab is removed
+            tab.Component.destruction.connect(checkForUnsaved);
+
+            // This will remove a tab, so we attach the handler before it
             Anthem.closeProject(0);
-            tabGroup.getTabAtIndex(0).Component.destruction.connect(checkForUnsaved);
-            tabGroup.removeTab(0);
+
             tabsRemaining = tabsRemaining - 1;
         }
         else {

@@ -141,16 +141,20 @@ Item {
         }
 
         if (globalStore.selectedTabIndex === index) {
-            if (isLastTab)
-                selectTab(globalStore.selectedTabIndex - 1);
-            else
-                selectTab(globalStore.selectedTabIndex + 1);
+            try {
+                if (isLastTab)
+                    selectTab(globalStore.selectedTabIndex - 1);
+                else
+                    selectTab(globalStore.selectedTabIndex + 1);
+            }
+            catch (ex) {}
         }
 
         if (index < globalStore.selectedTabIndex)
             globalStore.selectedTabIndex--;
 
-        tabGroup.children[index + offset].destroy();
+        const tab = getTabAtIndex(index);
+        tab.destroy();
         globalStore.tabCount--;
     }
 
