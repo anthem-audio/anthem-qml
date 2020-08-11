@@ -15,7 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Core/communicator.cpp \
-        Core/debug.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
         main.cpp \
@@ -47,7 +46,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Core/communicator.h \
-    Core/debug.h \
     Core/engine.h \
     Core/modelitem.h \
     Include/rapidjson/allocators.h \

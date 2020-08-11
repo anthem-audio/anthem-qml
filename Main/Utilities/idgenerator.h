@@ -28,7 +28,7 @@ class IdGenerator {
 public:
     IdGenerator();
     ~IdGenerator();
-    uint64_t get();
+    quint64 get();
 };
 
 #endif // IDGENERATOR_H

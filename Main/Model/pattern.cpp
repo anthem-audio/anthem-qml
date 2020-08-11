@@ -20,8 +20,6 @@
 
 #include "pattern.h"
 
-using namespace rapidjson;
-
 Pattern::Pattern(ModelItem* parent, IdGenerator* id, QString displayName,
                  QColor color) : ModelItem(parent, "pattern") {
     this->id = id;
@@ -32,23 +30,15 @@ Pattern::Pattern(ModelItem* parent, IdGenerator* id, QString displayName,
 Pattern::Pattern(
         ModelItem* parent,
         IdGenerator* id,
-        Value& patternNode) : ModelItem(parent, "pattern") {
+        QJsonObject& patternNode) : ModelItem(parent, "pattern") {
     this->id = id;
-    this->displayName = patternNode["display_name"].GetString();
-    this->color = QColor(patternNode["color"].GetString());
+    this->displayName = patternNode["display_name"].toString();
+    this->color = QColor(patternNode["color"].toString());
 }
 
-void Pattern::serialize(Value& value, Document::AllocatorType& allocator) {
-    value.SetObject();
-
-    Value displayNameValue;
-    setStr(displayNameValue, this->displayName, allocator);
-    value.AddMember("display_name", displayNameValue, allocator);
-
-
-    Value colorValue;
-    setStr(colorValue, this->color.name(), allocator);
-    value.AddMember("color", colorValue, allocator);
+void Pattern::serialize(QJsonObject& node) {
+    node["display_name"] = this->displayName;
+    node["color"] = this->color.name();
 }
 
 QString Pattern::getDisplayName() {

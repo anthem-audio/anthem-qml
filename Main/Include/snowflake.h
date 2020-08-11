@@ -1,5 +1,6 @@
 /*
-    Copyright (C) 2019 Joshua Wade, Henna Haahti
+    Copyright (C) 2019 - 2020 Joshua Wade
+    Copyright (C) 2019 Henna Haahti
     Original file by shenggan (https://github.com/Shenggan/), licensed under MIT.
 
     This file is part of Anthem.
@@ -52,6 +53,7 @@
 // https://github.com/Shenggan/SnowFlake/blob/master/SnowFlake.h
 // lightlog.h has been replaced by throw.
 // gettimeofday() and friends have been replaced by Qt equivalents.
+// uint64_t has been replaced by quint64.
 #include <stdint.h>
 #include <QDateTime>
 #include <stdexcept>
@@ -59,46 +61,46 @@
 
 class SnowFlake {
 private:
-    static const uint64_t start_stmp_ = 1480166465631;
-    static const uint64_t sequence_bit_ = 12;
-    static const uint64_t machine_bit_ = 5;
-    static const uint64_t datacenter_bit_ = 5;
+    static const quint64 start_stmp_ = 1480166465631;
+    static const quint64 sequence_bit_ = 12;
+    static const quint64 machine_bit_ = 5;
+    static const quint64 datacenter_bit_ = 5;
 
-    static const uint64_t max_sequence_num_ = -1 ^ (uint64_t(-1) << sequence_bit_);
+    static const quint64 max_sequence_num_ = -1 ^ (uint64_t(-1) << sequence_bit_);
 
-    static const uint64_t machine_left = sequence_bit_;
-    static const uint64_t datacenter_left = sequence_bit_ + machine_bit_;
-    static const uint64_t timestmp_left = sequence_bit_ + machine_bit_ + datacenter_bit_;
+    static const quint64 machine_left = sequence_bit_;
+    static const quint64 datacenter_left = sequence_bit_ + machine_bit_;
+    static const quint64 timestmp_left = sequence_bit_ + machine_bit_ + datacenter_bit_;
 
-    uint64_t datacenterId;
-    uint64_t machineId;
-    uint64_t sequence;
-    uint64_t lastStmp;
+    quint64 datacenterId;
+    quint64 machineId;
+    quint64 sequence;
+    quint64 lastStmp;
 
     std::mutex mutex_;
 
-    uint64_t getNextMill() {
-        uint64_t mill = getNewstmp();
+    quint64 getNextMill() {
+        quint64 mill = getNewstmp();
         while (mill <= lastStmp) {
             mill = getNewstmp();
         }
         return mill;
     }
 
-    uint64_t getNewstmp() {
+    quint64 getNewstmp() {
         QDateTime now = QDateTime::currentDateTimeUtc();
-        return uint64_t(now.toMSecsSinceEpoch());
+        return quint64(now.toMSecsSinceEpoch());
     }
 
 public:
-    static const uint64_t max_datacenter_num_ = -1 ^ (uint64_t(-1) << datacenter_bit_);
-    static const uint64_t max_machine_num_ = -1 ^ (uint64_t(-1) << machine_bit_);
+    static const quint64 max_datacenter_num_ = -1 ^ (uint64_t(-1) << datacenter_bit_);
+    static const quint64 max_machine_num_ = -1 ^ (uint64_t(-1) << machine_bit_);
 
     SnowFlake(int datacenter_Id, int machine_Id) {
-        if ((uint64_t)datacenter_Id > max_datacenter_num_ || datacenter_Id < 0) {
+        if ((quint64)datacenter_Id > max_datacenter_num_ || datacenter_Id < 0) {
             throw "datacenterId can't be greater than max_datacenter_num_ or less than 0";
         }
-        if ((uint64_t)machine_Id > max_machine_num_ || machine_Id < 0) {
+        if ((quint64)machine_Id > max_machine_num_ || machine_Id < 0) {
             throw "machineId can't be greater than max_machine_num_or less than 0";
         }
         datacenterId = datacenter_Id;
@@ -107,9 +109,9 @@ public:
         lastStmp = 0L;
     }
 
-    uint64_t nextId() {
+    quint64 nextId() {
         std::unique_lock<std::mutex> lock(mutex_);
-        uint64_t currStmp = getNewstmp();
+        quint64 currStmp = getNewstmp();
         if (currStmp < lastStmp) {
             throw "Clock moved backwards.  Refusing to generate id";
         }

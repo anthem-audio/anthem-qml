@@ -19,20 +19,14 @@
 */
 
 #include "patch.h"
-#include "Include/rapidjson/pointer.h"
-
-using namespace rapidjson;
 
 Patch::Patch(QObject* parent) : QObject(parent)
 {
-    patch.SetArray();
 }
 
 void Patch::patchAdd(
-    QString path, rapidjson::Value &value
+    QString path, QJsonValue &value
 ) {
-    Value nullVal(kNullType);
-
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
                 PatchFragment::PatchType::ADD,
@@ -44,7 +38,7 @@ void Patch::patchAdd(
 }
 
 void Patch::patchRemove(QString path) {
-    Value nullVal(kNullType);
+    QJsonValue nullVal(QJsonValue::Null);
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
@@ -58,7 +52,7 @@ void Patch::patchRemove(QString path) {
 
 void Patch::patchReplace(
     QString path,
-    rapidjson::Value& newValue
+    QJsonValue& newValue
 ) {
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
@@ -71,7 +65,7 @@ void Patch::patchReplace(
 }
 
 void Patch::patchCopy(QString from, QString path) {
-    Value nullVal(kNullType);
+    QJsonValue nullVal(QJsonValue::Null);
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
@@ -84,7 +78,7 @@ void Patch::patchCopy(QString from, QString path) {
 }
 
 void Patch::patchMove(QString from, QString path) {
-    Value nullVal(kNullType);
+    QJsonValue nullVal(QJsonValue::Null);
 
     PatchFragment* forwardFragment = new PatchFragment(
                 this,
@@ -96,18 +90,9 @@ void Patch::patchMove(QString from, QString path) {
     addFragmentToForward(forwardFragment);
 }
 
-Value& Patch::getPatch() {
-    if (patch.IsArray())
-        patch.Clear();
-    else
-        patch.SetArray();
-
+QJsonArray& Patch::getPatch() {
     for (int i = 0; i < patchList.length(); i++) {
-        patch.PushBack(
-            Value(
-                patchList[i]->patch, patch.GetAllocator()
-            ), patch.GetAllocator()
-        );
+        patch.push_back(patchList[i]->patch);
     }
 
     return patch;
@@ -117,6 +102,6 @@ void Patch::addFragmentToForward(PatchFragment* fragment) {
     patchList.append(fragment);
 }
 
-Document::AllocatorType* Patch::getPatchAllocator() {
-    return &patch.GetAllocator();
-}
+//Document::AllocatorType* Patch::getPatchAllocator() {
+//    return &patch.GetAllocator();
+//}

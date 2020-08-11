@@ -19,13 +19,7 @@
 */
 
 #include "control.h"
-
-using namespace rapidjson;
-
-#include "Include/rapidjson/stringbuffer.h"
-#include "Include/rapidjson/writer.h"
-
-using namespace rapidjson;
+#include "qdebug.h"
 
 Control::Control(
             ModelItem* parent,
@@ -49,29 +43,36 @@ Control::Control(
 Control::Control(
     ModelItem *parent,
     QString name,
-    Value& controlNode
+    QJsonObject& node
 ) : ModelItem(parent, name)
 {
-    id = controlNode["id"].GetUint64();
-    initialValue = controlNode["initial_value"].GetFloat();
+    // TODO: throw an error if this is false after the conversion
+    bool ok;
+    id = static_cast<quint64>(
+                node["id"].toString().toULongLong(&ok, 10)
+            );
+
+    initialValue = static_cast<float>(
+                node["initial_value"].toDouble()
+            );
     ui_currentValue = initialValue;
-    minimum = controlNode["minimum"].GetFloat();
-    maximum = controlNode["maximum"].GetFloat();
-    step = controlNode["step"].GetFloat();
-    overrideAutomation =
-        controlNode["override_automation"].GetBool();
+
+    minimum = static_cast<float>(node["minimum"].toDouble());
+    maximum = static_cast<float>(node["maximum"].toDouble());
+    step = static_cast<float>(node["step"].toDouble());
+    overrideAutomation = node["override_automation"].toBool();
+
+    qDebug() << node;
 }
 
-void Control::serialize(Value& value, Document::AllocatorType& allocator) {
-    value.SetObject();
-
-    value.AddMember("id", id, allocator);
-    value.AddMember("initial_value", initialValue, allocator);
-    value.AddMember("minimum", minimum, allocator);
-    value.AddMember("maximum", maximum, allocator);
-    value.AddMember("step", step, allocator);
-    value.AddMember("override_automation", overrideAutomation, allocator);
-    value.AddMember("connection", kNullType, allocator);
+void Control::serialize(QJsonObject& node) {
+    node["id"] = QString::number(id);
+    node["initial_value"] = static_cast<double>(initialValue);
+    node["minimum"] = static_cast<double>(minimum);
+    node["maximum"] = static_cast<double>(maximum);
+    node["step"] = static_cast<double>(step);
+    node["override_automation"] = overrideAutomation;
+    node["connection"] = QJsonValue::Null;
 }
 
 void Control::setOverrideState(bool isOverridden) {
@@ -79,10 +80,8 @@ void Control::setOverrideState(bool isOverridden) {
         return;
 
     overrideAutomation = isOverridden;
-    Value overrideVal(overrideAutomation);
-    patchReplace(
-        "override_automation", overrideVal
-    );
+    QJsonValue overrideVal(overrideAutomation);
+    patchReplace("override_automation", overrideVal);
 }
 
 // TODO: Set override state depending on whether project is playing or not
@@ -97,7 +96,7 @@ void Control::set(float val, bool isFinal) {
     if (isFinal) {
         initialValue = val;
         ui_currentValue = val;
-        Value v(val);
+        QJsonValue v(static_cast<double>(val));
         patchReplace("initial_value", v);
         changeMade = true;
     }

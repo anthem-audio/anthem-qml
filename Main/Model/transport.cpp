@@ -20,8 +20,6 @@
 
 #include "transport.h"
 
-using namespace rapidjson;
-
 Transport::Transport(
             ModelItem* parent, IdGenerator* id
         ) : ModelItem(parent, "transport")
@@ -40,46 +38,45 @@ Transport::Transport(
 Transport::Transport(
             ModelItem* parent,
             IdGenerator* id,
-            Value& transportNode
+            QJsonObject& transportNode
         ) : ModelItem(parent, "transport")
 {
     this->id = id;
 
+    QJsonObject masterPitchNode =
+            transportNode["master_pitch"].toObject();
     masterPitch =
-        new Control(this, "master_pitch", transportNode["master_pitch"]);
+            new Control(this, "master_pitch", masterPitchNode);
 
+    QJsonObject beatsPerMinuteNode =
+            transportNode["beats_per_minute"].toObject();
     beatsPerMinute =
-        new Control(this, "beats_per_minute",
-                    transportNode["beats_per_minute"]);
+            new Control(this, "beats_per_minute", beatsPerMinuteNode);
 
     defaultNumerator =
-        static_cast<quint8>(transportNode["default_numerator"].GetUint());
+        static_cast<quint8>(transportNode["default_numerator"].toInt());
 
     defaultDenominator =
-        static_cast<quint8>(transportNode["default_denominator"].GetUint());
+        static_cast<quint8>(transportNode["default_denominator"].toInt());
 }
 
-void Transport::serialize(Value& value, Document::AllocatorType& allocator) {
-    value.SetObject();
+void Transport::serialize(QJsonObject& node) {
+    QJsonObject masterPitch;
+    QJsonObject beatsPerMinute;
 
-    Value masterPitchValue;
-    masterPitch->serialize(masterPitchValue, allocator);
-    value.AddMember("master_pitch", masterPitchValue, allocator);
+    this->masterPitch->serialize(masterPitch);
+    this->beatsPerMinute->serialize(beatsPerMinute);
 
-    Value beatsPerMinuteValue;
-    beatsPerMinute->serialize(beatsPerMinuteValue, allocator);
-    value.AddMember("beats_per_minute", beatsPerMinuteValue, allocator);
+    node["master_pitch"] = masterPitch;
+    node["beats_per_minute"] = beatsPerMinute;
 
-    Value numeratorValue(defaultNumerator);
-    value.AddMember("default_numerator", numeratorValue, allocator);
-
-    Value denominatorValue(defaultDenominator);
-    value.AddMember("default_denominator", denominatorValue, allocator);
+    node["default_numerator"] = this->getNumerator();
+    node["default_denominator"] = this->getDenominator();
 }
 
 void Transport::setNumerator(quint8 numerator) {
     defaultNumerator = numerator;
-    Value v(numerator);
+    QJsonValue v(numerator);
     patchReplace("default_numerator", v);
     sendPatch();
 }
@@ -90,7 +87,7 @@ quint8 Transport::getNumerator() {
 
 void Transport::setDenominator(quint8 denominator) {
     defaultDenominator = denominator;
-    Value v(denominator);
+    QJsonValue v(denominator);
     patchReplace("default_denominator", v);
     sendPatch();
 }
