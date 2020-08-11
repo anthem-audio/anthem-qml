@@ -24,15 +24,15 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonArray>
+#include <QJsonValue>
 
 #include "patchfragment.h"
 #include "Model/project.h"
 
 class Patch : QObject {
 Q_OBJECT
-    rapidjson::Document patch;
+    QJsonArray patch;
 
     QVector<PatchFragment*> patchList;
 
@@ -40,15 +40,13 @@ Q_OBJECT
 public:
     Patch(QObject* parent);
 
-    void patchAdd(QString path, rapidjson::Value& value);
+    void patchAdd(QString path, QJsonValue& value);
     void patchRemove(QString path);
-    void patchReplace(QString path, rapidjson::Value& newValue);
+    void patchReplace(QString path, QJsonValue& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
 
-    rapidjson::Document::AllocatorType* getPatchAllocator();
-
-    rapidjson::Value& getPatch();
+    QJsonArray& getPatch();
 };
 
 #endif // PATCH_H

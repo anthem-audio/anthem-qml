@@ -20,7 +20,6 @@
 
 #include "mainpresenter.h"
 
-#include "Include/rapidjson/document.h"
 #include "Utilities/exceptions.h"
 
 #include <QFileInfo>
@@ -29,8 +28,6 @@
 #include <QSysInfo>
 
 #include <math.h>
-
-using namespace rapidjson;
 
 MainPresenter::MainPresenter(QObject *parent, IdGenerator* id)
                                 : Communicator(parent) {
@@ -156,9 +153,10 @@ QString MainPresenter::loadProject(QString path) {
 
     try {
         // Initialize model with JSON
-        project = new Project(
-            this, id, projectFile->document["project"]
-        );
+        QJsonObject projectJson =
+                projectFile->json["project"].toObject();
+
+        project = new Project(this, id, projectJson);
     }
     catch (const InvalidProjectException& ex) {
         QString errorText =
@@ -234,40 +232,29 @@ void MainPresenter::initializeNewPatchIfNeeded() {
     patchInProgress = new Patch(this);
 }
 
-void MainPresenter::patchAdd(QString path, rapidjson::Value& value) {
+void MainPresenter::patchAdd(QString path, QJsonValue& value) {
     initializeNewPatchIfNeeded();
-
-    Value copiedValue(value, *patchInProgress->getPatchAllocator());
-    patchInProgress->patchAdd("/" + path, copiedValue);
+    patchInProgress->patchAdd("/" + path, value);
 }
 
 void MainPresenter::patchRemove(QString path) {
     initializeNewPatchIfNeeded();
-
     patchInProgress->patchRemove("/" + path);
 }
 
 void MainPresenter::patchReplace(
-        QString path,
-        rapidjson::Value& newValue) {
+        QString path, QJsonValue& newValue) {
     initializeNewPatchIfNeeded();
-
-    Value copiedNewValue(
-        newValue, *patchInProgress->getPatchAllocator()
-    );
-
-    patchInProgress->patchReplace("/" + path, copiedNewValue);
+    patchInProgress->patchReplace("/" + path, newValue);
 }
 
 void MainPresenter::patchCopy(QString from, QString path) {
     initializeNewPatchIfNeeded();
-
     patchInProgress->patchCopy("/" + from, "/" + path);
 }
 
 void MainPresenter::patchMove(QString from, QString path) {
     initializeNewPatchIfNeeded();
-
     patchInProgress->patchMove("/" + from, "/" + path);
 }
 
@@ -292,11 +279,6 @@ void MainPresenter::liveUpdate(
     engines[
         activeProjectIndex
     ]->sendLiveControlUpdate(controlId, value);
-}
-
-Document::AllocatorType& MainPresenter::getPatchAllocator() {
-    initializeNewPatchIfNeeded();
-    return *patchInProgress->getPatchAllocator();
 }
 
 void MainPresenter::switchActiveProject(int index) {

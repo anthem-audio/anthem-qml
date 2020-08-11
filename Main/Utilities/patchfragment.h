@@ -23,8 +23,8 @@
 
 #include <QObject>
 #include <QString>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonValue>
+#include <QJsonObject>
 
 /// Describes one step of a patch
 class PatchFragment : QObject {
@@ -40,17 +40,16 @@ public:
 private:
     PatchType type;
 public:
-    rapidjson::Document patch;
+    QJsonObject patch;
 
     PatchFragment(
         QObject* parent,
         PatchType type,
         QString from,
         QString path,
-        rapidjson::Value& value
+        QJsonValue& value
     );
     PatchType getType();
-    void apply(rapidjson::Document& doc);
 };
 
 #endif // PATCHFRAGMENT_H

@@ -25,8 +25,7 @@
 #include <QHash>
 #include <QString>
 #include <QColor>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonObject>
 
 #include "Core/modelitem.h"
 #include "Utilities/idgenerator.h"
@@ -41,12 +40,9 @@ private:
 public:
     Pattern(ModelItem* parent, IdGenerator* id, QString displayName,
             QColor color);
-    Pattern(ModelItem* parent, IdGenerator* id, rapidjson::Value& patternNode);
+    Pattern(ModelItem* parent, IdGenerator* id, QJsonObject& patternNode);
 
-    void serialize(
-            rapidjson::Value& value,
-            rapidjson::Document::AllocatorType& allocator
-        ) override;
+    void serialize(QJsonObject& node) override;
 
     QString getDisplayName();
     QColor getColor();

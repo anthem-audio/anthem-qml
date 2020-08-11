@@ -27,10 +27,7 @@
 
 #include "Presenter/mainpresenter.h"
 
-#include "Include/rapidjson/pointer.h"
-
 Q_DECLARE_METATYPE(PatchFragment::PatchType);
-Q_DECLARE_METATYPE(rapidjson::Value*);
 
 class ModelTests : public QObject {
 Q_OBJECT
@@ -40,45 +37,12 @@ private:
     MainPresenter* presenter;
     Project* project;
 
-    rapidjson::Document doc;
-
-    rapidjson::Value basicAddValue;
-    rapidjson::Value basicAddValueOld;
-    rapidjson::Value basicRemoveValue;
-    rapidjson::Value basicRemoveValueOld;
-    rapidjson::Value basicReplaceValue;
-    rapidjson::Value basicReplaceValueOld;
-    rapidjson::Value basicCopyValue;
-    rapidjson::Value basicCopyValueOld;
-    rapidjson::Value basicMoveValue;
-    rapidjson::Value basicMoveValueOld;
-
 private slots:
     void initTestCase() {
         id = new IdGenerator();
         presenter = new MainPresenter(this, id);
 
         project = presenter->getProjectAt(0);
-
-        doc.Parse(
-            "{"
-            "    \"basic_remove\": \"init value\","
-            "    \"basic_replace\": \"init value\","
-            "    \"basic_copy_source\": \"init value\","
-            "    \"basic_move_source\": \"init value\""
-            "}"
-        );
-
-        basicAddValue.SetString("add");
-        basicAddValueOld.SetNull();
-        basicRemoveValue.SetNull();
-        basicRemoveValueOld.SetString("init value");
-        basicReplaceValue.SetString("replace");
-        basicReplaceValueOld.SetString("init value");
-        basicCopyValue.SetNull();
-        basicCopyValueOld.SetNull();
-        basicMoveValue.SetNull();
-        basicMoveValueOld.SetNull();
     }
 
     void emptyProject() {

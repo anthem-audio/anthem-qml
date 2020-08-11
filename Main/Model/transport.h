@@ -22,8 +22,7 @@
 #define TRANSPORT_H
 
 #include <QObject>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonObject>
 
 #include "Core/modelitem.h"
 #include "Model/control.h"
@@ -40,13 +39,10 @@ public:
     Transport(
         ModelItem* parent,
         IdGenerator* id,
-        rapidjson::Value& transportNode
+        QJsonObject& node
     );
 
-    void serialize(
-            rapidjson::Value& value,
-            rapidjson::Document::AllocatorType& allocator
-        ) override;
+    void serialize(QJsonObject& node) override;
 
     Control* masterPitch;
     Control* beatsPerMinute;

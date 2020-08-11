@@ -25,8 +25,7 @@
 #include <QHash>
 #include <QString>
 #include <QColor>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonObject>
 
 #include "Core/modelitem.h"
 #include "Utilities/idgenerator.h"
@@ -40,12 +39,9 @@ private:
     QHash<QString, Pattern*> patterns;
 public:
     Song(ModelItem* parent, IdGenerator* id);
-    Song(ModelItem* parent, IdGenerator* id, rapidjson::Value& songNode);
+    Song(ModelItem* parent, IdGenerator* id, QJsonObject& node);
 
-    void serialize(
-            rapidjson::Value& value,
-            rapidjson::Document::AllocatorType& allocator
-        ) override;
+    void serialize(QJsonObject& node) override;
 
     QString addPattern(QString name, QColor color);
     void addPattern(QString id, QString name, QColor color);

@@ -20,43 +20,33 @@
 
 #include "song.h"
 
-using namespace rapidjson;
-
 Song::Song(ModelItem* parent, IdGenerator* id) : ModelItem(parent, "song") {
     this->id = id;
     this->patterns = QHash<QString, Pattern*>();
     patterns[QString::number(id->get())] = new Pattern(this, id, "New pattern", QColor::fromHsl(162, 50, 43));
 }
 
-Song::Song(ModelItem* parent, IdGenerator* id, Value& songValue)
+Song::Song(ModelItem* parent, IdGenerator* id, QJsonObject& node)
             : ModelItem(parent, "song") {
     this->id = id;
-    Value& patternMap = songValue["patterns"];
-    for (auto& pair : patternMap.GetObject()) {
-        QString patternId(pair.name.GetString());
-        this->patterns[patternId] = new Pattern(this, id, pair.value);
+    QJsonObject patternMap = node["patterns"].toObject();
+    for (auto key : patternMap.keys()) {
+        QString patternId(key);
+        QJsonObject patternNode = patternMap[key].toObject();
+        this->patterns[patternId] = new Pattern(this, id, patternNode);
     }
 }
 
-void Song::serialize(Value& value, Document::AllocatorType& allocator) {
-    value.SetObject();
-
-    Value patterns(kObjectType);
+void Song::serialize(QJsonObject& node) {
+    QJsonObject patterns;
     auto keys = this->patterns.keys();
     for (QString key : keys) {
-        Value v(kObjectType);
-        this->patterns[key]->serialize(v, allocator);
-
-        // https://stackoverflow.com/a/33473321/8166701
-        auto indexStr = key.toStdString();
-
-        Value index(indexStr.c_str(), static_cast<SizeType>(indexStr.size()),
-                    allocator);
-
-        patterns.AddMember(index, v, allocator);
+        QJsonObject v;
+        this->patterns[key]->serialize(v);
+        patterns[key] = v;
     }
 
-    value.AddMember("patterns", patterns, allocator);
+    node["patterns"] = patterns;
 }
 
 // Adds a pattern and returns its ID
@@ -69,21 +59,14 @@ QString Song::addPattern(QString name, QColor color) {
 }
 
 void Song::addPattern(QString id, QString name, QColor color) {
-    Value patchVal(kObjectType);
+    QJsonObject patchObj;
 
+    patchObj["display_name"] = name;
+    patchObj["color"] = color.name();
 
-    Value nameVal;
-    setStr(nameVal, name, getPatchAllocator());
-
-    Value colorVal;
-    setStr(colorVal, color.name(), getPatchAllocator());
-
-
-    patchVal.AddMember("display_name", nameVal, getPatchAllocator());
-    patchVal.AddMember("color", colorVal, getPatchAllocator());
+    QJsonValue patchVal = patchObj;
 
     patchAdd("patterns/" + id, patchVal);
-
 
     patterns[id] = new Pattern(this, this->id, name, color);
 

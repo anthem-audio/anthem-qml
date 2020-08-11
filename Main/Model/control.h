@@ -22,8 +22,8 @@
 #define CONTROL_H
 
 #include <QObject>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonValue>
+#include <QJsonObject>
 
 #include "Core/modelitem.h"
 
@@ -32,7 +32,7 @@
 class Control : public ModelItem {
     Q_OBJECT
 private:
-    uint64_t id;
+    quint64 id;
     float initialValue;
     float ui_currentValue;
     float minimum;
@@ -59,23 +59,20 @@ public:
     Control(
         ModelItem* parent,
         QString name,
-        rapidjson::Value& controlNode
+        QJsonObject& node
     );
 
     /// Generate new JSON node and add as field under parentNode
     /// parentNode[controlName] = {...newly generated control...}
     Control(QObject *parent,
-            rapidjson::Value* parentNode,
+            QJsonObject* parentNode,
             std::string controlName,
             float minimum,
             float maximum,
             float initialValue,
             float step);
 
-    void serialize(
-            rapidjson::Value& value,
-            rapidjson::Document::AllocatorType& allocator
-        ) override;
+    void serialize(QJsonObject& node) override;
 
     void set(float val, bool isFinal);
     float get();

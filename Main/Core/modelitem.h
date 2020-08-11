@@ -22,11 +22,11 @@
 #define MODELITEM_H
 
 #include <QObject>
+#include <QJsonValue>
+#include <QJsonObject>
 
 #include "communicator.h"
 #include "Utilities/patchfragment.h"
-
-#include "Include/rapidjson/document.h"
 
 class ModelItem : public Communicator {
     Q_OBJECT
@@ -34,25 +34,17 @@ private:
     QString key;
 public:
     /// Serialize model item state into the given value
-    virtual void serialize(
-                rapidjson::Value& value,
-                rapidjson::Document::AllocatorType& allocator
-            ) = 0;
+    virtual void serialize(QJsonObject& node) = 0;
 
     ModelItem(Communicator* parent, QString jsonKey);
 
-    void patchAdd(QString path, rapidjson::Value& value);
+    void patchAdd(QString path, QJsonValue& value);
     void patchRemove(QString path);
-    void patchReplace(QString path, rapidjson::Value& newValue);
+    void patchReplace(QString path, QJsonValue& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();
-    void liveUpdate(uint64_t controlId, float value);
-    rapidjson::Document::AllocatorType& getPatchAllocator();
-
-    /// Utility function to generate a rapidjson value from a string
-    void setStr(rapidjson::Value& target, QString str,
-                rapidjson::Document::AllocatorType& allocator);
+    void liveUpdate(quint64 controlId, float value);
 
     Communicator* parent;
 

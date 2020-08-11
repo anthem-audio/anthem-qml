@@ -15,7 +15,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         Core/communicator.cpp \
-        Core/debug.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
         main.cpp \
@@ -47,45 +46,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     Core/communicator.h \
-    Core/debug.h \
     Core/engine.h \
     Core/modelitem.h \
-    Include/rapidjson/allocators.h \
-    Include/rapidjson/cursorstreamwrapper.h \
-    Include/rapidjson/document.h \
-    Include/rapidjson/encodedstream.h \
-    Include/rapidjson/encodings.h \
-    Include/rapidjson/error/en.h \
-    Include/rapidjson/error/error.h \
-    Include/rapidjson/filereadstream.h \
-    Include/rapidjson/filewritestream.h \
-    Include/rapidjson/fwd.h \
-    Include/rapidjson/internal/biginteger.h \
-    Include/rapidjson/internal/diyfp.h \
-    Include/rapidjson/internal/dtoa.h \
-    Include/rapidjson/internal/ieee754.h \
-    Include/rapidjson/internal/itoa.h \
-    Include/rapidjson/internal/meta.h \
-    Include/rapidjson/internal/pow10.h \
-    Include/rapidjson/internal/regex.h \
-    Include/rapidjson/internal/stack.h \
-    Include/rapidjson/internal/strfunc.h \
-    Include/rapidjson/internal/strtod.h \
-    Include/rapidjson/internal/swap.h \
-    Include/rapidjson/istreamwrapper.h \
-    Include/rapidjson/memorybuffer.h \
-    Include/rapidjson/memorystream.h \
-    Include/rapidjson/msinttypes/inttypes.h \
-    Include/rapidjson/msinttypes/stdint.h \
-    Include/rapidjson/ostreamwrapper.h \
-    Include/rapidjson/pointer.h \
-    Include/rapidjson/prettywriter.h \
-    Include/rapidjson/rapidjson.h \
-    Include/rapidjson/reader.h \
-    Include/rapidjson/schema.h \
-    Include/rapidjson/stream.h \
-    Include/rapidjson/stringbuffer.h \
-    Include/rapidjson/writer.h \
     Include/snowflake.h \
     Model/control.h \
     Model/pattern.h \

@@ -24,8 +24,8 @@
 #include <QObject>
 #include <QString>
 #include <QVector>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonValue>
+#include <QJsonObject>
 
 #include "Model/project.h"
 #include "Utilities/projectfile.h"
@@ -72,16 +72,14 @@ public:
     explicit MainPresenter(QObject* parent, IdGenerator* id);
 
     // Implementations of virtual functions in Communicator
-    void patchAdd(QString path, rapidjson::Value& value);
+    void patchAdd(QString path, QJsonValue& value);
     void patchRemove(QString path);
-    void patchReplace(QString path, rapidjson::Value& newValue);
+    void patchReplace(QString path, QJsonValue& newValue);
     void patchCopy(QString from, QString path);
     void patchMove(QString from, QString path);
     void sendPatch();
 
-    void liveUpdate(uint64_t controlId, float value);
-
-    rapidjson::Document::AllocatorType& getPatchAllocator();
+    void liveUpdate(quint64 controlId, float value);
 
     /// Project that is currently loaded
     int activeProjectIndex;

@@ -26,8 +26,8 @@
 
 #include <QString>
 #include <QObject>
+#include <QJsonObject>
 
-#include "Include/rapidjson/document.h"
 #include "Model/project.h"
 
 class ProjectFile : QObject {
@@ -42,8 +42,8 @@ public:
     ProjectFile(QObject* parent, QString path);
 
     /// In-memory JSON representation of the project.
-    /// ONLY updated on save.
-    rapidjson::Document document;
+    /// Only updated on save.
+    QJsonObject json;
     QString path;
 
     void markDirty();

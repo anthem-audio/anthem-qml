@@ -28,7 +28,7 @@ ModelItem::ModelItem(Communicator* parent, QString jsonKey)
 
 ModelItem::~ModelItem() {}
 
-void ModelItem::patchAdd(QString path, rapidjson::Value& value) {
+void ModelItem::patchAdd(QString path, QJsonValue& value) {
     parent->patchAdd(key + "/" + path, value);
 }
 
@@ -36,7 +36,7 @@ void ModelItem::patchRemove(QString path) {
     parent->patchRemove(key + "/" + path);
 }
 
-void ModelItem::patchReplace(QString path, rapidjson::Value& newValue) {
+void ModelItem::patchReplace(QString path, QJsonValue& newValue) {
     parent->patchReplace(key + "/" + path, newValue);
 }
 
@@ -52,21 +52,6 @@ void ModelItem::sendPatch() {
     parent->sendPatch();
 }
 
-void ModelItem::liveUpdate(uint64_t controlId, float value) {
+void ModelItem::liveUpdate(quint64 controlId, float value) {
     parent->liveUpdate(controlId, value);
-}
-
-rapidjson::Document::AllocatorType& ModelItem::getPatchAllocator() {
-    return parent->getPatchAllocator();
-}
-
-void ModelItem::setStr(
-        rapidjson::Value& target, QString str,
-        rapidjson::Document::AllocatorType& allocator) {
-
-    auto stdStr = str.toStdString();
-    target.SetString(
-            stdStr.c_str(),
-            static_cast<rapidjson::SizeType>(stdStr.size()),
-            allocator);
 }

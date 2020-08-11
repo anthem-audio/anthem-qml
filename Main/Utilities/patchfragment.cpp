@@ -20,22 +20,14 @@
 
 #include "patchfragment.h"
 
-#include "Include/rapidjson/pointer.h"
-#include "Include/rapidjson/stringbuffer.h"
-#include "Include/rapidjson/writer.h"
-
-using namespace rapidjson;
-
 PatchFragment::PatchFragment(
                 QObject* parent,
                 PatchType type,
                 QString from,
                 QString path,
-                rapidjson::Value& value
+                QJsonValue& value
             ) : QObject(parent)
 {
-    patch.SetObject();
-
     QString op;
 
     this->type = type;
@@ -51,25 +43,16 @@ PatchFragment::PatchFragment(
     else if (type == PatchType::MOVE)
         op = "move";
 
-    Value opVal(kStringType);
-    opVal.SetString(op.toStdString(), patch.GetAllocator());
-
-    patch.AddMember("op", opVal, patch.GetAllocator());
+    patch["op"] = op;
 
     if (!from.isNull()) {
-        patch.AddMember(
-            "from", from.toStdString(), patch.GetAllocator()
-        );
+        patch["from"] = from;
     }
 
-    patch.AddMember(
-        "path", path.toStdString(), patch.GetAllocator()
-    );
+    patch["path"] = path;
 
-    if (!value.IsNull()) {
-        patch.AddMember(
-            "value", value, patch.GetAllocator()
-        );
+    if (!value.isNull()) {
+        patch["value"] = value;
     }
 }
 
@@ -77,55 +60,55 @@ PatchFragment::PatchType PatchFragment::getType() {
     return type;
 }
 
-void PatchFragment::apply(Document &doc) {
-    switch (type) {
-        case PatchType::ADD:
-            Pointer(
-                patch["path"].GetString()
-            ).Set(
-                doc, Value(
-                    patch["value"], doc.GetAllocator()
-                )
-            );
-            break;
-        case PatchType::REMOVE:
-            Pointer(
-                patch["path"].GetString()
-            ).Erase(doc);
-            break;
-        case PatchType::REPLACE:
-            Pointer(
-                patch["path"].GetString()
-            ).Set(
-                doc, Value(
-                    patch["value"], doc.GetAllocator()
-                )
-            );
-            break;
-        case PatchType::COPY:
-            Pointer(
-                patch["path"].GetString()
-            ).Set(
-                doc, Value(
-                    Pointer(
-                        patch["from"].GetString()
-                    ).GetWithDefault(doc, kNullType),
-                    doc.GetAllocator()
-                )
-            );
-            break;
-        case PatchType::MOVE:
-            Pointer(
-                patch["path"].GetString()
-            ).Set(
-                doc, Value(
-                    Pointer(
-                        patch["from"].GetString()
-                    ).GetWithDefault(doc, kNullType),
-                    doc.GetAllocator()
-                )
-            );
-            Pointer(patch["from"].GetString()).Erase(doc);
-            break;
-    }
-}
+//void PatchFragment::apply(Document &doc) {
+//    switch (type) {
+//        case PatchType::ADD:
+//            Pointer(
+//                patch["path"].GetString()
+//            ).Set(
+//                doc, Value(
+//                    patch["value"], doc.GetAllocator()
+//                )
+//            );
+//            break;
+//        case PatchType::REMOVE:
+//            Pointer(
+//                patch["path"].GetString()
+//            ).Erase(doc);
+//            break;
+//        case PatchType::REPLACE:
+//            Pointer(
+//                patch["path"].GetString()
+//            ).Set(
+//                doc, Value(
+//                    patch["value"], doc.GetAllocator()
+//                )
+//            );
+//            break;
+//        case PatchType::COPY:
+//            Pointer(
+//                patch["path"].GetString()
+//            ).Set(
+//                doc, Value(
+//                    Pointer(
+//                        patch["from"].GetString()
+//                    ).GetWithDefault(doc, kNullType),
+//                    doc.GetAllocator()
+//                )
+//            );
+//            break;
+//        case PatchType::MOVE:
+//            Pointer(
+//                patch["path"].GetString()
+//            ).Set(
+//                doc, Value(
+//                    Pointer(
+//                        patch["from"].GetString()
+//                    ).GetWithDefault(doc, kNullType),
+//                    doc.GetAllocator()
+//                )
+//            );
+//            Pointer(patch["from"].GetString()).Erase(doc);
+//            break;
+//    }
+//}

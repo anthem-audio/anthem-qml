@@ -58,6 +58,6 @@ IdGenerator::~IdGenerator() {
     delete this->snowflake;
 }
 
-uint64_t IdGenerator::get() {
+quint64 IdGenerator::get() {
     return snowflake->nextId();
 }

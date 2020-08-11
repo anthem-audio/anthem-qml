@@ -26,20 +26,18 @@
 
 #include <QObject>
 #include <QProcess>
-
-#include "Include/rapidjson/document.h"
-#include "Include/rapidjson/stringbuffer.h"
-#include "Include/rapidjson/writer.h"
+#include <QJsonArray>
+#include <QJsonObject>
 
 class Engine : public QObject {
     Q_OBJECT
 private:
     QProcess* engine;
     void addRPCHeaders(
-        rapidjson::Document& json,
-        std::string headers
+        QJsonObject& json,
+        QString method
     );
-    void write(rapidjson::Document& json);
+    void write(QJsonObject& json);
 
 public:
     explicit
@@ -50,13 +48,13 @@ public:
     void stop();
 
     void sendLiveControlUpdate(
-        uint64_t controlId, float value
+        quint64 controlId, float value
     );
     void sendMidiNoteEvent(
-        uint64_t generatorId,
-        uint8_t status,
-        uint8_t data1,
-        uint8_t data2
+        quint64 generatorId,
+        quint8 status,
+        quint8 data1,
+        quint8 data2
     );
     // TODO: Add play, pause, stop, seek, etc.
 
@@ -64,9 +62,9 @@ public:
         QString operation,
         QString from,
         QString path,
-        rapidjson::Value &value
+        QJsonObject& value
     );
-    void sendPatchList(rapidjson::Value& patchList);
+    void sendPatchList(QJsonArray& patchList);
 
 signals:
     void engineStarted();

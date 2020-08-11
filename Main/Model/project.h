@@ -22,8 +22,7 @@
 #define PROJECT_H
 
 #include <QObject>
-
-#include "Include/rapidjson/document.h"
+#include <QJsonObject>
 
 #include "Core/communicator.h"
 #include "transport.h"
@@ -38,13 +37,9 @@ private:
     Song* song;
 public:
     Project(Communicator* parent, IdGenerator* id);
-    Project(Communicator* parent, IdGenerator* id,
-            rapidjson::Value& projectVal);
+    Project(Communicator* parent, IdGenerator* id, QJsonObject& node);
 
-    void serialize(
-            rapidjson::Value& value,
-            rapidjson::Document::AllocatorType& allocator
-        ) override;
+    void serialize(QJsonObject& node) override;
 
     Transport* getTransport();
     Song* getSong();
