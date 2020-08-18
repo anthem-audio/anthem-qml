@@ -26,6 +26,8 @@ Item {
     id: patternEditor
     anchors.margins: 3
 
+    clip: true
+
     Connections {
         target: mainWindow
         function onFlush() {
@@ -169,6 +171,106 @@ Item {
 
                 exec(command);
             }
+        }
+
+        Button {
+            id: btnAddAudio
+            anchors {
+                left: patternSelector.right
+                leftMargin: 3
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            width: 27
+
+            imageWidth: 19
+            imageHeight: 12
+            imageSource: "Images/Add Audio.svg"
+
+            hoverMessage: qsTr("Add audio channel")
+        }
+
+        Button {
+            id: btnAddAutomation
+            anchors {
+                left: btnAddAudio.right
+                leftMargin: 3
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            width: 27
+
+            imageWidth: 19
+            imageHeight: 12
+            imageSource: "Images/Add Automation.svg"
+
+            hoverMessage: qsTr("Add atuomation channel")
+        }
+    }
+
+    Item {
+        anchors {
+            top: topRowContainer.bottom
+            topMargin: 2
+            bottom: footerContainer.top
+            bottomMargin: 2
+            left: parent.left
+            right: parent.right
+        }
+        id: channelsContainer
+        Rectangle {
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                right: verticalScrollbar.left
+                rightMargin: 2
+            }
+            color: Qt.rgba(1, 1, 1, 0.2)
+        }
+        Scrollbar {
+            id: verticalScrollbar
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                right: parent.right
+            }
+            width: 20
+        }
+    }
+
+    Item {
+        id: footerContainer
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        height: 20
+
+        Scrollbar {
+            id: horizontalScrollbar
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                leftMargin: 300
+                right: resizer.left
+                rightMargin: 2
+            }
+        }
+
+        Rectangle {
+            id: resizer
+            anchors {
+                top: parent.top
+                right: parent.right
+                bottom: parent.bottom
+            }
+            width: parent.height
+            color: Qt.rgba(1, 1, 1, 0.2)
         }
     }
 }

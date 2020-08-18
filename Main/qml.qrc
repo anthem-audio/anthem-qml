@@ -67,5 +67,8 @@
         <file>GlobalStore.qml</file>
         <file>SaveLoadHandler.qml</file>
         <file>Commands/Commands.qml</file>
+        <file>Images/Add Audio.svg</file>
+        <file>Images/Add Automation.svg</file>
+        <file>BasicComponents/Scrollbar.qml</file>
     </qresource>
 </RCC>
