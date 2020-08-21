@@ -50,6 +50,8 @@ Button {
                 : { displayName: qsTr('(none)') };
     }
 
+    clickOnMouseDown: true
+
     onClicked: {
         let processedItems = [];
 

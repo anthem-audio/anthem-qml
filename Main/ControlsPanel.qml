@@ -76,6 +76,7 @@ Panel {
             textContent: qsTr("File")
 
             hasMenuIndicator: true
+            clickOnMouseDown: true
 
             onClicked: fileMenu.open()
 

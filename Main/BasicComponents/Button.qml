@@ -53,14 +53,17 @@ Item {
     }
 
     property string imageSource: ''
-    property real   imageWidth: 1
-    property real   imageHeight: 1
+    property real   imageWidth
+    property real   imageHeight
 
     property string textContent: ''
     property string textFloat: 'center'
     property real   textPixelSize: 11
     property bool   textAutoWidth: false
     property bool   isMouseDown: false
+
+    property bool   clickOnMouseDown: false
+    property bool   repeatOnHold: false
 
     readonly property real textWidth: text.width
 
@@ -143,6 +146,18 @@ Item {
     }
 
     signal clicked()
+
+    Timer {
+        id: repeatTimer
+        interval: 100; repeat: true
+        onTriggered: clicked()
+    }
+
+    Timer {
+        id: repeatStartTimer
+        interval: 200; repeat: false
+        onTriggered: repeatTimer.start()
+    }
 
     Rectangle {
         id: border
@@ -298,13 +313,19 @@ Item {
         onClicked: {
             if (isDisabled && !allowPressEventsOnDisable)
                 return;
-            parent.clicked();
+            if (clickOnMouseDown)
+                return;
+            button.clicked();
         }
 
         onPressed: {
             if (!isToggleButton)
                 button.pressed = true;
             button.isMouseDown = true;
+            if (clickOnMouseDown) button.clicked();
+            if (repeatOnHold) {
+                repeatStartTimer.start();
+            }
         }
 
         onReleased: {
@@ -313,6 +334,10 @@ Item {
             else
                 button.pressed = !button.pressed;
             button.isMouseDown = false;
+            if (repeatOnHold) {
+                repeatStartTimer.stop();
+                repeatTimer.stop();
+            }
         }
 
         property alias hoverActive: buttonProps.isHoverActive
