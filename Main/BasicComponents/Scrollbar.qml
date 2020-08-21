@@ -32,8 +32,9 @@ Item {
     property bool hasResizeHandles: false
 
     property double scrollAreaSize: 100
-    property double start: 10
-    property double end: 50
+    property double start: 0
+    property double end: 40
+    property double tick: 20
 
     function clamp(num) {
         return num < 0 ? 0 : num > 1 ? 1 : num;
@@ -58,6 +59,17 @@ Item {
 
         width: _scrollbarShortSize
         height: _scrollbarShortSize
+
+        onClicked: {
+            start -= tick;
+            end -= tick;
+
+            if (start < 0) {
+                const offset = -start;
+                start += offset;
+                end += offset;
+            }
+        }
     }
 
     Item {
@@ -155,5 +167,16 @@ Item {
 
         width: _scrollbarShortSize
         height: _scrollbarShortSize
+
+        onClicked: {
+            start += tick;
+            end += tick;
+
+            if (end > scrollAreaSize) {
+                const offset = end - scrollAreaSize;
+                end -= offset;
+                start -= offset;
+            }
+        }
     }
 }
