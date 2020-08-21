@@ -123,8 +123,18 @@ Item {
                         ? mouseX / handleContainer.width
                         : mouseY / handleContainer.height;
 
-                oldStart = scrollbar.start / scrollbar.scrollAreaSize;
-                oldEnd = scrollbar.end / scrollbar.scrollAreaSize;
+                const startNorm = start / scrollAreaSize;
+                const endNorm = end / scrollAreaSize;
+
+                if (mouseOffset < startNorm || mouseOffset > endNorm) {
+                    const oldwidth = (scrollbar.end - scrollbar.start) / scrollbar.scrollAreaSize;
+                    oldStart = mouseOffset - oldwidth * 0.5;
+                    oldEnd = mouseOffset + oldwidth * 0.5;
+                }
+                else {
+                    oldStart = scrollbar.start / scrollbar.scrollAreaSize;
+                    oldEnd = scrollbar.end / scrollbar.scrollAreaSize;
+                }
 
                 handle.isMouseDown = true;
             }
