@@ -80,6 +80,7 @@ Item {
         MouseArea {
             id: dragArea
             anchors.fill: parent
+            propagateComposedEvents: true
 
             function handleChange(normalizedPos) {
                 const width = oldEnd - oldStart;
@@ -118,9 +119,18 @@ Item {
             }
 
             onPressed: {
-                mouseOffset = _isHorizontal ? mouseX / handleContainer.width : mouseY / handleContainer.height
-                oldStart = scrollbar.start / scrollbar.scrollAreaSize
-                oldEnd = scrollbar.end / scrollbar.scrollAreaSize
+                mouseOffset = _isHorizontal
+                        ? mouseX / handleContainer.width
+                        : mouseY / handleContainer.height;
+
+                oldStart = scrollbar.start / scrollbar.scrollAreaSize;
+                oldEnd = scrollbar.end / scrollbar.scrollAreaSize;
+
+                handle.isMouseDown = true;
+            }
+
+            onReleased: {
+                handle.isMouseDown = false;
             }
         }
     }

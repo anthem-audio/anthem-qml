@@ -68,7 +68,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin * 2
             anchors.verticalCenter: parent.verticalCenter
             textContent: okButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 okPressed()
             }

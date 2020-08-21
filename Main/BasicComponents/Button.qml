@@ -142,7 +142,7 @@ Item {
         property real contentOpacity: getContentOpacity()
     }
 
-    signal press()
+    signal clicked()
 
     Rectangle {
         id: border
@@ -293,36 +293,38 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        propagateComposedEvents: true
+
         onClicked: {
             if (isDisabled && !allowPressEventsOnDisable)
                 return;
-            parent.press();
+            parent.clicked();
         }
 
         onPressed: {
             if (!isToggleButton)
-                button.pressed = true
-            button.isMouseDown = true
+                button.pressed = true;
+            button.isMouseDown = true;
         }
 
         onReleased: {
             if (!isToggleButton)
-                button.pressed = false
+                button.pressed = false;
             else
-                button.pressed = !button.pressed
-            button.isMouseDown = false
+                button.pressed = !button.pressed;
+            button.isMouseDown = false;
         }
 
         property alias hoverActive: buttonProps.isHoverActive
 
         hoverEnabled: true
         onEntered: {
-            hoverActive = true
+            hoverActive = true;
             if (hoverMessage !== '')
                 globalStore.statusMessage = hoverMessage;
         }
         onExited: {
-            hoverActive = false
+            hoverActive = false;
             globalStore.statusMessage = '';
         }
     }

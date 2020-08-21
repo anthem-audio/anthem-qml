@@ -77,7 +77,7 @@ Panel {
 
             hasMenuIndicator: true
 
-            onPress: fileMenu.open()
+            onClicked: fileMenu.open()
 
             Shortcut {
                 sequence: "alt+f"
@@ -402,7 +402,7 @@ Panel {
             imageWidth: 16
             imageHeight: 16
 
-            onPress: saveLoadHandler.save()
+            onClicked: saveLoadHandler.save()
         }
 
         Button {
@@ -418,7 +418,7 @@ Panel {
             imageWidth: 15
             imageHeight: 15
 
-            onPress: {
+            onClicked: {
                 undo();
             }
         }
@@ -436,7 +436,7 @@ Panel {
             imageWidth: 15
             imageHeight: 15
 
-            onPress: {
+            onClicked: {
                 redo();
             }
         }

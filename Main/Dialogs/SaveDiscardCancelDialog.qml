@@ -72,7 +72,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin
             anchors.verticalCenter: parent.verticalCenter
             textContent: saveButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 savePressed()
             }
@@ -86,7 +86,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin
             anchors.verticalCenter: parent.verticalCenter
             textContent: discardButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 discardPressed()
             }
@@ -100,7 +100,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin * 2
             anchors.verticalCenter: parent.verticalCenter
             textContent: cancelButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 cancelPressed()
             }

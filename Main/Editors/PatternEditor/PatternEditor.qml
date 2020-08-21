@@ -81,7 +81,7 @@ Item {
             imageWidth: 8
             imageHeight: 9
 
-            onPress: {
+            onClicked: {
                 patternEditorMenu.open();
             }
         }

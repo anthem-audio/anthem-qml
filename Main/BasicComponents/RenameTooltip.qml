@@ -140,7 +140,7 @@ TooltipWrapper {
                         imageSource: "Images/Check.svg"
                         imageWidth: 8
                         imageHeight: 8
-                        onPress: {
+                        onClicked: {
                             accepted(input.text, selectedColor);
                         }
                     }
@@ -158,7 +158,7 @@ TooltipWrapper {
                         imageSource: "Images/Close.svg"
                         imageWidth: 8
                         imageHeight: 8
-                        onPress: {
+                        onClicked: {
                             rejected();
                             wrapper.close();
                         }

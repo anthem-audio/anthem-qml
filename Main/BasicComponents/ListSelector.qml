@@ -50,7 +50,7 @@ Button {
                 : { displayName: qsTr('(none)') };
     }
 
-    onPress: {
+    onClicked: {
         let processedItems = [];
 
         if (allowNoSelection) {
