@@ -90,6 +90,7 @@ Item {
 
         Button {
             id: handle
+            visible: scrollAreaSize !== 0
             x: _isHorizontal ? _start : 0
             y: _isHorizontal ? 0 : _start
             width: _isHorizontal ? scrollbar._length : scrollbar._scrollbarShortSize

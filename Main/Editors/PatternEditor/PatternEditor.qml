@@ -211,16 +211,20 @@ Item {
     }
 
     Item {
+        id: channelsContainer
+
         anchors {
             top: topRowContainer.bottom
             topMargin: 2
             bottom: footerContainer.top
             bottomMargin: 2
             left: parent.left
+            leftMargin: 2
             right: parent.right
         }
-        id: channelsContainer
-        Rectangle {
+
+        ChannelList {
+            id: channelList
             anchors {
                 top: parent.top
                 bottom: parent.bottom
@@ -228,7 +232,6 @@ Item {
                 right: verticalScrollbar.left
                 rightMargin: 2
             }
-            color: Qt.rgba(1, 1, 1, 0.2)
         }
         Scrollbar {
             id: verticalScrollbar

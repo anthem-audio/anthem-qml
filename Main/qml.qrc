@@ -74,5 +74,10 @@
         <file>Images/Triangle Arrow Left.svg</file>
         <file>Images/Triangle Arrow Right.svg</file>
         <file>Images/Triangle Arrow Up.svg</file>
+        <file>Editors/PatternEditor/ChannelList.qml</file>
+        <file>Editors/PatternEditor/Channel.qml</file>
+        <file>Images/Muted.svg</file>
+        <file>Images/Unmuted.svg</file>
+        <file>Images/Solo.svg</file>
     </qresource>
 </RCC>
