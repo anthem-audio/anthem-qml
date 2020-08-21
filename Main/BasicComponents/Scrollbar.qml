@@ -60,6 +60,10 @@ Item {
         width: _scrollbarShortSize
         height: _scrollbarShortSize
 
+        imageSource: _isHorizontal ? '../Images/Triangle Arrow Left.svg' : 'Images/Triangle Arrow Up.svg'
+        imageWidth: !_isHorizontal ? 0.4 * width : 0.3 * width
+        imageHeight: _isHorizontal ? 0.4 * width : 0.3 * width
+
         onClicked: {
             start -= tick;
             end -= tick;
@@ -167,6 +171,10 @@ Item {
 
         width: _scrollbarShortSize
         height: _scrollbarShortSize
+
+        imageSource: _isHorizontal ? 'Images/Triangle Arrow Right.svg' : 'Images/Triangle Arrow Down.svg'
+        imageWidth: !_isHorizontal ? 0.4 * width : 0.3 * width
+        imageHeight: _isHorizontal ? 0.4 * width : 0.3 * width
 
         onClicked: {
             start += tick;

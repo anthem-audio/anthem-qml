@@ -70,5 +70,9 @@
         <file>Images/Add Audio.svg</file>
         <file>Images/Add Automation.svg</file>
         <file>BasicComponents/Scrollbar.qml</file>
+        <file>Images/Triangle Arrow Down.svg</file>
+        <file>Images/Triangle Arrow Left.svg</file>
+        <file>Images/Triangle Arrow Right.svg</file>
+        <file>Images/Triangle Arrow Up.svg</file>
     </qresource>
 </RCC>
