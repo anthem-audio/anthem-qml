@@ -896,6 +896,8 @@ Panel {
                             anchors.top: parent.top
                             height: parent.width
                             visible: false
+                            sourceSize.width: width
+                            sourceSize.height: height
                         }
 
                         ColorOverlay {
@@ -913,6 +915,8 @@ Panel {
                             anchors.bottom: parent.bottom
                             height: parent.width
                             visible: false
+                            sourceSize.width: width
+                            sourceSize.height: height
                         }
 
                         ColorOverlay {
