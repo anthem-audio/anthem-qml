@@ -79,5 +79,7 @@
         <file>Images/Muted.svg</file>
         <file>Images/Unmuted.svg</file>
         <file>Images/Solo.svg</file>
+        <file>BasicComponents/Knob.qml</file>
+        <file>BasicComponents/Arc.qml</file>
     </qresource>
 </RCC>

@@ -121,6 +121,38 @@ Item {
                 imageWidth: 12
                 imageHeight: 12
             }
+
+            Knob {
+                id: volume
+
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: btnSolo.right
+                    leftMargin: contentMargins
+                }
+
+                width: height
+            }
+
+            Knob {
+                id: pan
+
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: volume.right
+                    leftMargin: contentMargins
+                }
+
+                isLeftRightKnob: true
+
+                min: -50
+                max: 50
+                value: 0
+
+                width: height
+            }
         }
     }
 

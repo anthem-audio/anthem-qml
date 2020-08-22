@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -18,8 +18,27 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.14
-import QtQuick.Window 2.14
+/*
+    When a drag is completed in a ControlMouseArea, the mouse will
+    snap back to the position it was in when the drag started.
+
+    This is fine, except it doesn't cause the enter() signal to fire.
+
+    Which *would* be fine, except that the knob (and maybe some
+    others?) need onExited to revert from a hover state, but after
+    the mouse is teleported back to the mouse area, onExited doesn't
+    fire when the mouse is subsequently moved out of the mouse area.
+
+    This is a problem, and I have no idea how to solve it. Right now
+    I'm just going to a no-interaction visual state when the drag
+    ends.
+
+    I asked a question about this on Stack Overflow:
+    https://stackoverflow.com/q/63532184/8166701
+*/
+
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import io.github.anthem.utilities.mousehelper 1.0
 
 MouseArea {
@@ -31,9 +50,10 @@ MouseArea {
     }
 
     property bool isDragActive: false
+    enabled: !isDragActive
 
     QtObject {
-        id: props
+        id: state
         property real snapX: Screen.width * 0.5
         property real snapY: Screen.height * 0.5
         property real startX
@@ -48,19 +68,20 @@ MouseArea {
         mouseHelper.setCursorToBlank();
 
         let mousePos = mouseHelper.getCursorPosition();
-        props.startX = mousePos.x;
-        props.startY = mousePos.y;
+        state.startX = mousePos.x;
+        state.startY = mousePos.y;
 
         isDragActive = true;
-        mouseHelper.setCursorPosition(props.snapX, props.snapY);
+        mouseHelper.setCursorPosition(state.snapX, state.snapY);
         dragStart();
     }
 
     onReleased: {
-        mouseHelper.setCursorPosition(props.startX, props.startY);
+        mouseHelper.setCursorPosition(state.startX, state.startY);
         mouseHelper.clearOverride();
 
         isDragActive = false;
+
         dragEnd();
     }
 
@@ -69,13 +90,13 @@ MouseArea {
             return;
 
         let mousePos = mouseHelper.getCursorPosition();
-        let deltaX = mousePos.x - props.snapX;
-        let deltaY = props.snapY - mousePos.y;
+        let deltaX = mousePos.x - state.snapX;
+        let deltaY = state.snapY - mousePos.y;
 
         if (deltaX === 0 && deltaY === 0)
             return;
 
         drag(deltaX, deltaY);
-        mouseHelper.setCursorPosition(props.snapX, props.snapY);
+        mouseHelper.setCursorPosition(state.snapX, state.snapY);
     }
 }
