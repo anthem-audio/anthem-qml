@@ -46,8 +46,8 @@ Rectangle {
         property real damping: 2
         property real accumulator: 0
         property bool showCursor:
-            (isLeftRightKnob && Math.abs(value) < tick * 0.1)
-            || Math.abs(value - min) < tick * 0.1
+            (isLeftRightKnob && Math.abs(value) < tick * 0.1) ||
+            (!isLeftRightKnob && Math.abs(value - min) < tick * 0.1)
     }
 
     Arc {
