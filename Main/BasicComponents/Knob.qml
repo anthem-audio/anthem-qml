@@ -55,11 +55,14 @@ Rectangle {
         anchors.margins: 1
         lineWidth: state.shrinkCenter ? 3 : 2
         colorCircle: '#1BC18F'
-        arcOffset: isLeftRightKnob ? 0 : 180
 
+        property real degrees: value * 360 / (max - min)
+
+        // If you think this math is confusing then uhh
+        // yeah me too
+        arcOffset: isLeftRightKnob ? (value < 0 ? degrees : 0) : 180
         arcBegin: 0
-        arcEnd: value * 360 / (max - min)
-
+        arcEnd: Math.abs(degrees)
 
         Behavior on lineWidth {
             SpringAnimation { spring: state.spring; damping: state.damping }
