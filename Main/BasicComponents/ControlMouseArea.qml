@@ -29,12 +29,15 @@
     the mouse is teleported back to the mouse area, onExited doesn't
     fire when the mouse is subsequently moved out of the mouse area.
 
-    This is a problem, and I have no idea how to solve it. Right now
-    I'm just going to a no-interaction visual state when the drag
-    ends.
-
-    I asked a question about this on Stack Overflow:
+    There's a workaround:
     https://stackoverflow.com/q/63532184/8166701
+
+    I tried implementing it, but it just uncovers another issue:
+    If you move the mouse too soon after clicking, the hover state
+    will be incorrect when the mouse is released.
+
+    I'd rather it be consistently incorrect than inconsistently
+    correct.
 */
 
 import QtQuick 2.15
