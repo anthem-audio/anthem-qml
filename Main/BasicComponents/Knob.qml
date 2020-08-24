@@ -32,6 +32,10 @@ Rectangle {
     property real tick: 1
     property real speedMultiplier: 0.3
 
+    // List of values for the knob to 'pause' at. Expects
+    // a javascript list.
+    property var  pauses: isLeftRightKnob ? [0] : []
+
     color: "transparent"
     border.width: 1
     border.color: Qt.rgba(0, 0, 0, 0.4)
@@ -48,6 +52,9 @@ Rectangle {
         property bool showCursor:
             (isLeftRightKnob && Math.abs(value) < tick * 0.1) ||
             (!isLeftRightKnob && Math.abs(value - min) < tick * 0.1)
+        property var pauses: knob.pauses.sort()
+        property bool isPaused: false
+        property real pauseThreshold: 10 * tick
     }
 
     Arc {
@@ -151,7 +158,14 @@ Rectangle {
             let tempValue = value;
 
             state.accumulator += delta;
-            if (Math.round(value + state.accumulator) !== value) {
+            if (state.isPaused) {
+                if (state.accumulator > state.pauseThreshold || state.accumulator < -state.pauseThreshold) {
+                    state.accumulator = delta;
+                    tempValue += delta;
+                    state.isPaused = false;
+                }
+            }
+            else if (Math.round(value + state.accumulator) !== value) {
                 tempValue += state.accumulator;
                 state.accumulator = 0;
             }
@@ -160,10 +174,36 @@ Rectangle {
                 state.accumulator = tempValue - min;
                 tempValue = min;
             }
-
-            if (tempValue > max) {
+            else if (tempValue > max) {
                 state.accumulator = tempValue - max;
                 tempValue = max;
+            }
+            else if (!state.isPaused && state.pauses.length > 0) {
+                let left = null;
+                let right = null;
+                for (let pause of state.pauses) {
+                    right = pause;
+                    if (pause > value) {
+                        break;
+                    }
+                    left = right;
+                }
+                if (left === right) {
+                    right = null;
+                }
+
+                if (right !== null && value !== right && tempValue > right) {
+                    state.isPaused = true;
+                    state.accumulator = -state.pauseThreshold;
+                    value = right;
+                    return;
+                }
+                else if (left !== null && value !== left && tempValue < left) {
+                    state.isPaused = true;
+                    state.accumulator = state.pauseThreshold;
+                    value = left;
+                    return;
+                }
             }
 
             if (value !== tempValue)
@@ -172,6 +212,7 @@ Rectangle {
 
         onDragEnd: {
             state.accumulator = 0;
+            state.isPaused = false;
         }
     }
 }
