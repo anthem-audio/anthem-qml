@@ -28,13 +28,16 @@ Rectangle {
 
     property real min: 0
     property real max: 100
-    property real value: 75
+    property real value: 50
     property real tick: 1
     property real speedMultiplier: 0.3
 
     // List of values for the knob to 'pause' at. Expects
     // a javascript list.
     property var  pauses: isLeftRightKnob ? [0] : []
+
+    property string hoverMessage: ''
+    property string units: ''
 
     color: "transparent"
     border.width: 1
@@ -206,13 +209,18 @@ Rectangle {
                 }
             }
 
-            if (value !== tempValue)
+            if (!state.isPaused && value !== tempValue) {
                 value = tempValue;
+            }
+
+
+            globalStore.statusMessage = `${hoverMessage}: ${Math.round(value / tick) * tick}${units}`
         }
 
         onDragEnd: {
             state.accumulator = 0;
             state.isPaused = false;
+            globalStore.statusMessage = '';
         }
     }
 }

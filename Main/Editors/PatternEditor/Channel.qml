@@ -133,6 +133,13 @@ Item {
                 }
 
                 width: height
+
+                min: 0
+                max: 100
+                value: 80
+
+                hoverMessage: qsTr('Volume')
+                units: '%'
             }
 
             Knob {
@@ -147,11 +154,29 @@ Item {
 
                 isLeftRightKnob: true
 
-                min: -50
-                max: 50
+                min: -100
+                max: 100
                 value: 0
 
                 width: height
+
+                hoverMessage: qsTr('Pan')
+                units: '%'
+            }
+
+            Rectangle {
+                color: Qt.rgba(1, 1, 1, 0.3)
+
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: pan.right
+                    leftMargin: contentMargins
+                }
+
+                width: 10
+
+                radius: 1
             }
         }
     }
