@@ -109,15 +109,20 @@ Item {
                                 delete patterns[id];
                                 updatePatternList();
                             },
-                            undo: (pattern) => {
+                            undo: (patternData) => {
+                                const pattern = patternData.pattern;
+                                const index = patternData.index;
+
                                 PatternPresenter.createPattern(
                                     id, pattern.displayName, pattern.color
                                 );
+
                                 patterns[id] = pattern;
                                 updatePatternList();
+                                patternSelector.selectItem(index);
                             },
-                            undoData: patterns[id],
-                            description: qsTr('delete pattern')
+                            undoData: {pattern: patterns[id], index: patternSelector.selectedItemIndex},
+                            description: qsTr('Delete pattern')
                         }
 
                         exec(command);
@@ -160,6 +165,8 @@ Item {
                             color: color
                         }
                         updatePatternList();
+
+                        patternSelector.selectItem(patternSelector.listItems.length - 1);
                     },
                     undo: () => {
                         PatternPresenter.removePattern(id);
@@ -259,7 +266,7 @@ Item {
                 top: parent.top
                 bottom: parent.bottom
                 left: parent.left
-                leftMargin: 300
+                leftMargin: 258
                 right: resizer.left
                 rightMargin: 2
             }
