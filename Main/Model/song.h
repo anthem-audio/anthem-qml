@@ -41,7 +41,7 @@ public:
     Song(ModelItem* parent, IdGenerator* id);
     Song(ModelItem* parent, IdGenerator* id, QJsonObject& node);
 
-    void serialize(QJsonObject& node) override;
+    void serialize(QJsonObject& node) const override;
 
     QString addPattern(QString name, QColor color);
     void addPattern(QString id, QString name, QColor color);

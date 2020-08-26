@@ -72,7 +72,7 @@ public:
             float initialValue,
             float step);
 
-    void serialize(QJsonObject& node) override;
+    void serialize(QJsonObject& node) const override;
 
     void set(float val, bool isFinal);
     float get();

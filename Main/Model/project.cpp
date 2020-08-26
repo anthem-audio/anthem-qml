@@ -20,13 +20,20 @@
 
 #include "project.h"
 
+#include <QJsonArray>
+
 #include "Utilities/exceptions.h"
+
+#include "controller.h"
+#include "instrument.h"
 
 Project::Project(Communicator* parent, IdGenerator* id)
                     : ModelItem(parent, "project") {
     this->id = id;
     transport = new Transport(this, id);
     song = new Song(this, id);
+    generators = QHash<QString, Generator*>();
+    generatorOrder = QVector<QString>();
 }
 
 Project::Project(Communicator* parent, IdGenerator* id,
@@ -39,9 +46,28 @@ Project::Project(Communicator* parent, IdGenerator* id,
 
     QJsonObject songVal = projectVal["song"].toObject();
     song = new Song(this, id, songVal);
+
+    QJsonObject generatorsVal = projectVal["generators"].toObject();
+    for (const QString& key : generatorsVal.keys()) {
+        QJsonObject generatorValue = generatorsVal[key].toObject();
+        auto type = generatorValue["type"].toString();
+        if (type == "controller") {
+            generators[key] = new Controller(this, this->id, generatorValue);
+        }
+        else if (type == "instrument") {
+            generators[key] = new Instrument(this, this->id, generatorValue);
+        }
+    }
+
+    QJsonArray generatorOrderVal = projectVal["generator_order"].toArray();
+    // https://stackoverflow.com/a/49979209/8166701
+    for (auto&& keyAsUnknown : generatorOrderVal) {
+        auto key = keyAsUnknown.toString();
+        generatorOrder.push_back(key);
+    }
 }
 
-void Project::serialize(QJsonObject& node) {
+void Project::serialize(QJsonObject& node) const {
     QJsonObject transportValue;
     transport->serialize(transportValue);
     node["transport"] = transportValue;
@@ -49,6 +75,34 @@ void Project::serialize(QJsonObject& node) {
     QJsonObject songValue;
     song->serialize(songValue);
     node["song"] = songValue;
+
+    QJsonObject generatorsValue;
+    QHashIterator<QString, Generator*> iter(generators);
+    while (iter.hasNext()) {
+        iter.next();
+
+        const Generator* generator = iter.value();
+        const Controller* controller = dynamic_cast<const Controller*>(generator);
+        const Instrument* instrument = dynamic_cast<const Instrument*>(generator);
+
+        QJsonObject thisGeneratorValue;
+        if (controller != nullptr) {
+            controller->serialize(thisGeneratorValue);
+            thisGeneratorValue["type"] = "controller";
+        }
+        else if (instrument != nullptr) {
+            instrument->serialize(thisGeneratorValue);
+            thisGeneratorValue["type"] = "instrument";
+        }
+        generatorsValue[iter.key()] = thisGeneratorValue;
+    }
+    node["generators"] = generatorsValue;
+
+    QJsonArray generatorOrderValue;
+    for (QString key : generatorOrder) {
+        generatorOrderValue.push_back(key);
+    }
+    node["generator_order"] = generatorOrderValue;
 }
 
 Transport* Project::getTransport() {

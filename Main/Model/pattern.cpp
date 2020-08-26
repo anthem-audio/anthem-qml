@@ -36,7 +36,7 @@ Pattern::Pattern(
     this->color = QColor(patternNode["color"].toString());
 }
 
-void Pattern::serialize(QJsonObject& node) {
+void Pattern::serialize(QJsonObject& node) const {
     node["display_name"] = this->displayName;
     node["color"] = this->color.name();
 }

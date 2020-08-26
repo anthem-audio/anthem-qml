@@ -60,7 +60,7 @@ Transport::Transport(
         static_cast<quint8>(transportNode["default_denominator"].toInt());
 }
 
-void Transport::serialize(QJsonObject& node) {
+void Transport::serialize(QJsonObject& node) const {
     QJsonObject masterPitch;
     QJsonObject beatsPerMinute;
 
@@ -81,7 +81,7 @@ void Transport::setNumerator(quint8 numerator) {
     sendPatch();
 }
 
-quint8 Transport::getNumerator() {
+quint8 Transport::getNumerator() const {
     return defaultNumerator;
 }
 
@@ -92,6 +92,6 @@ void Transport::setDenominator(quint8 denominator) {
     sendPatch();
 }
 
-quint8 Transport::getDenominator() {
+quint8 Transport::getDenominator() const {
     return defaultDenominator;
 }

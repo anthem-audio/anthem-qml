@@ -22,12 +22,16 @@
 #define PROJECT_H
 
 #include <QObject>
+#include <QString>
 #include <QJsonObject>
+#include <QHash>
 
 #include "Core/communicator.h"
+#include "Core/modelitem.h"
+
 #include "transport.h"
 #include "song.h"
-#include "Core/modelitem.h"
+#include "generator.h"
 
 class Project : public ModelItem {
     Q_OBJECT
@@ -35,11 +39,13 @@ private:
     IdGenerator* id;
     Transport* transport;
     Song* song;
+    QHash<QString, Generator*> generators;
+    QVector<QString> generatorOrder;
 public:
     Project(Communicator* parent, IdGenerator* id);
     Project(Communicator* parent, IdGenerator* id, QJsonObject& node);
 
-    void serialize(QJsonObject& node) override;
+    void serialize(QJsonObject& node) const override;
 
     Transport* getTransport();
     Song* getSong();

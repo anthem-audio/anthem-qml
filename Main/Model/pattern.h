@@ -42,7 +42,7 @@ public:
             QColor color);
     Pattern(ModelItem* parent, IdGenerator* id, QJsonObject& patternNode);
 
-    void serialize(QJsonObject& node) override;
+    void serialize(QJsonObject& node) const override;
 
     QString getDisplayName();
     QColor getColor();

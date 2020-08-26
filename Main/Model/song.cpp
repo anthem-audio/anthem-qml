@@ -37,7 +37,7 @@ Song::Song(ModelItem* parent, IdGenerator* id, QJsonObject& node)
     }
 }
 
-void Song::serialize(QJsonObject& node) {
+void Song::serialize(QJsonObject& node) const {
     QJsonObject patterns;
     auto keys = this->patterns.keys();
     for (QString key : keys) {
