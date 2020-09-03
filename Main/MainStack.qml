@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019, 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -21,6 +21,7 @@
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 import "BasicComponents"
+import "Explorer"
 
 SplitView {
     id: mainStack
@@ -33,6 +34,9 @@ SplitView {
         visible: showExplorer
         implicitWidth: 200
         SplitView.minimumWidth: 200
+        Explorer {
+            anchors.fill: parent
+        }
     }
 
     CenterStack {

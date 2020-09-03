@@ -67,11 +67,17 @@ Item {
 
     readonly property real textWidth: text.width
 
-    Component.onCompleted: {
+    width: textAutoWidth ? text.width + margin * 2 + 3 : undefined
+
+    function calculateWidth() {
         if (textAutoWidth) {
             width = text.width + margin * 2 + 3;
         }
     }
+
+    Component.onCompleted: calculateWidth()
+    onMarginChanged: calculateWidth()
+
 
     function getState() {
         if (isDisabled) {
@@ -258,6 +264,8 @@ Item {
         property int colorVal: isToggleButton && pressed ? 0 : 1
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
+
+        onWidthChanged: parent.calculateWidth()
     }
 
     Image {

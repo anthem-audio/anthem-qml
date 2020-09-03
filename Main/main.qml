@@ -334,23 +334,23 @@ Window {
             selectedIndex: 0
             fixedWidth: false
 
+            buttons: layoutTabsModel
+
             ListModel {
                 id: layoutTabsModel
                 ListElement {
-                    textContent: "ARRANGE"
+                    textContent: qsTr("ARRANGE")
                     hoverMessage: qsTr("Arrangement layout")
                 }
                 ListElement {
-                    textContent: "MIX"
+                    textContent: qsTr("MIX")
                     hoverMessage: qsTr("Mixing layout")
                 }
                 ListElement {
-                    textContent: "EDIT"
+                    textContent: qsTr("EDIT")
                     hoverMessage: qsTr("Editor layout")
                 }
             }
-
-            buttons: layoutTabsModel
         }
 
         Rectangle {
