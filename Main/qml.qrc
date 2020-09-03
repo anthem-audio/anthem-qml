@@ -83,5 +83,6 @@
         <file>BasicComponents/Arc.qml</file>
         <file>Explorer/Explorer.qml</file>
         <file>Images/Page With Text.svg</file>
+        <file>Explorer/Notes.qml</file>
     </qresource>
 </RCC>

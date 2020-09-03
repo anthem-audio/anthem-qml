@@ -30,10 +30,11 @@
 Project::Project(Communicator* parent, IdGenerator* id)
                     : ModelItem(parent, "project") {
     this->id = id;
-    transport = new Transport(this, id);
-    song = new Song(this, id);
-    generators = QHash<QString, Generator*>();
-    generatorOrder = QVector<QString>();
+    this->transport = new Transport(this, id);
+    this->song = new Song(this, id);
+    this->generators = QHash<QString, Generator*>();
+    this->generatorOrder = QVector<QString>();
+    this->notes = "";
 }
 
 Project::Project(Communicator* parent, IdGenerator* id,
@@ -42,20 +43,20 @@ Project::Project(Communicator* parent, IdGenerator* id,
     this->id = id;
 
     QJsonObject transportVal = projectVal["transport"].toObject();
-    transport = new Transport(this, id, transportVal);
+    this->transport = new Transport(this, id, transportVal);
 
     QJsonObject songVal = projectVal["song"].toObject();
-    song = new Song(this, id, songVal);
+    this->song = new Song(this, id, songVal);
 
     QJsonObject generatorsVal = projectVal["generators"].toObject();
     for (const QString& key : generatorsVal.keys()) {
         QJsonObject generatorValue = generatorsVal[key].toObject();
         auto type = generatorValue["type"].toString();
         if (type == "controller") {
-            generators[key] = new Controller(this, this->id, generatorValue);
+            this->generators[key] = new Controller(this, this->id, generatorValue);
         }
         else if (type == "instrument") {
-            generators[key] = new Instrument(this, this->id, generatorValue);
+            this->generators[key] = new Instrument(this, this->id, generatorValue);
         }
     }
 
@@ -63,17 +64,19 @@ Project::Project(Communicator* parent, IdGenerator* id,
     // https://stackoverflow.com/a/49979209/8166701
     for (auto&& keyAsUnknown : generatorOrderVal) {
         auto key = keyAsUnknown.toString();
-        generatorOrder.push_back(key);
+        this->generatorOrder.push_back(key);
     }
+
+    this->notes = projectVal["notes"].toString();
 }
 
 void Project::serialize(QJsonObject& node) const {
     QJsonObject transportValue;
-    transport->serialize(transportValue);
+    this->transport->serialize(transportValue);
     node["transport"] = transportValue;
 
     QJsonObject songValue;
-    song->serialize(songValue);
+    this->song->serialize(songValue);
     node["song"] = songValue;
 
     QJsonObject generatorsValue;
@@ -103,6 +106,8 @@ void Project::serialize(QJsonObject& node) const {
         generatorOrderValue.push_back(key);
     }
     node["generator_order"] = generatorOrderValue;
+
+    node["notes"] = this->notes;
 }
 
 Transport* Project::getTransport() {
@@ -111,4 +116,12 @@ Transport* Project::getTransport() {
 
 Song* Project::getSong() {
     return this->song;
+}
+
+QString Project::getNotes() {
+    return this->notes;
+}
+
+void Project::setNotes(QString notes) {
+    this->notes = notes;
 }
