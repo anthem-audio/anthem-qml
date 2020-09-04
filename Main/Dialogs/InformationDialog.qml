@@ -42,7 +42,7 @@ DialogBase {
             text: message
             wrapMode: Text.Wrap
             color: Qt.rgba(1, 1, 1, 0.7)
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 16
             anchors.top: parent.top
             anchors.left: parent.left

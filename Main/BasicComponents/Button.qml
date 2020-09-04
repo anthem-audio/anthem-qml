@@ -254,7 +254,7 @@ Item {
     Text {
         id: text
         text: qsTr(textContent)
-        font.family: Fonts.notoSansRegular.name
+        font.family: Fonts.main.name
         font.pixelSize: textPixelSize
         anchors.centerIn: textFloat == 'center' ? parent : undefined
         anchors.left: textFloat == 'left' ? parent.left : undefined

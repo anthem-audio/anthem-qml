@@ -420,7 +420,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.leftMargin: 20
             text: globalStore.statusMessage
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 11
             color: Qt.rgba(1, 1, 1, 0.6)
         }

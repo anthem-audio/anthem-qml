@@ -92,7 +92,7 @@ Button {
 
     Text {
         text: selectedItem.displayName ? qsTr(selectedItem.displayName) : qsTr("(none)")
-        font.family: Fonts.notoSansRegular.name
+        font.family: Fonts.main.name
         font.pixelSize: textPixelSize
         anchors {
             left: parent.left

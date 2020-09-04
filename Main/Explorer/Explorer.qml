@@ -44,22 +44,22 @@ Item {
 
         Text {
             text: qsTr("Plugins")
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 11
         }
         Text {
             text: qsTr("Audio")
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 11
         }
         Text {
             text: qsTr("Projects")
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 11
         }
         Text {
             text: qsTr("Files")
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 11
         }
     }
@@ -102,6 +102,11 @@ Item {
                 textContent: qsTr("Files")
             }
         }
+    }
+
+    Notes {
+        anchors.fill: parent
+        visible: explorer.isNotesVisible;
     }
 
 //    Item {

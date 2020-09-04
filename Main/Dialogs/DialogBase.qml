@@ -61,7 +61,7 @@ Window {
             Text {
                 text: title
                 anchors.left: parent.left
-                font.family: Fonts.notoSansRegular.name
+                font.family: Fonts.main.name
                 font.pixelSize: 11
                 color: Qt.hsla(0, 0, 1, 0.7)
                 anchors.verticalCenter: parent.verticalCenter

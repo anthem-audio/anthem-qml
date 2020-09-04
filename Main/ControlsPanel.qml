@@ -680,7 +680,7 @@ Panel {
                     Text {
                         id: timeSignatureSlash
                         text: "/"
-                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.family: Fonts.mono.name
                         font.weight: Font.Bold
                         font.pixelSize: 13
                         anchors.top: parent.top
@@ -755,7 +755,7 @@ Panel {
 
                     Text {
                         text: "1.1.1.00"
-                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.family: Fonts.mono.name
                         font.weight: Font.Bold
                         font.pointSize: 10
                         anchors.fill: parent
@@ -776,7 +776,7 @@ Panel {
 
                     Text {
                         text: "0:00.00"
-                        font.family: Fonts.sourceCodeProSemiBold.name
+                        font.family: Fonts.mono.name
                         font.weight: Font.Bold
                         font.pointSize: 10
                         anchors.fill: parent
@@ -809,7 +809,7 @@ Panel {
                     Text {
                         id: pitchLabel
                         text: qsTr("PITCH")
-                        font.family: Fonts.notoSansRegular.name
+                        font.family: Fonts.main.name
                         font.pointSize: 8
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -833,7 +833,7 @@ Panel {
 
                         property int lastSentValue: 0
 
-                        fontFamily: Fonts.notoSansRegular.name
+                        fontFamily: Fonts.main.name
 
                         highBound: 12
                         lowBound: -12

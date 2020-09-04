@@ -23,13 +23,13 @@ pragma Singleton
 import QtQuick 2.14
 
 QtObject {
-    property FontLoader notoSansRegular: FontLoader {
-        source: "../Fonts/NotoSans-Regular.ttf"
-        name: "Noto Sans Regular"
+    property FontLoader main: FontLoader {
+        source: "../Fonts/NotoSansDisplay-Regular.ttf"
+        name: "Noto Sans Display Regular"
     }
 
-    property FontLoader sourceCodeProSemiBold: FontLoader {
-        source: "../Fonts/SourceCodePro-SemiBold.ttf"
-        name: "Source Code Pro Semi Bold"
+    property FontLoader mono: FontLoader {
+        source: "../Fonts/NotoMono-Regular.ttf"
+        name: "Noto Sans Mono Regular"
     }
 }
