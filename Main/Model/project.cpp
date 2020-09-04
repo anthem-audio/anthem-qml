@@ -34,7 +34,6 @@ Project::Project(Communicator* parent, IdGenerator* id)
     this->song = new Song(this, id);
     this->generators = QHash<QString, Generator*>();
     this->generatorOrder = QVector<QString>();
-    this->notes = "";
 }
 
 Project::Project(Communicator* parent, IdGenerator* id,
@@ -66,8 +65,6 @@ Project::Project(Communicator* parent, IdGenerator* id,
         auto key = keyAsUnknown.toString();
         this->generatorOrder.push_back(key);
     }
-
-    this->notes = projectVal["notes"].toString();
 }
 
 void Project::serialize(QJsonObject& node) const {
@@ -106,8 +103,6 @@ void Project::serialize(QJsonObject& node) const {
         generatorOrderValue.push_back(key);
     }
     node["generator_order"] = generatorOrderValue;
-
-    node["notes"] = this->notes;
 }
 
 Transport* Project::getTransport() {
@@ -116,12 +111,4 @@ Transport* Project::getTransport() {
 
 Song* Project::getSong() {
     return this->song;
-}
-
-QString Project::getNotes() {
-    return this->notes;
-}
-
-void Project::setNotes(QString notes) {
-    this->notes = notes;
 }

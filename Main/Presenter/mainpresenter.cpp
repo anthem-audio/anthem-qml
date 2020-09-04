@@ -368,15 +368,3 @@ void MainPresenter::setTimeSignatureDenominator(quint8 denominator) {
         activeProjectIndex
     ]->getTransport()->setDenominator(denominator);
 }
-
-QString MainPresenter::getNotes() {
-    return projects[
-        activeProjectIndex
-    ]->getNotes();
-}
-
-void MainPresenter::setNotes(QString notes) {
-    projects[
-        activeProjectIndex
-    ]->setNotes(notes);
-}

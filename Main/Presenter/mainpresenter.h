@@ -142,8 +142,6 @@ public slots:
     void setTimeSignatureNumerator(quint8 numerator);
     quint8 getTimeSignatureDenominator();
     void setTimeSignatureDenominator(quint8 denominator);
-    QString getNotes();
-    void setNotes(QString notes);
 };
 
 #endif // MAINPRESENTER_H

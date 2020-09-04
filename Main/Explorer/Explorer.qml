@@ -25,7 +25,6 @@ import "../Global"
 
 Item {
     id: explorer
-    property bool isNotesVisible: notesButton.pressed
 
     anchors.margins: 6
 
@@ -102,11 +101,6 @@ Item {
                 textContent: qsTr("Files")
             }
         }
-    }
-
-    Notes {
-        anchors.fill: parent
-        visible: explorer.isNotesVisible;
     }
 
 //    Item {

@@ -41,7 +41,6 @@ private:
     Song* song;
     QHash<QString, Generator*> generators;
     QVector<QString> generatorOrder;
-    QString notes;
 public:
     Project(Communicator* parent, IdGenerator* id);
     Project(Communicator* parent, IdGenerator* id, QJsonObject& node);
@@ -50,9 +49,6 @@ public:
 
     Transport* getTransport();
     Song* getSong();
-
-    QString getNotes();
-    void setNotes(QString notes);
 signals:
 
 public slots:
