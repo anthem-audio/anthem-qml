@@ -45,7 +45,7 @@ Button {
         showBorder: false
         showBackground: false
 
-        imageSource: "Images/Close.svg"
+        imageSource: "Images/icons/small/close.svg"
         imageWidth: 8
         imageHeight: 8
 

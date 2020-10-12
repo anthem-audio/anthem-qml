@@ -293,12 +293,12 @@ Window {
 
                 ListElement {
                     leftMargin: 15
-                    imageSource: "Images/File.svg"
+                    imageSource: "Images/icons/bottom-bar/browser-panel.svg"
                     hoverMessage: qsTr("File explorer")
                 }
 
                 ListElement {
-                    imageSource: "Images/Document.svg"
+                    imageSource: "Images/icons/bottom-bar/project-panel.svg"
                     imageWidth: 11
                     buttonWidth: 16
                     leftMargin: 15
@@ -382,20 +382,20 @@ Window {
             ListModel {
                 id: editorPanelTabsModel
                 ListElement {
-                    imageSource: "Images/Piano Roll.svg"
+                    imageSource: "Images/icons/bottom-bar/midi-editor1.svg"
                     hoverMessage: qsTr("Piano roll")
                     leftMargin: 20
                 }
                 ListElement {
-                    imageSource: "Images/Automation.svg"
+                    imageSource: "Images/icons/bottom-bar/automation-editor.svg"
                     hoverMessage: qsTr("Automation editor")
                 }
                 ListElement {
-                    imageSource: "Images/Plugin.svg"
+                    imageSource: "Images/icons/bottom-bar/instrument-effects-panel.svg"
                     hoverMessage: qsTr("Plugin rack")
                 }
                 ListElement {
-                    imageSource: "Images/Mixer.svg"
+                    imageSource: "Images/icons/bottom-bar/mixer.svg"
                     hoverMessage: qsTr("Mixer")
                 }
             }
@@ -432,7 +432,7 @@ Window {
             anchors.right: parent.right
             anchors.rightMargin: 15
             width: 15
-            imageSource: "Images/Controllers.svg"
+            imageSource: "Images/icons/bottom-bar/automation-panel.svg"
             imageWidth: 15
             imageHeight: 15
             showBorder: false

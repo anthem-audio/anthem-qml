@@ -49,7 +49,7 @@ ButtonGroup {
         }
 
         ListElement {
-            imageSource: "Images/Minimize.svg"
+            imageSource: "Images/icons/small/minimize.svg"
             isDisabled: false
             hoverMessage: qsTr("Minimize")
             onClicked: () => {
@@ -57,7 +57,7 @@ ButtonGroup {
             }
         }
         ListElement {
-            imageSource: "Images/Maximize.svg"
+            imageSource: "Images/icons/small/maximize.svg"
             isDisabled: false
             hoverMessage: qsTr("Maximize")
             onClicked: () => {
@@ -65,7 +65,7 @@ ButtonGroup {
             }
         }
         ListElement {
-            imageSource: "Images/Close.svg"
+            imageSource: "Images/icons/small/close.svg"
             isDisabled: false
             hoverMessage: qsTr("Close")
             onClicked: () => {

@@ -8,29 +8,13 @@
         <file>CenterStack.qml</file>
         <file>BasicComponents/Panel.qml</file>
         <file>ArrangerStack.qml</file>
-        <file>Images/Logo.svg</file>
         <file>BasicComponents/ButtonGroup.qml</file>
-        <file>Images/Redo.svg</file>
-        <file>Images/Save.svg</file>
-        <file>Images/Undo.svg</file>
-        <file>Images/Metronome.svg</file>
-        <file>Images/Play.svg</file>
-        <file>Images/Record.svg</file>
-        <file>Images/Play and Record.svg</file>
-        <file>Images/Stop.svg</file>
-        <file>Images/Loop.svg</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
-        <file>Images/Knob.svg</file>
         <file>Global/Fonts.qml</file>
         <file>Global/qmldir</file>
         <file>BasicComponents/DigitControl.qml</file>
         <file>BasicComponents/SimpleMeter.qml</file>
-        <file>Images/CPU.svg</file>
-        <file>Images/Output Level.svg</file>
         <file>TabGroup.qml</file>
-        <file>Images/Close.svg</file>
-        <file>Images/Maximize.svg</file>
-        <file>Images/Minimize.svg</file>
         <file>ResizeHandles.qml</file>
         <file>MoveHandle.qml</file>
         <file>BasicComponents/TabHandle.qml</file>
@@ -39,17 +23,7 @@
         <file>Dialogs/OkCancelDialog.qml</file>
         <file>Dialogs/SaveDiscardCancelDialog.qml</file>
         <file>Dialogs/InformationDialog.qml</file>
-        <file>Images/Controllers.svg</file>
-        <file>Images/Document.svg</file>
-        <file>Images/File.svg</file>
-        <file>Images/Automation.svg</file>
-        <file>Images/Mixer.svg</file>
-        <file>Images/Piano Roll.svg</file>
-        <file>Images/Plugin.svg</file>
-        <file>Images/Pattern Editor.svg</file>
-        <file>Images/Pattern Picker.svg</file>
         <file>Editors/PatternEditor/PatternEditor.qml</file>
-        <file>Images/Hamburger.svg</file>
         <file>BasicComponents/ListSelector.qml</file>
         <file>Menus/Menu.qml</file>
         <file>Menus/Menus.qml</file>
@@ -65,8 +39,6 @@
         <file>GlobalStore.qml</file>
         <file>SaveLoadHandler.qml</file>
         <file>Commands/Commands.qml</file>
-        <file>Images/Add Audio.svg</file>
-        <file>Images/Add Automation.svg</file>
         <file>BasicComponents/Scrollbar.qml</file>
         <file>Images/Triangle Arrow Down.svg</file>
         <file>Images/Triangle Arrow Left.svg</file>
@@ -74,14 +46,104 @@
         <file>Images/Triangle Arrow Up.svg</file>
         <file>Editors/PatternEditor/ChannelList.qml</file>
         <file>Editors/PatternEditor/Channel.qml</file>
-        <file>Images/Muted.svg</file>
-        <file>Images/Unmuted.svg</file>
-        <file>Images/Solo.svg</file>
         <file>BasicComponents/Knob.qml</file>
         <file>BasicComponents/Arc.qml</file>
         <file>Explorer/Explorer.qml</file>
-        <file>Images/Page With Text.svg</file>
         <file>Fonts/NotoMono-Regular.ttf</file>
         <file>Fonts/NotoSansDisplay-Regular.ttf</file>
+        <file>Images/icons/arranger/clip/audio.svg</file>
+        <file>Images/icons/arranger/clip/automations.svg</file>
+        <file>Images/icons/arranger/clip/hybrid.svg</file>
+        <file>Images/icons/arranger/clip/note.svg</file>
+        <file>Images/icons/arranger/arranger-view.svg</file>
+        <file>Images/icons/arranger/show-automations-multi.svg</file>
+        <file>Images/icons/arranger/show-automations-single.svg</file>
+        <file>Images/icons/bottom-bar/automation-editor.svg</file>
+        <file>Images/icons/bottom-bar/automation-panel.svg</file>
+        <file>Images/icons/bottom-bar/browser-panel.svg</file>
+        <file>Images/icons/bottom-bar/instrument-effects-panel.svg</file>
+        <file>Images/icons/bottom-bar/midi-editor.svg</file>
+        <file>Images/icons/bottom-bar/midi-editor1.svg</file>
+        <file>Images/icons/bottom-bar/mixer.svg</file>
+        <file>Images/icons/bottom-bar/project-panel.svg</file>
+        <file>Images/icons/browser/audio.svg</file>
+        <file>Images/icons/browser/automation.svg</file>
+        <file>Images/icons/browser/file-details.svg</file>
+        <file>Images/icons/browser/files.svg</file>
+        <file>Images/icons/browser/folder.svg</file>
+        <file>Images/icons/browser/plugin.svg</file>
+        <file>Images/icons/browser/preset.svg</file>
+        <file>Images/icons/browser/projects.svg</file>
+        <file>Images/icons/channel/off.svg</file>
+        <file>Images/icons/channel/on.svg</file>
+        <file>Images/icons/channel/solo.svg</file>
+        <file>Images/icons/control/afterstop.svg</file>
+        <file>Images/icons/control/metronome.svg</file>
+        <file>Images/icons/control/punch-in.svg</file>
+        <file>Images/icons/control/punch-out.svg</file>
+        <file>Images/icons/control/repeat.svg</file>
+        <file>Images/icons/control/scroll-follow.svg</file>
+        <file>Images/icons/controller-rack/close.svg</file>
+        <file>Images/icons/controller-rack/exponential-wave-1.svg</file>
+        <file>Images/icons/controller-rack/exponential-wave.svg</file>
+        <file>Images/icons/controller-rack/hide-more.svg</file>
+        <file>Images/icons/controller-rack/moog-saw-wave.svg</file>
+        <file>Images/icons/controller-rack/open-folder.svg</file>
+        <file>Images/icons/controller-rack/saw-wave.svg</file>
+        <file>Images/icons/controller-rack/show-more.svg</file>
+        <file>Images/icons/controller-rack/sine-wave.svg</file>
+        <file>Images/icons/controller-rack/square-wave.svg</file>
+        <file>Images/icons/controller-rack/trinagle-wave.svg</file>
+        <file>Images/icons/controller-rack/user-defined-shape.svg</file>
+        <file>Images/icons/cursor/pencil.svg</file>
+        <file>Images/icons/cursor/resize.svg</file>
+        <file>Images/icons/cursor/select.svg</file>
+        <file>Images/icons/cursor/slice.svg</file>
+        <file>Images/icons/file/hamburger.svg</file>
+        <file>Images/icons/file/redo.svg</file>
+        <file>Images/icons/file/save.svg</file>
+        <file>Images/icons/file/undo.svg</file>
+        <file>Images/icons/main/anthem.svg</file>
+        <file>Images/icons/main/Vector 45.svg</file>
+        <file>Images/icons/media/play-arranger.svg</file>
+        <file>Images/icons/media/play-patterns.svg</file>
+        <file>Images/icons/media/play-record.svg</file>
+        <file>Images/icons/media/play.svg</file>
+        <file>Images/icons/media/record.svg</file>
+        <file>Images/icons/media/stop.svg</file>
+        <file>Images/icons/mixer/add-channel.svg</file>
+        <file>Images/icons/mixer/add-send-from.svg</file>
+        <file>Images/icons/mixer/add-send-to.svg</file>
+        <file>Images/icons/mixer/send-from-list.svg</file>
+        <file>Images/icons/mixer/send-to-list.svg</file>
+        <file>Images/icons/mixer/send-to.svg</file>
+        <file>Images/icons/mixer/show-effects.svg</file>
+        <file>Images/icons/mixer/show-meters.svg</file>
+        <file>Images/icons/mixer/show-sends.svg</file>
+        <file>Images/icons/not-clickable/cpu.svg</file>
+        <file>Images/icons/not-clickable/in-out.svg</file>
+        <file>Images/icons/pattern-editor/add-audio.svg</file>
+        <file>Images/icons/pattern-editor/add-automation.svg</file>
+        <file>Images/icons/pattern-list/automations.svg</file>
+        <file>Images/icons/pattern-list/hybrid.svg</file>
+        <file>Images/icons/pattern-list/midi.svg</file>
+        <file>Images/icons/pattern-list/samples.svg</file>
+        <file>Images/icons/patterns/pattern-editor.svg</file>
+        <file>Images/icons/patterns/pattern-list.svg</file>
+        <file>Images/icons/small/add.svg</file>
+        <file>Images/icons/small/arrow-down-selectbtn.svg</file>
+        <file>Images/icons/small/arrow-down.svg</file>
+        <file>Images/icons/small/arrow-left.svg</file>
+        <file>Images/icons/small/arrow-right.svg</file>
+        <file>Images/icons/small/arrow-up.svg</file>
+        <file>Images/icons/small/close.svg</file>
+        <file>Images/icons/small/maximize.svg</file>
+        <file>Images/icons/small/minimize.svg</file>
+        <file>Images/icons/small/send-on.svg</file>
+        <file>Images/icons/small/send-to.svg</file>
+        <file>Images/icons/topbar/tools/pencil.svg</file>
+        <file>Images/icons/topbar/tools/select.svg</file>
+        <file>Images/icons/topbar/tools/slice.svg</file>
+        <file>Images/icons/topbar/learn.svg</file>
     </qresource>
 </RCC>

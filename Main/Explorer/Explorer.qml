@@ -137,7 +137,7 @@ Item {
                 bottom: parent.bottom
             }
             width: 20
-            imageSource: "Images/Page With Text.svg"
+            imageSource: "Images/icons/browser/file-details.svg"
             imageWidth: 10
             imageHeight: 12
             isToggleButton: true

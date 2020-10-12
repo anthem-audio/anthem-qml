@@ -98,7 +98,7 @@ Item {
                 isToggleButton: true
                 pressed: true
 
-                imageSource: pressed ? 'Images/Unmuted.svg' : 'Images/Muted.svg'
+                imageSource: pressed ? 'Images/icons/channel/on.svg' : 'Images/icons/channel/off.svg'
                 imageWidth: 12
                 imageHeight: 12
             }
@@ -117,7 +117,7 @@ Item {
 
                 isToggleButton: true
 
-                imageSource: 'Images/Solo.svg'
+                imageSource: 'Images/icons/channel/solo.svg'
                 imageWidth: 12
                 imageHeight: 12
             }
