@@ -139,7 +139,7 @@ Item {
         isToggleButton: true
         pressed: true
 
-        imageSource: "Images/Pattern Editor.svg"
+        imageSource: "Images/icons/patterns/pattern-editor.svg"
         imageWidth: 11
         imageHeight: 11
 
@@ -169,7 +169,7 @@ Item {
         isToggleButton: true
         pressed: true
 
-        imageSource: "Images/Pattern Picker.svg"
+        imageSource: "Images/icons/patterns/pattern-list.svg"
         imageWidth: 12
         imageHeight: 11
 

@@ -155,7 +155,7 @@ TooltipWrapper {
                         width: parent.height
                         showBackground: false
                         showBorder: false
-                        imageSource: "Images/Close.svg"
+                        imageSource: "Images/icons/small/close.svg"
                         imageWidth: 8
                         imageHeight: 8
                         onClicked: {

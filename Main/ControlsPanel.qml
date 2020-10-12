@@ -58,7 +58,7 @@ Panel {
             width: parent.height // makes it square :)
             isToggleButton: true
 
-            imageSource: "Images/Logo.svg"
+            imageSource: "Images/icons/main/anthem.svg"
             imageWidth: 14
             imageHeight: 12
 
@@ -399,7 +399,7 @@ Panel {
             width: parent.height
             hoverMessage: qsTr("Save this project")
 
-            imageSource: "Images/Save.svg"
+            imageSource: "Images/icons/file/save.svg"
             imageWidth: 16
             imageHeight: 16
 
@@ -415,7 +415,7 @@ Panel {
             width: parent.height
             hoverMessage: qsTr("Undo")
 
-            imageSource: "Images/Undo.svg"
+            imageSource: "Images/icons/file/undo.svg"
             imageWidth: 15
             imageHeight: 15
 
@@ -433,7 +433,7 @@ Panel {
             width: parent.height
             hoverMessage: qsTr("Redo")
 
-            imageSource: "Images/Redo.svg"
+            imageSource: "Images/icons/file/redo.svg"
             imageWidth: 15
             imageHeight: 15
 
@@ -472,7 +472,7 @@ Panel {
 
                 isToggleButton: true
 
-                imageSource: "Images/Metronome.svg"
+                imageSource: "Images/icons/control/metronome.svg"
                 imageWidth: 13
                 imageHeight: 16
             }
@@ -502,25 +502,23 @@ Panel {
                 buttons: ListModel {
                     ListElement {
                         isToggleButton: true
-                        imageSource: "Images/Play.svg"
+                        hoverMessage: qsTr("Play")
+                        imageSource: "Images/icons/media/play.svg"
                     }
-
+                    ListElement {
+                        hoverMessage: qsTr("Stop")
+                        imageSource: "Images/icons/media/stop.svg"
+                    }
                     ListElement {
                         isToggleButton: true
                         hoverMessage: qsTr("Record")
-                        imageSource: "Images/Record.svg"
+                        imageSource: "Images/icons/media/record.svg"
                     }
-
                     ListElement {
                         hoverMessage: qsTr("Record immediately")
-                        imageSource: "Images/Play and Record.svg"
+                        imageSource: "Images/icons/media/play-record.svg"
                         imageWidth: 16
                         imageHeight: 16
-                    }
-
-                    ListElement {
-                        hoverMessage: qsTr("Stop")
-                        imageSource: "Images/Stop.svg"
                     }
                 }
             }
@@ -536,7 +534,7 @@ Panel {
 
                 isToggleButton: true
 
-                imageSource: "Images/Loop.svg"
+                imageSource: "Images/icons/control/repeat.svg"
                 imageWidth: 16
                 imageHeight: 14
             }
@@ -891,7 +889,7 @@ Panel {
 
                         Image {
                             id: cpuIcon
-                            source: 'Images/CPU.svg'
+                            source: 'Images/icons/not-clickable/cpu.svg'
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.top: parent.top
@@ -910,7 +908,7 @@ Panel {
 
                         Image {
                             id: outputIcon
-                            source: 'Images/Output Level.svg'
+                            source: 'Images/icons/not-clickable/in-out.svg'
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.bottom: parent.bottom
@@ -982,7 +980,7 @@ Panel {
             width: parent.height
             hoverMessage: qsTr("Midi learn")
 
-            imageSource: "Images/Knob.svg"
+            imageSource: "Images/icons/topbar/learn.svg"
             imageWidth: 16
             imageHeight: 16
         }

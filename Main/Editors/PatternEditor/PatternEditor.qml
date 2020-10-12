@@ -77,7 +77,7 @@ Item {
             height: parent.height
             width: parent.height
 
-            imageSource: "Images/Hamburger.svg"
+            imageSource: "Images/icons/file/hamburger.svg"
             imageWidth: 8
             imageHeight: 9
 
@@ -193,7 +193,7 @@ Item {
 
             imageWidth: 19
             imageHeight: 12
-            imageSource: "Images/Add Audio.svg"
+            imageSource: "Images/icons/pattern-editor/add-audio.svg"
 
             hoverMessage: qsTr("Add audio channel")
         }
@@ -211,7 +211,7 @@ Item {
 
             imageWidth: 19
             imageHeight: 12
-            imageSource: "Images/Add Automation.svg"
+            imageSource: "Images/icons/pattern-editor/add-automation.svg"
 
             hoverMessage: qsTr("Add atuomation channel")
         }
