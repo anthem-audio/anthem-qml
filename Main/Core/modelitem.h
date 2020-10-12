@@ -34,7 +34,7 @@ private:
     QString key;
 public:
     /// Serialize model item state into the given value
-    virtual void serialize(QJsonObject& node) = 0;
+    virtual void serialize(QJsonObject& node) const = 0;
 
     ModelItem(Communicator* parent, QString jsonKey);
 

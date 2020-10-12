@@ -1,5 +1,6 @@
 /*
-    Copyright (C) 2019 Rob van den Berg <rghvdberg at gmail dot org>
+    Copyright (C) 2018 Rob van den Berg <rghvdberg at gmail dot org>
+    Copyright (C) 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -28,6 +29,8 @@ Rectangle {
     property int borderWidth: 1
     property real hue: 162 / 360;
     property bool showHighlightColor: false;
+    property bool boostBrightness: false; // Knobs need this, for some reason
+    property double _brightnessBoost: boostBrightness ? 0.2 : 0
     implicitWidth: 26
     implicitHeight: 26
     radius: 1
@@ -46,11 +49,11 @@ Rectangle {
         id: borderGradient
         GradientStop {
            position: 0
-           color: Qt.rgba(1, 1, 1, 0.1)
+           color: Qt.rgba(1, 1, 1, 0.1 + _brightnessBoost)
         }
         GradientStop {
             position: 1
-            color: Qt.rgba(0,0,0,0)
+            color: Qt.rgba(1, 1, 1, 0 + _brightnessBoost * 0.5)
         }
     }
 

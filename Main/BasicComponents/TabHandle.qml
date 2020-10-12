@@ -34,7 +34,7 @@ Button {
 
     isHighlighted: isSelected
 
-    onPress: selected(index)
+    onClicked: selected(index)
 
     Button {
         height: parent.height
@@ -51,6 +51,6 @@ Button {
 
         isHighlighted: isSelected
 
-        onPress: btnClosePressed(tabHandle.index)
+        onClicked: btnClosePressed(tabHandle.index)
     }
 }

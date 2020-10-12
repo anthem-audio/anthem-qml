@@ -17,6 +17,9 @@ SOURCES += \
         Core/communicator.cpp \
         Core/engine.cpp \
         Core/modelitem.cpp \
+        Model/controller.cpp \
+        Model/generator.cpp \
+        Model/instrument.cpp \
         main.cpp \
         Model/control.cpp \
         Model/pattern.cpp \
@@ -50,6 +53,9 @@ HEADERS += \
     Core/modelitem.h \
     Include/snowflake.h \
     Model/control.h \
+    Model/controller.h \
+    Model/generator.h \
+    Model/instrument.h \
     Model/pattern.h \
     Model/project.h \
     Model/song.h \

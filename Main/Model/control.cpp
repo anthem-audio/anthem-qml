@@ -65,7 +65,7 @@ Control::Control(
     qDebug() << node;
 }
 
-void Control::serialize(QJsonObject& node) {
+void Control::serialize(QJsonObject& node) const {
     node["id"] = QString::number(id);
     node["initial_value"] = static_cast<double>(initialValue);
     node["minimum"] = static_cast<double>(minimum);

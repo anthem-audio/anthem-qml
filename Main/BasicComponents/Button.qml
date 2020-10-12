@@ -53,8 +53,8 @@ Item {
     }
 
     property string imageSource: ''
-    property real   imageWidth: 1
-    property real   imageHeight: 1
+    property real   imageWidth
+    property real   imageHeight
 
     property string textContent: ''
     property string textFloat: 'center'
@@ -62,13 +62,22 @@ Item {
     property bool   textAutoWidth: false
     property bool   isMouseDown: false
 
+    property bool   clickOnMouseDown: false
+    property bool   repeatOnHold: false
+
     readonly property real textWidth: text.width
 
-    Component.onCompleted: {
+    width: textAutoWidth ? text.width + margin * 2 + 3 : undefined
+
+    function calculateWidth() {
         if (textAutoWidth) {
             width = text.width + margin * 2 + 3;
         }
     }
+
+    Component.onCompleted: calculateWidth()
+    onMarginChanged: calculateWidth()
+
 
     function getState() {
         if (isDisabled) {
@@ -142,7 +151,19 @@ Item {
         property real contentOpacity: getContentOpacity()
     }
 
-    signal press()
+    signal clicked()
+
+    Timer {
+        id: repeatTimer
+        interval: 100; repeat: true
+        onTriggered: clicked()
+    }
+
+    Timer {
+        id: repeatStartTimer
+        interval: 200; repeat: false
+        onTriggered: repeatTimer.start()
+    }
 
     Rectangle {
         id: border
@@ -233,7 +254,7 @@ Item {
     Text {
         id: text
         text: qsTr(textContent)
-        font.family: Fonts.notoSansRegular.name
+        font.family: Fonts.main.name
         font.pixelSize: textPixelSize
         anchors.centerIn: textFloat == 'center' ? parent : undefined
         anchors.left: textFloat == 'left' ? parent.left : undefined
@@ -243,6 +264,8 @@ Item {
         property int colorVal: isToggleButton && pressed ? 0 : 1
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
+
+        onWidthChanged: parent.calculateWidth()
     }
 
     Image {
@@ -293,36 +316,48 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        propagateComposedEvents: true
+
         onClicked: {
             if (isDisabled && !allowPressEventsOnDisable)
                 return;
-            parent.press();
+            if (clickOnMouseDown)
+                return;
+            button.clicked();
         }
 
         onPressed: {
             if (!isToggleButton)
-                button.pressed = true
-            button.isMouseDown = true
+                button.pressed = true;
+            button.isMouseDown = true;
+            if (clickOnMouseDown) button.clicked();
+            if (repeatOnHold) {
+                repeatStartTimer.start();
+            }
         }
 
         onReleased: {
             if (!isToggleButton)
-                button.pressed = false
+                button.pressed = false;
             else
-                button.pressed = !button.pressed
-            button.isMouseDown = false
+                button.pressed = !button.pressed;
+            button.isMouseDown = false;
+            if (repeatOnHold) {
+                repeatStartTimer.stop();
+                repeatTimer.stop();
+            }
         }
 
         property alias hoverActive: buttonProps.isHoverActive
 
         hoverEnabled: true
         onEntered: {
-            hoverActive = true
+            hoverActive = true;
             if (hoverMessage !== '')
                 globalStore.statusMessage = hoverMessage;
         }
         onExited: {
-            hoverActive = false
+            hoverActive = false;
             globalStore.statusMessage = '';
         }
     }

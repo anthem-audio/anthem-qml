@@ -26,6 +26,8 @@ Item {
     id: patternEditor
     anchors.margins: 3
 
+    clip: true
+
     Connections {
         target: mainWindow
         function onFlush() {
@@ -79,7 +81,7 @@ Item {
             imageWidth: 8
             imageHeight: 9
 
-            onPress: {
+            onClicked: {
                 patternEditorMenu.open();
             }
         }
@@ -107,15 +109,20 @@ Item {
                                 delete patterns[id];
                                 updatePatternList();
                             },
-                            undo: (pattern) => {
+                            undo: (patternData) => {
+                                const pattern = patternData.pattern;
+                                const index = patternData.index;
+
                                 PatternPresenter.createPattern(
                                     id, pattern.displayName, pattern.color
                                 );
+
                                 patterns[id] = pattern;
                                 updatePatternList();
+                                patternSelector.selectItem(index);
                             },
-                            undoData: patterns[id],
-                            description: qsTr('delete pattern')
+                            undoData: {pattern: patterns[id], index: patternSelector.selectedItemIndex},
+                            description: qsTr('Delete pattern')
                         }
 
                         exec(command);
@@ -158,6 +165,8 @@ Item {
                             color: color
                         }
                         updatePatternList();
+
+                        patternSelector.selectItem(patternSelector.listItems.length - 1);
                     },
                     undo: () => {
                         PatternPresenter.removePattern(id);
@@ -169,6 +178,109 @@ Item {
 
                 exec(command);
             }
+        }
+
+        Button {
+            id: btnAddAudio
+            anchors {
+                left: patternSelector.right
+                leftMargin: 3
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            width: 27
+
+            imageWidth: 19
+            imageHeight: 12
+            imageSource: "Images/Add Audio.svg"
+
+            hoverMessage: qsTr("Add audio channel")
+        }
+
+        Button {
+            id: btnAddAutomation
+            anchors {
+                left: btnAddAudio.right
+                leftMargin: 3
+                top: parent.top
+                bottom: parent.bottom
+            }
+
+            width: 27
+
+            imageWidth: 19
+            imageHeight: 12
+            imageSource: "Images/Add Automation.svg"
+
+            hoverMessage: qsTr("Add atuomation channel")
+        }
+    }
+
+    Item {
+        id: channelsContainer
+
+        anchors {
+            top: topRowContainer.bottom
+            topMargin: 2
+            bottom: footerContainer.top
+            bottomMargin: 2
+            left: parent.left
+            leftMargin: 2
+            right: parent.right
+        }
+
+        ChannelList {
+            id: channelList
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                right: verticalScrollbar.left
+                rightMargin: 2
+            }
+        }
+        Scrollbar {
+            id: verticalScrollbar
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                right: parent.right
+            }
+            width: 20
+        }
+    }
+
+    Item {
+        id: footerContainer
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        height: 20
+
+        Scrollbar {
+            id: horizontalScrollbar
+            anchors {
+                top: parent.top
+                bottom: parent.bottom
+                left: parent.left
+                leftMargin: 258
+                right: resizer.left
+                rightMargin: 2
+            }
+        }
+
+        Rectangle {
+            id: resizer
+            anchors {
+                top: parent.top
+                right: parent.right
+                bottom: parent.bottom
+            }
+            width: parent.height
+            color: Qt.rgba(1, 1, 1, 0.2)
         }
     }
 }

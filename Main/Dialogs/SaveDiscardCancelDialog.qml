@@ -46,7 +46,7 @@ DialogBase {
             text: message
             wrapMode: Text.Wrap
             color: Qt.rgba(1, 1, 1, 0.7)
-            font.family: Fonts.notoSansRegular.name
+            font.family: Fonts.main.name
             font.pixelSize: 16
             anchors.top: parent.top
             anchors.left: parent.left
@@ -72,7 +72,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin
             anchors.verticalCenter: parent.verticalCenter
             textContent: saveButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 savePressed()
             }
@@ -86,7 +86,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin
             anchors.verticalCenter: parent.verticalCenter
             textContent: discardButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 discardPressed()
             }
@@ -100,7 +100,7 @@ DialogBase {
             anchors.rightMargin: dialogMargin * 2
             anchors.verticalCenter: parent.verticalCenter
             textContent: cancelButtonText
-            onPress: {
+            onClicked: {
                 dialog.close()
                 cancelPressed()
             }

@@ -35,30 +35,38 @@ Button {
      */
     property var listItems: []
     property bool allowNoSelection: false
-    property var selectedItem: ({displayName: qsTr('(none)')})
-    property var selectedItemIndex: -1;
-    property string selectedItemDisplayName: selectedItem.displayName
+    readonly property var selectedItem: state.selectedItem
+    readonly property int selectedItemIndex: state.selectedItemIndex
+    readonly property string selectedItemDisplayName: selectedItem.displayName
     property real textPixelSize: 11
     property real _hue: 162 / 360
     property real menuMaxWidth
 
+    QtObject {
+        id: state
+        property var selectedItem: ({displayName: qsTr('(none)')})
+        property int selectedItemIndex: -1
+    }
+
     function selectItem(index) {
-        selectedItemIndex = index;
-        selectedItem =
+        state.selectedItemIndex = index;
+        state.selectedItem =
             selectedItemIndex >= 0
                 ? listItems[index]
                 : { displayName: qsTr('(none)') };
     }
 
-    onPress: {
+    clickOnMouseDown: true
+
+    onClicked: {
         let processedItems = [];
 
         if (allowNoSelection) {
             processedItems.push({
                 text: qsTr('(none)'),
                 onTriggered: () => {
-                    selectedItem = {displayName: qsTr('(none)')};
-                    selectedItemIndex = -1;
+                    state.selectedItem = {displayName: qsTr('(none)')};
+                    state.selectedItemIndex = -1;
                 },
             });
         }
@@ -69,8 +77,8 @@ Button {
 
             newItem.text = item.displayName;
             newItem.onTriggered = () => {
-                selectedItem = item;
-                selectedItemIndex = i;
+                state.selectedItem = item;
+                state.selectedItemIndex = i;
             }
 
             processedItems.push(newItem);
@@ -84,7 +92,7 @@ Button {
 
     Text {
         text: selectedItem.displayName ? qsTr(selectedItem.displayName) : qsTr("(none)")
-        font.family: Fonts.notoSansRegular.name
+        font.family: Fonts.main.name
         font.pixelSize: textPixelSize
         anchors {
             left: parent.left

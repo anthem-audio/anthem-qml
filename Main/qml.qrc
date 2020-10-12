@@ -21,10 +21,8 @@
         <file>Images/Loop.svg</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
         <file>Images/Knob.svg</file>
-        <file>Fonts/NotoSans-Regular.ttf</file>
         <file>Global/Fonts.qml</file>
         <file>Global/qmldir</file>
-        <file>Fonts/SourceCodePro-SemiBold.ttf</file>
         <file>BasicComponents/DigitControl.qml</file>
         <file>BasicComponents/SimpleMeter.qml</file>
         <file>Images/CPU.svg</file>
@@ -67,5 +65,23 @@
         <file>GlobalStore.qml</file>
         <file>SaveLoadHandler.qml</file>
         <file>Commands/Commands.qml</file>
+        <file>Images/Add Audio.svg</file>
+        <file>Images/Add Automation.svg</file>
+        <file>BasicComponents/Scrollbar.qml</file>
+        <file>Images/Triangle Arrow Down.svg</file>
+        <file>Images/Triangle Arrow Left.svg</file>
+        <file>Images/Triangle Arrow Right.svg</file>
+        <file>Images/Triangle Arrow Up.svg</file>
+        <file>Editors/PatternEditor/ChannelList.qml</file>
+        <file>Editors/PatternEditor/Channel.qml</file>
+        <file>Images/Muted.svg</file>
+        <file>Images/Unmuted.svg</file>
+        <file>Images/Solo.svg</file>
+        <file>BasicComponents/Knob.qml</file>
+        <file>BasicComponents/Arc.qml</file>
+        <file>Explorer/Explorer.qml</file>
+        <file>Images/Page With Text.svg</file>
+        <file>Fonts/NotoMono-Regular.ttf</file>
+        <file>Fonts/NotoSansDisplay-Regular.ttf</file>
     </qresource>
 </RCC>

@@ -42,15 +42,15 @@ public:
         QJsonObject& node
     );
 
-    void serialize(QJsonObject& node) override;
+    void serialize(QJsonObject& node) const override;
 
     Control* masterPitch;
     Control* beatsPerMinute;
 
     void setNumerator(quint8 numerator);
-    quint8 getNumerator();
+    quint8 getNumerator() const;
     void setDenominator(quint8 denominator);
-    quint8 getDenominator();
+    quint8 getDenominator() const;
 
 signals:
 
