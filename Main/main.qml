@@ -64,33 +64,33 @@ Window {
     QtObject {
         id: colors
         property string main: '#07d2d4'
-        property string main_11: '#07d2d41c'
+        property string main_11: '#1c07d2d4'
         property string background: '#3e4246'
 
-        property string white_100: 'ffffff'
-        property string white_70: 'ffffffb3'
-        property string white_60: 'ffffff99'
-        property string white_40: 'ffffff66'
-        property string white_12: 'ffffff1f'
-        property string white_11: 'ffffff1c'
-        property string white_10: 'ffffff1a'
-        property string white_7: 'ffffff12'
-        property string white_5: 'ffffff0d'
-        property string white_4: 'ffffff0a'
-        property string white_3: 'ffffff08'
+        property string white_100: '#ffffff'
+        property string white_70: '#b3ffffff'
+        property string white_60: '#99ffffff'
+        property string white_40: '#66ffffff'
+        property string white_12: '#1fffffff'
+        property string white_11: '#1cffffff'
+        property string white_10: '#1affffff'
+        property string white_7: '#12ffffff'
+        property string white_5: '#0dffffff'
+        property string white_4: '#0affffff'
+        property string white_3: '#08ffffff'
 
-        property string black_45: '00000073'
-        property string black_30: '0000004d'
-        property string black_22: '00000038'
-        property string black_20: '00000033'
-        property string black_15: '00000026'
+        property string black_45: '#73000000'
+        property string black_30: '#4d000000'
+        property string black_22: '#38000000'
+        property string black_20: '#33000000'
+        property string black_15: '#26000000'
 
         property string meter_yellow: '#f3d444'
         property string meter_red: '#ff4b77'
-        property string keys_active: '009496'
+        property string keys_active: '#009496'
         property string knob: colors.white_12
         property string separator: colors.white_11
-        property string scrollbar: 'ffffff59'
+        property string scrollbar: '#59ffffff'
     }
 
     // All commands must have exec() and undo(). This is not enforced at runtime.
