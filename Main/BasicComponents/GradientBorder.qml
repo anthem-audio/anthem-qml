@@ -61,11 +61,11 @@ Rectangle {
         id: highlightGradient
         GradientStop {
            position: 0
-           color: Qt.hsla(hue, 0.5, 0.43, 1)
+           color: colors.main
         }
         GradientStop {
             position: 1
-            color: Qt.hsla(hue, 0.5, 0.43, 1)
+            color: colors.main
         }
     }
 

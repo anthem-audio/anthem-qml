@@ -35,6 +35,6 @@ Rectangle {
         width: isVertical ? parent.width : parent.width * value
 
         radius: 0.5
-        color: Qt.hsla(162 / 360, 0.5, 0.43, 1);
+        color: colors.main
     }
 }

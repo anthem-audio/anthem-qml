@@ -28,7 +28,7 @@ TooltipWrapper {
     id: wrapper
     property int instanceID;
     property string selectedColor: ''
-    property string defaultSelectedColor: Qt.hsla(162/360, 0.5, 0.43, 1)
+    property string defaultSelectedColor: colors.main
     property string defaultName: '';
 
     signal accepted(string name, string color)
@@ -104,7 +104,7 @@ TooltipWrapper {
                             family: Fonts.notoSansRegular.name
                         }
                         color: Qt.hsla(0, 0, 1, 0.8)
-                        selectionColor: Qt.hsla(162/360, 0.5, 0.43, 1)
+                        selectionColor: colors.main
                         clip: true
                         onAccepted: {
                             wrapper.accepted(text, selectedColor);

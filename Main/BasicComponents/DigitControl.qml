@@ -72,7 +72,7 @@ Item {
         horizontalAlignment: alignment
         verticalAlignment: Text.AlignVCenter
         anchors.fill: parent
-        color: '#1ac18f'
+        color: colors.main
     }
 
     ControlMouseArea {

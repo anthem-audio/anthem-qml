@@ -103,7 +103,7 @@ Column {
                 if (!modelData.separator
                     && !modelData.disabled
                     && index + startIndex === selectedIndex) {
-                    return Qt.hsla(hue, 0.5, 0.43, 1);
+                    return colors.main
                 }
                 else {
                     return "transparent";
