@@ -40,9 +40,13 @@ Rectangle {
     property string units: ''
 
     color: "transparent"
-    border.width: 1
-    border.color: Qt.rgba(0, 0, 0, 0.4)
+    border.width: state.shrinkCenter ? 3 : 2
+    border.color: colors.white_7
     radius: width * 0.5
+
+    Behavior on border.width {
+        SpringAnimation { spring: state.spring; damping: state.damping }
+    }
 
     QtObject {
         id: state
@@ -62,9 +66,9 @@ Rectangle {
 
     Arc {
         anchors.fill: parent
-        anchors.margins: 1
         lineWidth: state.shrinkCenter ? 3 : 2
         colorCircle: colors.main
+        roundLineCaps: true
 
         property real degrees: value * 360 / (max - min)
 
@@ -80,46 +84,18 @@ Rectangle {
     }
 
     Rectangle {
-        color: "transparent"
-        border.width: 1
-        border.color: Qt.rgba(0, 0, 0, 0.4)
-        anchors.fill: parent
-        anchors.margins: state.shrinkCenter ? 4 : 3
-        radius: width * 0.5
-
-        Behavior on anchors.margins {
-            SpringAnimation { spring: state.spring; damping: state.damping }
-        }
-    }
-
-    GradientBorder {
+        color: colors.white_12
+//        opacity: state.isActive ? 0.06 : 0.12
         anchors.fill: parent
         anchors.margins: state.shrinkCenter ? 5 : 4
         radius: width * 0.5
-        boostBrightness: true
-        opacity: state.isActive ? 0.5 : 1
 
         Behavior on anchors.margins {
             SpringAnimation { spring: state.spring; damping: state.damping }
         }
-        Behavior on opacity {
-            SpringAnimation { spring: state.spring * 2; damping: state.damping }
-        }
-    }
-
-    Rectangle {
-        color: Qt.rgba(1, 1, 1)
-        opacity: state.isActive ? 0.06 : 0.12
-        anchors.fill: parent
-        anchors.margins: state.shrinkCenter ? 6 : 5
-        radius: width * 0.5
-
-        Behavior on anchors.margins {
-            SpringAnimation { spring: state.spring; damping: state.damping }
-        }
-        Behavior on opacity {
-            SpringAnimation { spring: state.spring * 2; damping: state.damping }
-        }
+//        Behavior on opacity {
+//            SpringAnimation { spring: state.spring * 2; damping: state.damping }
+//        }
     }
 
     Rectangle {

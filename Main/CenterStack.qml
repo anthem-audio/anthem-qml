@@ -40,6 +40,17 @@ SplitView {
         implicitHeight: 350
         SplitView.minimumHeight: 250
         visible: showEditors
+
+        Knob {
+            anchors {
+                top: parent.top
+                left: parent.left
+                topMargin: 25
+                leftMargin: 25
+            }
+            width: 50
+            height: 50
+        }
     }
 
     handle: Rectangle {

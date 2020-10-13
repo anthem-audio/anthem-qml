@@ -33,6 +33,7 @@ Item {
     property real lineWidth: 2                 // Width of the arc line
     property string colorCircle: "#CC3333"
     property string colorBackground: "#779933"
+    property bool roundLineCaps: false
 
 //    property alias beginAnimation: animationArcBegin.enabled
 //    property alias endAnimation: animationArcEnd.enabled
@@ -60,41 +61,42 @@ Item {
         rotation: -90 + parent.arcOffset
 
         onPaint: {
-            var ctx = getContext("2d")
-            var x = width / 2
-            var y = height / 2
-            var start = Math.PI * (parent.arcBegin / 180)
-            var end = Math.PI * (parent.arcEnd / 180)
-            ctx.reset()
+            var ctx = getContext('2d');
+            var x = width / 2;
+            var y = height / 2;
+            var start = Math.PI * (parent.arcBegin / 180);
+            var end = Math.PI * (parent.arcEnd / 180);
+            ctx.reset();
+            if (roundLineCaps) ctx.lineCap = 'round';
 
             if (root.isPie) {
                 if (root.showBackground) {
-                    ctx.beginPath()
-                    ctx.fillStyle = root.colorBackground
-                    ctx.moveTo(x, y)
-                    ctx.arc(x, y, width / 2, 0, Math.PI * 2, false)
-                    ctx.lineTo(x, y)
-                    ctx.fill()
+                    ctx.beginPath();
+                    ctx.fillStyle = root.colorBackground;
+                    ctx.moveTo(x, y);
+                    ctx.arc(x, y, width / 2, 0, Math.PI * 2, false);
+                    ctx.lineTo(x, y);
+                    ctx.fill();
                 }
-                ctx.beginPath()
-                ctx.fillStyle = root.colorCircle
-                ctx.moveTo(x, y)
-                ctx.arc(x, y, width / 2, start, end, false)
-                ctx.lineTo(x, y)
-                ctx.fill()
+                ctx.beginPath();
+                ctx.fillStyle = root.colorCircle;
+                ctx.moveTo(x, y);
+                ctx.arc(x, y, width / 2, start, end, false);
+                ctx.lineTo(x, y);
+                ctx.fill();
             } else {
                 if (root.showBackground) {
                     ctx.beginPath();
-                    ctx.arc(x, y, (width / 2) - parent.lineWidth / 2, 0, Math.PI * 2, false)
-                    ctx.lineWidth = root.lineWidth
-                    ctx.strokeStyle = root.colorBackground
-                    ctx.stroke()
+                    ctx.arc(x, y, (width / 2) - parent.lineWidth / 2, 0, Math.PI * 2, false);
+                    ctx.lineWidth = root.lineWidth;
+                    ctx.strokeStyle = root.colorBackground;
+                    ctx.stroke();
                 }
                 ctx.beginPath();
-                ctx.arc(x, y, (width / 2) - parent.lineWidth / 2, start, end, false)
-                ctx.lineWidth = root.lineWidth
-                ctx.strokeStyle = root.colorCircle
-                ctx.stroke()
+                ctx.arc(x, y, (width / 2) - parent.lineWidth / 2, start, end, false);
+                ctx.lineWidth = root.lineWidth;
+                ctx.strokeStyle = root.colorCircle;
+                ctx.stroke();
             }
         }
     }
