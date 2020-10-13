@@ -64,7 +64,7 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 1
         lineWidth: state.shrinkCenter ? 3 : 2
-        colorCircle: '#1BC18F'
+        colorCircle: colors.main
 
         property real degrees: value * 360 / (max - min)
 

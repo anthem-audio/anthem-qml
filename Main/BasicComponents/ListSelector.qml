@@ -39,7 +39,6 @@ Button {
     readonly property int selectedItemIndex: state.selectedItemIndex
     readonly property string selectedItemDisplayName: selectedItem.displayName
     property real textPixelSize: 11
-    property real _hue: 162 / 360
     property real menuMaxWidth
 
     QtObject {
@@ -101,7 +100,7 @@ Button {
             verticalCenter: parent.verticalCenter
         }
         elide: Text.ElideMiddle
-        color: Qt.hsla(_hue, 0.5, 0.43, 1);
+        color: colors.main
     }
 
     Menu {

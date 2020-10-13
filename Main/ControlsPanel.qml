@@ -684,7 +684,7 @@ Panel {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureDenominatorControl.left
-                        color: "#1ac18f"
+                        color: colors.main
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -758,7 +758,7 @@ Panel {
                         font.pointSize: 10
                         anchors.fill: parent
                         anchors.topMargin: 2
-                        color: "#1ac18f"
+                        color: colors.main
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                     }
@@ -779,7 +779,7 @@ Panel {
                         font.pointSize: 10
                         anchors.fill: parent
                         anchors.bottomMargin: 2
-                        color: "#1ac18f"
+                        color: colors.main
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                     }

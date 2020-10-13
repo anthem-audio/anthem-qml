@@ -119,7 +119,7 @@ Item {
             case Button.State.Hovered:
                 return Qt.hsla(0, 0, 1, 1); // 80% opacity white
             case Button.State.Highlighted:
-                return Qt.hsla(hue, 0.5, 0.43, 1); // #37a483 (+ hue shift)
+                return colors.main
             case Button.State.Pressed:
                 return Qt.hsla(0, 0, 1, 1); // 70% opacity white
             case Button.State.Active:
@@ -215,9 +215,9 @@ Item {
                 case Button.State.Highlighted:
                     return Qt.hsla(0, 0, 0, 1); // transparent
                 case Button.State.Pressed:
-                    return Qt.hsla(buttonProps.hue, 0.5, 0.43, 1); // #37a483 (+ hue shift), 50% opacity
+                    return colors.main + '7f'   // 50% opacity
                 case Button.State.Active:
-                    return Qt.hsla(buttonProps.hue, 0.5, 0.43, 1); // #37a483 (+ hue shift)
+                    return colors.main
                 case Button.State.Disabled:
                     return Qt.hsla(0, 0, 1, 1); // 4% opacity white
                 }
