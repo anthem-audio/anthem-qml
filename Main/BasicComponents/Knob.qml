@@ -40,9 +40,13 @@ Rectangle {
     property string units: ''
 
     color: "transparent"
-    border.width: 1
-    border.color: Qt.rgba(0, 0, 0, 0.4)
+    border.width: state.shrinkCenter ? 3 : 2
+    border.color: colors.white_7
     radius: width * 0.5
+
+    Behavior on border.width {
+        SpringAnimation { spring: state.spring; damping: state.damping }
+    }
 
     QtObject {
         id: state
@@ -57,22 +61,27 @@ Rectangle {
             (!isLeftRightKnob && Math.abs(value - min) < tick * 0.1)
         property var pauses: knob.pauses.sort()
         property bool isPaused: false
-        property real pauseThreshold: 10 * tick
+        property real pauseThreshold: 15 * tick
+        property real rotationAngle: value * 360 / (max - min)
+        property real arcRoundnessCorrection:
+            ((state.isHovered || state.isActive) ? 1.75 : 1) * 360 / (Math.PI * knob.width)
+        Behavior on arcRoundnessCorrection {
+            SpringAnimation { spring: state.spring; damping: state.damping }
+        }
     }
 
     Arc {
         anchors.fill: parent
-        anchors.margins: 1
         lineWidth: state.shrinkCenter ? 3 : 2
         colorCircle: colors.main
-
-        property real degrees: value * 360 / (max - min)
+        roundLineCaps: true
 
         // If you think this math is confusing then uhh
         // yeah me too
-        arcOffset: isLeftRightKnob ? (value < 0 ? degrees : 0) : 180
+        arcOffset: (isLeftRightKnob ? (value < 0 ? state.rotationAngle : 0) : 180) + ((isLeftRightKnob && value < 0) ? 0 : 1) * state.arcRoundnessCorrection
         arcBegin: 0
-        arcEnd: Math.abs(degrees)
+        property real endTarget: Math.abs(state.rotationAngle) - state.arcRoundnessCorrection
+        arcEnd: endTarget < arcBegin ? arcBegin : endTarget
 
         Behavior on lineWidth {
             SpringAnimation { spring: state.spring; damping: state.damping }
@@ -80,67 +89,42 @@ Rectangle {
     }
 
     Rectangle {
-        color: "transparent"
-        border.width: 1
-        border.color: Qt.rgba(0, 0, 0, 0.4)
-        anchors.fill: parent
-        anchors.margins: state.shrinkCenter ? 4 : 3
-        radius: width * 0.5
-
-        Behavior on anchors.margins {
-            SpringAnimation { spring: state.spring; damping: state.damping }
-        }
-    }
-
-    GradientBorder {
+        color: colors.white_12
         anchors.fill: parent
         anchors.margins: state.shrinkCenter ? 5 : 4
         radius: width * 0.5
-        boostBrightness: true
-        opacity: state.isActive ? 0.5 : 1
 
         Behavior on anchors.margins {
             SpringAnimation { spring: state.spring; damping: state.damping }
         }
-        Behavior on opacity {
-            SpringAnimation { spring: state.spring * 2; damping: state.damping }
-        }
     }
 
-    Rectangle {
-        color: Qt.rgba(1, 1, 1)
-        opacity: state.isActive ? 0.06 : 0.12
+    Item {
         anchors.fill: parent
-        anchors.margins: state.shrinkCenter ? 6 : 5
-        radius: width * 0.5
-
-        Behavior on anchors.margins {
-            SpringAnimation { spring: state.spring; damping: state.damping }
+        transform: Rotation {
+            origin.x: knob.width * 0.5
+            origin.y: knob.height * 0.5
+            angle: state.rotationAngle
         }
-        Behavior on opacity {
-            SpringAnimation { spring: state.spring * 2; damping: state.damping }
-        }
-    }
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: isLeftRightKnob ? undefined : parent.bottom
+            anchors.top: isLeftRightKnob ? parent.top : undefined
+            property real distanceFromEdge: state.shrinkCenter ? 5 : 4
+            anchors.bottomMargin: isLeftRightKnob ? undefined : distanceFromEdge
+            anchors.topMargin: isLeftRightKnob ? distanceFromEdge : undefined
+            width: 2
+            height: 6
+            radius: 1
+            color: '#c4c4c4'
+            opacity: knob.width < 25 && state.shrinkCenter ? 0 : 1
 
-    Rectangle {
-        visible: state.showCursor
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: isLeftRightKnob ? undefined : parent.bottom
-        anchors.top: isLeftRightKnob ? parent.top : undefined
-        property real distanceFromEdge: state.shrinkCenter ? 7 : 6
-        anchors.bottomMargin: isLeftRightKnob ? undefined : distanceFromEdge
-        anchors.topMargin: isLeftRightKnob ? distanceFromEdge : undefined
-        width: 2
-        height: 2
-        radius: 1
-        color: Qt.rgba(1, 1, 1, 0.65)
-        opacity: knob.width < 25 && state.shrinkCenter ? 0 : 1
-
-        Behavior on distanceFromEdge {
-            SpringAnimation { spring: state.spring; damping: state.damping }
-        }
-        Behavior on opacity {
-            SpringAnimation { spring: state.spring; damping: state.damping }
+            Behavior on distanceFromEdge {
+                SpringAnimation { spring: state.spring; damping: state.damping }
+            }
+            Behavior on opacity {
+                SpringAnimation { spring: state.spring; damping: state.damping }
+            }
         }
     }
 
@@ -212,7 +196,6 @@ Rectangle {
             if (!state.isPaused && value !== tempValue) {
                 value = tempValue;
             }
-
 
             globalStore.statusMessage = `${hoverMessage}: ${Math.round(value / tick) * tick}${units}`
         }
