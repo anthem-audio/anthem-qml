@@ -62,6 +62,12 @@ Rectangle {
         property var pauses: knob.pauses.sort()
         property bool isPaused: false
         property real pauseThreshold: 15 * tick
+        property real rotationAngle: value * 360 / (max - min)
+        property real arcRoundnessCorrection:
+            ((state.isHovered || state.isActive) ? 1.75 : 1) * 360 / (Math.PI * knob.width)
+        Behavior on arcRoundnessCorrection {
+            SpringAnimation { spring: state.spring; damping: state.damping }
+        }
     }
 
     Arc {
@@ -70,13 +76,12 @@ Rectangle {
         colorCircle: colors.main
         roundLineCaps: true
 
-        property real degrees: value * 360 / (max - min)
-
         // If you think this math is confusing then uhh
         // yeah me too
-        arcOffset: isLeftRightKnob ? (value < 0 ? degrees : 0) : 180
+        arcOffset: (isLeftRightKnob ? (value < 0 ? state.rotationAngle : 0) : 180) + ((isLeftRightKnob && value < 0) ? 0 : 1) * state.arcRoundnessCorrection
         arcBegin: 0
-        arcEnd: Math.abs(degrees)
+        property real endTarget: Math.abs(state.rotationAngle) - state.arcRoundnessCorrection
+        arcEnd: endTarget < arcBegin ? arcBegin : endTarget
 
         Behavior on lineWidth {
             SpringAnimation { spring: state.spring; damping: state.damping }
@@ -85,7 +90,6 @@ Rectangle {
 
     Rectangle {
         color: colors.white_12
-//        opacity: state.isActive ? 0.06 : 0.12
         anchors.fill: parent
         anchors.margins: state.shrinkCenter ? 5 : 4
         radius: width * 0.5
@@ -93,30 +97,34 @@ Rectangle {
         Behavior on anchors.margins {
             SpringAnimation { spring: state.spring; damping: state.damping }
         }
-//        Behavior on opacity {
-//            SpringAnimation { spring: state.spring * 2; damping: state.damping }
-//        }
     }
 
-    Rectangle {
-        visible: state.showCursor
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: isLeftRightKnob ? undefined : parent.bottom
-        anchors.top: isLeftRightKnob ? parent.top : undefined
-        property real distanceFromEdge: state.shrinkCenter ? 7 : 6
-        anchors.bottomMargin: isLeftRightKnob ? undefined : distanceFromEdge
-        anchors.topMargin: isLeftRightKnob ? distanceFromEdge : undefined
-        width: 2
-        height: 2
-        radius: 1
-        color: Qt.rgba(1, 1, 1, 0.65)
-        opacity: knob.width < 25 && state.shrinkCenter ? 0 : 1
-
-        Behavior on distanceFromEdge {
-            SpringAnimation { spring: state.spring; damping: state.damping }
+    Item {
+        anchors.fill: parent
+        transform: Rotation {
+            origin.x: knob.width * 0.5
+            origin.y: knob.height * 0.5
+            angle: state.rotationAngle
         }
-        Behavior on opacity {
-            SpringAnimation { spring: state.spring; damping: state.damping }
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: isLeftRightKnob ? undefined : parent.bottom
+            anchors.top: isLeftRightKnob ? parent.top : undefined
+            property real distanceFromEdge: state.shrinkCenter ? 5 : 4
+            anchors.bottomMargin: isLeftRightKnob ? undefined : distanceFromEdge
+            anchors.topMargin: isLeftRightKnob ? distanceFromEdge : undefined
+            width: 2
+            height: 6
+            radius: 1
+            color: '#c4c4c4'
+            opacity: knob.width < 25 && state.shrinkCenter ? 0 : 1
+
+            Behavior on distanceFromEdge {
+                SpringAnimation { spring: state.spring; damping: state.damping }
+            }
+            Behavior on opacity {
+                SpringAnimation { spring: state.spring; damping: state.damping }
+            }
         }
     }
 
@@ -188,7 +196,6 @@ Rectangle {
             if (!state.isPaused && value !== tempValue) {
                 value = tempValue;
             }
-
 
             globalStore.statusMessage = `${hoverMessage}: ${Math.round(value / tick) * tick}${units}`
         }
