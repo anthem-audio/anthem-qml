@@ -61,7 +61,7 @@ Rectangle {
             (!isLeftRightKnob && Math.abs(value - min) < tick * 0.1)
         property var pauses: knob.pauses.sort()
         property bool isPaused: false
-        property real pauseThreshold: 10 * tick
+        property real pauseThreshold: 15 * tick
     }
 
     Arc {
