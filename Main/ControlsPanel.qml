@@ -26,7 +26,7 @@ import "BasicComponents"
 import "Global"
 import "Menus"
 
-Panel {
+Item {
     height: 44
 
     function updateAll() {

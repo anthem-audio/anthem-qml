@@ -30,7 +30,7 @@ SplitView {
     property bool showExplorer
     property bool showEditors
 
-    Panel {
+    Item {
         visible: showExplorer
         implicitWidth: 200
         SplitView.minimumWidth: 200
@@ -44,7 +44,7 @@ SplitView {
         showEditors: mainStack.showEditors
     }
 
-    Panel {
+    Item {
         visible: showControllerRack
         implicitWidth: 200
         SplitView.minimumWidth: 200

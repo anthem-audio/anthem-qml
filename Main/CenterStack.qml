@@ -26,7 +26,7 @@ SplitView {
     orientation: Qt.Vertical
     property bool showEditors
 
-    Panel {
+    Item {
         SplitView.fillHeight: true
         SplitView.minimumHeight: 250
 
@@ -36,7 +36,7 @@ SplitView {
         }
     }
 
-    Panel {
+    Item {
         implicitHeight: 350
         SplitView.minimumHeight: 250
         visible: showEditors

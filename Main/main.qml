@@ -203,19 +203,21 @@ Window {
     Item {
         id: header
         width: parent.width
-        height: 30
+        height: 40
 
         anchors.top: parent.top
 
         Item {
             id: headerControlsContainer
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.topMargin: margin
-            anchors.leftMargin: margin
-            anchors.rightMargin: margin
-            height: 20
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+                topMargin: 3
+                leftMargin: 3
+                rightMargin: 3
+            }
 
             MoveHandle {
                 window: mainWindow
@@ -227,14 +229,91 @@ Window {
                 }
             }
 
+            Rectangle {
+                id: anthemButtonContainer
+                radius: 2
+                color: colors.white_7
+
+                anchors {
+                    left: parent.left
+                    top: parent.top
+                }
+
+                width: 36
+                height: 36
+
+                Button {
+                    width: 28
+                    height: 28
+                    anchors.centerIn: parent;
+
+                    showBackground: false
+                    showBorder: false
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/main/anthem.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+            }
+
             TabGroup {
                 id: tabGroup
-                anchors.left: parent.left
+                anchors.left: anthemButtonContainer.right
+                anchors.leftMargin: 1
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 // Width is managed internally by TabGroup
 
                 onLastTabClosed: Qt.quit()
+                visible: false
+            }
+
+            Item {
+                id: thisIsAnItem
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: anthemButtonContainer.right
+                    leftMargin: 1
+                    right: windowControlButtons.left
+                }
+
+                property var rowModel: [0, 1, 2]
+
+                Row {
+                    id: thisIsARow
+                    anchors {
+                        top: parent.top
+                        bottom: parent.bottom
+                        left: parent.left
+                    }
+                    Repeater {
+                        model: thisIsAnItem.rowModel
+                        Rectangle {
+                            width: 10
+                            height: 10
+                            color: modelData % 3 === 0 ? 'red' : modelData % 3 === 1 ? 'green' : modelData % 3 === 2 ? 'blue' : 'white'
+                        }
+                    }
+                }
+
+                Rectangle {
+                    anchors {
+                        left: thisIsARow.right
+                        top: parent.top
+                        bottom: parent.bottom
+                    }
+                    width: 10
+                    color: Qt.rgba(1, 1, 1, 0.2)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            const oldRowModel = thisIsAnItem.rowModel;
+                            thisIsAnItem.rowModel = [...oldRowModel, oldRowModel.length]
+                        }
+                    }
+                }
             }
 
             WindowControls {

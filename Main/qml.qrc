@@ -6,7 +6,6 @@
         <file>ControlsPanel.qml</file>
         <file>MainStack.qml</file>
         <file>CenterStack.qml</file>
-        <file>BasicComponents/Panel.qml</file>
         <file>ArrangerStack.qml</file>
         <file>BasicComponents/ButtonGroup.qml</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
