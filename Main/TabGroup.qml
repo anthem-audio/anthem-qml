@@ -53,13 +53,15 @@ Item {
                         height: index === selected ? parent.height + radius : parent.height
                         radius: 2
 
-                        color: index === selected ? colors.white_12 : colors.white_7
+                        color: index === selected || hovered ? colors.white_12 : colors.white_7
+
+                        property bool hovered: tabMouseArea.hovered || closeButton.hovered
 
                         Text {
                             text: modelData.text
                             anchors {
-                                verticalCenter: parent.verticalCenter
-                                verticalCenterOffset: -2
+                                verticalCenter: closeButton.verticalCenter
+                                verticalCenterOffset: -1
                                 left: parent.left
                                 leftMargin: 13
                             }
@@ -68,7 +70,24 @@ Item {
                             color: colors.white_70
                         }
 
+                        MouseArea {
+                            id: tabMouseArea
+                            property bool hovered: false
+                            anchors.fill: parent
+                            onClicked: {
+                                selected = index;
+                            }
+                            hoverEnabled: true
+                            onEntered: {
+                                hovered = true;
+                            }
+                            onExited: {
+                                hovered = false;
+                            }
+                        }
+
                         Button {
+                            id: closeButton
                             anchors {
                                 top: parent.top
                                 right: parent.right

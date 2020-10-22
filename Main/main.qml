@@ -259,9 +259,7 @@ Window {
                 height: 36
 
                 Button {
-                    width: 28
-                    height: 28
-                    anchors.centerIn: parent;
+                    anchors.fill: parent
 
                     showBackground: false
                     showBorder: false

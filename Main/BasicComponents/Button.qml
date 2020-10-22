@@ -67,6 +67,8 @@ Item {
 
     readonly property real textWidth: text.width
 
+    property alias hovered: buttonProps.isHoverActive
+
     width: textAutoWidth ? text.width + margin * 2 + 3 : undefined
 
     function calculateWidth() {
@@ -97,7 +99,7 @@ Item {
                 return Button.State.Active;
             }
         }
-        else if (buttonProps.isHoverActive) {
+        else if (hovered) {
             return Button.State.Hovered;
         }
         else {
@@ -245,7 +247,7 @@ Item {
         id: btnCorner
         color: 'transparent'
         anchors.fill: parent
-        border.color: Qt.rgba(1, 1, 1, buttonProps.isHoverActive && !button.isMouseDown ? 1 : 0.7)
+        border.color: Qt.rgba(1, 1, 1, hovered && !button.isMouseDown ? 1 : 0.7)
         anchors.margins: 1
         radius: 1
         visible: false
@@ -348,16 +350,14 @@ Item {
             }
         }
 
-        property alias hoverActive: buttonProps.isHoverActive
-
         hoverEnabled: true
         onEntered: {
-            hoverActive = true;
+            hovered = true;
             if (hoverMessage !== '')
                 globalStore.statusMessage = hoverMessage;
         }
         onExited: {
-            hoverActive = false;
+            hovered = false;
             globalStore.statusMessage = '';
         }
     }
