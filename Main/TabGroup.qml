@@ -50,7 +50,7 @@ Item {
                             right: parent.right
                         }
 
-                        height: parent.height + radius
+                        height: index === selected ? parent.height + radius : parent.height
                         radius: 2
 
                         color: index === selected ? colors.white_12 : colors.white_7
