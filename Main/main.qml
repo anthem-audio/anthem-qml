@@ -295,29 +295,34 @@ Window {
                 // Width is managed by TabGroup
             }
 
-//            WindowControls {
-//                id: windowControlButtons
-//                anchors.right: parent.right
-//                anchors.top: parent.top
-//                anchors.bottom: parent.bottom
+            WindowControls {
+                id: windowControlButtons
+                anchors {
+                    right: parent.right
+                    top: parent.top
+                    bottom: parent.bottom
+                    topMargin: 8
+                    rightMargin: 8
+                    bottomMargin: 8
+                }
 
-//                onMinimizePressed: {
-//                    mainWindow.showMinimized();
-//                }
+                onMinimizePressed: {
+                    mainWindow.showMinimized();
+                }
 
-//                onMaximizePressed: {
-//                    if (mainWindow.isMaximized)
-//                        mainWindow.showNormal();
-//                    else
-//                        mainWindow.showMaximized();
+                onMaximizePressed: {
+                    if (mainWindow.isMaximized)
+                        mainWindow.showNormal();
+                    else
+                        mainWindow.showMaximized();
 
-//                    mainWindow.isMaximized = !mainWindow.isMaximized;
-//                }
+                    mainWindow.isMaximized = !mainWindow.isMaximized;
+                }
 
-//                onClosePressed: {
-//                    saveLoadHandler.closeWithSavePrompt();
-//                }
-//            }
+                onClosePressed: {
+                    saveLoadHandler.closeWithSavePrompt();
+                }
+            }
         }
     }
 
