@@ -13,7 +13,7 @@
         <file>Global/qmldir</file>
         <file>BasicComponents/DigitControl.qml</file>
         <file>BasicComponents/SimpleMeter.qml</file>
-        <file>TabGroup.qml</file>
+        <file>TabGroupOld.qml</file>
         <file>ResizeHandles.qml</file>
         <file>MoveHandle.qml</file>
         <file>BasicComponents/TabHandle.qml</file>
@@ -144,5 +144,6 @@
         <file>Images/icons/topbar/tools/select.svg</file>
         <file>Images/icons/topbar/tools/slice.svg</file>
         <file>Images/icons/topbar/learn.svg</file>
+        <file>TabGroup.qml</file>
     </qresource>
 </RCC>

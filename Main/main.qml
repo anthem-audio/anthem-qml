@@ -187,18 +187,25 @@ Window {
         }
     }
 
-//    Image {
-//        id: asdf
-//        source: "file:///C:\\Users\\qbgee\\Pictures\\6p6qwzkpyh921.jpg"
-//        anchors.fill: parent
-//    }
-//    FastBlur {
-//        id: blurredbg
-//        visible: true
-//        anchors.fill: asdf
-//        source: asdf
-//        radius: 128
-//    }
+    Image {
+        id: asdf
+        source: "file:///C:\\Users\\qbgee\\Pictures\\background.jpg"
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        visible: false
+    }
+    FastBlur {
+        id: blurredbg
+        visible: true
+        anchors.fill: asdf
+        source: asdf
+        radius: 128
+        opacity: 0.3
+    }
+    Rectangle {
+        anchors.fill: parent
+        color: colors.black_30
+    }
 
     Item {
         id: header
@@ -219,14 +226,23 @@ Window {
                 rightMargin: 3
             }
 
-            MoveHandle {
-                window: mainWindow
+            // Rectangle to the right of the tab group that
+            // contains the window controls
+            Rectangle {
                 anchors {
                     top: parent.top
+                    right: parent.right
                     bottom: parent.bottom
-                    left: parent.left
-                    right: windowControlButtons.left
+                    left: tabGroup.right
+                    bottomMargin: 1
                 }
+                radius: 2
+                color: colors.white_7
+            }
+
+            MoveHandle {
+                window: mainWindow
+                anchors.fill: parent
             }
 
             Rectangle {
@@ -257,8 +273,8 @@ Window {
                 }
             }
 
-            TabGroup {
-                id: tabGroup
+            TabGroupOld {
+                id: tabGroupOld
                 anchors.left: anthemButtonContainer.right
                 anchors.leftMargin: 1
                 anchors.top: parent.top
@@ -269,76 +285,41 @@ Window {
                 visible: false
             }
 
-            Item {
-                id: thisIsAnItem
+            TabGroup {
+                id: tabGroup
                 anchors {
                     top: parent.top
                     bottom: parent.bottom
                     left: anthemButtonContainer.right
                     leftMargin: 1
-                    right: windowControlButtons.left
                 }
 
-                property var rowModel: [0, 1, 2]
-
-                Row {
-                    id: thisIsARow
-                    anchors {
-                        top: parent.top
-                        bottom: parent.bottom
-                        left: parent.left
-                    }
-                    Repeater {
-                        model: thisIsAnItem.rowModel
-                        Rectangle {
-                            width: 10
-                            height: 10
-                            color: modelData % 3 === 0 ? 'red' : modelData % 3 === 1 ? 'green' : modelData % 3 === 2 ? 'blue' : 'white'
-                        }
-                    }
-                }
-
-                Rectangle {
-                    anchors {
-                        left: thisIsARow.right
-                        top: parent.top
-                        bottom: parent.bottom
-                    }
-                    width: 10
-                    color: Qt.rgba(1, 1, 1, 0.2)
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            const oldRowModel = thisIsAnItem.rowModel;
-                            thisIsAnItem.rowModel = [...oldRowModel, oldRowModel.length]
-                        }
-                    }
-                }
+                // Width is managed by TabGroup
             }
 
-            WindowControls {
-                id: windowControlButtons
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+//            WindowControls {
+//                id: windowControlButtons
+//                anchors.right: parent.right
+//                anchors.top: parent.top
+//                anchors.bottom: parent.bottom
 
-                onMinimizePressed: {
-                    mainWindow.showMinimized();
-                }
+//                onMinimizePressed: {
+//                    mainWindow.showMinimized();
+//                }
 
-                onMaximizePressed: {
-                    if (mainWindow.isMaximized)
-                        mainWindow.showNormal();
-                    else
-                        mainWindow.showMaximized();
+//                onMaximizePressed: {
+//                    if (mainWindow.isMaximized)
+//                        mainWindow.showNormal();
+//                    else
+//                        mainWindow.showMaximized();
 
-                    mainWindow.isMaximized = !mainWindow.isMaximized;
-                }
+//                    mainWindow.isMaximized = !mainWindow.isMaximized;
+//                }
 
-                onClosePressed: {
-                    saveLoadHandler.closeWithSavePrompt();
-                }
-            }
+//                onClosePressed: {
+//                    saveLoadHandler.closeWithSavePrompt();
+//                }
+//            }
         }
     }
 
