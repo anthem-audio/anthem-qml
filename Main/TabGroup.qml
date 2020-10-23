@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019 - 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -18,35 +18,26 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.14
+import QtQuick 2.15
 import "BasicComponents"
+import "Global"
 import "Dialogs"
-
-/*
-  TabGroup is used to display the tabs at the
-  top of the Anthem window.
-
-  It's worth leaving a note about the offset
-  variable in some of the functions below,
-  calculated as
-    let offset = children.length - tabCount;
-
-  When a child item is removed programmatically,
-  it does not immediately disappear. The Qt
-  Quick engine takes care of removing it before
-  the next frame. "Oh, I'll do it at some point
-  before the next frame" gives no guarantee
-  that the item will be gone by the time we are
-  ready to manipulate the children again, and
-  so this occasional discrepency must be
-  accounted for.
-*/
 
 Item {
     id: tabGroup
+    /*
+        Each item contains:
+        {
+            key: string;
+            text: string;
+        }
+    */
+    property var rowModel: [
+        { text: 'New project 1' },
+    ]
 
-    property Component tabComponent
-    property int tabWidth: 124
+    readonly property real tabWidth: 126
+    width: tabWidth * rowModel.length
 
     QtObject {
         id: tabGroupProps
@@ -54,7 +45,9 @@ Item {
         property int  currentSavingTabIndex: -1
     }
 
-    width: globalStore.tabCount * (tabWidth + 3)
+    onRowModelChanged: {
+        globalStore.tabCount = rowModel.length;
+    }
 
     signal lastTabClosed()
 
@@ -68,99 +61,51 @@ Item {
         onActivated: doOnTabClosePressed(globalStore.selectedTabIndex)
     }
 
-    TabHandle {
-        height: parent.height
-        x: parent.x
-        y: parent.y
-        width: tabWidth
-        isSelected: true
-        index: 0
-
-        onSelected: doOnTabPressed(index)
-        onBtnClosePressed: doOnTabClosePressed(index)
-    }
+    property real newProjectCounter: 2;
 
     function addTab(tabName) {
-        if (tabComponent === null)
-            tabComponent = Qt.createComponent("BasicComponents/TabHandle.qml");
-
-        if (tabComponent.status === Component.Ready) {
-            let options = {
-                height: tabGroup.height,
-                x: globalStore.tabCount * (tabWidth + 3),
-                y: tabGroup.y,
-                width: 124,
-                title: tabName,
-                index: globalStore.tabCount,
-                isSelected: false,
-            }
-
-            let tab = tabComponent.createObject(tabGroup, options);
-            tab.selected.connect(doOnTabPressed);
-            tab.btnClosePressed.connect(doOnTabClosePressed);
-            globalStore.tabCount++;
-        }
-        else if (tabComponent.status === Component.Error) {
-            console.error("Error loading component:", tabComponent.errorString());
-        }
-        else {
-            console.error("tabComponent.status is not either \"ready\" or \"error\". This may mean the component hasn't loaded yet. This shouldn't be possible.");
-        }
+        rowModel = [...rowModel, { text: `New project ${newProjectCounter}` }];
+        newProjectCounter++;
     }
 
     function renameTab(index, name) {
-        let offset = children.length - globalStore.tabCount;
-        tabGroup.children[index + offset].title = name;
-    }
-
-    function selectTab(index) {
-        let offset = children.length - globalStore.tabCount;
-        tabGroup.children[globalStore.selectedTabIndex + offset].isSelected = false;
-        tabGroup.children[index + offset].isSelected = true;
-        globalStore.selectedTabIndex = index;
+        const newRowModel = [...rowModel];
+        newRowModel[index].text = name;
+        rowModel = newRowModel;
     }
 
     function doOnTabPressed(index) {
-        let offset = children.length - globalStore.tabCount;
-        Anthem.switchActiveProject(index + offset);
-        selectTab(index + offset);
+        Anthem.switchActiveProject(index);
+        globalStore.selectedTabIndex = index;
     }
 
     function removeTab(index) {
-        let offset = children.length - globalStore.tabCount;
-
-        for (let i = index + offset; i < globalStore.tabCount + offset; i++) {
-            tabGroup.children[i].index--;
-            tabGroup.children[i].x -= (tabWidth + 3);
-        }
+        const tabCount = globalStore.tabCount;
 
         let isLastTab = false;
 
-        if (globalStore.selectedTabIndex === globalStore.tabCount - 1) {
+        console.log(globalStore.selectedTabIndex, tabCount - 1);
+
+        if (globalStore.selectedTabIndex === tabCount - 1) {
             isLastTab = true;
         }
 
         if (globalStore.selectedTabIndex === index) {
-            try {
-                if (isLastTab)
-                    selectTab(globalStore.selectedTabIndex - 1);
-                else
-                    selectTab(globalStore.selectedTabIndex + 1);
-            }
-            catch (ex) {}
+            console.log(isLastTab)
+            if (isLastTab)
+                globalStore.selectedTabIndex--;
+            else
+                globalStore.selectedTabIndex++;
         }
 
         if (index < globalStore.selectedTabIndex)
             globalStore.selectedTabIndex--;
 
-        const tab = getTabAtIndex(index);
-        tab.destroy();
-        globalStore.tabCount--;
-    }
+        rowModel = rowModel.filter((_, i) => i !== index);
 
-    function getTabAtIndex(index) {
-        let offset = children.length - globalStore.tabCount;
-        return children[index + offset]
+        console.log('happens');
+
+        console.log(globalStore.selectedTabIndex);
     }
 
     function doOnCloseConfirmation(index) {
@@ -169,12 +114,10 @@ Item {
         }
 
         if (globalStore.tabCount <= 1) {
-            tabGroup.children[0].destroy();
             Anthem.closeProject(0);
             lastTabClosed();
         }
         else {
-//            removeTab(index);
             Anthem.closeProject(index);
             Anthem.switchActiveProject(globalStore.selectedTabIndex);
         }
@@ -184,7 +127,8 @@ Item {
         if (Anthem.projectHasUnsavedChanges(index)) {
             tabGroupProps.currentSavingTabIndex = index;
             let projectName = tabGroup.children[index].title;
-            saveConfirmDialog.message = `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
+            saveConfirmDialog.message =
+                `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
             saveConfirmDialog.show();
         }
         else {
@@ -209,12 +153,9 @@ Item {
         }
     }
 
-    // This code also handles discarding or adding to the list of undo/redo
-    // stacks. The code for handling this should not be here but oh well
     Connections {
         target: Anthem
         function onTabAdd() {
-            console.log('add');
             addTab(name);
             commands.histories.push([]);
             commands.historyPointers.push(-1);
@@ -223,12 +164,118 @@ Item {
             renameTab(index, name);
         }
         function onTabSelect() {
-            selectTab(index);
+            globalStore.selectedTabIndex = index;
         }
         function onTabRemove() {
             removeTab(index);
             commands.histories.splice(index, 1);
             commands.historyPointers.splice(index, 1);
+        }
+    }
+
+    Row {
+        id: thisIsARow
+        anchors {
+            top: parent.top
+            bottom: parent.bottom
+            left: parent.left
+        }
+        Repeater {
+            model: tabGroup.rowModel
+            Item {
+                id: tabContainer
+                width: tabWidth
+                height: tabGroup.height
+                Item {
+                    clip: true
+                    anchors {
+                        fill: parent
+                        rightMargin: 1
+                        bottomMargin: 1
+                    }
+                    Rectangle {
+                        anchors {
+                            top: parent.top
+                            left: parent.left
+                            right: parent.right
+                        }
+
+                        height: index === globalStore.selectedTabIndex ? parent.height + radius : parent.height
+                        radius: 2
+
+                        color: index === globalStore.selectedTabIndex || hovered ? colors.white_12 : colors.white_7
+
+                        property bool hovered: tabMouseArea.hovered || closeButton.hovered
+
+                        Text {
+                            text: modelData.text
+                            anchors {
+                                verticalCenter: closeButton.verticalCenter
+                                verticalCenterOffset: -1
+                                left: parent.left
+                                leftMargin: 13
+                                right: closeButton.left
+                                rightMargin: 4
+                            }
+                            font.family: Fonts.main.name
+                            font.pixelSize: 13
+                            color: colors.white_70
+                            elide: Text.ElideRight
+                        }
+
+                        MouseArea {
+                            id: tabMouseArea
+                            property bool hovered: false
+                            anchors.fill: parent
+                            onClicked: {
+                                globalStore.selectedTabIndex = index;
+                                doOnTabPressed(index);
+                            }
+                            hoverEnabled: true
+                            onEntered: {
+                                hovered = true;
+                            }
+                            onExited: {
+                                hovered = false;
+                            }
+                        }
+
+                        Button {
+                            id: closeButton
+                            anchors {
+                                top: parent.top
+                                right: parent.right
+                                topMargin: 8
+                                rightMargin: 8
+                            }
+                            width: 20
+                            height: 20
+
+                            imageSource: "Images/icons/small/close.svg"
+                            imageWidth: 8
+                            imageHeight: 8
+
+                            showBorder: false
+                            showBackground: false
+
+                            onClicked: {
+                                doOnTabClosePressed(index);
+                            }
+                        }
+                    }
+                }
+                Rectangle {
+                    anchors {
+                        left: parent.left
+                        right: parent.right
+                        bottom: parent.bottom
+                        rightMargin: 1
+                    }
+                    height: 1
+                    color: colors.white_12
+                    visible: index === globalStore.selectedTabIndex
+                }
+            }
         }
     }
 }

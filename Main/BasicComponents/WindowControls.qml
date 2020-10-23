@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2019 Joshua Wade
+    Copyright (C) 2019 - 2020 Joshua Wade
 
     This file is part of Anthem.
 
@@ -18,69 +18,69 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.14
+import QtQuick 2.15
 
-ButtonGroup {
-    id: windowButtonsContainer
-
-    property bool disableMinimize: false
-    property bool disableMaximize: false
-    property bool disableClose:    false
-
+Item {
     signal minimizePressed()
     signal maximizePressed()
     signal closePressed()
 
-    defaultButtonWidth: 26
-    defaultButtonHeight: 20
-    defaultImageWidth: 8
-    defaultImageHeight: 8
-
-    fixedWidth: false
-
-    buttons: ListModel {
-        // https://stackoverflow.com/a/33161093/8166701
-        property bool completed: false
-        Component.onCompleted: {
-            buttons.setProperty(0, "isDisabled", disableMinimize);
-            buttons.setProperty(1, "isDisabled", disableMaximize);
-            buttons.setProperty(2, "isDisabled", disableClose);
-            completed = true;
+    Button {
+        id: closeButton
+        width: 20
+        height: 20
+        anchors {
+            top: parent.top
+            right: parent.right
         }
 
-        ListElement {
-            imageSource: "Images/icons/small/minimize.svg"
-            isDisabled: false
-            hoverMessage: qsTr("Minimize")
-            onClicked: () => {
-               windowButtonsContainer.minimizePressed();
-            }
-        }
-        ListElement {
-            imageSource: "Images/icons/small/maximize.svg"
-            isDisabled: false
-            hoverMessage: qsTr("Maximize")
-            onClicked: () => {
-               windowButtonsContainer.maximizePressed();
-            }
-        }
-        ListElement {
-            imageSource: "Images/icons/small/close.svg"
-            isDisabled: false
-            hoverMessage: qsTr("Close")
-            onClicked: () => {
-               windowButtonsContainer.closePressed();
-            }
-        }
+        imageSource: "Images/icons/small/close.svg"
+        imageWidth: 8
+        imageHeight: 8
+
+        showBorder: false
+        showBackground: false
+
+        onClicked: closePressed()
     }
 
-    onDisableMinimizeChanged: {
-        buttons.setProperty(0, "isDisabled", disableMinimize);
+    Button {
+        id: maximizeButton
+        width: 20
+        height: 20
+        anchors {
+            top: parent.top
+            right: closeButton.left
+            rightMargin: 4
+        }
+
+        imageSource: "Images/icons/small/maximize.svg"
+        imageWidth: 8
+        imageHeight: 8
+
+        showBorder: false
+        showBackground: false
+
+        onClicked: maximizePressed()
     }
-    onDisableMaximizeChanged: {
-        buttons.setProperty(1, "isDisabled", disableMaximize);
-    }
-    onDisableCloseChanged: {
-        buttons.setProperty(2, "isDisabled", disableClose);
+
+    Button {
+        id: minimizeButton
+        width: 20
+        height: 20
+        anchors {
+            top: parent.top
+            right: maximizeButton.left
+            rightMargin: 4
+        }
+
+        imageSource: "Images/icons/small/minimize.svg"
+        imageWidth: 8
+        imageHeight: 8
+
+        showBorder: false
+        showBackground: false
+
+        onClicked: minimizePressed()
     }
 }

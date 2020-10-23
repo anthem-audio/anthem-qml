@@ -6,7 +6,6 @@
         <file>ControlsPanel.qml</file>
         <file>MainStack.qml</file>
         <file>CenterStack.qml</file>
-        <file>BasicComponents/Panel.qml</file>
         <file>ArrangerStack.qml</file>
         <file>BasicComponents/ButtonGroup.qml</file>
         <file>BasicComponents/ControlMouseArea.qml</file>
@@ -14,10 +13,8 @@
         <file>Global/qmldir</file>
         <file>BasicComponents/DigitControl.qml</file>
         <file>BasicComponents/SimpleMeter.qml</file>
-        <file>TabGroup.qml</file>
         <file>ResizeHandles.qml</file>
         <file>MoveHandle.qml</file>
-        <file>BasicComponents/TabHandle.qml</file>
         <file>Dialogs/DialogBase.qml</file>
         <file>BasicComponents/WindowControls.qml</file>
         <file>Dialogs/OkCancelDialog.qml</file>
@@ -145,5 +142,6 @@
         <file>Images/icons/topbar/tools/select.svg</file>
         <file>Images/icons/topbar/tools/slice.svg</file>
         <file>Images/icons/topbar/learn.svg</file>
+        <file>TabGroup.qml</file>
     </qresource>
 </RCC>

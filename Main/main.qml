@@ -187,61 +187,112 @@ Window {
         }
     }
 
-//    Image {
-//        id: asdf
-//        source: "file:///C:\\Users\\qbgee\\Pictures\\6p6qwzkpyh921.jpg"
-//        anchors.fill: parent
-//    }
-//    FastBlur {
-//        id: blurredbg
-//        visible: true
-//        anchors.fill: asdf
-//        source: asdf
-//        radius: 128
-//    }
+    Image {
+        id: asdf
+        source: "file:///C:\\Users\\qbgee\\Pictures\\background.jpg"
+        anchors.fill: parent
+        fillMode: Image.PreserveAspectCrop
+        visible: false
+    }
+    FastBlur {
+        id: blurredbg
+        visible: true
+        anchors.fill: asdf
+        source: asdf
+        radius: 128
+        opacity: 0.3
+    }
+    Rectangle {
+        anchors.fill: parent
+        color: colors.black_30
+    }
 
     Item {
         id: header
         width: parent.width
-        height: 30
+        height: 40
 
         anchors.top: parent.top
 
         Item {
             id: headerControlsContainer
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.topMargin: margin
-            anchors.leftMargin: margin
-            anchors.rightMargin: margin
-            height: 20
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+                bottom: parent.bottom
+                topMargin: 3
+                leftMargin: 3
+                rightMargin: 3
+            }
+
+            // Rectangle to the right of the tab group that
+            // contains the window controls
+            Rectangle {
+                anchors {
+                    top: parent.top
+                    right: parent.right
+                    bottom: parent.bottom
+                    left: tabGroup.right
+                    bottomMargin: 1
+                }
+                radius: 2
+                color: colors.white_7
+            }
 
             MoveHandle {
                 window: mainWindow
+                anchors.fill: parent
+            }
+
+            Rectangle {
+                id: anthemButtonContainer
+                radius: 2
+                color: colors.white_7
+
                 anchors {
-                    top: parent.top
-                    bottom: parent.bottom
                     left: parent.left
-                    right: windowControlButtons.left
+                    top: parent.top
+                }
+
+                width: 36
+                height: 36
+
+                Button {
+                    anchors.fill: parent
+
+                    showBackground: false
+                    showBorder: false
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/main/anthem.svg"
+                    imageWidth: 16
+                    imageHeight: 16
                 }
             }
 
             TabGroup {
                 id: tabGroup
-                anchors.left: parent.left
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                // Width is managed internally by TabGroup
+                anchors {
+                    top: parent.top
+                    bottom: parent.bottom
+                    left: anthemButtonContainer.right
+                    leftMargin: 1
+                }
 
-                onLastTabClosed: Qt.quit()
+                // Width is managed by TabGroup
             }
 
             WindowControls {
                 id: windowControlButtons
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                anchors {
+                    right: parent.right
+                    top: parent.top
+                    bottom: parent.bottom
+                    topMargin: 8
+                    rightMargin: 8
+                    bottomMargin: 8
+                }
 
                 onMinimizePressed: {
                     mainWindow.showMinimized();

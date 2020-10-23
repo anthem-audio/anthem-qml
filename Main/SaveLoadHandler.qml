@@ -41,7 +41,7 @@ Item {
             }
             else if (Anthem.projectHasUnsavedChanges(0)) {
                 Anthem.switchActiveProject(0);
-                tabGroup.selectTab(0);
+                globalStore.selectedTabIndex = 0;
 
                 let projectName = tabGroup.children[0].title;
                 saveConfirmDialog.message =
@@ -61,15 +61,12 @@ Item {
                 Qt.quit();
             }
 
-            const tab = tabGroup.getTabAtIndex(0);
-
-            // Check for the next unsaved tab when this tab is removed
-            tab.Component.destruction.connect(checkForUnsaved);
-
             // This will remove a tab, so we attach the handler before it
             Anthem.closeProject(0);
 
             tabsRemaining = tabsRemaining - 1;
+
+            checkForUnsaved();
         }
         else {
             checkForUnsaved();
