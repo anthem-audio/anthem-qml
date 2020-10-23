@@ -143,5 +143,6 @@
         <file>Images/icons/topbar/tools/slice.svg</file>
         <file>Images/icons/topbar/learn.svg</file>
         <file>TabGroup.qml</file>
+        <file>BasicComponents/AsymRoundRect.qml</file>
     </qresource>
 </RCC>

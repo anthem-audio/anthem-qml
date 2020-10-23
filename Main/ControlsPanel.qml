@@ -26,8 +26,8 @@ import "BasicComponents"
 import "Global"
 import "Menus"
 
-Item {
-    height: 44
+Rectangle {
+    height: 42
 
     function updateAll() {
         timeSignatureNumeratorControl.value = Anthem.getTimeSignatureNumerator();
@@ -43,10 +43,15 @@ Item {
         }
     }
 
+    radius: 1
+    color: colors.white_12
+
     Item {
         id: controlPanelSpacer
-        anchors.fill: parent
-        anchors.margins: 6
+        anchors {
+            fill: parent
+            margins: 7
+        }
 
         // Float left
 

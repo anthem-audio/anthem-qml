@@ -228,7 +228,7 @@ Window {
 
             // Rectangle to the right of the tab group that
             // contains the window controls
-            Rectangle {
+            AsymRoundRect {
                 anchors {
                     top: parent.top
                     right: parent.right
@@ -236,7 +236,9 @@ Window {
                     left: tabGroup.right
                     bottomMargin: 1
                 }
-                radius: 2
+                startRadius: 2
+                endRadius: 1
+                direction: AsymRoundRect.Direction.Vertical
                 color: colors.white_7
             }
 
@@ -245,9 +247,11 @@ Window {
                 anchors.fill: parent
             }
 
-            Rectangle {
+            AsymRoundRect {
                 id: anthemButtonContainer
-                radius: 2
+                startRadius: 2
+                endRadius: 1
+                direction: AsymRoundRect.Direction.Vertical
                 color: colors.white_7
 
                 anchors {
@@ -322,8 +326,8 @@ Window {
         anchors.right: parent.right
         anchors.bottom: footerContainer.top
 
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
+        anchors.leftMargin: 3
+        anchors.rightMargin: 3
         anchors.bottomMargin: 10
 
         ControlsPanel {
