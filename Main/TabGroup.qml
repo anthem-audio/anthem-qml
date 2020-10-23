@@ -1,5 +1,27 @@
+/*
+    Copyright (C) 2019 - 2020 Joshua Wade
+
+    This file is part of Anthem.
+
+    Anthem is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as
+    published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version.
+
+    Anthem is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with Anthem. If not, see
+                        <https://www.gnu.org/licenses/>.
+*/
+
 import QtQuick 2.15
 import "BasicComponents"
+import "Global"
+import "Dialogs"
 
 Item {
     id: tabGroup
@@ -11,17 +33,145 @@ Item {
         }
     */
     property var rowModel: [
-        { key: '0', text: 'Project 1' },
-        { key: '1', text: 'Project 2' },
-        { key: '2', text: 'Project 3' },
-        { key: '3', text: 'Project 4' },
-        { key: '4', text: 'Project 5' },
+        { text: 'New project 1' },
     ]
-
-    property real selected: 0
 
     readonly property real tabWidth: 126
     width: tabWidth * rowModel.length
+
+    QtObject {
+        id: tabGroupProps
+        property bool isSaveInProgress: false
+        property int  currentSavingTabIndex: -1
+    }
+
+    onRowModelChanged: {
+        globalStore.tabCount = rowModel.length;
+    }
+
+    signal lastTabClosed()
+
+    SaveDiscardCancelDialog {
+        id: saveConfirmDialog
+        title: "Unsaved changes"
+    }
+
+    Shortcut {
+        sequence: "Ctrl+W"
+        onActivated: doOnTabClosePressed(globalStore.selectedTabIndex)
+    }
+
+    property real newProjectCounter: 2;
+
+    function addTab(tabName) {
+        rowModel = [...rowModel, { text: `New project ${newProjectCounter}` }];
+        newProjectCounter++;
+    }
+
+    function renameTab(index, name) {
+        const newRowModel = [...rowModel];
+        newRowModel[index].text = name;
+        rowModel = newRowModel;
+    }
+
+    function doOnTabPressed(index) {
+        Anthem.switchActiveProject(index);
+        globalStore.selectedTabIndex = index;
+    }
+
+    function removeTab(index) {
+        const tabCount = globalStore.tabCount;
+
+        let isLastTab = false;
+
+        console.log(globalStore.selectedTabIndex, tabCount - 1);
+
+        if (globalStore.selectedTabIndex === tabCount - 1) {
+            isLastTab = true;
+        }
+
+        if (globalStore.selectedTabIndex === index) {
+            console.log(isLastTab)
+            if (isLastTab)
+                globalStore.selectedTabIndex--;
+            else
+                globalStore.selectedTabIndex++;
+        }
+
+        if (index < globalStore.selectedTabIndex)
+            globalStore.selectedTabIndex--;
+
+        rowModel = rowModel.filter((_, i) => i !== index);
+
+        console.log('happens');
+
+        console.log(globalStore.selectedTabIndex);
+    }
+
+    function doOnCloseConfirmation(index) {
+        if (index === undefined) {
+            index = tabGroupProps.currentSavingTabIndex;
+        }
+
+        if (globalStore.tabCount <= 1) {
+            Anthem.closeProject(0);
+            lastTabClosed();
+        }
+        else {
+            Anthem.closeProject(index);
+            Anthem.switchActiveProject(globalStore.selectedTabIndex);
+        }
+    }
+
+    function doOnTabClosePressed(index) {
+        if (Anthem.projectHasUnsavedChanges(index)) {
+            tabGroupProps.currentSavingTabIndex = index;
+            let projectName = tabGroup.children[index].title;
+            saveConfirmDialog.message =
+                `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
+            saveConfirmDialog.show();
+        }
+        else {
+            doOnCloseConfirmation(index);
+        }
+    }
+
+    Connections {
+        target: saveConfirmDialog
+        function onSavePressed() {
+            if (Anthem.isProjectSaved(tabGroupProps.currentSavingTabIndex)) {
+                saveLoadHandler.saveActiveProject();
+                doOnCloseConfirmation();
+            }
+            else {
+                tabGroupProps.isSaveInProgress = true;
+                saveLoadHandler.openSaveDialog();
+            }
+        }
+        function onDiscardPressed() {
+            doOnCloseConfirmation();
+        }
+    }
+
+    Connections {
+        target: Anthem
+        function onTabAdd() {
+            addTab(name);
+            commands.histories.push([]);
+            commands.historyPointers.push(-1);
+        }
+        function onTabRename() {
+            renameTab(index, name);
+        }
+        function onTabSelect() {
+            globalStore.selectedTabIndex = index;
+        }
+        function onTabRemove() {
+            removeTab(index);
+            commands.histories.splice(index, 1);
+            commands.historyPointers.splice(index, 1);
+        }
+    }
 
     Row {
         id: thisIsARow
@@ -50,10 +200,10 @@ Item {
                             right: parent.right
                         }
 
-                        height: index === selected ? parent.height + radius : parent.height
+                        height: index === globalStore.selectedTabIndex ? parent.height + radius : parent.height
                         radius: 2
 
-                        color: index === selected || hovered ? colors.white_12 : colors.white_7
+                        color: index === globalStore.selectedTabIndex || hovered ? colors.white_12 : colors.white_7
 
                         property bool hovered: tabMouseArea.hovered || closeButton.hovered
 
@@ -64,10 +214,13 @@ Item {
                                 verticalCenterOffset: -1
                                 left: parent.left
                                 leftMargin: 13
+                                right: closeButton.left
+                                rightMargin: 4
                             }
                             font.family: Fonts.main.name
                             font.pixelSize: 13
                             color: colors.white_70
+                            elide: Text.ElideRight
                         }
 
                         MouseArea {
@@ -75,7 +228,8 @@ Item {
                             property bool hovered: false
                             anchors.fill: parent
                             onClicked: {
-                                selected = index;
+                                globalStore.selectedTabIndex = index;
+                                doOnTabPressed(index);
                             }
                             hoverEnabled: true
                             onEntered: {
@@ -103,6 +257,10 @@ Item {
 
                             showBorder: false
                             showBackground: false
+
+                            onClicked: {
+                                doOnTabClosePressed(index);
+                            }
                         }
                     }
                 }
@@ -115,26 +273,9 @@ Item {
                     }
                     height: 1
                     color: colors.white_12
-                    visible: index === selected
+                    visible: index === globalStore.selectedTabIndex
                 }
             }
         }
     }
-
-//    Rectangle {
-//        anchors {
-//            left: thisIsARow.right
-//            top: parent.top
-//            bottom: parent.bottom
-//        }
-//        width: 10
-//        color: Qt.rgba(1, 1, 1, 0.2)
-//        MouseArea {
-//            anchors.fill: parent
-//            onClicked: {
-//                const oldRowModel = thisIsAnItem.rowModel;
-//                thisIsAnItem.rowModel = [...oldRowModel, oldRowModel.length]
-//            }
-//        }
-//    }
 }

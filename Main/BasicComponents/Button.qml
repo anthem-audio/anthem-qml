@@ -22,6 +22,8 @@ import QtQuick 2.14
 import QtGraphicalEffects 1.14
 import '../Global'
 
+// See pinned messages for hover styles
+
 Item {
     id: button
 

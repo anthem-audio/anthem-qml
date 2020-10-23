@@ -271,18 +271,6 @@ Window {
                 }
             }
 
-            TabGroupOld {
-                id: tabGroupOld
-                anchors.left: anthemButtonContainer.right
-                anchors.leftMargin: 1
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                // Width is managed internally by TabGroup
-
-                onLastTabClosed: Qt.quit()
-                visible: false
-            }
-
             TabGroup {
                 id: tabGroup
                 anchors {

@@ -13,10 +13,8 @@
         <file>Global/qmldir</file>
         <file>BasicComponents/DigitControl.qml</file>
         <file>BasicComponents/SimpleMeter.qml</file>
-        <file>TabGroupOld.qml</file>
         <file>ResizeHandles.qml</file>
         <file>MoveHandle.qml</file>
-        <file>BasicComponents/TabHandle.qml</file>
         <file>Dialogs/DialogBase.qml</file>
         <file>BasicComponents/WindowControls.qml</file>
         <file>Dialogs/OkCancelDialog.qml</file>
