@@ -263,15 +263,17 @@ Window {
                 height: 36
 
                 Button {
+                    id: btnLogo
                     anchors.fill: parent
 
                     showBackground: false
-                    showBorder: false
                     isToggleButton: true
 
                     imageSource: "Images/icons/main/anthem.svg"
                     imageWidth: 16
                     imageHeight: 16
+
+                    hoverMessage: btnLogo.pressed ? qsTr("Stop engine for this tab") : qsTr("Start engine for this tab")
                 }
             }
 
@@ -523,7 +525,6 @@ Window {
             imageSource: "Images/icons/bottom-bar/automation-panel.svg"
             imageWidth: 15
             imageHeight: 15
-            showBorder: false
             showBackground: false
             isToggleButton: true
             pressed: true

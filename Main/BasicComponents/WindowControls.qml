@@ -38,9 +38,6 @@ Item {
         imageWidth: 8
         imageHeight: 8
 
-        showBorder: false
-        showBackground: false
-
         onClicked: closePressed()
     }
 
@@ -58,9 +55,6 @@ Item {
         imageWidth: 8
         imageHeight: 8
 
-        showBorder: false
-        showBackground: false
-
         onClicked: maximizePressed()
     }
 
@@ -77,9 +71,6 @@ Item {
         imageSource: "Images/icons/small/minimize.svg"
         imageWidth: 8
         imageHeight: 8
-
-        showBorder: false
-        showBackground: false
 
         onClicked: minimizePressed()
     }

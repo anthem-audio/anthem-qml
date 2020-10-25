@@ -136,7 +136,6 @@ TooltipWrapper {
                         }
                         width: parent.height
                         showBackground: false
-                        showBorder: false
                         imageSource: "Images/Check.svg"
                         imageWidth: 8
                         imageHeight: 8
@@ -154,7 +153,6 @@ TooltipWrapper {
                         }
                         width: parent.height
                         showBackground: false
-                        showBorder: false
                         imageSource: "Images/icons/small/close.svg"
                         imageWidth: 8
                         imageHeight: 8

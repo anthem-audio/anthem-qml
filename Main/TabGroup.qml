@@ -84,14 +84,11 @@ Item {
 
         let isLastTab = false;
 
-        console.log(globalStore.selectedTabIndex, tabCount - 1);
-
         if (globalStore.selectedTabIndex === tabCount - 1) {
             isLastTab = true;
         }
 
         if (globalStore.selectedTabIndex === index) {
-            console.log(isLastTab)
             if (isLastTab)
                 globalStore.selectedTabIndex--;
             else
@@ -102,10 +99,6 @@ Item {
             globalStore.selectedTabIndex--;
 
         rowModel = rowModel.filter((_, i) => i !== index);
-
-        console.log('happens');
-
-        console.log(globalStore.selectedTabIndex);
     }
 
     function doOnCloseConfirmation(index) {
@@ -250,9 +243,6 @@ Item {
                         imageSource: "Images/icons/small/close.svg"
                         imageWidth: 8
                         imageHeight: 8
-
-                        showBorder: false
-                        showBackground: false
 
                         onClicked: {
                             doOnTabClosePressed(index);

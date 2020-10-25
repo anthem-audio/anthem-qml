@@ -53,480 +53,271 @@ Rectangle {
             margins: 7
         }
 
-        // Float left
+        Row {
+            id: groupContainer
+            property int totalGroupWidths: group1.width + spacerWidth + group2.width
+            property int spacerWidth: 2
+            property int groupCount: 6
 
-        Button {
-            id: btnLogo
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            width: parent.height // makes it square :)
-            isToggleButton: true
+            spacing: (controlPanelSpacer.width - totalGroupWidths) / groupCount
 
-            imageSource: "Images/icons/main/anthem.svg"
-            imageWidth: 14
-            imageHeight: 12
+            Row {
+                id: group1
 
-            hoverMessage: btnLogo.pressed ? qsTr("Stop engine for this tab") : qsTr("Start engine for this tab")
-        }
+                spacing: 4
+                Button {
+                    id: btnFile
+                    width: 28
+                    height: 28
 
-        Button {
-            id: btnFile
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnLogo.right
-            anchors.leftMargin: 2
-            width: parent.height
+                    imageSource: "Images/icons/file/hamburger.svg"
+                    imageWidth: 16
+                    imageHeight: 16
 
-            textContent: qsTr("File")
+                    clickOnMouseDown: true
 
-            hasMenuIndicator: true
-            clickOnMouseDown: true
+                    onClicked: fileMenu.open()
 
-            onClicked: fileMenu.open()
+                    Shortcut {
+                        sequence: "alt+f"
+                        onActivated: fileMenu.open()
+                    }
 
-            Shortcut {
-                sequence: "alt+f"
-                onActivated: fileMenu.open()
-            }
+                    Menu {
+                        id: fileMenu
+                        menuX: 0
+                        menuY: parent.height
 
-            Menu {
-                id: fileMenu
-                menuX: 0
-                menuY: parent.height
-
-                menuItems: [
-                    {
-                        text: qsTr('N_ew project'),
-                        shortcut: 'Ctrl+N',
-                        hoverText: qsTr('Start a new project'),
-                        onTriggered: () => {
-                            Anthem.newProject();
-                        }
-                    },
-                    {
-                        text: qsTr('O_pen...'),
-                        shortcut: 'Ctrl+O',
-                        hoverText: qsTr('Open an existing project'),
-                        onTriggered: () => {
-                            saveLoadHandler.openLoadDialog();
-                        }
-                    },
-                    {
-                        separator: true
-                    },
-                    {
-                        text: qsTr('S_ave'),
-                        shortcut: 'Ctrl+S',
-                        hoverText: qsTr('Save this project'),
-                        onTriggered: () => {
-                            saveLoadHandler.save();
-                        }
-                    },
-                    {
-                        text: qsTr('Save a_s...'),
-                        hoverText: qsTr('Save this project to a different file'),
-                        onTriggered: () => {
-                            saveLoadHandler.openSaveDialog();
-                        }
-                    },
-                    {
-                        separator: true
-                    },
-                    {
-                        text: tempoControl.value.toString()
-                    },
-                    {
-                        text: qsTr('Ex_it'),
-                        hoverText: qsTr('Quit Anthem'),
-                        onTriggered: () => {
-                            saveLoadHandler.closeWithSavePrompt();
-                        }
-                    },/*
-                    {
-                        separator: true
-                    },
-                    {
-                        text: 'Submenu test',
-                        submenu: [
+                        menuItems: [
                             {
-                                text: 'P_iano roll'
+                                text: qsTr('N_ew project'),
+                                shortcut: 'Ctrl+N',
+                                hoverText: qsTr('Start a new project'),
+                                onTriggered: () => {
+                                    Anthem.newProject();
+                                }
                             },
                             {
-                                text: 'Graph editor'
+                                text: qsTr('O_pen...'),
+                                shortcut: 'Ctrl+O',
+                                hoverText: qsTr('Open an existing project'),
+                                onTriggered: () => {
+                                    saveLoadHandler.openLoadDialog();
+                                }
                             },
                             {
                                 separator: true
                             },
                             {
-                                text: 'R_ename, color and icon..'
+                                text: qsTr('S_ave'),
+                                shortcut: 'Ctrl+S',
+                                hoverText: qsTr('Save this project'),
+                                onTriggered: () => {
+                                    saveLoadHandler.save();
+                                }
                             },
                             {
-                                text: 'Change color...'
-                            },
-                            {
-                                text: 'Change icon...'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'L_oad sample...'
-                            },
-                            {
-                                text: 'Cut_ itself'
+                                text: qsTr('Save a_s...'),
+                                hoverText: qsTr('Save this project to a different file'),
+                                onTriggered: () => {
+                                    saveLoadHandler.openSaveDialog();
+                                }
                             },
                             {
                                 separator: true
                             },
                             {
-                                text: 'I_nsert'
+                                text: tempoControl.value.toString()
                             },
                             {
-                                text: 'Replace'
-                            },
-                            {
-                                text: 'C_lone'
-                            },
-                            {
-                                text: 'D_elete...'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Assign to new instrument track...'
-                            },
-                            {
-                                newColumn: true
-                            },
-                            {
-                                text: 'Cut_'
-                            },
-                            {
-                                text: 'Co_py'
-                            },
-                            {
-                                text: 'P_aste',
-                                disabled: true
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Fill each 2_ steps'
-                            },
-                            {
-                                text: 'Fill each 4_ steps'
-                            },
-                            {
-                                text: 'Fill each 8_ steps'
-                            },
-                            {
-                                text: 'Advanced fill...'
-                            },
-                            {
-                                text: 'Advanced fill...'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Rotate left',
-                                shortcut: 'Shift+Ctrl+Left'
-                            },
-                            {
-                                text: 'Rotate right',
-                                shortcut: 'Shift+Ctrl+Right'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'MIDI channel through'
-                            },
-                            {
-                                text: 'Receive n_otes from',
-                                submenu: [
-                                    {text: 'Typing keyboard'},
-                                    {
-                                        text: 'Touch keyboard',
-                                        submenu: [
-                                            {text: 'abc'},
-                                            {text: 'abc'},
-                                            {text: 'abc'},
-                                            {text: 'abc'},
-                                            {newColumn: true},
-                                            {
-                                                text: 'abcdefghijklmnopqrstuvwxyz',
-                                                submenu: [
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {newColumn: true},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {
-                                                        text: 'abcdefghijklmnopqrstuvwxyz',
-                                                        submenu: [
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {newColumn: true},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {
-                                                                text: 'abcdefghijklmnopqrstuvwxyz',
-                                                                submenu: [
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {newColumn: true},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {
-                                                                        text: 'abcdefghijklmnopqrstuvwxyz',
-                                                                        submenu: [
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {newColumn: true},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {
-                                                                                text: 'abcdefghijklmnopqrstuvwxyz',
-                                                                                submenu: [
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {newColumn: true},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {newColumn: true},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {newColumn: true},
-                                                                                ]
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
-
-                                ]
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Create DirectWave instrument...'
-                            },
-                            {
-                                text: 'Burn MIDI to',
-                                submenu: [
-                                    {text: 'C_urrent pattern'},
-                                    {text: 'N_ew pattern'}
-                                ]
+                                text: qsTr('Ex_it'),
+                                hoverText: qsTr('Quit Anthem'),
+                                onTriggered: () => {
+                                    saveLoadHandler.closeWithSavePrompt();
+                                }
                             },
                         ]
-                    }*/
-                ]
+                    }
+                }
+
+                Button {
+                    id: btnSave
+                    width: 28
+                    height: 28
+                    hoverMessage: qsTr("Save this project")
+
+                    imageSource: "Images/icons/file/save.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+
+                    onClicked: saveLoadHandler.save()
+                }
+
+                Button {
+                    id: btnUndo
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Undo")
+
+                    imageSource: "Images/icons/file/undo.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+
+                    onClicked: {
+                        undo();
+                    }
+                }
+
+                Button {
+                    id: btnRedo
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Redo")
+
+                    imageSource: "Images/icons/file/redo.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+
+                    onClicked: {
+                        redo();
+                    }
+                }
+            }
+
+            Rectangle {
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
+
+            Row {
+                id: group2
+                spacing: 4
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Toggle metronome")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/metronome.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Scroll to playhead")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/scroll-follow.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Return playhead to initial position on stop")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/afterstop.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+            }
+
+            Rectangle {
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
+
+            Row {
+                id: group3
+                spacing: 4
+
+                Button {
+                    width: 39
+                    height: 28
+
+                    hoverMessage: qsTr("I do not know what this does :)")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/media/play-arranger.svg"
+                    imageWidth: 27
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Play")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/media/play.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Stop")
+
+                    imageSource: "Images/icons/media/stop.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Record")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/media/record.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Play and start recording")
+
+                    imageSource: "Images/icons/media/play-record.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
             }
         }
-
-        Button {
-            id: btnSave
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnFile.right
-            anchors.leftMargin: 20
-            width: parent.height
-            hoverMessage: qsTr("Save this project")
-
-            imageSource: "Images/icons/file/save.svg"
-            imageWidth: 16
-            imageHeight: 16
-
-            onClicked: saveLoadHandler.save()
-        }
-
-        Button {
-            id: btnUndo
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnSave.right
-            anchors.leftMargin: 2
-            width: parent.height
-            hoverMessage: qsTr("Undo")
-
-            imageSource: "Images/icons/file/undo.svg"
-            imageWidth: 15
-            imageHeight: 15
-
-            onClicked: {
-                undo();
-            }
-        }
-
-        Button {
-            id: btnRedo
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnUndo.right
-            anchors.leftMargin: 2
-            width: parent.height
-            hoverMessage: qsTr("Redo")
-
-            imageSource: "Images/icons/file/redo.svg"
-            imageWidth: 15
-            imageHeight: 15
-
-            onClicked: {
-                redo();
-            }
-        }
-
-
 
         // Float middle
         Item {
-            /*
-              This item is used to center a group of contorls in its parent.
-
-              In a perfect world, I would have the item adapt to the width of its
-                content and then center itself in the parent, but I don't know how
-                to do the former and I'm on a plane right now so I'm going to have
-                to settle for hard-coding the width.
-
-              -- Joshua Wade, Jun 11, 2019
-              */
-
+            visible: false
             id: centerPositioner
             width: 498
             height: parent.height
             anchors.centerIn: parent
-
-            Button {
-                id: btnMetronomeToggle
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                width: parent.height
-                hoverMessage: qsTr("Toggle metronome")
-
-                isToggleButton: true
-
-                imageSource: "Images/icons/control/metronome.svg"
-                imageWidth: 13
-                imageHeight: 16
-            }
-
-            Button {
-                id: idk
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: btnMetronomeToggle.right
-                anchors.leftMargin: 3
-                width: 21
-            }
-
-            ButtonGroup {
-                id: playbackControlsGroup
-                anchors.top: parent.top
-                anchors.left: idk.right
-                anchors.bottom: parent.bottom
-                fixedWidth: false
-                anchors.leftMargin: 3
-
-                defaultImageWidth: 12
-                defaultImageHeight: 12
-                defaultButtonWidth: 32
-                defaultButtonHeight: 32
-
-                buttons: ListModel {
-                    ListElement {
-                        isToggleButton: true
-                        hoverMessage: qsTr("Play")
-                        imageSource: "Images/icons/media/play.svg"
-                    }
-                    ListElement {
-                        hoverMessage: qsTr("Stop")
-                        imageSource: "Images/icons/media/stop.svg"
-                    }
-                    ListElement {
-                        isToggleButton: true
-                        hoverMessage: qsTr("Record")
-                        imageSource: "Images/icons/media/record.svg"
-                    }
-                    ListElement {
-                        hoverMessage: qsTr("Record immediately")
-                        imageSource: "Images/icons/media/play-record.svg"
-                        imageWidth: 16
-                        imageHeight: 16
-                    }
-                }
-            }
 
             Button {
                 id: btnLoop

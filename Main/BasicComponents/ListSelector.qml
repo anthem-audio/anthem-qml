@@ -87,8 +87,6 @@ Button {
         menu.open();
     }
 
-    hasMenuIndicator: true
-
     Text {
         text: selectedItem.displayName ? qsTr(selectedItem.displayName) : qsTr("(none)")
         font.family: Fonts.main.name

@@ -39,7 +39,6 @@ Item {
     Row {
         id: textWidthCalculator
         visible: false
-        onWidthChanged: console.log(width)
 
         Text {
             text: qsTr("Plugins")

@@ -18,8 +18,8 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.14
-import QtGraphicalEffects 1.14
+import QtQuick 2.15
+import QtGraphicalEffects 1.15
 import '../Global'
 
 // See pinned messages for hover styles
@@ -37,12 +37,10 @@ Item {
         Disabled
     }
 
-    property bool   showBorder: true
     property bool   showBackground: true
     property bool   pressed: false
     property bool   isToggleButton: false
     property bool   isHighlighted: false
-    property bool   hasMenuIndicator: false
     property bool   isDisabled: false
     property bool   allowPressEventsOnDisable: false
     property real   margin: 5
@@ -81,7 +79,6 @@ Item {
 
     Component.onCompleted: calculateWidth()
     onMarginChanged: calculateWidth()
-
 
     function getState() {
         if (isDisabled) {
@@ -170,23 +167,11 @@ Item {
     }
 
     Rectangle {
-        id: border
-        visible: showBorder
-        anchors.fill: parent
-        color: 'transparent'
-        radius: 2
-
-        border.width: 1
-        border.color: Qt.rgba(0, 0, 0, 0.4)
-    }
-
-    Rectangle {
         id: inside
 
         visible: showBackground
         anchors.fill: parent
-        anchors.margins: showBorder ? 1 : 0
-        radius: 1
+        radius: 2
 
         QtObject {
             id: insideProps
@@ -194,13 +179,13 @@ Item {
             function getOpacity() {
                 switch (button.state) {
                 case Button.State.Inactive:
-                    return 0.12; // 12% opacity white
-                case Button.State.Hovered:
-                    return 0.18; // 18% opacity white
-                case Button.State.Highlighted:
                     return 0; // transparent
+                case Button.State.Hovered:
+                    return 0.12; // 12% opacity white
+                case Button.State.Highlighted:
+                    return 0.09; // 9% opacity white
                 case Button.State.Pressed:
-                    return 0.5; // #37a483 (+ hue shift), 50% opacity
+                    return 0.09; // #37a483 (+ hue shift), 50% opacity
                 case Button.State.Active:
                     return 1; // #37a483 (+ hue shift)
                 case Button.State.Disabled:
@@ -213,13 +198,13 @@ Item {
             function getColor() {
                 switch (button.state) {
                 case Button.State.Inactive:
-                    return Qt.hsla(0, 0, 1, 1); // 12% opacity white
+                    return Qt.hsla(0, 0, 1, 1); // transparent
                 case Button.State.Hovered:
-                    return Qt.hsla(0, 0, 1, 1); // 18% opacity white
+                    return Qt.hsla(0, 0, 1, 1); // 12% opacity white
                 case Button.State.Highlighted:
                     return Qt.hsla(0, 0, 0, 1); // transparent
                 case Button.State.Pressed:
-                    return colors.main + '7f'   // 50% opacity
+                    return Qt.hsla(0, 0, 1, 1); // 9% opacity white
                 case Button.State.Active:
                     return colors.main
                 case Button.State.Disabled:
@@ -232,27 +217,6 @@ Item {
 
         color: insideProps.color
         opacity: insideProps.opacity
-    }
-
-    GradientBorder {
-        id: highlight
-        anchors.fill: parent
-        anchors.margins: showBorder ? 1 : 0
-        borderWidth: 1
-        visible: showBackground && button.state !== Button.State.Disabled
-        hue: buttonProps.hue
-        showHighlightColor: button.state === Button.State.Highlighted ||
-                            button.state === Button.State.Pressed
-    }
-
-    Rectangle {
-        id: btnCorner
-        color: 'transparent'
-        anchors.fill: parent
-        border.color: Qt.rgba(1, 1, 1, hovered && !button.isMouseDown ? 1 : 0.7)
-        anchors.margins: 1
-        radius: 1
-        visible: false
     }
 
     Text {
@@ -290,31 +254,6 @@ Item {
         visible: true;
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
-    }
-
-    Rectangle {
-        id: btnCornerMask
-
-        anchors.fill: parent
-        anchors.margins: 1
-        color: 'transparent'
-
-        Rectangle {
-            color: 'white'
-            width: 5
-            height: 5
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-        }
-
-        visible: false
-    }
-
-    OpacityMask {
-        anchors.fill: btnCorner
-        source: btnCorner
-        maskSource: btnCornerMask
-        visible: hasMenuIndicator
     }
 
     MouseArea {

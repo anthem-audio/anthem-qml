@@ -219,7 +219,6 @@ Item {
                         isToggleButton: props._isToggleButton || managementType === ButtonGroup.ManagementType.Selector
                         pressed: index == selectedIndex
                         showBackground: buttonGroup.showBackground
-                        showBorder: false
 
                         imageWidth: props._imageWidth || defaultImageWidth
                         imageHeight: props._imageHeight || defaultImageHeight
