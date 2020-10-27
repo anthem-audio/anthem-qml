@@ -206,7 +206,7 @@ Item {
                             right: closeButton.left
                             rightMargin: 4
                         }
-                        font.family: Fonts.main.name
+                        font.family: Fonts.mainRegular.name
                         font.pixelSize: 13
                         color: colors.white_70
                         elide: Text.ElideRight

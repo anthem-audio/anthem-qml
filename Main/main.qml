@@ -510,7 +510,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.leftMargin: 20
             text: globalStore.statusMessage
-            font.family: Fonts.main.name
+            font.family: Fonts.mainRegular.name
             font.pixelSize: 11
             color: Qt.rgba(1, 1, 1, 0.6)
         }

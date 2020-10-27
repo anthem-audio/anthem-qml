@@ -33,7 +33,7 @@ Item {
     property real   speedMultiplier: 1
     property int    decimalPlaces: 0
     property int    alignment: Text.AlignRight
-    property var    fontFamily: Fonts.mono.name
+    property var    fontFamily: Fonts.monoMedium.name
     property int    fontPixelSize: 11
     property var    acceptedValues: []
     property string hoverMessage: ''

@@ -42,22 +42,22 @@ Item {
 
         Text {
             text: qsTr("Plugins")
-            font.family: Fonts.main.name
+            font.family: Fonts.mainRegular.name
             font.pixelSize: 11
         }
         Text {
             text: qsTr("Audio")
-            font.family: Fonts.main.name
+            font.family: Fonts.mainRegular.name
             font.pixelSize: 11
         }
         Text {
             text: qsTr("Projects")
-            font.family: Fonts.main.name
+            font.family: Fonts.mainRegular.name
             font.pixelSize: 11
         }
         Text {
             text: qsTr("Files")
-            font.family: Fonts.main.name
+            font.family: Fonts.mainRegular.name
             font.pixelSize: 11
         }
     }

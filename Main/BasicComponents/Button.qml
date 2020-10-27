@@ -222,7 +222,7 @@ Item {
     Text {
         id: text
         text: qsTr(textContent)
-        font.family: Fonts.main.name
+        font.family: Fonts.mainRegular.name
         font.pixelSize: textPixelSize
         anchors.centerIn: textFloat == 'center' ? parent : undefined
         anchors.left: textFloat == 'left' ? parent.left : undefined
