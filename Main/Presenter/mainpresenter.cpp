@@ -312,24 +312,6 @@ void MainPresenter::displayStatusMessage(QString message) {
 // Control-specific functions //
 //****************************//
 
-int MainPresenter::getMasterPitch() {
-    return static_cast<int>(
-        std::round(
-            projects[
-                activeProjectIndex
-            ]->getTransport()->masterPitch->get()
-        )
-    );
-}
-
-void MainPresenter::setMasterPitch(int pitch, bool isFinal) {
-    projects[
-        activeProjectIndex
-    ]->getTransport()->masterPitch->set(
-        static_cast<float>(pitch), isFinal
-    );
-}
-
 
 float MainPresenter::getBeatsPerMinute() {
     return projects[

@@ -134,8 +134,6 @@ public slots:
 
 
     // Getters and setters for model properties
-    int getMasterPitch();
-    void setMasterPitch(int pitch, bool isFinal);
     float getBeatsPerMinute();
     void setBeatsPerMinute(float bpm, bool isFinal);
     quint8 getTimeSignatureNumerator();

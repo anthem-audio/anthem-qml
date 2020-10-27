@@ -47,25 +47,25 @@ private slots:
 
     void emptyProject() {
         qDebug() << "Initial project state";
-        QCOMPARE(project->getTransport()->masterPitch->get(), 0.0f);
+        QCOMPARE(project->getTransport()->beatsPerMinute->get(), 140.0f);
 
 
 
         qDebug() << "Direct item set";
 
         // Set the value to -5, but send a live update instead of a patch.
-        project->getTransport()->masterPitch->set(-5.0f, false);
+        project->getTransport()->beatsPerMinute->set(-5.0f, false);
 
         // The control should report the newly set value.
-        QCOMPARE(project->getTransport()->masterPitch->get(), -5.0f);
+        QCOMPARE(project->getTransport()->beatsPerMinute->get(), -5.0f);
 
 
 
         // Set the value to 10, and send a patch (final value in a channge operation).
-        project->getTransport()->masterPitch->set(10.0f, true);
+        project->getTransport()->beatsPerMinute->set(10.0f, true);
 
         // The control should report the newly set value.
-        QCOMPARE(project->getTransport()->masterPitch->get(), 10.0f);
+        QCOMPARE(project->getTransport()->beatsPerMinute->get(), 10.0f);
     }
 
     void presenterTests() {
@@ -78,8 +78,8 @@ private slots:
         QCOMPARE(presenter->projectHasUnsavedChanges(0), false);
 
         qDebug() << "Performing an action should add an undo step";
-        presenter->setMasterPitch(3, true);
-        QCOMPARE(presenter->getMasterPitch(), 3);
+        presenter->setBeatsPerMinute(3, true);
+        QCOMPARE(presenter->getBeatsPerMinute(), 3);
         QCOMPARE(presenter->projectHasUnsavedChanges(0), true);
         QCOMPARE(presenter->isProjectSaved(0), false);
 
@@ -98,42 +98,42 @@ private slots:
         QCOMPARE(presenter->isProjectSaved(1), false);
 
         qDebug() << "We should be able to switch tabs";
-        presenter->setMasterPitch(6, true);
-        presenter->setMasterPitch(7, true);
+        presenter->setBeatsPerMinute(6, true);
+        presenter->setBeatsPerMinute(7, true);
 
         presenter->switchActiveProject(0);
         QCOMPARE(presenter->activeProjectIndex, 0);
-        presenter->setMasterPitch(6, true);
-        presenter->setMasterPitch(7, true);
-        QCOMPARE(presenter->getMasterPitch(), 7);
+        presenter->setBeatsPerMinute(6, true);
+        presenter->setBeatsPerMinute(7, true);
+        QCOMPARE(presenter->getBeatsPerMinute(), 7);
 
         qDebug() << "We should be able to close the first tab";
         presenter->closeProject(0);
         presenter->switchActiveProject(0);
         QCOMPARE(presenter->activeProjectIndex, 0);
-        QCOMPARE(presenter->getMasterPitch(), 9);
+        QCOMPARE(presenter->getBeatsPerMinute(), 9);
 
         qDebug() << "Save and load should work as expected";
         auto path = QDir::currentPath() + "/test.anthem";
         qDebug() << path;
-        presenter->setMasterPitch(10, true);
+        presenter->setBeatsPerMinute(10, true);
         presenter->saveActiveProjectAs(path);
         QCOMPARE(presenter->projectHasUnsavedChanges(0), false);
         QCOMPARE(presenter->isProjectSaved(0), true);
         presenter->loadProject(path);
         QCOMPARE(presenter->activeProjectIndex, 1);
-        QCOMPARE(presenter->getMasterPitch(), 10);
+        QCOMPARE(presenter->getBeatsPerMinute(), 10);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
         QCOMPARE(presenter->isProjectSaved(1), true);
         QCOMPARE(presenter->getProjectAt(presenter->activeProjectIndex)->getSong()->getPatterns().keys().length(), 1);
 
-        presenter->setMasterPitch(-12, true);
+        presenter->setBeatsPerMinute(-12, true);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), true);
         QCOMPARE(presenter->isProjectSaved(1), true);
         presenter->saveActiveProject();
         presenter->loadProject(path);
         QCOMPARE(presenter->activeProjectIndex, 2);
-        QCOMPARE(presenter->getMasterPitch(), -12);
+        QCOMPARE(presenter->getBeatsPerMinute(), -12);
         QCOMPARE(presenter->projectHasUnsavedChanges(1), false);
         QCOMPARE(presenter->isProjectSaved(1), true);
         QCOMPARE(presenter->projectHasUnsavedChanges(2), false);
