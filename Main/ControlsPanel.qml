@@ -33,7 +33,6 @@ Rectangle {
         timeSignatureNumeratorControl.value = Anthem.getTimeSignatureNumerator();
         timeSignatureDenominatorControl.value = Anthem.getTimeSignatureDenominator();
         tempoControl.value = Anthem.getBeatsPerMinute();
-        masterPitchControl.value = Anthem.getMasterPitch();
     }
 
     Connections {
@@ -60,9 +59,10 @@ Rectangle {
                 group2.width + spacerWidth +
                 group3.width + spacerWidth +
                 group4.width + spacerWidth +
-                group5.width
+                group5.width + spacerWidth +
+                group6.width
             property int spacerWidth: 2
-            property int groupCount: 5
+            property int groupCount: 6
 
             spacing: (controlPanelSpacer.width - totalGroupWidths) / ((groupCount - 1) * 2)
 
@@ -570,137 +570,115 @@ Rectangle {
                     imageHeight: 16
                 }
             }
-        }
-
-        // Float middle
-        Item {
-            visible: false
-            id: centerPositioner
-            width: 498
-            height: parent.height
-            anchors.centerIn: parent
 
             Rectangle {
-                id: cpuAndOutputBlock
-                anchors.left: pitchBlock.right
-                anchors.leftMargin: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 58
-                radius: 2
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+            Row {
+                id: group6
+                spacing: 4
 
                 Item {
-                    anchors.fill: parent
-                    anchors.margins: 5
+                    height: 28
+                    width: 57
 
-                    Item {
-                        id: icons
-                        width: 9
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-
-                        Image {
-                            id: cpuIcon
-                            source: 'Images/icons/not-clickable/cpu.svg'
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.top: parent.top
-                            height: parent.width
-                            visible: false
-                            sourceSize.width: width
-                            sourceSize.height: height
+                    Icon {
+                        imageSource: "Images/icons/not-clickable/cpu.svg"
+                        width: 16
+                        height: 16
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: 4
                         }
 
-                        ColorOverlay {
-                            anchors.fill: cpuIcon
-                            source: cpuIcon
-                            color: Qt.rgba(1, 1, 1, 1)
-                            opacity: 0.65
+                        color: '#fff'
+                        opacity: 0.4
+                    }
+
+                    SimpleMeter {
+                        width: 26
+                        height: 16
+
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                            rightMargin: 4
                         }
 
-                        Image {
-                            id: outputIcon
-                            source: 'Images/icons/not-clickable/in-out.svg'
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            height: parent.width
-                            visible: false
-                            sourceSize.width: width
-                            sourceSize.height: height
+                        value: 0.15
+                    }
+                }
+
+                Item {
+                    height: 28
+                    width: 57
+
+                    Icon {
+                        imageSource: "Images/icons/not-clickable/in-out.svg"
+                        width: 16
+                        height: 16
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: 4
                         }
 
-                        ColorOverlay {
-                            anchors.fill: outputIcon
-                            source: outputIcon
-                            color: Qt.rgba(1, 1, 1, 1)
-                            opacity: 0.65
-                        }
+                        color: '#fff'
+                        opacity: 0.4
                     }
 
                     Item {
-                        anchors.left: icons.right
-                        anchors.leftMargin: 3
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.right: parent.right
+                        width: 26
+                        height: 16
 
-                        SimpleMeter {
-                            anchors.right: parent.right
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            height: 9
-
-                            value: 0.45
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                            rightMargin: 4
                         }
 
-                        Item {
-                            anchors.right: parent.right
-                            anchors.left: parent.left
-                            anchors.bottom: parent.bottom
-                            height: 9
-
-                            SimpleMeter {
-                                anchors.top: parent.top
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: 4
-
-                                value: 0.7
+                        SimpleMeter {
+                            anchors {
+                                right: parent.right
+                                left: parent.left
+                                top: parent.top
                             }
 
-                            SimpleMeter {
-                                anchors.bottom: parent.bottom
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: 4
-                                value: 0.8
+                            height: 7
+
+                            value: 0.15
+                        }
+
+                        SimpleMeter {
+                            anchors {
+                                right: parent.right
+                                left: parent.left
+                                bottom: parent.bottom
                             }
+
+                            height: 7
+
+                            value: 0.05
                         }
                     }
                 }
+
+                Button {
+                    id: btnMidiLearn // ?
+                    width: 28
+                    height: 28
+                    hoverMessage: qsTr("Midi learn")
+
+                    imageSource: "Images/icons/topbar/learn.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
             }
-        }
-
-        // Float right
-
-        Button {
-            visible: false
-            id: btnMidiLearn // ?
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            width: parent.height
-            hoverMessage: qsTr("Midi learn")
-
-            imageSource: "Images/icons/topbar/learn.svg"
-            imageWidth: 16
-            imageHeight: 16
         }
     }
 }

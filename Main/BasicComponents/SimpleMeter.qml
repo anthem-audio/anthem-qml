@@ -24,8 +24,8 @@ Rectangle {
     property real value: 0
     property bool isVertical: false
 
-    color: Qt.rgba(1, 1, 1, 0.09)
-    radius: 0.5
+    color: colors.white_12
+    radius: 1
 
     Rectangle {
         anchors.left: parent.left
@@ -34,7 +34,7 @@ Rectangle {
         height: isVertical ? parent.height * value : parent.height
         width: isVertical ? parent.width : parent.width * value
 
-        radius: 0.5
-        color: colors.main
+        radius: 1
+        color: colors.white_60
     }
 }
