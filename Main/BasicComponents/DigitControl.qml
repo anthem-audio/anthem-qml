@@ -32,7 +32,7 @@ Item {
     property real   smallestIncrement: step
     property real   speedMultiplier: 1
     property int    decimalPlaces: 0
-    property int    alignment: Text.AlignRight
+    property int    alignment: Text.AlignHCenter
     property var    fontFamily: Fonts.monoMedium.name
     property int    fontPixelSize: 11
     property var    acceptedValues: []
@@ -72,7 +72,7 @@ Item {
         horizontalAlignment: alignment
         verticalAlignment: Text.AlignVCenter
         anchors.fill: parent
-        color: colors.main
+        color: colors.white_70
     }
 
     ControlMouseArea {

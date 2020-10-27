@@ -55,11 +55,16 @@ Rectangle {
 
         Row {
             id: groupContainer
-            property int totalGroupWidths: group1.width + spacerWidth + group2.width
+            property int totalGroupWidths:
+                group1.width + spacerWidth +
+                group2.width + spacerWidth +
+                group3.width + spacerWidth +
+                group4.width + spacerWidth +
+                group5.width
             property int spacerWidth: 2
-            property int groupCount: 6
+            property int groupCount: 5
 
-            spacing: (controlPanelSpacer.width - totalGroupWidths) / groupCount
+            spacing: (controlPanelSpacer.width - totalGroupWidths) / ((groupCount - 1) * 2)
 
             Row {
                 id: group1
@@ -309,144 +314,105 @@ Rectangle {
                     imageHeight: 16
                 }
             }
-        }
-
-        // Float middle
-        Item {
-            visible: false
-            id: centerPositioner
-            width: 498
-            height: parent.height
-            anchors.centerIn: parent
-
-            Button {
-                id: btnLoop
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: playbackControlsGroup.right
-                anchors.leftMargin: 3
-                width: parent.height
-                hoverMessage: qsTr("Toggle loop points")
-
-                isToggleButton: true
-
-                imageSource: "Images/icons/control/repeat.svg"
-                imageWidth: 16
-                imageHeight: 14
-            }
 
             Rectangle {
-                id: tempoAndTimeSignatureBlock
-                anchors.left: btnLoop.right
-                anchors.leftMargin: 20
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 61
-                radius: 2
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+            Row {
+                id: group4
+                spacing: 2
 
-                Item {
-                    id: spacer1
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: parent.height * 0.5;
-                    anchors.rightMargin: 7
+                DigitControl {
+                    id: tempoControl
 
-                    DigitControl {
-                        id: tempoControl
+                    height: 28
+                    width: 70
+
+                    lowBound: 10
+                    highBound: 999
+                    step: 0.01
+                    smallestIncrement: 0.01
+                    decimalPlaces: 2
+                    value: 140
+                    property int lastSentValue: 140
+                    hoverMessage: qsTr("Tempo")
+                    units: qsTr("BPM")
+
+                    fontPixelSize: 16
+
+//                    onValueChanged: {
+//                        Anthem.setBeatsPerMinute(value, false);
+//                    }
+
+                    onValueChangeCompleted: {
+                        const old = lastSentValue;
+
+                        const command = {
+                            exec: () => {
+                                lastSentValue = value;
+                                tempoControl.value = value;
+                                Anthem.setBeatsPerMinute(value, true);
+                            },
+                            undo: () => {
+                                lastSentValue = old;
+                                tempoControl.value = old;
+                                Anthem.setBeatsPerMinute(old, true);
+                            },
+                            description: qsTr('set BPM')
+                        }
+
+                        exec(command);
+                    }
+
+                    // This MouseArea changes the step on tempoControl
+                    // depending on which digit is clicked.
+                    MouseArea {
                         anchors.fill: parent
-                        anchors.topMargin: 2
-
-                        lowBound: 10
-                        highBound: 999
-                        step: 0.01
-                        smallestIncrement: 0.01
-                        decimalPlaces: 2
-                        value: 140
-                        property int lastSentValue: 140
-                        hoverMessage: qsTr("Tempo")
-                        units: qsTr("BPM")
-
-                        fontPixelSize: 13
-
-                        onValueChanged: {
-//                            Anthem.setBeatsPerMinute(value, false);
+                        onPressed: {
+                            mouse.accepted = false;
+                            let distanceFromRight = parent.width - mouseX;
+                            if (distanceFromRight <= 8) {
+                                tempoControl.step = 0.01;
+                            }
+                            else if (distanceFromRight <= 16) {
+                                tempoControl.step = 0.1;
+                            }
+                            else {
+                                tempoControl.step = 1;
+                            }
                         }
-
-                        onValueChangeCompleted: {
-                            const old = lastSentValue;
-
-                            const command = {
-                                exec: () => {
-                                    lastSentValue = value;
-                                    tempoControl.value = value;
-                                    Anthem.setBeatsPerMinute(value, true);
-                                },
-                                undo: () => {
-                                    lastSentValue = old;
-                                    tempoControl.value = old;
-                                    Anthem.setBeatsPerMinute(old, true);
-                                },
-                                description: qsTr('set BPM')
-                            }
-
-                            exec(command);
+                        onReleased: {
+                            mouse.accepted = false;
                         }
-
-                        // This MouseArea changes the step on tempoControl
-                        // depending on which digit is clicked.
-                        MouseArea {
-                            anchors.fill: parent
-                            onPressed: {
-                                mouse.accepted = false;
-                                let distanceFromRight = parent.width - mouseX;
-                                if (distanceFromRight <= 8) {
-                                    tempoControl.step = 0.01;
-                                }
-                                else if (distanceFromRight <= 16) {
-                                    tempoControl.step = 0.1;
-                                }
-                                else {
-                                    tempoControl.step = 1;
-                                }
-                            }
-                            onReleased: {
-                                mouse.accepted = false;
-                            }
-                            onPositionChanged: {
-                                mouse.accepted = false;
-                            }
+                        onPositionChanged: {
+                            mouse.accepted = false;
                         }
                     }
                 }
 
                 Item {
-                    id: spacer2
-                    anchors.top: spacer1.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.rightMargin: 7
+                    width: 60
+                    height: 28
 
                     DigitControl {
                         id: timeSignatureNumeratorControl
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
-                        width: 16
+                        width: 18
                         hoverMessage: qsTr("Time signature numerator")
 
-                        fontPixelSize: 13
+                        fontPixelSize: 16
+                        alignment: Text.AlignRight
 
                         lowBound: 1
                         highBound: 16
                         value: 4
                         speedMultiplier: 0.5
-
 
 //                        onValueChanged: {
 //                            Anthem.setTimeSignatureNumerator(value);
@@ -474,26 +440,24 @@ Rectangle {
                     Text {
                         id: timeSignatureSlash
                         text: "/"
-                        font.family: Fonts.mono.name
+                        font.family: Fonts.monoMedium.name
                         font.weight: Font.Bold
-                        font.pixelSize: 13
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.right: timeSignatureDenominatorControl.left
-                        color: colors.main
+                        font.pixelSize: 16
+                        anchors.centerIn: parent
+                        color: colors.white_70
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     DigitControl {
                         id: timeSignatureDenominatorControl
-                        anchors.right: parent.right
+                        anchors.left: timeSignatureSlash.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        width: value === 16 ? 16 : 8
+                        width: 18
                         hoverMessage: qsTr("Time signature denominator")
 
-                        fontPixelSize: 13
+                        fontPixelSize: 16
                         alignment: Text.AlignLeft
 
                         value: 4
@@ -524,140 +488,97 @@ Rectangle {
                         }
                     }
                 }
-            }
 
-            Rectangle {
-                id: playheadInfoBlock
-                anchors.left: tempoAndTimeSignatureBlock.right
-                anchors.leftMargin: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 95
-                radius: 2
+                Text {
+                    text: "111.1.1.00"
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+                    width: 108
+                    height: 28
 
-                Item {
-                    id: spacer3
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: parent.height * 0.5;
-                    anchors.rightMargin: 7
+                    font.family: Fonts.monoMedium.name
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
 
-                    Text {
-                        text: "1.1.1.00"
-                        font.family: Fonts.mono.name
-                        font.weight: Font.Bold
-                        font.pointSize: 10
-                        anchors.fill: parent
-                        anchors.topMargin: 2
-                        color: colors.main
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
+                    color: colors.white_70
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
 
-                Item {
-                    id: spacer4
-                    anchors.top: spacer3.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.rightMargin: 7
+                Text {
+                    text: "000:00.000"
 
-                    Text {
-                        text: "0:00.00"
-                        font.family: Fonts.mono.name
-                        font.weight: Font.Bold
-                        font.pointSize: 10
-                        anchors.fill: parent
-                        anchors.bottomMargin: 2
-                        color: colors.main
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
+                    width: 108
+                    height: 28
+
+                    font.family: Fonts.monoMedium.name
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
+
+                    color: colors.white_70
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
             Rectangle {
-                id: pitchBlock
-                anchors.left: playheadInfoBlock.right
-                anchors.leftMargin: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 39
-                radius: 2
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+            Row {
+                id: group5
+                spacing: 4
 
-                Item {
-                    anchors.fill: parent
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
+                Button {
+                    width: 28
+                    height: 28
 
-                    Text {
-                        id: pitchLabel
-                        text: qsTr("PITCH")
-                        font.family: Fonts.main.name
-                        font.pointSize: 8
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        height: parent.height * 0.5
-                        color: Qt.rgba(1, 1, 1, 0.65)
-                    }
+                    hoverMessage: qsTr("Punch in")
 
-                    DigitControl {
-                        id: masterPitchControl
-                        anchors.top: pitchLabel.bottom
-                        anchors.left: parent.left
-                        anchors.leftMargin: 4
-                        anchors.right: parent.right
-                        anchors.rightMargin: 4
-                        anchors.bottom: parent.bottom
-                        hoverMessage: qsTr("Master pitch")
-                        units: qsTr("semitones")
+                    isToggleButton: true
 
-                        property int lastSentValue: 0
+                    imageSource: "Images/icons/control/punch-in.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
 
-                        fontFamily: Fonts.main.name
+                Button {
+                    width: 28
+                    height: 28
 
-                        highBound: 12
-                        lowBound: -12
+                    hoverMessage: qsTr("Toggle loop points")
 
-                        onValueChanged: {
-                            Anthem.setMasterPitch(value, false);
-                        }
+                    isToggleButton: true
 
-                        onValueChangeCompleted: {
-                            const old = lastSentValue;
+                    imageSource: "Images/icons/control/repeat.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
 
-                            const command = {
-                                exec: () => {
-                                    masterPitchControl.value = value;
-                                    Anthem.setMasterPitch(value, true);
-                                    lastSentValue = value;
-                                },
-                                undo: () => {
-                                    masterPitchControl.value = old;
-                                    Anthem.setMasterPitch(old, true);
-                                    lastSentValue = old;
-                                },
-                                description: qsTr('set master pitch')
-                            }
+                Button {
+                    width: 28
+                    height: 28
 
-                            exec(command);
-                        }
-                    }
+                    hoverMessage: qsTr("Punch out")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/punch-out.svg"
+                    imageWidth: 16
+                    imageHeight: 16
                 }
             }
+        }
+
+        // Float middle
+        Item {
+            visible: false
+            id: centerPositioner
+            width: 498
+            height: parent.height
+            anchors.centerIn: parent
 
             Rectangle {
                 id: cpuAndOutputBlock
@@ -769,6 +690,7 @@ Rectangle {
         // Float right
 
         Button {
+            visible: false
             id: btnMidiLearn // ?
             anchors.top: parent.top
             anchors.bottom: parent.bottom

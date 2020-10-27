@@ -45,9 +45,6 @@ Item {
         }
         width: direction === AsymRoundRect.Direction.Horizontal ? Math.floor(rect.width * 0.5) : undefined
         height: direction === AsymRoundRect.Direction.Vertical ? Math.floor(rect.height * 0.5) : undefined
-        Rectangle {
-            anchors.fill: rect
-        }
 
         Rectangle {
             anchors.fill: parent
