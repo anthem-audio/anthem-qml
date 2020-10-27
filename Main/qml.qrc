@@ -148,5 +148,6 @@
         <file>Fonts/NotoSansDisplay-Medium.ttf</file>
         <file>Fonts/NotoSansMono-Medium.ttf</file>
         <file>Fonts/NotoSansMono-Regular.ttf</file>
+        <file>BasicComponents/Icon.qml</file>
     </qresource>
 </RCC>

@@ -236,22 +236,11 @@ Item {
         onWidthChanged: parent.calculateWidth()
     }
 
-    Image {
-        id: icon
-        // If the source is defined, use it. Otherwise, use a transparent 1-pixel PNG.
-        source: imageSource != '' ? '../' + imageSource : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-        width: imageWidth
-        height: imageHeight
+    Icon {
+        imageSource: button.imageSource
+        width: button.imageWidth
+        height: button.imageHeight
         anchors.centerIn: parent
-        sourceSize.width: imageWidth
-        sourceSize.height: imageHeight
-        visible: false
-    }
-    ColorOverlay {
-        anchors.fill: icon
-        source: icon
-        property int colorVal: isToggleButton && pressed ? 0 : 1
-        visible: true;
         color: buttonProps.contentColor
         opacity: buttonProps.contentOpacity
     }
