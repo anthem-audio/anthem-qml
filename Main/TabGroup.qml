@@ -148,18 +148,18 @@ Item {
 
     Connections {
         target: Anthem
-        function onTabAdd() {
+        function onTabAdd(name) {
             addTab(name);
             commands.histories.push([]);
             commands.historyPointers.push(-1);
         }
-        function onTabRename() {
+        function onTabRename(index, name) {
             renameTab(index, name);
         }
-        function onTabSelect() {
+        function onTabSelect(index) {
             globalStore.selectedTabIndex = index;
         }
-        function onTabRemove() {
+        function onTabRemove(index) {
             removeTab(index);
             commands.histories.splice(index, 1);
             commands.historyPointers.splice(index, 1);
