@@ -26,8 +26,6 @@ Transport::Transport(
 {
     this->id = id;
 
-    masterPitch =
-        new Control(this, "master_pitch", *id, 0, -12, 12, 1);
     beatsPerMinute =
         new Control(this, "beats_per_minute", *id, 140, 10, 999, 0.01f);
 
@@ -45,8 +43,6 @@ Transport::Transport(
 
     QJsonObject masterPitchNode =
             transportNode["master_pitch"].toObject();
-    masterPitch =
-            new Control(this, "master_pitch", masterPitchNode);
 
     QJsonObject beatsPerMinuteNode =
             transportNode["beats_per_minute"].toObject();
@@ -64,7 +60,6 @@ void Transport::serialize(QJsonObject& node) const {
     QJsonObject masterPitch;
     QJsonObject beatsPerMinute;
 
-    this->masterPitch->serialize(masterPitch);
     this->beatsPerMinute->serialize(beatsPerMinute);
 
     node["master_pitch"] = masterPitch;

@@ -228,7 +228,7 @@ Window {
 
             // Rectangle to the right of the tab group that
             // contains the window controls
-            Rectangle {
+            AsymRoundRect {
                 anchors {
                     top: parent.top
                     right: parent.right
@@ -236,7 +236,9 @@ Window {
                     left: tabGroup.right
                     bottomMargin: 1
                 }
-                radius: 2
+                startRadius: 2
+                endRadius: 1
+                direction: AsymRoundRect.Direction.Vertical
                 color: colors.white_7
             }
 
@@ -245,9 +247,11 @@ Window {
                 anchors.fill: parent
             }
 
-            Rectangle {
+            AsymRoundRect {
                 id: anthemButtonContainer
-                radius: 2
+                startRadius: 2
+                endRadius: 1
+                direction: AsymRoundRect.Direction.Vertical
                 color: colors.white_7
 
                 anchors {
@@ -259,15 +263,17 @@ Window {
                 height: 36
 
                 Button {
+                    id: btnLogo
                     anchors.fill: parent
 
                     showBackground: false
-                    showBorder: false
                     isToggleButton: true
 
                     imageSource: "Images/icons/main/anthem.svg"
                     imageWidth: 16
                     imageHeight: 16
+
+                    hoverMessage: btnLogo.pressed ? qsTr("Stop engine for this tab") : qsTr("Start engine for this tab")
                 }
             }
 
@@ -322,8 +328,8 @@ Window {
         anchors.right: parent.right
         anchors.bottom: footerContainer.top
 
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
+        anchors.leftMargin: 3
+        anchors.rightMargin: 3
         anchors.bottomMargin: 10
 
         ControlsPanel {
@@ -504,7 +510,7 @@ Window {
             anchors.bottom: parent.bottom
             anchors.leftMargin: 20
             text: globalStore.statusMessage
-            font.family: Fonts.main.name
+            font.family: Fonts.mainRegular.name
             font.pixelSize: 11
             color: Qt.rgba(1, 1, 1, 0.6)
         }
@@ -519,7 +525,6 @@ Window {
             imageSource: "Images/icons/bottom-bar/automation-panel.svg"
             imageWidth: 15
             imageHeight: 15
-            showBorder: false
             showBackground: false
             isToggleButton: true
             pressed: true

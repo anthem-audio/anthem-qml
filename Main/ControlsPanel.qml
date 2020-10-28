@@ -26,14 +26,13 @@ import "BasicComponents"
 import "Global"
 import "Menus"
 
-Item {
-    height: 44
+Rectangle {
+    height: 42
 
     function updateAll() {
         timeSignatureNumeratorControl.value = Anthem.getTimeSignatureNumerator();
         timeSignatureDenominatorControl.value = Anthem.getTimeSignatureDenominator();
         tempoControl.value = Anthem.getBeatsPerMinute();
-        masterPitchControl.value = Anthem.getMasterPitch();
     }
 
     Connections {
@@ -43,614 +42,377 @@ Item {
         }
     }
 
+    radius: 1
+    color: colors.white_12
+
     Item {
         id: controlPanelSpacer
-        anchors.fill: parent
-        anchors.margins: 6
-
-        // Float left
-
-        Button {
-            id: btnLogo
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            width: parent.height // makes it square :)
-            isToggleButton: true
-
-            imageSource: "Images/icons/main/anthem.svg"
-            imageWidth: 14
-            imageHeight: 12
-
-            hoverMessage: btnLogo.pressed ? qsTr("Stop engine for this tab") : qsTr("Start engine for this tab")
+        anchors {
+            fill: parent
+            margins: 7
         }
 
-        Button {
-            id: btnFile
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnLogo.right
-            anchors.leftMargin: 2
-            width: parent.height
+        Row {
+            id: groupContainer
+            property int totalGroupWidths:
+                group1.width + spacerWidth +
+                group2.width + spacerWidth +
+                group3.width + spacerWidth +
+                group4.width + spacerWidth +
+                group5.width + spacerWidth +
+                group6.width
+            property int spacerWidth: 2
+            property int groupCount: 6
 
-            textContent: qsTr("File")
+            spacing: (controlPanelSpacer.width - totalGroupWidths) / ((groupCount - 1) * 2)
 
-            hasMenuIndicator: true
-            clickOnMouseDown: true
+            Row {
+                id: group1
 
-            onClicked: fileMenu.open()
+                spacing: 4
+                Button {
+                    id: btnFile
+                    width: 28
+                    height: 28
 
-            Shortcut {
-                sequence: "alt+f"
-                onActivated: fileMenu.open()
-            }
+                    imageSource: "Images/icons/file/hamburger.svg"
+                    imageWidth: 16
+                    imageHeight: 16
 
-            Menu {
-                id: fileMenu
-                menuX: 0
-                menuY: parent.height
+                    clickOnMouseDown: true
 
-                menuItems: [
-                    {
-                        text: qsTr('N_ew project'),
-                        shortcut: 'Ctrl+N',
-                        hoverText: qsTr('Start a new project'),
-                        onTriggered: () => {
-                            Anthem.newProject();
-                        }
-                    },
-                    {
-                        text: qsTr('O_pen...'),
-                        shortcut: 'Ctrl+O',
-                        hoverText: qsTr('Open an existing project'),
-                        onTriggered: () => {
-                            saveLoadHandler.openLoadDialog();
-                        }
-                    },
-                    {
-                        separator: true
-                    },
-                    {
-                        text: qsTr('S_ave'),
-                        shortcut: 'Ctrl+S',
-                        hoverText: qsTr('Save this project'),
-                        onTriggered: () => {
-                            saveLoadHandler.save();
-                        }
-                    },
-                    {
-                        text: qsTr('Save a_s...'),
-                        hoverText: qsTr('Save this project to a different file'),
-                        onTriggered: () => {
-                            saveLoadHandler.openSaveDialog();
-                        }
-                    },
-                    {
-                        separator: true
-                    },
-                    {
-                        text: tempoControl.value.toString()
-                    },
-                    {
-                        text: qsTr('Ex_it'),
-                        hoverText: qsTr('Quit Anthem'),
-                        onTriggered: () => {
-                            saveLoadHandler.closeWithSavePrompt();
-                        }
-                    },/*
-                    {
-                        separator: true
-                    },
-                    {
-                        text: 'Submenu test',
-                        submenu: [
-                            {
-                                text: 'P_iano roll'
-                            },
-                            {
-                                text: 'Graph editor'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'R_ename, color and icon..'
-                            },
-                            {
-                                text: 'Change color...'
-                            },
-                            {
-                                text: 'Change icon...'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'L_oad sample...'
-                            },
-                            {
-                                text: 'Cut_ itself'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'I_nsert'
-                            },
-                            {
-                                text: 'Replace'
-                            },
-                            {
-                                text: 'C_lone'
-                            },
-                            {
-                                text: 'D_elete...'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Assign to new instrument track...'
-                            },
-                            {
-                                newColumn: true
-                            },
-                            {
-                                text: 'Cut_'
-                            },
-                            {
-                                text: 'Co_py'
-                            },
-                            {
-                                text: 'P_aste',
-                                disabled: true
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Fill each 2_ steps'
-                            },
-                            {
-                                text: 'Fill each 4_ steps'
-                            },
-                            {
-                                text: 'Fill each 8_ steps'
-                            },
-                            {
-                                text: 'Advanced fill...'
-                            },
-                            {
-                                text: 'Advanced fill...'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'Rotate left',
-                                shortcut: 'Shift+Ctrl+Left'
-                            },
-                            {
-                                text: 'Rotate right',
-                                shortcut: 'Shift+Ctrl+Right'
-                            },
-                            {
-                                separator: true
-                            },
-                            {
-                                text: 'MIDI channel through'
-                            },
-                            {
-                                text: 'Receive n_otes from',
-                                submenu: [
-                                    {text: 'Typing keyboard'},
-                                    {
-                                        text: 'Touch keyboard',
-                                        submenu: [
-                                            {text: 'abc'},
-                                            {text: 'abc'},
-                                            {text: 'abc'},
-                                            {text: 'abc'},
-                                            {newColumn: true},
-                                            {
-                                                text: 'abcdefghijklmnopqrstuvwxyz',
-                                                submenu: [
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {newColumn: true},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {text: 'abc'},
-                                                    {
-                                                        text: 'abcdefghijklmnopqrstuvwxyz',
-                                                        submenu: [
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {newColumn: true},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {text: 'abc'},
-                                                            {
-                                                                text: 'abcdefghijklmnopqrstuvwxyz',
-                                                                submenu: [
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {newColumn: true},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {text: 'abc'},
-                                                                    {
-                                                                        text: 'abcdefghijklmnopqrstuvwxyz',
-                                                                        submenu: [
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {newColumn: true},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {text: 'abc'},
-                                                                            {
-                                                                                text: 'abcdefghijklmnopqrstuvwxyz',
-                                                                                submenu: [
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {text: 'abcdefghijklmnopqrstuvwxyz'},
-                                                                                    {newColumn: true},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {newColumn: true},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {text: 'abcdefg'},
-                                                                                    {newColumn: true},
-                                                                                ]
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
+                    onClicked: fileMenu.open()
 
-                                ]
+                    Shortcut {
+                        sequence: "alt+f"
+                        onActivated: fileMenu.open()
+                    }
+
+                    Menu {
+                        id: fileMenu
+                        menuX: 0
+                        menuY: parent.height
+
+                        menuItems: [
+                            {
+                                text: qsTr('N_ew project'),
+                                shortcut: 'Ctrl+N',
+                                hoverText: qsTr('Start a new project'),
+                                onTriggered: () => {
+                                    Anthem.newProject();
+                                }
+                            },
+                            {
+                                text: qsTr('O_pen...'),
+                                shortcut: 'Ctrl+O',
+                                hoverText: qsTr('Open an existing project'),
+                                onTriggered: () => {
+                                    saveLoadHandler.openLoadDialog();
+                                }
                             },
                             {
                                 separator: true
                             },
                             {
-                                text: 'Create DirectWave instrument...'
+                                text: qsTr('S_ave'),
+                                shortcut: 'Ctrl+S',
+                                hoverText: qsTr('Save this project'),
+                                onTriggered: () => {
+                                    saveLoadHandler.save();
+                                }
                             },
                             {
-                                text: 'Burn MIDI to',
-                                submenu: [
-                                    {text: 'C_urrent pattern'},
-                                    {text: 'N_ew pattern'}
-                                ]
+                                text: qsTr('Save a_s...'),
+                                hoverText: qsTr('Save this project to a different file'),
+                                onTriggered: () => {
+                                    saveLoadHandler.openSaveDialog();
+                                }
+                            },
+                            {
+                                separator: true
+                            },
+                            {
+                                text: tempoControl.value.toString()
+                            },
+                            {
+                                text: qsTr('Ex_it'),
+                                hoverText: qsTr('Quit Anthem'),
+                                onTriggered: () => {
+                                    saveLoadHandler.closeWithSavePrompt();
+                                }
                             },
                         ]
-                    }*/
-                ]
-            }
-        }
-
-        Button {
-            id: btnSave
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnFile.right
-            anchors.leftMargin: 20
-            width: parent.height
-            hoverMessage: qsTr("Save this project")
-
-            imageSource: "Images/icons/file/save.svg"
-            imageWidth: 16
-            imageHeight: 16
-
-            onClicked: saveLoadHandler.save()
-        }
-
-        Button {
-            id: btnUndo
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnSave.right
-            anchors.leftMargin: 2
-            width: parent.height
-            hoverMessage: qsTr("Undo")
-
-            imageSource: "Images/icons/file/undo.svg"
-            imageWidth: 15
-            imageHeight: 15
-
-            onClicked: {
-                undo();
-            }
-        }
-
-        Button {
-            id: btnRedo
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: btnUndo.right
-            anchors.leftMargin: 2
-            width: parent.height
-            hoverMessage: qsTr("Redo")
-
-            imageSource: "Images/icons/file/redo.svg"
-            imageWidth: 15
-            imageHeight: 15
-
-            onClicked: {
-                redo();
-            }
-        }
-
-
-
-        // Float middle
-        Item {
-            /*
-              This item is used to center a group of contorls in its parent.
-
-              In a perfect world, I would have the item adapt to the width of its
-                content and then center itself in the parent, but I don't know how
-                to do the former and I'm on a plane right now so I'm going to have
-                to settle for hard-coding the width.
-
-              -- Joshua Wade, Jun 11, 2019
-              */
-
-            id: centerPositioner
-            width: 498
-            height: parent.height
-            anchors.centerIn: parent
-
-            Button {
-                id: btnMetronomeToggle
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: parent.left
-                width: parent.height
-                hoverMessage: qsTr("Toggle metronome")
-
-                isToggleButton: true
-
-                imageSource: "Images/icons/control/metronome.svg"
-                imageWidth: 13
-                imageHeight: 16
-            }
-
-            Button {
-                id: idk
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: btnMetronomeToggle.right
-                anchors.leftMargin: 3
-                width: 21
-            }
-
-            ButtonGroup {
-                id: playbackControlsGroup
-                anchors.top: parent.top
-                anchors.left: idk.right
-                anchors.bottom: parent.bottom
-                fixedWidth: false
-                anchors.leftMargin: 3
-
-                defaultImageWidth: 12
-                defaultImageHeight: 12
-                defaultButtonWidth: 32
-                defaultButtonHeight: 32
-
-                buttons: ListModel {
-                    ListElement {
-                        isToggleButton: true
-                        hoverMessage: qsTr("Play")
-                        imageSource: "Images/icons/media/play.svg"
-                    }
-                    ListElement {
-                        hoverMessage: qsTr("Stop")
-                        imageSource: "Images/icons/media/stop.svg"
-                    }
-                    ListElement {
-                        isToggleButton: true
-                        hoverMessage: qsTr("Record")
-                        imageSource: "Images/icons/media/record.svg"
-                    }
-                    ListElement {
-                        hoverMessage: qsTr("Record immediately")
-                        imageSource: "Images/icons/media/play-record.svg"
-                        imageWidth: 16
-                        imageHeight: 16
                     }
                 }
-            }
 
-            Button {
-                id: btnLoop
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                anchors.left: playbackControlsGroup.right
-                anchors.leftMargin: 3
-                width: parent.height
-                hoverMessage: qsTr("Toggle loop points")
+                Button {
+                    id: btnSave
+                    width: 28
+                    height: 28
+                    hoverMessage: qsTr("Save this project")
 
-                isToggleButton: true
+                    imageSource: "Images/icons/file/save.svg"
+                    imageWidth: 16
+                    imageHeight: 16
 
-                imageSource: "Images/icons/control/repeat.svg"
-                imageWidth: 16
-                imageHeight: 14
+                    onClicked: saveLoadHandler.save()
+                }
+
+                Button {
+                    id: btnUndo
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Undo")
+
+                    imageSource: "Images/icons/file/undo.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+
+                    onClicked: {
+                        undo();
+                    }
+                }
+
+                Button {
+                    id: btnRedo
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Redo")
+
+                    imageSource: "Images/icons/file/redo.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+
+                    onClicked: {
+                        redo();
+                    }
+                }
             }
 
             Rectangle {
-                id: tempoAndTimeSignatureBlock
-                anchors.left: btnLoop.right
-                anchors.leftMargin: 20
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 61
-                radius: 2
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+            Row {
+                id: group2
+                spacing: 4
 
-                Item {
-                    id: spacer1
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: parent.height * 0.5;
-                    anchors.rightMargin: 7
+                Button {
+                    width: 28
+                    height: 28
 
-                    DigitControl {
-                        id: tempoControl
+                    hoverMessage: qsTr("Toggle metronome")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/metronome.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Scroll to playhead")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/scroll-follow.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Return playhead to initial position on stop")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/afterstop.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+            }
+
+            Rectangle {
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
+
+            Row {
+                id: group3
+                spacing: 4
+
+                Button {
+                    width: 39
+                    height: 28
+
+                    hoverMessage: qsTr("I do not know what this does :)")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/media/play-arranger.svg"
+                    imageWidth: 27
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Play")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/media/play.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Stop")
+
+                    imageSource: "Images/icons/media/stop.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Record")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/media/record.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+
+                Button {
+                    width: 28
+                    height: 28
+
+                    hoverMessage: qsTr("Play and start recording")
+
+                    imageSource: "Images/icons/media/play-record.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
+            }
+
+            Rectangle {
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
+
+            Row {
+                id: group4
+                spacing: 2
+
+                DigitControl {
+                    id: tempoControl
+
+                    height: 28
+                    width: 70
+
+                    lowBound: 10
+                    highBound: 999
+                    step: 0.01
+                    smallestIncrement: 0.01
+                    decimalPlaces: 2
+                    value: 140
+                    property int lastSentValue: 140
+                    hoverMessage: qsTr("Tempo")
+                    units: qsTr("BPM")
+
+                    fontPixelSize: 16
+
+//                    onValueChanged: {
+//                        Anthem.setBeatsPerMinute(value, false);
+//                    }
+
+                    onValueChangeCompleted: {
+                        const old = lastSentValue;
+
+                        const command = {
+                            exec: () => {
+                                lastSentValue = value;
+                                tempoControl.value = value;
+                                Anthem.setBeatsPerMinute(value, true);
+                            },
+                            undo: () => {
+                                lastSentValue = old;
+                                tempoControl.value = old;
+                                Anthem.setBeatsPerMinute(old, true);
+                            },
+                            description: qsTr('set BPM')
+                        }
+
+                        exec(command);
+                    }
+
+                    // This MouseArea changes the step on tempoControl
+                    // depending on which digit is clicked.
+                    MouseArea {
                         anchors.fill: parent
-                        anchors.topMargin: 2
-
-                        lowBound: 10
-                        highBound: 999
-                        step: 0.01
-                        smallestIncrement: 0.01
-                        decimalPlaces: 2
-                        value: 140
-                        property int lastSentValue: 140
-                        hoverMessage: qsTr("Tempo")
-                        units: qsTr("BPM")
-
-                        fontPixelSize: 13
-
-                        onValueChanged: {
-//                            Anthem.setBeatsPerMinute(value, false);
+                        onPressed: {
+                            mouse.accepted = false;
+                            let distanceFromRight = parent.width - mouseX;
+                            if (distanceFromRight <= 8) {
+                                tempoControl.step = 0.01;
+                            }
+                            else if (distanceFromRight <= 16) {
+                                tempoControl.step = 0.1;
+                            }
+                            else {
+                                tempoControl.step = 1;
+                            }
                         }
-
-                        onValueChangeCompleted: {
-                            const old = lastSentValue;
-
-                            const command = {
-                                exec: () => {
-                                    lastSentValue = value;
-                                    tempoControl.value = value;
-                                    Anthem.setBeatsPerMinute(value, true);
-                                },
-                                undo: () => {
-                                    lastSentValue = old;
-                                    tempoControl.value = old;
-                                    Anthem.setBeatsPerMinute(old, true);
-                                },
-                                description: qsTr('set BPM')
-                            }
-
-                            exec(command);
+                        onReleased: {
+                            mouse.accepted = false;
                         }
-
-                        // This MouseArea changes the step on tempoControl
-                        // depending on which digit is clicked.
-                        MouseArea {
-                            anchors.fill: parent
-                            onPressed: {
-                                mouse.accepted = false;
-                                let distanceFromRight = parent.width - mouseX;
-                                if (distanceFromRight <= 8) {
-                                    tempoControl.step = 0.01;
-                                }
-                                else if (distanceFromRight <= 16) {
-                                    tempoControl.step = 0.1;
-                                }
-                                else {
-                                    tempoControl.step = 1;
-                                }
-                            }
-                            onReleased: {
-                                mouse.accepted = false;
-                            }
-                            onPositionChanged: {
-                                mouse.accepted = false;
-                            }
+                        onPositionChanged: {
+                            mouse.accepted = false;
                         }
                     }
                 }
 
                 Item {
-                    id: spacer2
-                    anchors.top: spacer1.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.rightMargin: 7
+                    width: 60
+                    height: 28
 
                     DigitControl {
                         id: timeSignatureNumeratorControl
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
-                        width: 16
+                        width: 18
                         hoverMessage: qsTr("Time signature numerator")
 
-                        fontPixelSize: 13
+                        fontPixelSize: 16
+                        alignment: Text.AlignRight
 
                         lowBound: 1
                         highBound: 16
                         value: 4
                         speedMultiplier: 0.5
-
 
 //                        onValueChanged: {
 //                            Anthem.setTimeSignatureNumerator(value);
@@ -678,26 +440,24 @@ Item {
                     Text {
                         id: timeSignatureSlash
                         text: "/"
-                        font.family: Fonts.mono.name
+                        font.family: Fonts.monoMedium.name
                         font.weight: Font.Bold
-                        font.pixelSize: 13
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.right: timeSignatureDenominatorControl.left
-                        color: colors.main
+                        font.pixelSize: 16
+                        anchors.centerIn: parent
+                        color: colors.white_70
                         horizontalAlignment: Text.AlignRight
                         verticalAlignment: Text.AlignVCenter
                     }
 
                     DigitControl {
                         id: timeSignatureDenominatorControl
-                        anchors.right: parent.right
+                        anchors.left: timeSignatureSlash.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        width: value === 16 ? 16 : 8
+                        width: 18
                         hoverMessage: qsTr("Time signature denominator")
 
-                        fontPixelSize: 13
+                        fontPixelSize: 16
                         alignment: Text.AlignLeft
 
                         value: 4
@@ -728,261 +488,197 @@ Item {
                         }
                     }
                 }
-            }
 
-            Rectangle {
-                id: playheadInfoBlock
-                anchors.left: tempoAndTimeSignatureBlock.right
-                anchors.leftMargin: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 95
-                radius: 2
+                Text {
+                    text: "111.1.1.00"
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+                    width: 108
+                    height: 28
 
-                Item {
-                    id: spacer3
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: parent.height * 0.5;
-                    anchors.rightMargin: 7
+                    font.family: Fonts.monoMedium.name
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
 
-                    Text {
-                        text: "1.1.1.00"
-                        font.family: Fonts.mono.name
-                        font.weight: Font.Bold
-                        font.pointSize: 10
-                        anchors.fill: parent
-                        anchors.topMargin: 2
-                        color: colors.main
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
+                    color: colors.white_70
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
 
-                Item {
-                    id: spacer4
-                    anchors.top: spacer3.bottom
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.bottom: parent.bottom
-                    anchors.rightMargin: 7
+                Text {
+                    text: "000:00.000"
 
-                    Text {
-                        text: "0:00.00"
-                        font.family: Fonts.mono.name
-                        font.weight: Font.Bold
-                        font.pointSize: 10
-                        anchors.fill: parent
-                        anchors.bottomMargin: 2
-                        color: colors.main
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
-                    }
+                    width: 108
+                    height: 28
+
+                    font.family: Fonts.monoMedium.name
+                    font.weight: Font.Bold
+                    font.pixelSize: 16
+
+                    color: colors.white_70
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
                 }
             }
 
             Rectangle {
-                id: pitchBlock
-                anchors.left: playheadInfoBlock.right
-                anchors.leftMargin: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 39
-                radius: 2
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+            Row {
+                id: group5
+                spacing: 4
 
-                Item {
-                    anchors.fill: parent
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 1
+                Button {
+                    width: 28
+                    height: 28
 
-                    Text {
-                        id: pitchLabel
-                        text: qsTr("PITCH")
-                        font.family: Fonts.main.name
-                        font.pointSize: 8
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        height: parent.height * 0.5
-                        color: Qt.rgba(1, 1, 1, 0.65)
-                    }
+                    hoverMessage: qsTr("Punch in")
 
-                    DigitControl {
-                        id: masterPitchControl
-                        anchors.top: pitchLabel.bottom
-                        anchors.left: parent.left
-                        anchors.leftMargin: 4
-                        anchors.right: parent.right
-                        anchors.rightMargin: 4
-                        anchors.bottom: parent.bottom
-                        hoverMessage: qsTr("Master pitch")
-                        units: qsTr("semitones")
+                    isToggleButton: true
 
-                        property int lastSentValue: 0
+                    imageSource: "Images/icons/control/punch-in.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
 
-                        fontFamily: Fonts.main.name
+                Button {
+                    width: 28
+                    height: 28
 
-                        highBound: 12
-                        lowBound: -12
+                    hoverMessage: qsTr("Toggle loop points")
 
-                        onValueChanged: {
-                            Anthem.setMasterPitch(value, false);
-                        }
+                    isToggleButton: true
 
-                        onValueChangeCompleted: {
-                            const old = lastSentValue;
+                    imageSource: "Images/icons/control/repeat.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
 
-                            const command = {
-                                exec: () => {
-                                    masterPitchControl.value = value;
-                                    Anthem.setMasterPitch(value, true);
-                                    lastSentValue = value;
-                                },
-                                undo: () => {
-                                    masterPitchControl.value = old;
-                                    Anthem.setMasterPitch(old, true);
-                                    lastSentValue = old;
-                                },
-                                description: qsTr('set master pitch')
-                            }
+                Button {
+                    width: 28
+                    height: 28
 
-                            exec(command);
-                        }
-                    }
+                    hoverMessage: qsTr("Punch out")
+
+                    isToggleButton: true
+
+                    imageSource: "Images/icons/control/punch-out.svg"
+                    imageWidth: 16
+                    imageHeight: 16
                 }
             }
 
             Rectangle {
-                id: cpuAndOutputBlock
-                anchors.left: pitchBlock.right
-                anchors.leftMargin: 2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                width: 58
-                radius: 2
+                height: 16
+                anchors.verticalCenter: parent.verticalCenter
+                width: groupContainer.spacerWidth
+                color: colors.white_12
+            }
 
-                color: Qt.rgba(0, 0, 0, 0.15)
-                border.width: 1
-                border.color: Qt.rgba(0, 0, 0, 0.4)
+            Row {
+                id: group6
+                spacing: 4
 
                 Item {
-                    anchors.fill: parent
-                    anchors.margins: 5
+                    height: 28
+                    width: 57
 
-                    Item {
-                        id: icons
-                        width: 9
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.left: parent.left
-
-                        Image {
-                            id: cpuIcon
-                            source: 'Images/icons/not-clickable/cpu.svg'
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.top: parent.top
-                            height: parent.width
-                            visible: false
-                            sourceSize.width: width
-                            sourceSize.height: height
+                    Icon {
+                        imageSource: "Images/icons/not-clickable/cpu.svg"
+                        width: 16
+                        height: 16
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: 4
                         }
 
-                        ColorOverlay {
-                            anchors.fill: cpuIcon
-                            source: cpuIcon
-                            color: Qt.rgba(1, 1, 1, 1)
-                            opacity: 0.65
+                        color: '#fff'
+                        opacity: 0.4
+                    }
+
+                    SimpleMeter {
+                        width: 26
+                        height: 16
+
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                            rightMargin: 4
                         }
 
-                        Image {
-                            id: outputIcon
-                            source: 'Images/icons/not-clickable/in-out.svg'
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-                            height: parent.width
-                            visible: false
-                            sourceSize.width: width
-                            sourceSize.height: height
+                        value: 0.15
+                    }
+                }
+
+                Item {
+                    height: 28
+                    width: 57
+
+                    Icon {
+                        imageSource: "Images/icons/not-clickable/in-out.svg"
+                        width: 16
+                        height: 16
+                        anchors {
+                            verticalCenter: parent.verticalCenter
+                            left: parent.left
+                            leftMargin: 4
                         }
 
-                        ColorOverlay {
-                            anchors.fill: outputIcon
-                            source: outputIcon
-                            color: Qt.rgba(1, 1, 1, 1)
-                            opacity: 0.65
-                        }
+                        color: '#fff'
+                        opacity: 0.4
                     }
 
                     Item {
-                        anchors.left: icons.right
-                        anchors.leftMargin: 3
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.right: parent.right
+                        width: 26
+                        height: 16
+
+                        anchors {
+                            right: parent.right
+                            verticalCenter: parent.verticalCenter
+                            rightMargin: 4
+                        }
 
                         SimpleMeter {
-                            anchors.right: parent.right
-                            anchors.left: parent.left
-                            anchors.top: parent.top
-                            height: 9
+                            anchors {
+                                right: parent.right
+                                left: parent.left
+                                top: parent.top
+                            }
 
-                            value: 0.45
+                            height: 7
+
+                            value: 0.15
                         }
 
-                        Item {
-                            anchors.right: parent.right
-                            anchors.left: parent.left
-                            anchors.bottom: parent.bottom
-                            height: 9
-
-                            SimpleMeter {
-                                anchors.top: parent.top
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: 4
-
-                                value: 0.7
+                        SimpleMeter {
+                            anchors {
+                                right: parent.right
+                                left: parent.left
+                                bottom: parent.bottom
                             }
 
-                            SimpleMeter {
-                                anchors.bottom: parent.bottom
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: 4
-                                value: 0.8
-                            }
+                            height: 7
+
+                            value: 0.05
                         }
                     }
                 }
+
+                Button {
+                    id: btnMidiLearn // ?
+                    width: 28
+                    height: 28
+                    hoverMessage: qsTr("Midi learn")
+
+                    imageSource: "Images/icons/topbar/learn.svg"
+                    imageWidth: 16
+                    imageHeight: 16
+                }
             }
-        }
-
-        // Float right
-
-        Button {
-            id: btnMidiLearn // ?
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            width: parent.height
-            hoverMessage: qsTr("Midi learn")
-
-            imageSource: "Images/icons/topbar/learn.svg"
-            imageWidth: 16
-            imageHeight: 16
         }
     }
 }

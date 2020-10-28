@@ -46,7 +46,6 @@
         <file>BasicComponents/Knob.qml</file>
         <file>BasicComponents/Arc.qml</file>
         <file>Explorer/Explorer.qml</file>
-        <file>Fonts/NotoMono-Regular.ttf</file>
         <file>Fonts/NotoSansDisplay-Regular.ttf</file>
         <file>Images/icons/arranger/clip/audio.svg</file>
         <file>Images/icons/arranger/clip/automations.svg</file>
@@ -143,5 +142,12 @@
         <file>Images/icons/topbar/tools/slice.svg</file>
         <file>Images/icons/topbar/learn.svg</file>
         <file>TabGroup.qml</file>
+        <file>BasicComponents/AsymRoundRect.qml</file>
+        <file>Fonts/NotoSansDisplay-Bold.ttf</file>
+        <file>Fonts/NotoSansDisplay-Italic.ttf</file>
+        <file>Fonts/NotoSansDisplay-Medium.ttf</file>
+        <file>Fonts/NotoSansMono-Medium.ttf</file>
+        <file>Fonts/NotoSansMono-Regular.ttf</file>
+        <file>BasicComponents/Icon.qml</file>
     </qresource>
 </RCC>

@@ -84,14 +84,11 @@ Item {
 
         let isLastTab = false;
 
-        console.log(globalStore.selectedTabIndex, tabCount - 1);
-
         if (globalStore.selectedTabIndex === tabCount - 1) {
             isLastTab = true;
         }
 
         if (globalStore.selectedTabIndex === index) {
-            console.log(isLastTab)
             if (isLastTab)
                 globalStore.selectedTabIndex--;
             else
@@ -102,10 +99,6 @@ Item {
             globalStore.selectedTabIndex--;
 
         rowModel = rowModel.filter((_, i) => i !== index);
-
-        console.log('happens');
-
-        console.log(globalStore.selectedTabIndex);
     }
 
     function doOnCloseConfirmation(index) {
@@ -155,18 +148,18 @@ Item {
 
     Connections {
         target: Anthem
-        function onTabAdd() {
+        function onTabAdd(name) {
             addTab(name);
             commands.histories.push([]);
             commands.historyPointers.push(-1);
         }
-        function onTabRename() {
+        function onTabRename(index, name) {
             renameTab(index, name);
         }
-        function onTabSelect() {
+        function onTabSelect(index) {
             globalStore.selectedTabIndex = index;
         }
-        function onTabRemove() {
+        function onTabRemove(index) {
             removeTab(index);
             commands.histories.splice(index, 1);
             commands.historyPointers.splice(index, 1);
@@ -186,84 +179,77 @@ Item {
                 id: tabContainer
                 width: tabWidth
                 height: tabGroup.height
-                Item {
-                    clip: true
+
+                property bool hovered: tabMouseArea.hovered || closeButton.hovered
+                property color tabColor: index === globalStore.selectedTabIndex || hovered ? colors.white_12 : colors.white_7
+
+                AsymRoundRect {
                     anchors {
                         fill: parent
                         rightMargin: 1
                         bottomMargin: 1
                     }
-                    Rectangle {
+
+                    startRadius: 2
+                    endRadius: index === globalStore.selectedTabIndex ? 0 : 1
+                    direction: AsymRoundRect.Direction.Vertical
+
+                    color: tabContainer.tabColor
+
+                    Text {
+                        text: modelData.text
+                        anchors {
+                            verticalCenter: closeButton.verticalCenter
+                            verticalCenterOffset: -1
+                            left: parent.left
+                            leftMargin: 13
+                            right: closeButton.left
+                            rightMargin: 4
+                        }
+                        font.family: Fonts.mainRegular.name
+                        font.pixelSize: 13
+                        color: colors.white_70
+                        elide: Text.ElideRight
+                    }
+
+                    MouseArea {
+                        id: tabMouseArea
+                        property bool hovered: false
+                        anchors.fill: parent
+                        onClicked: {
+                            globalStore.selectedTabIndex = index;
+                            doOnTabPressed(index);
+                        }
+                        hoverEnabled: true
+                        onEntered: {
+                            hovered = true;
+                        }
+                        onExited: {
+                            hovered = false;
+                        }
+                    }
+
+                    Button {
+                        id: closeButton
                         anchors {
                             top: parent.top
-                            left: parent.left
                             right: parent.right
+                            topMargin: 8
+                            rightMargin: 8
                         }
+                        width: 20
+                        height: 20
 
-                        height: index === globalStore.selectedTabIndex ? parent.height + radius : parent.height
-                        radius: 2
+                        imageSource: "Images/icons/small/close.svg"
+                        imageWidth: 8
+                        imageHeight: 8
 
-                        color: index === globalStore.selectedTabIndex || hovered ? colors.white_12 : colors.white_7
-
-                        property bool hovered: tabMouseArea.hovered || closeButton.hovered
-
-                        Text {
-                            text: modelData.text
-                            anchors {
-                                verticalCenter: closeButton.verticalCenter
-                                verticalCenterOffset: -1
-                                left: parent.left
-                                leftMargin: 13
-                                right: closeButton.left
-                                rightMargin: 4
-                            }
-                            font.family: Fonts.main.name
-                            font.pixelSize: 13
-                            color: colors.white_70
-                            elide: Text.ElideRight
-                        }
-
-                        MouseArea {
-                            id: tabMouseArea
-                            property bool hovered: false
-                            anchors.fill: parent
-                            onClicked: {
-                                globalStore.selectedTabIndex = index;
-                                doOnTabPressed(index);
-                            }
-                            hoverEnabled: true
-                            onEntered: {
-                                hovered = true;
-                            }
-                            onExited: {
-                                hovered = false;
-                            }
-                        }
-
-                        Button {
-                            id: closeButton
-                            anchors {
-                                top: parent.top
-                                right: parent.right
-                                topMargin: 8
-                                rightMargin: 8
-                            }
-                            width: 20
-                            height: 20
-
-                            imageSource: "Images/icons/small/close.svg"
-                            imageWidth: 8
-                            imageHeight: 8
-
-                            showBorder: false
-                            showBackground: false
-
-                            onClicked: {
-                                doOnTabClosePressed(index);
-                            }
+                        onClicked: {
+                            doOnTabClosePressed(index);
                         }
                     }
                 }
+
                 Rectangle {
                     anchors {
                         left: parent.left

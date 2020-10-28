@@ -44,7 +44,6 @@ public:
 
     void serialize(QJsonObject& node) const override;
 
-    Control* masterPitch;
     Control* beatsPerMinute;
 
     void setNumerator(quint8 numerator);
