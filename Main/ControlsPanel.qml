@@ -18,15 +18,19 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.14
-import QtGraphicalEffects 1.14
+import QtQuick 2.15
+import QtGraphicalEffects 1.15
 import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.15
 
 import "BasicComponents"
 import "Global"
 import "Menus"
 
 Rectangle {
+    id: controlsPanel
+    property real spacerMargins: 7
+
     height: 42
 
     function updateAll() {
@@ -46,25 +50,31 @@ Rectangle {
     color: colors.white_12
 
     Item {
-        id: controlPanelSpacer
+        id: paddingItem
         anchors {
             fill: parent
-            margins: 7
+            margins: controlsPanel.spacerMargins
         }
 
         Row {
             id: groupContainer
-            property int totalGroupWidths:
+            property real totalGroupWidths:
                 group1.width + spacerWidth +
                 group2.width + spacerWidth +
                 group3.width + spacerWidth +
                 group4.width + spacerWidth +
                 group5.width + spacerWidth +
                 group6.width
-            property int spacerWidth: 2
-            property int groupCount: 6
+            property real spacerWidth: 2
+            property real groupCount: 6
+            property real spacerCount: groupCount * 2 - 2
 
-            spacing: (controlPanelSpacer.width - totalGroupWidths) / ((groupCount - 1) * 2)
+            property real spacingBase:
+                Math.floor(
+                    (Screen.devicePixelRatio *
+                        (paddingItem.width - totalGroupWidths)) /
+                        ((groupCount - 1) * 2)
+                ) / Screen.devicePixelRatio;
 
             Row {
                 id: group1
@@ -191,12 +201,21 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 1
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
             }
+
+            ControlsPanelSpacer {
+                spacerNumber: 2
+            }
+
 
             Row {
                 id: group2
@@ -242,11 +261,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 3
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 4
             }
 
             Row {
@@ -315,11 +342,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 5
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 6
             }
 
             Row {
@@ -338,7 +373,7 @@ Rectangle {
                     smallestIncrement: 0.01
                     decimalPlaces: 2
                     value: 140
-                    property int lastSentValue: 140
+                    property real lastSentValue: 140
                     hoverMessage: qsTr("Tempo")
                     units: qsTr("BPM")
 
@@ -520,11 +555,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 7
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 8
             }
 
             Row {
@@ -571,11 +614,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 9
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 10
             }
 
             Row {

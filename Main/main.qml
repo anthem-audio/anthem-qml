@@ -190,7 +190,8 @@ Window {
     Image {
         id: asdf
         source: "file:///C:\\Users\\qbgee\\Pictures\\background.jpg"
-        anchors.fill: parent
+        width: Screen.width
+        height: Screen.height
         fillMode: Image.PreserveAspectCrop
         visible: false
     }
