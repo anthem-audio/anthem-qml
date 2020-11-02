@@ -361,70 +361,79 @@ Rectangle {
                 id: group4
                 spacing: 2
 
-                DigitControl {
-                    id: tempoControl
-
+                Item {
                     height: 28
                     width: 70
 
-                    lowBound: 10
-                    highBound: 999
-                    step: 0.01
-                    smallestIncrement: 0.01
-                    decimalPlaces: 2
-                    value: 140
-                    property real lastSentValue: 140
-                    hoverMessage: qsTr("Tempo")
-                    units: qsTr("BPM")
+                    DigitControl {
+                        id: tempoControl
 
-                    fontPixelSize: 16
-
-//                    onValueChanged: {
-//                        Anthem.setBeatsPerMinute(value, false);
-//                    }
-
-                    onValueChangeCompleted: {
-                        const old = lastSentValue;
-
-                        const command = {
-                            exec: () => {
-                                lastSentValue = value;
-                                tempoControl.value = value;
-                                Anthem.setBeatsPerMinute(value, true);
-                            },
-                            undo: () => {
-                                lastSentValue = old;
-                                tempoControl.value = old;
-                                Anthem.setBeatsPerMinute(old, true);
-                            },
-                            description: qsTr('set BPM')
+                        anchors {
+                            fill: parent
+                            rightMargin: 6
                         }
 
-                        exec(command);
-                    }
+                        lowBound: 10
+                        highBound: 999
+                        step: 0.01
+                        smallestIncrement: 0.01
+                        decimalPlaces: 2
+                        value: 140
+                        property real lastSentValue: 140
+                        hoverMessage: qsTr("Tempo")
+                        units: qsTr("BPM")
 
-                    // This MouseArea changes the step on tempoControl
-                    // depending on which digit is clicked.
-                    MouseArea {
-                        anchors.fill: parent
-                        onPressed: {
-                            mouse.accepted = false;
-                            let distanceFromRight = parent.width - mouseX;
-                            if (distanceFromRight <= 8) {
-                                tempoControl.step = 0.01;
+                        fontPixelSize: 16
+                        alignment: Text.AlignRight
+
+    //                    onValueChanged: {
+    //                        Anthem.setBeatsPerMinute(value, false);
+    //                    }
+
+                        onValueChangeCompleted: {
+                            const old = lastSentValue;
+
+                            const command = {
+                                exec: () => {
+                                    lastSentValue = value;
+                                    tempoControl.value = value;
+                                    Anthem.setBeatsPerMinute(value, true);
+                                },
+                                undo: () => {
+                                    lastSentValue = old;
+                                    tempoControl.value = old;
+                                    Anthem.setBeatsPerMinute(old, true);
+                                },
+                                description: qsTr('set BPM')
                             }
-                            else if (distanceFromRight <= 16) {
-                                tempoControl.step = 0.1;
-                            }
-                            else {
-                                tempoControl.step = 1;
-                            }
+
+                            exec(command);
                         }
-                        onReleased: {
-                            mouse.accepted = false;
-                        }
-                        onPositionChanged: {
-                            mouse.accepted = false;
+
+                        // This MouseArea changes the step on tempoControl
+                        // depending on which digit is clicked.
+                        MouseArea {
+                            anchors.fill: parent
+                            onPressed: {
+                                mouse.accepted = false;
+                                let distanceFromRight = parent.width - mouseX;
+                                if (distanceFromRight <= 10) {
+                                    tempoControl.step = 0.01;
+                                }
+                                else if (distanceFromRight <= 20) {
+                                    tempoControl.step = 0.1;
+                                }
+                                else {
+                                    tempoControl.step = 1;
+                                }
+                            }
+                            onReleased: {
+                                mouse.accepted = false;
+                            }
+                            onPositionChanged: {
+                                mouse.accepted = false;
+                            }
+                            cursorShape: Qt.SizeVerCursor
                         }
                     }
                 }
@@ -439,7 +448,7 @@ Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
                         width: 18
-                        hoverMessage: qsTr("Time signature numerator")
+                        hoverMessage: qsTr("Time signature")
 
                         fontPixelSize: 16
                         alignment: Text.AlignRight
@@ -490,7 +499,7 @@ Rectangle {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         width: 18
-                        hoverMessage: qsTr("Time signature denominator")
+                        hoverMessage: qsTr("Time signature")
 
                         fontPixelSize: 16
                         alignment: Text.AlignLeft

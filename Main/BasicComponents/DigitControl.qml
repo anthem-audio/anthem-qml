@@ -85,6 +85,8 @@ Item {
         // If highBound and lowBound are unset, they will both be 0
         property bool hasBound: highBound != lowBound
 
+        cursorShape: Qt.SizeVerCursor
+
         onDrag: {
             let delta = ((deltaY) * 0.07 * speedMultiplier * _stepsPerIncrement) + remainder;
             let roundedDelta = Math.round(Math.round(delta / _stepsPerIncrement) * _stepsPerIncrement);
