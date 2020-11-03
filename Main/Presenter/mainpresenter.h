@@ -101,8 +101,6 @@ signals:
     void tabSelect(int index);
     void tabRemove(int index);
 
-    void flush();
-
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
 

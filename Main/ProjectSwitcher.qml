@@ -20,7 +20,38 @@
 
 import QtQuick 2.15
 
-QtObject {
-    property var histories: [[]]
-    property var historyPointers: [-1] // points to the last performed command
+Item {
+    id: projectSwitcher
+    function add() {
+        const component = Qt.createComponent("Project.qml");
+        const instance = component.createObject(projectSwitcher, { visible: false });
+    }
+
+    function select(index) {
+        for (let i = 0; i < children.length; i++) {
+            children[i].visible = index === i;
+        }
+    }
+
+    function remove(index) {
+        children[index].destroy();
+    }
+
+    Component.onCompleted: {
+        add()
+        select(0)
+    }
+
+    Connections {
+        target: Anthem
+        function onTabAdd() {
+            add();
+        }
+        function onTabSelect(index) {
+            select(index);
+        }
+        function onTabRemove(index) {
+            remove(index);
+        }
+    }
 }

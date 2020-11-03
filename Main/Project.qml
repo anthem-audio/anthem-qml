@@ -22,13 +22,47 @@
 
 import QtQuick 2.15
 import "BasicComponents"
+import "Global"
 
 Item {
-    anchors {
-        top: header.bottom
-        left: parent.left
-        right: parent.right
-        bottom: parent.bottom
+    id: project
+
+    anchors.fill: parent
+
+    property int historyPointer: -1
+    property var history: []
+
+    // All commands must have exec() and undo(). This is not enforced at runtime.
+    function exec(command) {
+        // If the history pointer isn't at the end, remove the tail
+        if (historyPointer + 1 !== history.length) {
+            history.splice(historyPointer + 1);
+        }
+
+        history.push(command);
+        historyPointer++;
+        command.exec(command.execData);
+    }
+
+    function undo() {
+        const command = history[historyPointer];
+        if (!command) return;
+
+        historyPointer--;
+        command.undo(command.undoData);
+
+        // This might do bad things for translation
+        globalStore.statusMessage = `${qsTr('Undo')} ${command.description}`;
+    }
+
+    function redo() {
+        const command = history[historyPointer + 1];
+        if (!command) return;
+
+        historyPointer++;
+        command.exec(command.execData);
+
+        globalStore.statusMessage = `${qsTr('Redo')} ${command.description}`;
     }
 
     Item {

@@ -39,13 +39,6 @@ Rectangle {
         tempoControl.value = Anthem.getBeatsPerMinute();
     }
 
-    Connections {
-        target: mainWindow
-        function onFlush() {
-            updateAll();
-        }
-    }
-
     radius: 1
     color: colors.white_12
 

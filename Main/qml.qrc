@@ -35,7 +35,6 @@
         <file>BasicComponents/ColorPicker.qml</file>
         <file>GlobalStore.qml</file>
         <file>SaveLoadHandler.qml</file>
-        <file>Commands/Commands.qml</file>
         <file>BasicComponents/Scrollbar.qml</file>
         <file>Images/Triangle Arrow Down.svg</file>
         <file>Images/Triangle Arrow Left.svg</file>
@@ -151,5 +150,6 @@
         <file>BasicComponents/Icon.qml</file>
         <file>ControlsPanelSpacer.qml</file>
         <file>Project.qml</file>
+        <file>ProjectSwitcher.qml</file>
     </qresource>
 </RCC>

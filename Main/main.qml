@@ -28,7 +28,6 @@ import "BasicComponents/GenericTooltip"
 import "Dialogs"
 import "Menus"
 import "Global"
-import "Commands"
 
 Window {
     id: mainWindow
@@ -41,23 +40,12 @@ Window {
     property int tabsRemaining: -1
     readonly property int margin: 5
 
-    Connections {
-        target: Anthem
-        function onFlush() {
-            flush();
-        }
-    }
-
     /*
         This stores data used all over the UI. It can be accessed from almost
         anywhere by calling globalStore.(something) Because Qml (tm) (:
     */
     GlobalStore {
         id: globalStore
-    }
-
-    Commands {
-        id: commands
     }
 
     // Colors tagged color_(number) are that color at (number)% opacity
@@ -91,50 +79,6 @@ Window {
         property string knob: colors.white_12
         property string separator: colors.white_11
         property string scrollbar: '#59ffffff'
-    }
-
-    // All commands must have exec() and undo(). This is not enforced at runtime.
-    function exec(command) {
-        const tabIndex = globalStore.selectedTabIndex;
-
-        // If the history pointer isn't at the end, remove the tail
-        if (commands.historyPointers[tabIndex] + 1 !== commands.histories[tabIndex].length) {
-            commands.histories[tabIndex].splice(commands.historyPointers[tabIndex] + 1);
-        }
-
-        commands.histories[tabIndex].push(command);
-        commands.historyPointers[tabIndex]++;
-        command.exec(command.execData);
-    }
-
-    function undo() {
-        const tabIndex = globalStore.selectedTabIndex;
-
-        const command = commands.histories[tabIndex][commands.historyPointers[tabIndex]];
-        if (!command) return;
-
-        commands.historyPointers[tabIndex]--;
-        command.undo(command.undoData);
-
-        // This might do bad things for translation
-        globalStore.statusMessage = `${qsTr('Undo')} ${command.description}`;
-    }
-
-    function redo() {
-        const tabIndex = globalStore.selectedTabIndex;
-
-        const command = commands.histories[tabIndex][commands.historyPointers[tabIndex] + 1];
-        if (!command) return;
-        commands.historyPointers[tabIndex]++;
-        command.exec(command.execData);
-
-        globalStore.statusMessage = `${qsTr('Redo')} ${command.description}`;
-    }
-
-    signal flush();
-
-    onFlush: {
-        console.log('f l u s h')
     }
 
     color: colors.background
@@ -321,7 +265,14 @@ Window {
         }
     }
 
-    Project {}
+    ProjectSwitcher {
+        anchors {
+            top: header.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+    }
 
     TooltipManager {
         anchors.fill: parent
