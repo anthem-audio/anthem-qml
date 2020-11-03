@@ -28,13 +28,6 @@ Item {
 
     clip: true
 
-    Connections {
-        target: mainWindow
-        function onFlush() {
-            // oops
-        }
-    }
-
     property var patterns: ({})
 
     function updatePatternList() {

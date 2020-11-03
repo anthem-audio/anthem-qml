@@ -28,7 +28,6 @@ Item {
     /*
         Each item contains:
         {
-            key: string;
             text: string;
         }
     */
@@ -99,6 +98,8 @@ Item {
             globalStore.selectedTabIndex--;
 
         rowModel = rowModel.filter((_, i) => i !== index);
+
+        globalStore.tabCount--;
     }
 
     function doOnCloseConfirmation(index) {
@@ -119,7 +120,7 @@ Item {
     function doOnTabClosePressed(index) {
         if (Anthem.projectHasUnsavedChanges(index)) {
             tabGroupProps.currentSavingTabIndex = index;
-            let projectName = tabGroup.children[index].title;
+            let projectName = rowModel[index].text;
             saveConfirmDialog.message =
                 `${projectName} ${qsTr('has unsaved changes. Would you like to save before closing?')}`;
             saveConfirmDialog.show();
@@ -150,8 +151,6 @@ Item {
         target: Anthem
         function onTabAdd(name) {
             addTab(name);
-            commands.histories.push([]);
-            commands.historyPointers.push(-1);
         }
         function onTabRename(index, name) {
             renameTab(index, name);
@@ -161,13 +160,10 @@ Item {
         }
         function onTabRemove(index) {
             removeTab(index);
-            commands.histories.splice(index, 1);
-            commands.historyPointers.splice(index, 1);
         }
     }
 
     Row {
-        id: thisIsARow
         anchors {
             top: parent.top
             bottom: parent.bottom
@@ -217,7 +213,6 @@ Item {
                         property bool hovered: false
                         anchors.fill: parent
                         onClicked: {
-                            globalStore.selectedTabIndex = index;
                             doOnTabPressed(index);
                         }
                         hoverEnabled: true

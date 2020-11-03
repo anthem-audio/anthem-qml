@@ -28,7 +28,6 @@ import "BasicComponents/GenericTooltip"
 import "Dialogs"
 import "Menus"
 import "Global"
-import "Commands"
 
 Window {
     id: mainWindow
@@ -41,23 +40,12 @@ Window {
     property int tabsRemaining: -1
     readonly property int margin: 5
 
-    Connections {
-        target: Anthem
-        function onFlush() {
-            flush();
-        }
-    }
-
     /*
         This stores data used all over the UI. It can be accessed from almost
         anywhere by calling globalStore.(something) Because Qml (tm) (:
     */
     GlobalStore {
         id: globalStore
-    }
-
-    Commands {
-        id: commands
     }
 
     // Colors tagged color_(number) are that color at (number)% opacity
@@ -91,50 +79,6 @@ Window {
         property string knob: colors.white_12
         property string separator: colors.white_11
         property string scrollbar: '#59ffffff'
-    }
-
-    // All commands must have exec() and undo(). This is not enforced at runtime.
-    function exec(command) {
-        const tabIndex = globalStore.selectedTabIndex;
-
-        // If the history pointer isn't at the end, remove the tail
-        if (commands.historyPointers[tabIndex] + 1 !== commands.histories[tabIndex].length) {
-            commands.histories[tabIndex].splice(commands.historyPointers[tabIndex] + 1);
-        }
-
-        commands.histories[tabIndex].push(command);
-        commands.historyPointers[tabIndex]++;
-        command.exec(command.execData);
-    }
-
-    function undo() {
-        const tabIndex = globalStore.selectedTabIndex;
-
-        const command = commands.histories[tabIndex][commands.historyPointers[tabIndex]];
-        if (!command) return;
-
-        commands.historyPointers[tabIndex]--;
-        command.undo(command.undoData);
-
-        // This might do bad things for translation
-        globalStore.statusMessage = `${qsTr('Undo')} ${command.description}`;
-    }
-
-    function redo() {
-        const tabIndex = globalStore.selectedTabIndex;
-
-        const command = commands.histories[tabIndex][commands.historyPointers[tabIndex] + 1];
-        if (!command) return;
-        commands.historyPointers[tabIndex]++;
-        command.exec(command.execData);
-
-        globalStore.statusMessage = `${qsTr('Redo')} ${command.description}`;
-    }
-
-    signal flush();
-
-    onFlush: {
-        console.log('f l u s h')
     }
 
     color: colors.background
@@ -190,7 +134,8 @@ Window {
     Image {
         id: asdf
         source: "file:///C:\\Users\\qbgee\\Pictures\\background.jpg"
-        anchors.fill: parent
+        width: Screen.width
+        height: Screen.height
         fillMode: Image.PreserveAspectCrop
         visible: false
     }
@@ -320,215 +265,12 @@ Window {
         }
     }
 
-    Item {
-        id: mainContentContainer
-
-        anchors.top: header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: footerContainer.top
-
-        anchors.leftMargin: 3
-        anchors.rightMargin: 3
-        anchors.bottomMargin: 10
-
-        ControlsPanel {
-            id: controlsPanel
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.right: parent.right
-        }
-
-        MainStack {
-            id: mainStack
-            anchors.top: controlsPanel.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.topMargin: 4
-            showControllerRack: btnShowControllerRack.pressed
-            showExplorer: explorerTabs.selectedIndex > -1
-            showEditors: editorPanelTabs.selectedIndex > -1
-        }
-    }
-
-    Item {
-        id: footerContainer
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 10
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
-        height: 15
-        width: 65
-
-        ButtonGroup {
-            id: explorerTabs
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            showBackground: false
-            defaultButtonWidth: 25
-            defaultImageWidth: 15
-            defaultButtonHeight: 15
-            defaultLeftMargin: 20
-            managementType: ButtonGroup.ManagementType.Selector
-            selectedIndex: 0
-            allowDeselection: true
-            fixedWidth: false
-
-            ListModel {
-                id: explorerTabsModel
-
-                ListElement {
-                    leftMargin: 15
-                    imageSource: "Images/icons/bottom-bar/browser-panel.svg"
-                    hoverMessage: qsTr("File explorer")
-                }
-
-                ListElement {
-                    imageSource: "Images/icons/bottom-bar/project-panel.svg"
-                    imageWidth: 11
-                    buttonWidth: 16
-                    leftMargin: 15
-                    hoverMessage: qsTr("Project explorer")
-                }
-            }
-
-            buttons: explorerTabsModel
-        }
-
-        Rectangle {
-            id: spacer1
-            width: 2
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: explorerTabs.right
-            anchors.leftMargin: 20
-            color: Qt.rgba(1, 1, 1, 0.11)
-        }
-
-        ButtonGroup {
-            id: layoutTabs
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: spacer1.right
-            anchors.leftMargin: 5
-            showBackground: false
-            defaultButtonHeight: 15
-            defaultLeftMargin: 15
-            buttonAutoWidth: true
-            defaultInnerMargin: 0
-            managementType: ButtonGroup.ManagementType.Selector
-            selectedIndex: 0
-            fixedWidth: false
-
-            buttons: layoutTabsModel
-
-            ListModel {
-                id: layoutTabsModel
-                ListElement {
-                    textContent: qsTr("ARRANGE")
-                    hoverMessage: qsTr("Arrangement layout")
-                }
-                ListElement {
-                    textContent: qsTr("MIX")
-                    hoverMessage: qsTr("Mixing layout")
-                }
-                ListElement {
-                    textContent: qsTr("EDIT")
-                    hoverMessage: qsTr("Editor layout")
-                }
-            }
-        }
-
-        Rectangle {
-            id: spacer2
-            width: 2
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: layoutTabs.right
-            anchors.leftMargin: 20
-            color: Qt.rgba(1, 1, 1, 0.11)
-        }
-
-        ButtonGroup {
-            id: editorPanelTabs
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: spacer2.right
-            showBackground: false
-            defaultButtonWidth: 25
-            defaultImageWidth: 15
-            defaultButtonHeight: 15
-            defaultLeftMargin: 10
-            defaultTopMargin: 0
-            managementType: ButtonGroup.ManagementType.Selector
-            selectedIndex: 3
-            allowDeselection: true
-            fixedWidth: false
-
-            ListModel {
-                id: editorPanelTabsModel
-                ListElement {
-                    imageSource: "Images/icons/bottom-bar/midi-editor1.svg"
-                    hoverMessage: qsTr("Piano roll")
-                    leftMargin: 20
-                }
-                ListElement {
-                    imageSource: "Images/icons/bottom-bar/automation-editor.svg"
-                    hoverMessage: qsTr("Automation editor")
-                }
-                ListElement {
-                    imageSource: "Images/icons/bottom-bar/instrument-effects-panel.svg"
-                    hoverMessage: qsTr("Plugin rack")
-                }
-                ListElement {
-                    imageSource: "Images/icons/bottom-bar/mixer.svg"
-                    hoverMessage: qsTr("Mixer")
-                }
-            }
-
-            buttons: editorPanelTabsModel
-        }
-
-        Rectangle {
-            id: spacer3
-            width: 2
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: editorPanelTabs.right
-            anchors.leftMargin: 20
-            color: Qt.rgba(1, 1, 1, 0.11)
-        }
-
-        Text {
-            id: statusText
-            anchors.left: spacer3.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.leftMargin: 20
-            text: globalStore.statusMessage
-            font.family: Fonts.mainRegular.name
-            font.pixelSize: 11
-            color: Qt.rgba(1, 1, 1, 0.6)
-        }
-
-        Button {
-            id: btnShowControllerRack
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.rightMargin: 15
-            width: 15
-            imageSource: "Images/icons/bottom-bar/automation-panel.svg"
-            imageWidth: 15
-            imageHeight: 15
-            showBackground: false
-            isToggleButton: true
-            pressed: true
-            hoverMessage: pressed ? qsTr("Hide controller rack") : qsTr("Show controller rack")
+    ProjectSwitcher {
+        anchors {
+            top: header.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
         }
     }
 

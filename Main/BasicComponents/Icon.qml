@@ -20,6 +20,7 @@
 
 import QtQuick 2.15
 import QtGraphicalEffects 1.15
+import QtQuick.Window 2.15
 
 Item {
     id: icon
@@ -41,9 +42,15 @@ Item {
         anchors.centerIn: parent
         sourceSize.width: imageWidth
         sourceSize.height: imageHeight
-        fillMode: Image.PreserveAspectFit
+        fillMode: Image.Pad
         visible: false
-        sourceClipRect: Qt.rect(-1, -1, imageWidth + 2, imageHeight + 2)
+        sourceClipRect:
+            Qt.rect(
+                -1,
+                -1,
+                imageWidth * Screen.devicePixelRatio + 2,
+                imageHeight * Screen.devicePixelRatio + 2
+            )
     }
     ColorOverlay {
         anchors.fill: image

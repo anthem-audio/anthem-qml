@@ -18,15 +18,19 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-import QtQuick 2.14
-import QtGraphicalEffects 1.14
+import QtQuick 2.15
+import QtGraphicalEffects 1.15
 import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.15
 
 import "BasicComponents"
 import "Global"
 import "Menus"
 
 Rectangle {
+    id: controlsPanel
+    property real spacerMargins: 7
+
     height: 42
 
     function updateAll() {
@@ -35,36 +39,35 @@ Rectangle {
         tempoControl.value = Anthem.getBeatsPerMinute();
     }
 
-    Connections {
-        target: mainWindow
-        function onFlush() {
-            updateAll();
-        }
-    }
-
     radius: 1
     color: colors.white_12
 
     Item {
-        id: controlPanelSpacer
+        id: paddingItem
         anchors {
             fill: parent
-            margins: 7
+            margins: controlsPanel.spacerMargins
         }
 
         Row {
             id: groupContainer
-            property int totalGroupWidths:
+            property real totalGroupWidths:
                 group1.width + spacerWidth +
                 group2.width + spacerWidth +
                 group3.width + spacerWidth +
                 group4.width + spacerWidth +
                 group5.width + spacerWidth +
                 group6.width
-            property int spacerWidth: 2
-            property int groupCount: 6
+            property real spacerWidth: 2
+            property real groupCount: 6
+            property real spacerCount: groupCount * 2 - 2
 
-            spacing: (controlPanelSpacer.width - totalGroupWidths) / ((groupCount - 1) * 2)
+            property real spacingBase:
+                Math.floor(
+                    (Screen.devicePixelRatio *
+                        (paddingItem.width - totalGroupWidths)) /
+                        ((groupCount - 1) * 2)
+                ) / Screen.devicePixelRatio;
 
             Row {
                 id: group1
@@ -191,12 +194,21 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 1
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
             }
+
+            ControlsPanelSpacer {
+                spacerNumber: 2
+            }
+
 
             Row {
                 id: group2
@@ -242,11 +254,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 3
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 4
             }
 
             Row {
@@ -315,6 +335,10 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 5
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
@@ -322,74 +346,87 @@ Rectangle {
                 color: colors.white_12
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 6
+            }
+
             Row {
                 id: group4
                 spacing: 2
 
-                DigitControl {
-                    id: tempoControl
-
+                Item {
                     height: 28
                     width: 70
 
-                    lowBound: 10
-                    highBound: 999
-                    step: 0.01
-                    smallestIncrement: 0.01
-                    decimalPlaces: 2
-                    value: 140
-                    property int lastSentValue: 140
-                    hoverMessage: qsTr("Tempo")
-                    units: qsTr("BPM")
+                    DigitControl {
+                        id: tempoControl
 
-                    fontPixelSize: 16
-
-//                    onValueChanged: {
-//                        Anthem.setBeatsPerMinute(value, false);
-//                    }
-
-                    onValueChangeCompleted: {
-                        const old = lastSentValue;
-
-                        const command = {
-                            exec: () => {
-                                lastSentValue = value;
-                                tempoControl.value = value;
-                                Anthem.setBeatsPerMinute(value, true);
-                            },
-                            undo: () => {
-                                lastSentValue = old;
-                                tempoControl.value = old;
-                                Anthem.setBeatsPerMinute(old, true);
-                            },
-                            description: qsTr('set BPM')
+                        anchors {
+                            fill: parent
+                            rightMargin: 6
                         }
 
-                        exec(command);
-                    }
+                        lowBound: 10
+                        highBound: 999
+                        step: 0.01
+                        smallestIncrement: 0.01
+                        decimalPlaces: 2
+                        value: 140
+                        property real lastSentValue: 140
+                        hoverMessage: qsTr("Tempo")
+                        units: qsTr("BPM")
 
-                    // This MouseArea changes the step on tempoControl
-                    // depending on which digit is clicked.
-                    MouseArea {
-                        anchors.fill: parent
-                        onPressed: {
-                            mouse.accepted = false;
-                            let distanceFromRight = parent.width - mouseX;
-                            if (distanceFromRight <= 8) {
-                                tempoControl.step = 0.01;
+                        fontPixelSize: 16
+                        alignment: Text.AlignRight
+
+    //                    onValueChanged: {
+    //                        Anthem.setBeatsPerMinute(value, false);
+    //                    }
+
+                        onValueChangeCompleted: {
+                            const old = lastSentValue;
+
+                            const command = {
+                                exec: () => {
+                                    lastSentValue = value;
+                                    tempoControl.value = value;
+                                    Anthem.setBeatsPerMinute(value, true);
+                                },
+                                undo: () => {
+                                    lastSentValue = old;
+                                    tempoControl.value = old;
+                                    Anthem.setBeatsPerMinute(old, true);
+                                },
+                                description: qsTr('set BPM')
                             }
-                            else if (distanceFromRight <= 16) {
-                                tempoControl.step = 0.1;
-                            }
-                            else {
-                                tempoControl.step = 1;
-                            }
+
+                            exec(command);
                         }
-                        onReleased: {
-                            mouse.accepted = false;
-                        }
-                        onPositionChanged: {
-                            mouse.accepted = false;
+
+                        // This MouseArea changes the step on tempoControl
+                        // depending on which digit is clicked.
+                        MouseArea {
+                            anchors.fill: parent
+                            onPressed: {
+                                mouse.accepted = false;
+                                let distanceFromRight = parent.width - mouseX;
+                                if (distanceFromRight <= 10) {
+                                    tempoControl.step = 0.01;
+                                }
+                                else if (distanceFromRight <= 20) {
+                                    tempoControl.step = 0.1;
+                                }
+                                else {
+                                    tempoControl.step = 1;
+                                }
+                            }
+                            onReleased: {
+                                mouse.accepted = false;
+                            }
+                            onPositionChanged: {
+                                mouse.accepted = false;
+                            }
+                            cursorShape: Qt.SizeVerCursor
                         }
                     }
                 }
@@ -404,7 +441,7 @@ Rectangle {
                         anchors.bottom: parent.bottom
                         anchors.right: timeSignatureSlash.left
                         width: 18
-                        hoverMessage: qsTr("Time signature numerator")
+                        hoverMessage: qsTr("Time signature")
 
                         fontPixelSize: 16
                         alignment: Text.AlignRight
@@ -441,7 +478,6 @@ Rectangle {
                         id: timeSignatureSlash
                         text: "/"
                         font.family: Fonts.monoMedium.name
-                        font.weight: Font.Bold
                         font.pixelSize: 16
                         anchors.centerIn: parent
                         color: colors.white_70
@@ -455,7 +491,7 @@ Rectangle {
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         width: 18
-                        hoverMessage: qsTr("Time signature denominator")
+                        hoverMessage: qsTr("Time signature")
 
                         fontPixelSize: 16
                         alignment: Text.AlignLeft
@@ -496,7 +532,6 @@ Rectangle {
                     height: 28
 
                     font.family: Fonts.monoMedium.name
-                    font.weight: Font.Bold
                     font.pixelSize: 16
 
                     color: colors.white_70
@@ -511,7 +546,6 @@ Rectangle {
                     height: 28
 
                     font.family: Fonts.monoMedium.name
-                    font.weight: Font.Bold
                     font.pixelSize: 16
 
                     color: colors.white_70
@@ -520,11 +554,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 7
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 8
             }
 
             Row {
@@ -571,11 +613,19 @@ Rectangle {
                 }
             }
 
+            ControlsPanelSpacer {
+                spacerNumber: 9
+            }
+
             Rectangle {
                 height: 16
                 anchors.verticalCenter: parent.verticalCenter
                 width: groupContainer.spacerWidth
                 color: colors.white_12
+            }
+
+            ControlsPanelSpacer {
+                spacerNumber: 10
             }
 
             Row {

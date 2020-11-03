@@ -291,7 +291,7 @@ void MainPresenter::switchActiveProject(int index) {
 
     isActiveProjectValid = true;
 
-    emit flush();
+    emit tabSelect(index);
 }
 
 int MainPresenter::getNumOpenProjects() {
