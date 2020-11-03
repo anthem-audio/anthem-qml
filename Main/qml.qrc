@@ -150,5 +150,6 @@
         <file>Fonts/NotoSansMono-Regular.ttf</file>
         <file>BasicComponents/Icon.qml</file>
         <file>ControlsPanelSpacer.qml</file>
+        <file>Project.qml</file>
     </qresource>
 </RCC>
