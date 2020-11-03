@@ -485,7 +485,6 @@ Rectangle {
                         id: timeSignatureSlash
                         text: "/"
                         font.family: Fonts.monoMedium.name
-                        font.weight: Font.Bold
                         font.pixelSize: 16
                         anchors.centerIn: parent
                         color: colors.white_70
@@ -540,7 +539,6 @@ Rectangle {
                     height: 28
 
                     font.family: Fonts.monoMedium.name
-                    font.weight: Font.Bold
                     font.pixelSize: 16
 
                     color: colors.white_70
@@ -555,7 +553,6 @@ Rectangle {
                     height: 28
 
                     font.family: Fonts.monoMedium.name
-                    font.weight: Font.Bold
                     font.pixelSize: 16
 
                     color: colors.white_70
