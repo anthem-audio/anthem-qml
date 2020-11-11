@@ -31,14 +31,7 @@
 #include "Utilities/idgenerator.h"
 #include "Presenter/mainpresenter.h"
 
-#include "Tests/modeltests.h"
-
 int main(int argc, char *argv[]) {
-    // Simplistic check for -test or --test in first argument position
-    if (argc > 1 && (strncmp(argv[1], "-test", 6) == 0 || strncmp(argv[1], "--test", 7) == 0)) {
-        ModelTests modelTests;
-        return QTest::qExec(&modelTests);
-    }
 #if HIDE_CONSOLE
     FreeConsole();
 #endif
