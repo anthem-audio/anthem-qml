@@ -20,12 +20,14 @@ jobs:
         version: 5.15.1
     - name: Build Anthem
       run: |
-           cd $GITHUB_WORKSPACE
-           mkdir build && cd build
-           cmake --build .. --target all
+           cd $GITHUB_WORKSPACE\src
+           mkdir build
+           cmake --build . --target all
+          #  find .
+           find .
           #  qmake .. -config release
-          #  make -j$(nproc)
-          #  make install
+           make -j$(nproc)
+           make install
     # - name: Test Anthem
     #   run: |
     #        cd $GITHUB_WORKSPACE/build/Anthem
