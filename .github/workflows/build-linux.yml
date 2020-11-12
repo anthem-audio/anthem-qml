@@ -20,7 +20,7 @@ jobs:
         version: 5.15.1
     - name: Build Anthem
       run: |
-           cd $GITHUB_WORKSPACE\src
+           cd $GITHUB_WORKSPACE/src
            mkdir build
            cmake --build . --target all
            find .
