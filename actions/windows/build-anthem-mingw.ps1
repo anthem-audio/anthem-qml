@@ -5,6 +5,8 @@ cd $env:GITHUB_WORKSPACE\src
 Write-Host "Running CMake...`n`n"
 cmake .
 
+Get-ChildItem -Recurse
+
 Write-Host "`nBuilding Anthem...`n`n"
 C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\mingw32-make.exe
 
