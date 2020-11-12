@@ -3,7 +3,7 @@ Write-Host "Build script started."
 cd $env:GITHUB_WORKSPACE\src
 
 Write-Host "Running CMake...`n`n"
-cmake .
+cmake . -G "MinGW Makefiles"
 
 Get-ChildItem -Recurse
 
