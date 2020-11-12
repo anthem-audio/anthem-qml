@@ -4,9 +4,9 @@ cd $env:GITHUB_WORKSPACE
 # choco uninstall mingw
 # choco install mingw --version=7.3.0 -y
 
+cd src
 C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\mingw32-make.exe
 
-cd Anthem
 mkdir AnthemBuild
 Copy-Item Anthem.exe -Destination Anthem
 cd AnthemBuild
