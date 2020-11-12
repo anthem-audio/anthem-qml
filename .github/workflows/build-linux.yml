@@ -21,11 +21,13 @@ jobs:
     - name: Build Anthem
       run: |
            cd $GITHUB_WORKSPACE/src
+           cmake .
            mkdir build
-           cmake --build . --target all
+           cd build
+           cmake --build .. --target all
            find .
-           make -j$(nproc)
-           make install
+          #  make -j$(nproc)
+          #  make install
     # - name: Test Anthem
     #   run: |
     #        cd $GITHUB_WORKSPACE/build/Anthem
