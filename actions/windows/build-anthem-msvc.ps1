@@ -12,7 +12,7 @@ Write-Host "`nRunning CMake...`n`n"
 cmake .
 
 Write-Host "`nBuilding...`n`n"
-msbuild Anthem.sln
+msbuild Anthem.sln /property:Configuration=Release
 # & {
 #     # https://stackoverflow.com/a/12538601
 #     $ErrorActionPreference = 'Continue'
