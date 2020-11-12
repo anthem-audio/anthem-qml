@@ -23,9 +23,7 @@ jobs:
            cd $GITHUB_WORKSPACE\src
            mkdir build
            cmake --build . --target all
-          #  find .
            find .
-          #  qmake .. -config release
            make -j$(nproc)
            make install
     # - name: Test Anthem
