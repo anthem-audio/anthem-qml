@@ -6,11 +6,11 @@ cd $env:GITHUB_WORKSPACE\src
 Write-Host "`nSetting up MSVC build environment...`n`n"
 Invoke-CmdScript "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" amd64
 
-# ls "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise" "cl.exe" -Recurse -File
 # cmake . -DCMAKE_BUILD_TYPE:STRING="Release" -DCMAKE_C_COMPILER:STRING="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.27.29110\bin\HostX86\x64\cl.exe" -DCMAKE_PREFIX_PATH:STRING="C:\Qt\5.15.1\msvc2019_64" -DQT_QMAKE_EXECUTABLE:STRING="C:\Qt\5.15.1\msvc2019_64\bin\qmake.exe"
 Write-Host "`nRunning CMake...`n`n"
-cmake . -DCMAKE_BUILD_TYPE:STRING="Release" -DCMAKE_C_COMPILER:STRING="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.27.29110\bin\HostX64\x64\cl.exe" -DCMAKE_PREFIX_PATH:STRING=$env:Qt5_Dir\msvc2019_64 -DQT_QMAKE_EXECUTABLE:STRING=$env:Qt5_Dir\msvc2019_64\bin\qmake.exe
-Get-ChildItem -Recurse
+# cmake . -DCMAKE_BUILD_TYPE:STRING="Release" -DCMAKE_C_COMPILER:STRING="C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\MSVC\14.27.29110\bin\HostX64\x64\cl.exe" -DCMAKE_PREFIX_PATH:STRING=$env:Qt5_Dir\msvc2019_64 -DQT_QMAKE_EXECUTABLE:STRING=$env:Qt5_Dir\msvc2019_64\bin\qmake.exe
+cmake .
+
 Write-Host "`nBuilding...`n`n"
 msbuild Anthem.sln
 # & {
@@ -19,6 +19,7 @@ msbuild Anthem.sln
 #     nmake
 # }
 mkdir AnthemBuild
+ls . "Anthem.exe" -Recurse -File
 Copy-Item release\Anthem.exe -Destination AnthemBuild
 cd AnthemBuild
 Write-Host "`nPackaging...`n`n"
