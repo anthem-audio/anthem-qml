@@ -1,16 +1,17 @@
-cd $env:GITHUB_WORKSPACE
-. $env:Qt5_Dir\bin\qmake
+Write-Host "Build script started."
 
-# choco uninstall mingw
-# choco install mingw --version=7.3.0 -y
+cd $env:GITHUB_WORKSPACE\src
 
-cd src
+Write-Host "Running CMake...`n`n"
+cmake .
+
+Write-Host "`nBuilding Anthem...`n`n"
 C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin\mingw32-make.exe
 
 mkdir AnthemBuild
-Copy-Item Anthem.exe -Destination Anthem
+Copy-Item Anthem.exe -Destination AnthemBuild
 cd AnthemBuild
-. $env:Qt5_Dir\bin\windeployqt.exe Anthem.exe --qmldir $env:GITHUB_WORKSPACE\Anthem
+. $env:Qt5_Dir\bin\windeployqt.exe Anthem.exe --qmldir $env:GITHUB_WORKSPACE\src
 
 # Copy some extra DLLs that windeployqt missed (dlls might be because mingw wasn't run properly??)
 Copy-Item "$env:Qt5_Dir\bin\libgcc_s_seh-1.dll" -Destination "libgcc_s_seh-1.dll"
