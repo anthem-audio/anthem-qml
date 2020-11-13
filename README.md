@@ -1,2 +1,3 @@
-[![](https://github.com/anthem-audio/Anthem/workflows/Linux%20Build/badge.svg)](https://github.com/anthem-audio/Anthem/actions)
-[![](https://github.com/anthem-audio/Anthem/workflows/Windows%20Build/badge.svg)](https://github.com/anthem-audio/Anthem/actions)
+[![](https://github.com/anthem-audio/Anthem/workflows/Windows%20Build%20(MSVC)/badge.svg?branch=main)](https://github.com/anthem-audio/Anthem/actions?query=branch%3Amain+workflow%3A%22Windows+Build+%28MSVC%29%22)
+[![](https://github.com/anthem-audio/Anthem/workflows/Windows%20Build%20(MinGW)/badge.svg?branch=main)](https://github.com/anthem-audio/Anthem/actions?query=branch%3Amain+workflow%3A%22Windows+Build+%28MinGW%29%22)
+[![](https://github.com/anthem-audio/Anthem/workflows/Linux%20Build/badge.svg?branch=main)](https://github.com/anthem-audio/Anthem/actions?query=branch%3Amain+workflow%3A%22Linux+Build%22)
