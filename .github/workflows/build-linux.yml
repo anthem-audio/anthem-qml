@@ -39,7 +39,7 @@ jobs:
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
            wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
            chmod +x linuxdeploy*.AppImage
-           ./linuxdeploy-x86_64.AppImage --appdir AppDir -e ../Anthem -i ../actions/linux/Anthem.png -d ../actions/linux/anthem.desktop --plugin qt --output appimage
+           ./linuxdeploy-x86_64.AppImage --appdir AppDir -e $GITHUB_WORKSPACE/Anthem -i $GITHUB_WORKSPACE/actions/linux/Anthem.png -d $GITHUB_WORKSPACE/actions/linux/anthem.desktop --plugin qt --output appimage
            mkdir upload
            mv ./Anthem*.AppImage ./upload
     - uses: actions/upload-artifact@master
