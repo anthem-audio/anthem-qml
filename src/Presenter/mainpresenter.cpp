@@ -274,7 +274,7 @@ void MainPresenter::sendPatch() {
 }
 
 void MainPresenter::liveUpdate(
-    uint64_t controlId, float value
+    quint64 controlId, float value
 ) {
     engines[
         activeProjectIndex
