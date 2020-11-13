@@ -14,6 +14,7 @@ jobs:
       run: |
            sudo apt install libxkbcommon-x11-0 -y
            sudo apt install libgl1-mesa-dev -y
+           sudo apt install libxcb-icccm4-dev -y
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
