@@ -2,7 +2,7 @@
 Type=Application
 Name=Anthem
 Comment=Prototype DAW
-Exec=Main
+Exec=Anthem
 Icon=Anthem
 Categories=AudioVideo;Audio;
 X-AppImage-Version=d28392c
