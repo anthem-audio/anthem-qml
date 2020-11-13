@@ -27,6 +27,8 @@ jobs:
            cmake --build .. --target all
     - name: Generate AppImage
       run: |
+           sudo apt install tree
+           tree
            cd $GITHUB_WORKSPACE/src/build
            export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/src
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
