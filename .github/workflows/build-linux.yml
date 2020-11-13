@@ -25,17 +25,10 @@ jobs:
            mkdir build
            cd build
            cmake --build .. --target all
-           find .
-          #  make -j$(nproc)
-          #  make install
-    # - name: Test Anthem
-    #   run: |
-    #        cd $GITHUB_WORKSPACE/build/Anthem
-    #        ./Anthem --test
     - name: Generate AppImage
       run: |
-           cd $GITHUB_WORKSPACE/build
-           export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/Anthem
+           cd $GITHUB_WORKSPACE/src/build
+           export QML_SOURCES_PATHS=$GITHUB_WORKSPACE/src
            wget https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
            wget https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage
            chmod +x linuxdeploy*.AppImage
