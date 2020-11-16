@@ -22,6 +22,8 @@ import QtQuick 2.14
 import QtQuick.Dialogs 1.2
 import "Dialogs"
 
+import Anthem 1.0
+
 Item {
     signal saveCompleted();
     signal saveCancelled();

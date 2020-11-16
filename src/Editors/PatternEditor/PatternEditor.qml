@@ -22,6 +22,9 @@ import QtQuick 2.14
 import "../../BasicComponents"
 import "../../Menus"
 
+import Anthem 1.0
+import Anthem.PatternEditor 1.0
+
 Item {
     id: patternEditor
     anchors.margins: 3

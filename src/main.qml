@@ -29,6 +29,8 @@ import "Dialogs"
 import "Menus"
 import "Global"
 
+import Anthem 1.0
+
 Window {
     id: mainWindow
     flags: Qt.Window | Qt.FramelessWindowHint

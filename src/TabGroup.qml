@@ -23,6 +23,8 @@ import "BasicComponents"
 import "Global"
 import "Dialogs"
 
+import Anthem 1.0
+
 Item {
     id: tabGroup
     /*

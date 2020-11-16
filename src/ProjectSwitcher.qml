@@ -20,6 +20,8 @@
 
 import QtQuick 2.15
 
+import Anthem 1.0
+
 Item {
     id: projectSwitcher
     function add(key) {

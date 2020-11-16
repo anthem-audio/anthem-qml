@@ -27,6 +27,8 @@ import "BasicComponents"
 import "Global"
 import "Menus"
 
+import Anthem 1.0
+
 Rectangle {
     id: controlsPanel
     property real spacerMargins: 7
