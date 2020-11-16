@@ -37,19 +37,21 @@ MainPresenter::MainPresenter(QObject *parent, IdGenerator* id)
 
     this->id = id;
 
+    QString projectID = QString::number(id->get());
+
     // Initialize with blank project
     auto projectFile = new ProjectFile(this);
-    auto projectModel = new Project(this, id);
+    auto project = new Project(this, id, projectID);
     activeProjectIndex = 0;
 
     // Initialize child presenters
-    patternPresenter = new PatternPresenter(this, id, projectModel);
+    patternPresenter = new PatternPresenter(this, id, project);
 
     // Start the engine
     auto engine = new Engine(dynamic_cast<QObject*>(this));
     engine->start();
 
-    addProject(projectModel, projectFile, engine);
+    addProject(project, projectFile, engine);
 }
 
 PatternPresenter* MainPresenter::getPatternPresenter() {
@@ -80,6 +82,8 @@ Engine* MainPresenter::getEngineAt(int index) {
 }
 
 void MainPresenter::removeProjectAt(int index) {
+    QString key = projects[activeProjectIndex]->getID();
+
     // Notify child presenters of the change before removing things
     if (activeProjectIndex == index) {
         patternPresenter->setActiveProject(nullptr);
@@ -107,23 +111,31 @@ void MainPresenter::removeProjectAt(int index) {
         activeProjectIndex--;
     }
 
-    emit this->tabRemove(index);
+    emit this->tabRemove(index, key);
 }
 
-void MainPresenter::newProject() {
+QString MainPresenter::newProject() {
+    QString projectID = QString::number(this->id->get());
+
     auto projectFile = new ProjectFile(this);
-    auto projectModel = new Project(this, id);
+    auto project = new Project(this, id, projectID);
     auto engine = new Engine(this);
     engine->start();
-    addProject(projectModel, projectFile, engine);
+    addProject(project, projectFile, engine);
     switchActiveProject(projects.length() - 1);
-    emit tabAdd("New project");
-    emit tabSelect(activeProjectIndex);
+
+    QString id = project->getID();
+    emit tabAdd("New project", id);
+    emit tabSelect(activeProjectIndex, id);
+
     isInInitialState = false;
+    return projectID;
 }
 
 QString MainPresenter::loadProject(QString path) {
     QFileInfo fileInfo(path);
+
+    QString projectID = QString::number(this->id->get());
 
     // Check if the path exists and is a file
     if (!fileInfo.exists() || !fileInfo.isFile()) {
@@ -156,7 +168,7 @@ QString MainPresenter::loadProject(QString path) {
         QJsonObject projectJson =
                 projectFile->json["project"].toObject();
 
-        project = new Project(this, id, projectJson);
+        project = new Project(this, id, projectID, projectJson);
     }
     catch (const InvalidProjectException& ex) {
         QString errorText =
@@ -180,17 +192,20 @@ QString MainPresenter::loadProject(QString path) {
         removeProjectAt(0);
     }
 
+    QString id = project->getID();
+
     if (isInInitialState) {
         emit tabRename(0, fileName);
+        emit tabSelect(0, id);
     }
     else {
-        emit tabAdd(fileName);
-        emit tabSelect(getNumOpenProjects() - 1);
+        emit tabAdd(fileName, id);
+        emit tabSelect(getNumOpenProjects() - 1, id);
     }
 
     isInInitialState = false;
 
-    return "";
+    return projectID;
 }
 
 void MainPresenter::saveActiveProject() {
@@ -291,11 +306,19 @@ void MainPresenter::switchActiveProject(int index) {
 
     isActiveProjectValid = true;
 
-    emit tabSelect(index);
+    emit tabSelect(index, projects[activeProjectIndex]->getID());
 }
 
 int MainPresenter::getNumOpenProjects() {
     return projects.count();
+}
+
+int MainPresenter::getActiveProjectIndex() {
+    return activeProjectIndex;
+}
+
+QString MainPresenter::getActiveProjectKey() {
+    return projects[activeProjectIndex]->getID();
 }
 
 void MainPresenter::closeProject(int index) {

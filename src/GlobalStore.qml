@@ -30,5 +30,6 @@ QtObject {
     property string statusMessage: ''
 
     property int selectedTabIndex: 0
+    property string selectedTabKey: ''
     property int tabCount: 1
 }

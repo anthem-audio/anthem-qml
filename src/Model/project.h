@@ -36,16 +36,19 @@
 class Project : public ModelItem {
     Q_OBJECT
 private:
+    QString projectID;
     IdGenerator* id;
     Transport* transport;
     Song* song;
     QHash<QString, Generator*> generators;
     QVector<QString> generatorOrder;
 public:
-    Project(Communicator* parent, IdGenerator* id);
-    Project(Communicator* parent, IdGenerator* id, QJsonObject& node);
+    Project(Communicator* parent, IdGenerator* id, QString projectID);
+    Project(Communicator* parent, IdGenerator* id, QString projectID, QJsonObject& node);
 
     void serialize(QJsonObject& node) const override;
+
+    QString getID();
 
     Transport* getTransport();
     Song* getSong();

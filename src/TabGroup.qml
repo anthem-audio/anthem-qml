@@ -149,13 +149,13 @@ Item {
 
     Connections {
         target: Anthem
-        function onTabAdd(name) {
+        function onTabAdd(name, key) {
             addTab(name);
         }
         function onTabRename(index, name) {
             renameTab(index, name);
         }
-        function onTabSelect(index) {
+        function onTabSelect(index, key) {
             globalStore.selectedTabIndex = index;
         }
         function onTabRemove(index) {

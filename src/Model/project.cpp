@@ -27,9 +27,11 @@
 #include "controller.h"
 #include "instrument.h"
 
-Project::Project(Communicator* parent, IdGenerator* id)
+Project::Project(Communicator* parent, IdGenerator* id,
+                 QString projectID)
                     : ModelItem(parent, "project") {
     this->id = id;
+    this->projectID = projectID;
     this->transport = new Transport(this, id);
     this->song = new Song(this, id);
     this->generators = QHash<QString, Generator*>();
@@ -37,9 +39,10 @@ Project::Project(Communicator* parent, IdGenerator* id)
 }
 
 Project::Project(Communicator* parent, IdGenerator* id,
-                 QJsonObject& projectVal)
+                 QString projectID, QJsonObject& projectVal)
                     : ModelItem(parent, "project") {
     this->id = id;
+    this->projectID = projectID;
 
     QJsonObject transportVal = projectVal["transport"].toObject();
     this->transport = new Transport(this, id, transportVal);
@@ -103,6 +106,10 @@ void Project::serialize(QJsonObject& node) const {
         generatorOrderValue.push_back(key);
     }
     node["generator_order"] = generatorOrderValue;
+}
+
+QString Project::getID() {
+    return this->projectID;
 }
 
 Transport* Project::getTransport() {

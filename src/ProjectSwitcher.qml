@@ -22,36 +22,36 @@ import QtQuick 2.15
 
 Item {
     id: projectSwitcher
-    function add() {
+    function add(key) {
         const component = Qt.createComponent("Project.qml");
-        const instance = component.createObject(projectSwitcher, { visible: false });
+        const instance = component.createObject(projectSwitcher, { key });
     }
 
-    function select(index) {
+    function remove(key) {
         for (let i = 0; i < children.length; i++) {
-            children[i].visible = index === i;
+            const child = children[i];
+            if (child.key === key) {
+                child.destroy();
+            }
         }
     }
 
-    function remove(index) {
-        children[index].destroy();
-    }
-
     Component.onCompleted: {
-        add()
-        select(0)
+        const projectKey = Anthem.getActiveProjectKey();
+        globalStore.selectedTabKey = projectKey;
+        add(projectKey);
     }
 
     Connections {
         target: Anthem
-        function onTabAdd() {
-            add();
+        function onTabAdd(name, key) {
+            add(key);
         }
-        function onTabSelect(index) {
-            select(index);
+        function onTabSelect(index, key) {
+            globalStore.selectedTabKey = key;
         }
-        function onTabRemove(index) {
-            remove(index);
+        function onTabRemove(index, key) {
+            remove(key);
         }
     }
 }
