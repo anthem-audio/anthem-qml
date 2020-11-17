@@ -82,7 +82,7 @@ Engine* MainPresenter::getEngineAt(int index) {
 }
 
 void MainPresenter::removeProjectAt(int index) {
-    QString key = projects[activeProjectIndex]->getID();
+    QString key = projects[index]->getID();
 
     // Notify child presenters of the change before removing things
     if (activeProjectIndex == index) {
