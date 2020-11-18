@@ -126,7 +126,6 @@ QString MainPresenter::newProject() {
 
     QString id = project->getID();
     emit tabAdd("New project", id);
-    emit tabSelect(activeProjectIndex, id);
 
     isInInitialState = false;
     return projectID;
@@ -196,11 +195,9 @@ QString MainPresenter::loadProject(QString path) {
 
     if (isInInitialState) {
         emit tabRename(0, fileName);
-        emit tabSelect(0, id);
     }
     else {
         emit tabAdd(fileName, id);
-        emit tabSelect(getNumOpenProjects() - 1, id);
     }
 
     isInInitialState = false;

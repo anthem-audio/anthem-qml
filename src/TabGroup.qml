@@ -101,7 +101,17 @@ Item {
 
         rowModel = rowModel.filter((_, i) => i !== index);
 
-        globalStore.tabCount--;
+        globalStore.tabCount = rowModel.length;
+
+        if (globalStore.selectedTabIndex < 0) globalStore.selectedTabIndex = 0;
+        if (globalStore.selectedTabIndex > tabCount - 1) globalStore.selectedTabIndex = tabCount - 1;
+
+        if (globalStore.selectedTabIndex >= 0 && globalStore.selectedTabIndex < globalStore.tabCount) {
+            Anthem.switchActiveProject(globalStore.selectedTabIndex);
+        }
+        if (globalStore.tabCount === 0) {
+            mainWindow.close();
+        }
     }
 
     function doOnCloseConfirmation(index) {

@@ -268,6 +268,7 @@ Window {
     }
 
     ProjectSwitcher {
+        id: projectSwitcher
         anchors {
             top: header.bottom
             left: parent.left
