@@ -101,7 +101,7 @@ TooltipWrapper {
                         anchors.margins: 6
                         font {
                             pixelSize: parent.height - 12
-                            family: Fonts.notoSansRegular.name
+                            family: Fonts.mainRegular.name
                         }
                         color: Qt.hsla(0, 0, 1, 0.8)
                         selectionColor: colors.main
