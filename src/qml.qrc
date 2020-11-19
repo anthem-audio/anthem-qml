@@ -151,5 +151,6 @@
         <file>ControlsPanelSpacer.qml</file>
         <file>Project.qml</file>
         <file>ProjectSwitcher.qml</file>
+        <file>ProjectShortcuts.qml</file>
     </qresource>
 </RCC>

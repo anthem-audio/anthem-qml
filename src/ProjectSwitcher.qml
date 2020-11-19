@@ -24,9 +24,13 @@ import Anthem 1.0
 
 Item {
     id: projectSwitcher
+
+    property Project selectedProject
+
     function add(key) {
         const component = Qt.createComponent("Project.qml");
         const instance = component.createObject(projectSwitcher, { key });
+        return instance;
     }
 
     function remove(key) {
@@ -34,6 +38,7 @@ Item {
             const child = children[i];
             if (child.key === key) {
                 child.destroy();
+                break;
             }
         }
     }
@@ -41,13 +46,14 @@ Item {
     Component.onCompleted: {
         const projectKey = Anthem.getActiveProjectKey();
         globalStore.selectedTabKey = projectKey;
-        add(projectKey);
+        selectedProject = add(projectKey);
     }
 
     Connections {
         target: Anthem
         function onTabAdd(name, key) {
-            add(key);
+            // Adding always causes a tab change
+            selectedProject = add(key);
         }
         function onTabSelect(index, key) {
             globalStore.selectedTabKey = key;
@@ -55,5 +61,25 @@ Item {
         function onTabRemove(index, key) {
             remove(key);
         }
+    }
+
+    Connections {
+        target: globalStore
+        function onSelectedTabKeyChanged() {
+            const key = globalStore.selectedTabKey;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child.key === key) {
+                    selectedProject = child;
+                    break;
+                }
+            }
+        }
+    }
+
+    ProjectShortcuts {
+        id: shortcuts
+        onUndo: selectedProject.undo()
+        onRedo: selectedProject.redo()
     }
 }

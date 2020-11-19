@@ -34,8 +34,10 @@ Item {
 
     property string key
 
+    readonly property bool isActive: key === globalStore.selectedTabKey
+
     // Declaratively show this tab content if the key matches the active tab key
-    visible: key === globalStore.selectedTabKey
+    visible: isActive
 
     // All commands must have exec() and undo(). This is not enforced at runtime.
     function exec(command) {

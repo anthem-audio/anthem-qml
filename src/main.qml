@@ -99,16 +99,6 @@ Window {
     }
 
     Shortcut {
-        sequence: "Ctrl+Z"
-        onActivated: undo()
-    }
-
-    Shortcut {
-        sequence: "Ctrl+Shift+Z"
-        onActivated: redo()
-    }
-
-    Shortcut {
         sequence: "Ctrl+N"
         onActivated: Anthem.newProject()
     }
