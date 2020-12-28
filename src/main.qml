@@ -29,6 +29,8 @@ import "Dialogs"
 import "Menus"
 import "Global"
 
+import Anthem 1.0
+
 Window {
     id: mainWindow
     flags: Qt.Window | Qt.FramelessWindowHint
@@ -94,16 +96,6 @@ Window {
     ResizeHandles {
         anchors.fill: parent
         window: mainWindow
-    }
-
-    Shortcut {
-        sequence: "Ctrl+Z"
-        onActivated: undo()
-    }
-
-    Shortcut {
-        sequence: "Ctrl+Shift+Z"
-        onActivated: redo()
     }
 
     Shortcut {
@@ -266,6 +258,7 @@ Window {
     }
 
     ProjectSwitcher {
+        id: projectSwitcher
         anchors {
             top: header.bottom
             left: parent.left

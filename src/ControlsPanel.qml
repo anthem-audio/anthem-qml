@@ -27,6 +27,8 @@ import "BasicComponents"
 import "Global"
 import "Menus"
 
+import Anthem 1.0
+
 Rectangle {
     id: controlsPanel
     property real spacerMargins: 7
@@ -508,16 +510,19 @@ Rectangle {
                             const old = Anthem.getTimeSignatureDenominator();
 
                             const command = {
-                                exec: () => {
-                                    timeSignatureDenominatorControl.value = value;
-                                    Anthem.setTimeSignatureDenominator(value);
+                                exec: data => {
+                                    timeSignatureDenominatorControl.value = data;
+                                    Anthem.setTimeSignatureDenominator(data);
                                 },
                                 undo: () => {
                                     value = old;
                                     timeSignatureDenominatorControl.value = old;
                                     Anthem.setTimeSignatureDenominator(old);
                                 },
-                                description: qsTr('set time signature denominator')
+                                description: qsTr('set time signature denominator'),
+                                // Just using the closure to caputre the value doesn't work
+                                // sometimes, but only for the denominator
+                                execData: value
                             }
 
                             exec(command);

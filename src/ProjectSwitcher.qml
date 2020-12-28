@@ -20,38 +20,66 @@
 
 import QtQuick 2.15
 
+import Anthem 1.0
+
 Item {
     id: projectSwitcher
-    function add() {
+
+    property Project selectedProject
+
+    function add(key) {
         const component = Qt.createComponent("Project.qml");
-        const instance = component.createObject(projectSwitcher, { visible: false });
+        const instance = component.createObject(projectSwitcher, { key });
+        return instance;
     }
 
-    function select(index) {
+    function remove(key) {
         for (let i = 0; i < children.length; i++) {
-            children[i].visible = index === i;
+            const child = children[i];
+            if (child.key === key) {
+                child.destroy();
+                break;
+            }
         }
     }
 
-    function remove(index) {
-        children[index].destroy();
-    }
-
     Component.onCompleted: {
-        add()
-        select(0)
+        const projectKey = Anthem.getActiveProjectKey();
+        globalStore.selectedTabKey = projectKey;
+        selectedProject = add(projectKey);
     }
 
     Connections {
         target: Anthem
-        function onTabAdd() {
-            add();
+        function onTabAdd(name, key) {
+            // Adding always causes a tab change
+            selectedProject = add(key);
         }
-        function onTabSelect(index) {
-            select(index);
+        function onTabSelect(index, key) {
+            globalStore.selectedTabKey = key;
         }
-        function onTabRemove(index) {
-            remove(index);
+        function onTabRemove(index, key) {
+            remove(key);
         }
+    }
+
+    Connections {
+        target: globalStore
+        function onSelectedTabKeyChanged() {
+            const key = globalStore.selectedTabKey;
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child.key === key) {
+                    selectedProject = child;
+                    break;
+                }
+            }
+        }
+    }
+
+    ProjectShortcuts {
+        id: shortcuts
+        onUndo: selectedProject.undo()
+        onRedo: selectedProject.redo()
     }
 }

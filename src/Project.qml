@@ -32,6 +32,13 @@ Item {
     property int historyPointer: -1
     property var history: []
 
+    property string key
+
+    readonly property bool isActive: key === globalStore.selectedTabKey
+
+    // Declaratively show this tab content if the key matches the active tab key
+    visible: isActive
+
     // All commands must have exec() and undo(). This is not enforced at runtime.
     function exec(command) {
         // If the history pointer isn't at the end, remove the tail

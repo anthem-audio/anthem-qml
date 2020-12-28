@@ -96,10 +96,10 @@ public:
     Engine* getEngineAt(int index);
 
 signals:
-    void tabAdd(QString name);
+    void tabAdd(QString name, QString key);
     void tabRename(int index, QString name);
-    void tabSelect(int index);
-    void tabRemove(int index);
+    void tabSelect(int index, QString key);
+    void tabRemove(int index, QString key);
 
     /// Emitted when a status message should be displayed
     void statusMessageRequest(QString message);
@@ -108,7 +108,7 @@ public slots:
     QString createID();
     PatternPresenter* getPatternPresenter();
 
-    void newProject();
+    QString newProject();
     QString loadProject(QString path);
     void saveActiveProject();
     void saveActiveProjectAs(QString path);
@@ -121,6 +121,9 @@ public slots:
     bool projectHasUnsavedChanges(int projectIndex);
 
     int getNumOpenProjects();
+
+    int getActiveProjectIndex();
+    QString getActiveProjectKey();
 
     void switchActiveProject(int index);
     /// Does not update the active project

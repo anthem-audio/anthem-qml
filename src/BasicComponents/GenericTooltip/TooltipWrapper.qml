@@ -30,7 +30,7 @@ Item {
 
     Connections {
         target: tooltipManager
-        function onTooltipClosed() {
+        function onTooltipClosed(tooltipId) {
             if (tooltipId === id) {
                 isOpen = false;
             }

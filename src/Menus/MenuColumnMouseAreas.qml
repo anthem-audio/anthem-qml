@@ -122,7 +122,7 @@ Column {
                 anchors.verticalCenterOffset: -1
                 anchors.leftMargin: 7
                 anchors.left: parent.left
-                font.family: Fonts.notoSansRegular.name
+                font.family: Fonts.mainRegular.name
                 font.pixelSize: 11
                 text: modelData.text ? qsTr(modelData.text) : ''
             }
@@ -136,7 +136,7 @@ Column {
                 anchors.verticalCenterOffset: 0
                 anchors.rightMargin: modelData.submenu ? 7 : 0
                 anchors.right: parent.right
-                font.family: Fonts.notoSansRegular.name
+                font.family: Fonts.mainRegular.name
                 font.pixelSize: 9
                 text: modelData.shortcut ? modelData.shortcut : ''
             }

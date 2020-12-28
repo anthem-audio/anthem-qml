@@ -18,18 +18,27 @@
                         <https://www.gnu.org/licenses/>.
 */
 
-/*
-    This component is used to store UI state that should be accessible from
-    anywhere in the software. Data stored here cannot be persisted between
-    sessions (for now).
-*/
+// Project-level shortcuts live here. I have tried a number of different
+// ways of getting shortcuts to work in the Project component, but they
+// all seem to fail after the second project is added.
 
-import QtQuick 2.14
+import QtQuick 2.15
 
-QtObject {
-    property string statusMessage: ''
+Item {
+    Shortcut {
+        sequence: "Ctrl+Z"
+        onActivated: {
+            undo();
+        }
+    }
 
-    property int selectedTabIndex: 0
-    property string selectedTabKey: ''
-    property int tabCount: 1
+    Shortcut {
+        sequence: "Ctrl+Shift+Z"
+        onActivated: {
+            redo();
+        }
+    }
+
+    signal undo()
+    signal redo()
 }

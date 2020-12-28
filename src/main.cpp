@@ -48,9 +48,16 @@ int main(int argc, char *argv[]) {
     MainPresenter mainPresenter(nullptr, &idGen);
 
     // Set global references to Anthem APIs in QML
-    qmlEngine.rootContext()->setContextProperty("Anthem", &mainPresenter);
-    qmlEngine.rootContext()->setContextProperty("PatternPresenter",
-                                                mainPresenter.getPatternPresenter());
+    qmlRegisterSingletonInstance<MainPresenter>(
+        "Anthem", 1, 0, "Anthem", &mainPresenter
+    );
+    qmlRegisterSingletonInstance<PatternPresenter>(
+        "Anthem.PatternEditor",
+        1,
+        0,
+        "PatternPresenter",
+        mainPresenter.getPatternPresenter()
+    );
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&qmlEngine, &QQmlApplicationEngine::objectCreated,
